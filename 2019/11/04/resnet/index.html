@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.0.0">
@@ -55,7 +55,7 @@
 <meta name="keywords" content="Deep Learning,Classification,Paper Reading">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ResNet(Deep Residual Learning for Image Recognition)">
-<meta property="og:url" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2019&#x2F;11&#x2F;03&#x2F;resnet&#x2F;index.html">
+<meta property="og:url" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2019&#x2F;11&#x2F;04&#x2F;resnet&#x2F;index.html">
 <meta property="og:site_name" content="Spring&#39;s Idea">
 <meta property="og:description" content="论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1512.03385如出现图像显示不完整，或者公式显示不完整，可访问如下博客CSDN:http:&#x2F;&#x2F;blog.csdn.net&#x2F;chunfengyanyulove&#x2F;article&#x2F;details&#x2F;79253656Resnet是2015年ImageNet比赛的冠军，不仅在分类上标线优秀，在目标检测中同样取得好成绩，Resnet将网络层数进一步加深">
 <meta property="og:locale" content="zh-CN">
@@ -67,11 +67,11 @@
 <meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20151217083726957">
 <meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20151217083734116">
 <meta property="og:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;145616-8bb29032c4783264.png?imageMogr2&#x2F;auto-orient&#x2F;strip%7CimageView2&#x2F;2&#x2F;w&#x2F;700">
-<meta property="og:updated_time" content="2019-11-03T13:30:06.883Z">
+<meta property="og:updated_time" content="2019-11-04T12:52:13.682Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20151216155525063">
 
-<link rel="canonical" href="https://www.wanglichun.tech/2019/11/03/resnet/">
+<link rel="canonical" href="https://www.wanglichun.tech/2019/11/04/resnet/">
 
 
 <script id="page-configurations">
@@ -89,6 +89,15 @@
   
 
 
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 
 
 
@@ -114,12 +123,12 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
     <div class="headband"></div>
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -204,7 +213,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/03/resnet/">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/04/resnet/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.png">
@@ -227,7 +236,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-11-03 08:30:06" itemprop="dateCreated datePublished" datetime="2019-11-03T08:30:06-05:00">2019-11-03</time>
+              <time title="创建时间：2019-11-04 07:52:13" itemprop="dateCreated datePublished" datetime="2019-11-04T07:52:13-05:00">2019-11-04</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -268,19 +277,17 @@
 </ul>
 <p><img src="http://img.blog.csdn.net/20151216160852064" alt="http://img.blog.csdn.net/20151216160852064"></p>
 <h3 id="2、Deep-Residual-Learning"><a href="#2、Deep-Residual-Learning" class="headerlink" title="2、Deep Residual Learning"></a>2、Deep Residual Learning</h3><h4 id="Identity-Mapping-by-Shortcuts"><a href="#Identity-Mapping-by-Shortcuts" class="headerlink" title="Identity Mapping by Shortcuts"></a>Identity Mapping by Shortcuts</h4><p>如上图是一个building block,公式定义如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">y=F(x,W_&#123;i&#125;) + x</span><br></pre></td></tr></table></figure>
-
+<p>$$y=F(x,W_{i})+x$$</p>
 <ul>
 <li>在上图例子中，由于block中包含2层，所以</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">F=\omega_2\sigma(\omega_1x)</span><br></pre></td></tr></table></figure>
-
+<p>$$F=\omega_2\sigma(\omega_1x)$$</p>
 <p>其中，σ表示RELU，这里省略了偏置项。</p>
 <ul>
 <li>当F()与x的维度不同时，可以通过线性映射进行调整，公式如下：</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">y=F(x,W_&#123;i&#125;) + \omega_s x</span><br></pre></td></tr></table></figure>
-<h4 id="Network-Architectures"><a href="#Network-Architectures" class="headerlink" title="Network Architectures"></a>Network Architectures</h4><p>Plain Network主要是受 VGG 网络启发，主要采用3*3滤波器，但是本网络与VGG相比，滤波器要少，复杂度要小，网络特征如下：    </p>
+<p>$$y=F(x,W_{i}) + \omega_s x$$</p>
+<h4 id="Network-Architectures"><a href="#Network-Architectures" class="headerlink" title="Network Architectures"></a>Network Architectures</h4><p>Plain Network主要是受 VGG 网络启发，主要采用3*3滤波器，但是本网络与VGG相比，滤波器要少，复杂度要小，网络特征如下： </p>
 <ul>
 <li>对于相同输出特征图尺寸，卷积层有相同个数的滤波器。</li>
 <li>如果特征图尺寸缩小一半，滤波器个数加倍以保持每个层的计算复杂度。通过步长为2的卷积来进行降采样。一共34个权重层。 </li>
@@ -349,14 +356,17 @@
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2019/11/03/hello-world/" rel="next" title="Hello World">
-                  <i class="fa fa-chevron-left"></i> Hello World
+                <a href="/2019/11/03/firstPage/" rel="next" title="firstPage">
+                  <i class="fa fa-chevron-left"></i> firstPage
                 </a>
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
+                <a href="/2019/11/04/hello-world/" rel="prev" title="Hello World">
+                  Hello World <i class="fa fa-chevron-right"></i>
+                </a>
             </div>
           </div>
       </footer>
@@ -442,7 +452,10 @@
         <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-csdn"></i>CSDN</a>
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
       </span>
   </div>
 
@@ -523,6 +536,56 @@
 
 
   
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
 
   
 
