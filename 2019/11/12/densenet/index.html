@@ -51,28 +51,26 @@
   };
 </script>
 
-  <meta name="description" content="论文名称：ShuffleNet: An Extremely Efficient Convolutional Neural Network for MobileDevices论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1707.01083摘要shuffleNet是face++在2017年提出，目的是提高深度模型的执行效率，可在移动端执行。">
+  <meta name="description" content="原文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1608.06993DenseNet原版代码：https:&#x2F;&#x2F;github.com&#x2F;liuzhuang13&#x2F;DenseNet如果出现图像或者公式显示不完整，可以访问如下博客：CSDN博客：http:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove&#x2F;article&#x2F;details&#x2F;79476475">
 <meta name="keywords" content="Deep Learning,Classification,Paper Reading">
 <meta property="og:type" content="article">
-<meta property="og:title" content="shuffleNet">
-<meta property="og:url" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2019&#x2F;11&#x2F;07&#x2F;shuffleNet&#x2F;index.html">
+<meta property="og:title" content="DenseNet">
+<meta property="og:url" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2019&#x2F;11&#x2F;12&#x2F;densenet&#x2F;index.html">
 <meta property="og:site_name" content="Spring&#39;s Idea">
-<meta property="og:description" content="论文名称：ShuffleNet: An Extremely Efficient Convolutional Neural Network for MobileDevices论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1707.01083摘要shuffleNet是face++在2017年提出，目的是提高深度模型的执行效率，可在移动端执行。">
+<meta property="og:description" content="原文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1608.06993DenseNet原版代码：https:&#x2F;&#x2F;github.com&#x2F;liuzhuang13&#x2F;DenseNet如果出现图像或者公式显示不完整，可以访问如下博客：CSDN博客：http:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove&#x2F;article&#x2F;details&#x2F;79476475">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1fu81twbwsqj208z065ac3.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1fu86xldurnj20wd0f0jt2.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1fu882ajbdnj20w10f60tz.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1fu890fyzz8j20w80f4tax.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1fu91rok7ldj20jm04wmxq.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1fu9254im8oj20jj06ggmg.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1fu928v6kghj20qw059t9g.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1fu92ah1scoj20ku08qwfq.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1fu94b13jf3j20qn06ct9z.jpg">
-<meta property="og:updated_time" content="2019-11-07T13:45:42.813Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20180306185904712?watermark&#x2F;2&#x2F;text&#x2F;aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=&#x2F;font&#x2F;5a6L5L2T&#x2F;fontsize&#x2F;400&#x2F;fill&#x2F;I0JBQkFCMA==&#x2F;dissolve&#x2F;70">
+<meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20180306200052989?watermark&#x2F;2&#x2F;text&#x2F;aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=&#x2F;font&#x2F;5a6L5L2T&#x2F;fontsize&#x2F;400&#x2F;fill&#x2F;I0JBQkFCMA==&#x2F;dissolve&#x2F;70">
+<meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20180306210121233?watermark&#x2F;2&#x2F;text&#x2F;aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=&#x2F;font&#x2F;5a6L5L2T&#x2F;fontsize&#x2F;400&#x2F;fill&#x2F;I0JBQkFCMA==&#x2F;dissolve&#x2F;70">
+<meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20180307193557492?watermark&#x2F;2&#x2F;text&#x2F;aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=&#x2F;font&#x2F;5a6L5L2T&#x2F;fontsize&#x2F;400&#x2F;fill&#x2F;I0JBQkFCMA==&#x2F;dissolve&#x2F;70">
+<meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20180307200059691?watermark&#x2F;2&#x2F;text&#x2F;aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=&#x2F;font&#x2F;5a6L5L2T&#x2F;fontsize&#x2F;400&#x2F;fill&#x2F;I0JBQkFCMA==&#x2F;dissolve&#x2F;70">
+<meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20180307202444623?watermark&#x2F;2&#x2F;text&#x2F;aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=&#x2F;font&#x2F;5a6L5L2T&#x2F;fontsize&#x2F;400&#x2F;fill&#x2F;I0JBQkFCMA==&#x2F;dissolve&#x2F;70">
+<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1frvio3hy1wj208t0muq3c.jpg">
+<meta property="og:updated_time" content="2019-11-12T14:27:02.115Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1fu81twbwsqj208z065ac3.jpg">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20180306185904712?watermark&#x2F;2&#x2F;text&#x2F;aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=&#x2F;font&#x2F;5a6L5L2T&#x2F;fontsize&#x2F;400&#x2F;fill&#x2F;I0JBQkFCMA==&#x2F;dissolve&#x2F;70">
 
-<link rel="canonical" href="https://www.wanglichun.tech/2019/11/07/shuffleNet/">
+<link rel="canonical" href="https://www.wanglichun.tech/2019/11/12/densenet/">
 
 
 <script id="page-configurations">
@@ -86,7 +84,7 @@
   };
 </script>
 
-  <title>shuffleNet | Spring's Idea</title>
+  <title>DenseNet | Spring's Idea</title>
   
 
 
@@ -214,7 +212,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/07/shuffleNet/">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/12/densenet/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.png">
@@ -227,7 +225,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          shuffleNet
+          DenseNet
         </h1>
 
         <div class="post-meta">
@@ -238,7 +236,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2019-11-07 08:33:19 / 修改时间：08:45:42" itemprop="dateCreated datePublished" datetime="2019-11-07T08:33:19-05:00">2019-11-07</time>
+              <time title="创建时间：2019-11-12 09:22:23 / 修改时间：09:27:02" itemprop="dateCreated datePublished" datetime="2019-11-12T09:22:23-05:00">2019-11-12</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -253,7 +251,7 @@
             </span>
 
           
-            <span id="/2019/11/07/shuffleNet/" class="post-meta-item leancloud_visitors" data-flag-title="shuffleNet" title="阅读次数">
+            <span id="/2019/11/12/densenet/" class="post-meta-item leancloud_visitors" data-flag-title="DenseNet" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -268,8 +266,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2019/11/07/shuffleNet/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/07/shuffleNet/" itemprop="commentCount"></span>
+    <a title="valine" href="/2019/11/12/densenet/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/12/densenet/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -284,53 +282,60 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><strong>论文名称：ShuffleNet: An Extremely Efficient Convolutional Neural Network for Mobile<br>Devices</strong></p><p><a href="https://arxiv.org/abs/1707.01083" target="_blank" rel="noopener">论文链接：https://arxiv.org/abs/1707.01083</a></p><h5 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h5><p>shuffleNet是face++在2017年提出，目的是提高深度模型的执行效率，可在移动端执行。</p><a id="more"></a>
+        <p><a href="https://arxiv.org/abs/1608.06993" target="_blank" rel="noopener">原文链接：https://arxiv.org/abs/1608.06993</a></p><p><a href="https://github.com/liuzhuang13/DenseNet" target="_blank" rel="noopener">DenseNet原版代码：https://github.com/liuzhuang13/DenseNet</a></p><p><strong>如果出现图像或者公式显示不完整，可以访问如下博客：</strong></p><p><a href="http://blog.csdn.net/Chunfengyanyulove/article/details/79476475" target="_blank" rel="noopener">CSDN博客：http://blog.csdn.net/Chunfengyanyulove/article/details/79476475</a></p><a id="more"></a>
 
 
-<p>我们知道深度学习网络在包括图像识别等多个领域发展迅速，但是随着模型的深度越来越深，模型的参数量越来越大，现如今模型一般都跑的GPU上面，那么如何能在嵌入式或者移动端使用深度学习也是目前研究比较多的领域，shufflenet便是其中一个成果。<strong>shuffleNet主要有两个创新点：（1）pointwise group convolution，（2）channel shuffle。</strong></p>
-<p><strong>在模型效果方面，作者通过实验证明，在ImageNet classfication任务中，shuffleNet相比较于mobileNet，top-1的错误率降低了7.8个百分点。另外在移动端，在相同的精度下，shuffleNet的速度是alexNet的13倍。</strong></p>
-<p><strong>与shuffleNet相关的两个网络，一个是Xception，一个是MobileNet，有兴趣的读者可以看一下这两个网络</strong></p>
-<h5 id="shuffleNet策略之一：分组卷积"><a href="#shuffleNet策略之一：分组卷积" class="headerlink" title="shuffleNet策略之一：分组卷积"></a>shuffleNet策略之一：分组卷积</h5><p>为了提高网络的效率，除了<strong>剪枝、量化</strong>等手段，另一个主要的手段便是在网络设计阶段在保证精度的情况下减少一定的网络参数量，分组卷积便是这样的一个手段，<strong>这里解释一下什么是分组卷积，举个例子，比如你的特征图有64个channel，分成2个组，每个组的32个特征图分别处理，得到结果之后再进行合并，这就是分组卷积了，另外补充一个，depthwise separable convolution是分组卷积的一个特例，其就是特征图有几个channel，我就分为几个组，保证每个组只有一个特征图进行处理，这是在mobileNet中提出的，shuffleNet用到了分组卷积以及depthwise separable convolution</strong>。其实分组卷积在alexnet中便被使用，当时受限于GPU的显存，alex将网络分别在两个GPU上同时训练，另一个比较火的分组卷积网络便是resneXt，resneXt通过分组卷积，比resnet精度提高了一些，但是resneXt的分组卷积也有一个缺点：<strong>dense 1*1卷积耗费了大量的计算，占到了总计算量的93.3%</strong>，怎么计算出来的呢？下面说明一下：</p>
-<p>首先明确一下resnext一个unit的网络结构：如下图：</p>
-<p>下面我们假设输入的特征图大小为d*d，来计算一下该网络结构的计算量：首先对于最上面的降维:$256*1*d*d*4$,中间的计算量为：$4*3*3*d*d*4$,最后的输出的计算量为：$4*1*1*d*d*256$,则最终pointwise所占的计算量为：$\frac{256*1*1*d*d*4*2}{256*1*1*d*d*4*2+4*3*3*d*d*4}$ = $\frac{14}{15}$ =93.3%,由此可见，如果1*1降维太多的话（channel数减少太多），1*1卷积网络的参数量就占bottleneck主导地位了。</p>
-<p><strong>注：分组卷积，比如原来是128维，3*3后变仍为128维，通过分组卷积分为32组，那就是输入4维，输出仍为4维，并不是输入为4维输出为128维，如果是128维，那跟没分组也没啥区别了，笔者在这就搞晕了，算了半天也不对</strong></p>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fu81twbwsqj208z065ac3.jpg" alt="resneXt unit结构"></p>
-<h5 id="shuffleNet是怎么操作的呢？"><a href="#shuffleNet是怎么操作的呢？" class="headerlink" title="shuffleNet是怎么操作的呢？"></a>shuffleNet是怎么操作的呢？</h5><p>首先，为了解决1*1卷积在分组unit中计算量占比较大，作者提出在1*1卷积中同样使用分组卷积，但是这样会带来一个问题，就是组内的channel之间的相关性很弱，那怎么解决这个问题呢？作者提出了使用shuffle操作，来帮助信息在不同的channel间进行流动。如下图（a）就是单纯的对1*1卷积（pointwise conv）进行分组操作，根据不同的颜色可以发现，其实不同组之间没有交集，图（b，c）显示利用shuffle操作，增加不同channel之间的关联性。<strong>具体怎么操作呢？假设，我们将卷积层分为g组每组n个channel，则共有g*n个channel，（b,g*n,h,w）,首先reshape成（b,g，n,h,w）然后transpose为（b,n,g,h,w）,shuffle后在reshape成（b,n*g,h,w）</strong>，<strong>channel是可微的，可以嵌入到end-to-end网络中</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">channel_shuffle</span><span class="params">(data, groups)</span>:</span></span><br><span class="line">	data = mx.sym.reshape(data, shape=(<span class="number">0</span>, <span class="number">-4</span>, groups, <span class="number">-1</span>, <span class="number">-2</span>))</span><br><span class="line">	data = mx.sym.swapaxes(data, <span class="number">1</span>, <span class="number">2</span>) <span class="comment"># </span></span><br><span class="line">	data = mx.sym.reshape(data, shape=(<span class="number">0</span>, <span class="number">-3</span>, <span class="number">-2</span>))</span><br><span class="line">	<span class="keyword">return</span> data</span><br></pre></td></tr></table></figure>
 
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fu86xldurnj20wd0f0jt2.jpg" alt></p>
-<p>基于此，作者设计网络如下：</p>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fu882ajbdnj20w10f60tz.jpg" alt></p>
-<p>作者首先设计了bottleneck unit如下图（a）,作者使用3*3的depthwise convolution，然后，利用group conv替换了pointwise group convolution，在其后增加了channel shuffle operation操作，如下图（b）所示</p>
-<p><strong>shuffleNet实际上就是对resnext的1*1的pointwise-conv进行分组卷积，进一步降低参数量，然后采用Depth-wise-conv进行卷积（同样有效减少参数量），最后再使用分组卷积进行1*1的的计算，并且在最终的输出上采用concat进行叠加</strong></p>
-<p><strong>特别说明，作者使用了BN层，但是在最后的BN后面没有使用relu，这点也是Xception以及mobileNet v2所介绍的</strong></p>
-<p>另外为了增加stride操作，作者这里做了2个改变（i）增加了3*3的average pooling在shortcut上面，（ii）shortcut的相加变为了相乘，使得channel增加。</p>
-<p>下面是shuffleNet每个unit的计算量的对比：(其中c代表输入channel,m代表输出channel，g代表分组卷积组数)</p>
-<p>resnet: $h*w*c*1*1*m*2 + h*w*m*3*3*m$</p>
-<p>resneXt: $h*w*c*1*1*m/g*g*2 + h*w*m/g*3*3*m/g*g$</p>
-<p>shuffleNet: $h*w*c/g*1*1*m/g*g*2 + h*w*m/g*3*3*1*g$</p>
-<p>化简的结果,可见shuffleNet的计算量小了很多：</p>
-<p>resnet: $hw(2cm+9m^{2})$</p>
-<p>resneXt: $hw(2cm+9m^2/g)$</p>
-<p>shuffleNet: $hw(2cm/g+9m)$</p>
-<p>shuffleNet网络详细结构图如下：</p>
-<p>在每个Stage中的一个block设置stride=2,来减少特征图的大小，其他的保持特征图大小不变，bottleneck中channel输出为输入的1/4,下图table中显示了不同的group的结果，<br><img src="http://ww1.sinaimg.cn/large/87675bbbly1fu890fyzz8j20w80f4tax.jpg" alt></p>
-<h5 id="对比实验"><a href="#对比实验" class="headerlink" title="对比实验"></a>对比实验</h5><p>1.首先针对Pointwise Group</p>
-<p>Convolutions的效果如下图所示：【其中0.5*代表channel数为原来的0.5倍】</p>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fu91rok7ldj20jm04wmxq.jpg" alt></p>
-<p>可见group的增加对模型的效果有一定的提升，并且实验证明，channel的增加有利于模型精度。</p>
-<p>2.针对channel shuffle的作用：</p>
-<p>根据下表可以观察到，shuffle效果还是比较明显的</p>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fu9254im8oj20jj06ggmg.jpg" alt></p>
-<p>3.与其他unit的对比：</p>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fu928v6kghj20qw059t9g.jpg" alt></p>
-<ol start="4">
-<li>与mobileNet的对比</li>
-</ol>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fu92ah1scoj20ku08qwfq.jpg" alt></p>
-<p>最后作者在mobile中进行上实验，发现group取3是精度与效率的trade-off，与不同的网络对于结果如下：</p>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fu94b13jf3j20qn06ct9z.jpg" alt></p>
-<p>可见shuffleNet的效率还是杠杠滴</p>
+<p><strong>创新点：DenseNet作为2017CVPR最佳论文，其在ResNet基础上，提出了更优秀的shortcut方式，Dense Connection 不仅能使得feature更加强健，还能带来更快的收敛速度。并且DenseNet具有比ResNet更少的参数，在测试时具有更快的速度</strong></p>
+<h3 id="1、简介"><a href="#1、简介" class="headerlink" title="1、简介"></a>1、简介</h3><p>在传统的ResNet中，layer与layer之间具有L个connection，DenseNet在ResNet的shorter connection的基础上，在每个Layer之间均加入shorter connection，共包含</p>
+<p>$$\frac{L(L+1)}{2}$$</p>
+<p>个连接。如下图1所示。<br>不同于ResNet，DenseNet采用concatenation的方式进行特征图的叠加，而ResNet采用相加的方式进行叠加。<br>DenseNet 特征重用，使得denseNet更容易去训练，具有更高的效率。<br><img src="http://img.blog.csdn.net/20180306185904712?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<center>图1，5layers dense block</center>
+
+<p>DenseNet需要更少的参数，<br>作者指出，最近对ResNet的研究表明，ResNet的很多层在训练的过程中贡献较小，甚至可以随机的丢弃一些层，并且ResNet的参数量较大，说明ResNet其实寻找一定的冗余性，基于此，作者提出设计DenseNet，DenseNet网络中的每一层都直接与其前面层相连，实现特征的重复利用；同时把网络的每一层设计得特别窄，即只学习非常少的特征图，达到降低冗余性的目的。</p>
+<ul>
+<li>DenseNet改善了图像信息以及梯度在网络中的传递，使得训练更加容易。</li>
+<li>Dense Connection具有正则化效果，可以降低小训练集上的过拟合。</li>
+</ul>
+<h3 id="2、DenseNet"><a href="#2、DenseNet" class="headerlink" title="2、DenseNet"></a>2、DenseNet</h3><p><strong>Dense Connectivity</strong></p>
+<p>Resnet:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x_l=H_l(x_&#123;l-1&#125;)+x_&#123;l-1&#125;</span><br></pre></td></tr></table></figure>
+
+<p>DenseNet:</p>
+<p>$$x_l=H_l([x_0,x_1,…,x_{l-1}])$$</p>
+<p><strong>composite function</strong></p>
+<p>BN-ReLU-Conv(3*3)</p>
+<p><strong>pooling layers</strong></p>
+<p>当特征图大小发生变化时候，便无法进行特征图的concatenation操作，因此DenseNet采用block结构，block结构之间设计为BN-Conv(1*1)-Average Pooling(2*2)，可利用Conv(1*1)进行模型压缩。<br>结构如下图所示：</p>
+<p><img src="http://img.blog.csdn.net/20180306200052989?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p><strong>Growth rate</strong><br>由于DenseNet采用的是concatenation的连接方式，如果每层产生k个feature maps，则将会产生</p>
+<p>$$k*(l-1)+k_0$$</p>
+<p>个特征图，为了防止网络变得很宽，k需要被限制为一个较小的数，作者将k称作growth rate。</p>
+<p><strong>bottleneck layers</strong><br>同样为了降低网络的宽度，DenseNet同样利用1*1卷积进行降维，Dense Block被设计为：<br>DenseNet-B结构：BN-ReLU-Conv(1*1)-BN-ReLU-Conv(3*3)<br>其中1*1的filter-num为growth rate 的 4倍<br>3*3的filter-num为growth rate</p>
+<p><strong>Compression</strong><br>在block之间，可以利用卷积进行模型维度压缩，在本文实验中，作者设置压缩比例为0.5。</p>
+<p>block之间的channels变换：<br>n_channels += units[i]*growth_rate</p>
+<p>compression进行模型压缩的channel变化：<br>n_channels =int(math.floor(n_channels*reduction))</p>
+<p><strong>模型详细描述如下：</strong><br><img src="http://img.blog.csdn.net/20180306210121233?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<h3 id="4-实验"><a href="#4-实验" class="headerlink" title="4.实验"></a>4.实验</h3><p>作者首先在CIFAR SVHN ImageNet进行分类实验。</p>
+<p><strong>CIFAR 与 SVHN</strong><br>实验结果如下图所示：</p>
+<ul>
+<li>实验表明，在Accuracy中，DenseNet表现非常好，DenseNet-BC(L=190 and k=40)在多个数据集中均具有最好的表现，并且通过实验可以发现，随着DenseNet模型容量的增加，模型的精度有提升。</li>
+<li>通过实验可以看出，DenseNet的参数数量较少，说明DenseNet模型参数具有更高的有效性。</li>
+<li>DenseNet不容易过拟合</li>
+</ul>
+<p><img src="http://img.blog.csdn.net/20180307193557492?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p><strong>ImageNet</strong></p>
+<p>如下图为ResNet与DenseNet在ImageNet上的实验对比图，作者采用近乎相同的参数配置进行实验，从实验结果如下，左图是在不同的parameters下的实验结果，右图为不同flops下实验的结果。对比可见，DenseNet的优越性。</p>
+<p><img src="http://img.blog.csdn.net/20180307200059691?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p>还有一个自然而然的问题就是，这么多的密集连接，是不是全部都是必要的，有没有可能去掉一些也不会影响网络的性能？论文里面有一个热力图（heatmap），直观上刻画了各个连接的强度。从图中可以观察到网络中比较靠后的层确实也会用到非常浅层的特征。</p>
+<p><img src="http://img.blog.csdn.net/20180307202444623?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<hr>
+<p>20180601补充</p>
+<p>densenet 网络结构图：</p>
+<p>从该图可以发现，其实densenet的单个结构，类似于将resnet的element-wise sum 变换成为了concat操作，这样带来的一个问题自然是网络特征图的厚度增加会比较明显，所以，作者采用了较小的特征图的维度进行增加，所以densenet初始的number-out就比较小，</p>
+<p>如果采用bottle-neck操作，每个block中1*1的卷积和的数量是growth_rate的4倍，估计可能是提高维度会取得较好效果吧，一般bottle-neck在网络层数较深的时候使用。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1frvio3hy1wj208t0muq3c.jpg" alt></p>
+<p><a href="https://github.com/bruinxiong/densenet.mxnet/blob/master/symbol_densenet.py" target="_blank" rel="noopener">mxnet,实现代码链接</a></p>
 
     </div>
 
@@ -349,16 +354,16 @@
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2019/11/07/cplusplus/" rel="next" title="C++面试-知识点总结">
-                  <i class="fa fa-chevron-left"></i> C++面试-知识点总结
+                <a href="/2019/11/12/resnext/" rel="next" title="ResNeXt：Aggregated Residual Transformations for Deep Neural Networks">
+                  <i class="fa fa-chevron-left"></i> ResNeXt：Aggregated Residual Transformations for Deep Neural Networks
                 </a>
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-                <a href="/2019/11/07/shuffleNet-v2/" rel="prev" title="shuffleNet V2">
-                  shuffleNet V2 <i class="fa fa-chevron-right"></i>
+                <a href="/2019/11/12/dpn/" rel="prev" title="DPN">
+                  DPN <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -399,7 +404,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#摘要"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#shuffleNet策略之一：分组卷积"><span class="nav-number">2.</span> <span class="nav-text">shuffleNet策略之一：分组卷积</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#shuffleNet是怎么操作的呢？"><span class="nav-number">3.</span> <span class="nav-text">shuffleNet是怎么操作的呢？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#对比实验"><span class="nav-number">4.</span> <span class="nav-text">对比实验</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、简介"><span class="nav-number">1.</span> <span class="nav-text">1、简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、DenseNet"><span class="nav-number">2.</span> <span class="nav-text">2、DenseNet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-实验"><span class="nav-number">3.</span> <span class="nav-text">4.实验</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
