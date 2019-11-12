@@ -66,7 +66,7 @@
 <meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20180307200059691?watermark&#x2F;2&#x2F;text&#x2F;aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=&#x2F;font&#x2F;5a6L5L2T&#x2F;fontsize&#x2F;400&#x2F;fill&#x2F;I0JBQkFCMA==&#x2F;dissolve&#x2F;70">
 <meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20180307202444623?watermark&#x2F;2&#x2F;text&#x2F;aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=&#x2F;font&#x2F;5a6L5L2T&#x2F;fontsize&#x2F;400&#x2F;fill&#x2F;I0JBQkFCMA==&#x2F;dissolve&#x2F;70">
 <meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1frvio3hy1wj208t0muq3c.jpg">
-<meta property="og:updated_time" content="2019-11-12T14:27:02.115Z">
+<meta property="og:updated_time" content="2019-11-12T14:31:43.224Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20180306185904712?watermark&#x2F;2&#x2F;text&#x2F;aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=&#x2F;font&#x2F;5a6L5L2T&#x2F;fontsize&#x2F;400&#x2F;fill&#x2F;I0JBQkFCMA==&#x2F;dissolve&#x2F;70">
 
@@ -236,7 +236,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2019-11-12 09:22:23 / 修改时间：09:27:02" itemprop="dateCreated datePublished" datetime="2019-11-12T09:22:23-05:00">2019-11-12</time>
+              <time title="创建时间：2019-11-12 09:22:23 / 修改时间：09:31:43" itemprop="dateCreated datePublished" datetime="2019-11-12T09:22:23-05:00">2019-11-12</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -287,7 +287,7 @@
 
 
 <p><strong>创新点：DenseNet作为2017CVPR最佳论文，其在ResNet基础上，提出了更优秀的shortcut方式，Dense Connection 不仅能使得feature更加强健，还能带来更快的收敛速度。并且DenseNet具有比ResNet更少的参数，在测试时具有更快的速度</strong></p>
-<h3 id="1、简介"><a href="#1、简介" class="headerlink" title="1、简介"></a>1、简介</h3><p>在传统的ResNet中，layer与layer之间具有L个connection，DenseNet在ResNet的shorter connection的基础上，在每个Layer之间均加入shorter connection，共包含</p>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>在传统的ResNet中，layer与layer之间具有L个connection，DenseNet在ResNet的shorter connection的基础上，在每个Layer之间均加入shorter connection，共包含</p>
 <p>$$\frac{L(L+1)}{2}$$</p>
 <p>个连接。如下图1所示。<br>不同于ResNet，DenseNet采用concatenation的方式进行特征图的叠加，而ResNet采用相加的方式进行叠加。<br>DenseNet 特征重用，使得denseNet更容易去训练，具有更高的效率。<br><img src="http://img.blog.csdn.net/20180306185904712?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
 <center>图1，5layers dense block</center>
@@ -297,10 +297,9 @@
 <li>DenseNet改善了图像信息以及梯度在网络中的传递，使得训练更加容易。</li>
 <li>Dense Connection具有正则化效果，可以降低小训练集上的过拟合。</li>
 </ul>
-<h3 id="2、DenseNet"><a href="#2、DenseNet" class="headerlink" title="2、DenseNet"></a>2、DenseNet</h3><p><strong>Dense Connectivity</strong></p>
+<h3 id="DenseNet"><a href="#DenseNet" class="headerlink" title="DenseNet"></a>DenseNet</h3><p><strong>Dense Connectivity</strong></p>
 <p>Resnet:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x_l=H_l(x_&#123;l-1&#125;)+x_&#123;l-1&#125;</span><br></pre></td></tr></table></figure>
-
+<p>$$x_l=H_l(x_{l-1})+x_{l-1}$$</p>
 <p>DenseNet:</p>
 <p>$$x_l=H_l([x_0,x_1,…,x_{l-1}])$$</p>
 <p><strong>composite function</strong></p>
@@ -316,7 +315,7 @@
 <p>block之间的channels变换：<br>n_channels += units[i]*growth_rate</p>
 <p>compression进行模型压缩的channel变化：<br>n_channels =int(math.floor(n_channels*reduction))</p>
 <p><strong>模型详细描述如下：</strong><br><img src="http://img.blog.csdn.net/20180306210121233?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
-<h3 id="4-实验"><a href="#4-实验" class="headerlink" title="4.实验"></a>4.实验</h3><p>作者首先在CIFAR SVHN ImageNet进行分类实验。</p>
+<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><p>作者首先在CIFAR SVHN ImageNet进行分类实验。</p>
 <p><strong>CIFAR 与 SVHN</strong><br>实验结果如下图所示：</p>
 <ul>
 <li>实验表明，在Accuracy中，DenseNet表现非常好，DenseNet-BC(L=190 and k=40)在多个数据集中均具有最好的表现，并且通过实验可以发现，随着DenseNet模型容量的增加，模型的精度有提升。</li>
@@ -330,8 +329,7 @@
 <p>还有一个自然而然的问题就是，这么多的密集连接，是不是全部都是必要的，有没有可能去掉一些也不会影响网络的性能？论文里面有一个热力图（heatmap），直观上刻画了各个连接的强度。从图中可以观察到网络中比较靠后的层确实也会用到非常浅层的特征。</p>
 <p><img src="http://img.blog.csdn.net/20180307202444623?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
 <hr>
-<p>20180601补充</p>
-<p>densenet 网络结构图：</p>
+<h3 id="20180601补充"><a href="#20180601补充" class="headerlink" title="20180601补充"></a>20180601补充</h3><p>densenet 网络结构图：</p>
 <p>从该图可以发现，其实densenet的单个结构，类似于将resnet的element-wise sum 变换成为了concat操作，这样带来的一个问题自然是网络特征图的厚度增加会比较明显，所以，作者采用了较小的特征图的维度进行增加，所以densenet初始的number-out就比较小，</p>
 <p>如果采用bottle-neck操作，每个block中1*1的卷积和的数量是growth_rate的4倍，估计可能是提高维度会取得较好效果吧，一般bottle-neck在网络层数较深的时候使用。</p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1frvio3hy1wj208t0muq3c.jpg" alt></p>
@@ -404,7 +402,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、简介"><span class="nav-number">1.</span> <span class="nav-text">1、简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、DenseNet"><span class="nav-number">2.</span> <span class="nav-text">2、DenseNet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-实验"><span class="nav-number">3.</span> <span class="nav-text">4.实验</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DenseNet"><span class="nav-number">2.</span> <span class="nav-text">DenseNet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验"><span class="nav-number">3.</span> <span class="nav-text">实验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#20180601补充"><span class="nav-number">4.</span> <span class="nav-text">20180601补充</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
