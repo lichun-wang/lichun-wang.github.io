@@ -51,21 +51,24 @@
   };
 </script>
 
-  <meta name="description" content="SIFT原理：参考链接：http:&#x2F;&#x2F;blog.csdn.net&#x2F;zddblog&#x2F;article&#x2F;details&#x2F;7521424关键点理解 二维高斯模糊：SIFT算法是在不同的尺度空间上查找关键点，而尺度空间的获取需要使用高斯模糊来实现，Lindeberg等人已证明高斯卷积核是实现尺度变换的唯一变换核，并且是唯一的线性核。 尺度空间在实现时使用高斯金字塔表示 对图像做不同尺度的高斯模糊； 对图像做">
-<meta name="keywords" content="Image Processing">
+  <meta name="description" content="目标检测中的小目标的检测一直是一个难题，同样也有很多方法被提出来优化小目标的识别，使用图像金字塔进行多尺度检测是一个比较常用的方法，但是使用图像金字塔往往会带来巨大的资源消耗，本篇文章就针对这个问题，提出了一个解决利用图像金字塔进行多尺度训练时间长、资源消耗大的方法，其在SNIP的方法上发展而来，通过采样多个chips,并将chips缩放到相同的尺度（这点有点像RCNN）进行训练，不仅仅实现了多">
+<meta name="keywords" content="目标检测">
 <meta property="og:type" content="article">
-<meta property="og:title" content="图像特征点检测方法总结">
-<meta property="og:url" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2019&#x2F;11&#x2F;07&#x2F;image-feature&#x2F;index.html">
+<meta property="og:title" content="SNIPER(Efficient Multi-Scale Training)">
+<meta property="og:url" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2019&#x2F;11&#x2F;20&#x2F;snipper&#x2F;index.html">
 <meta property="og:site_name" content="Spring&#39;s Idea">
-<meta property="og:description" content="SIFT原理：参考链接：http:&#x2F;&#x2F;blog.csdn.net&#x2F;zddblog&#x2F;article&#x2F;details&#x2F;7521424关键点理解 二维高斯模糊：SIFT算法是在不同的尺度空间上查找关键点，而尺度空间的获取需要使用高斯模糊来实现，Lindeberg等人已证明高斯卷积核是实现尺度变换的唯一变换核，并且是唯一的线性核。 尺度空间在实现时使用高斯金字塔表示 对图像做不同尺度的高斯模糊； 对图像做">
+<meta property="og:description" content="目标检测中的小目标的检测一直是一个难题，同样也有很多方法被提出来优化小目标的识别，使用图像金字塔进行多尺度检测是一个比较常用的方法，但是使用图像金字塔往往会带来巨大的资源消耗，本篇文章就针对这个问题，提出了一个解决利用图像金字塔进行多尺度训练时间长、资源消耗大的方法，其在SNIP的方法上发展而来，通过采样多个chips,并将chips缩放到相同的尺度（这点有点像RCNN）进行训练，不仅仅实现了多">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20150507154003000?watermark&#x2F;2&#x2F;text&#x2F;aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdGlhbmRpanVu&#x2F;font&#x2F;5a6L5L2T&#x2F;fontsize&#x2F;400&#x2F;fill&#x2F;I0JBQkFCMA==&#x2F;dissolve&#x2F;70&#x2F;gravity&#x2F;Center">
-<meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20150807151120252">
-<meta property="og:updated_time" content="2019-11-07T14:01:20.379Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1g12f3fkf1ij20lk0bwqej.jpg">
+<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1g12g7s9iq0j20ld0b9167.jpg">
+<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1g12j6y40kuj20ls043dgl.jpg">
+<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1g12j97dj6cj20le04x0tp.jpg">
+<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1g12k08fdzwj20li09tq5p.jpg">
+<meta property="og:updated_time" content="2019-11-20T14:50:38.646Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20150507154003000?watermark&#x2F;2&#x2F;text&#x2F;aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdGlhbmRpanVu&#x2F;font&#x2F;5a6L5L2T&#x2F;fontsize&#x2F;400&#x2F;fill&#x2F;I0JBQkFCMA==&#x2F;dissolve&#x2F;70&#x2F;gravity&#x2F;Center">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1g12f3fkf1ij20lk0bwqej.jpg">
 
-<link rel="canonical" href="https://www.wanglichun.tech/2019/11/07/image-feature/">
+<link rel="canonical" href="https://www.wanglichun.tech/2019/11/20/snipper/">
 
 
 <script id="page-configurations">
@@ -79,7 +82,7 @@
   };
 </script>
 
-  <title>图像特征点检测方法总结 | Spring's Idea</title>
+  <title>SNIPER(Efficient Multi-Scale Training) | Spring's Idea</title>
   
 
 
@@ -207,7 +210,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/07/image-feature/">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/20/snipper/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.png">
@@ -220,7 +223,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          图像特征点检测方法总结
+          SNIPER(Efficient Multi-Scale Training)
         </h1>
 
         <div class="post-meta">
@@ -231,7 +234,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2019-11-07 08:47:29 / 修改时间：09:01:20" itemprop="dateCreated datePublished" datetime="2019-11-07T08:47:29-05:00">2019-11-07</time>
+              <time title="创建时间：2019-11-20 09:39:26 / 修改时间：09:50:38" itemprop="dateCreated datePublished" datetime="2019-11-20T09:39:26-05:00">2019-11-20</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -239,14 +242,14 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Image-Processing/" itemprop="url" rel="index">
-                    <span itemprop="name">Image Processing</span>
+                  <a href="/categories/Papers/" itemprop="url" rel="index">
+                    <span itemprop="name">Papers</span>
                   </a>
                 </span>
             </span>
 
           
-            <span id="/2019/11/07/image-feature/" class="post-meta-item leancloud_visitors" data-flag-title="图像特征点检测方法总结" title="阅读次数">
+            <span id="/2019/11/20/snipper/" class="post-meta-item leancloud_visitors" data-flag-title="SNIPER(Efficient Multi-Scale Training)" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -261,8 +264,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2019/11/07/image-feature/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/07/image-feature/" itemprop="commentCount"></span>
+    <a title="valine" href="/2019/11/20/snipper/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/20/snipper/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -277,75 +280,46 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="SIFT原理："><a href="#SIFT原理：" class="headerlink" title="SIFT原理："></a>SIFT原理：</h3><p>参考链接：<a href="http://blog.csdn.net/zddblog/article/details/7521424" target="_blank" rel="noopener">http://blog.csdn.net/zddblog/article/details/7521424</a></p><h4 id="关键点理解"><a href="#关键点理解" class="headerlink" title="关键点理解"></a>关键点理解</h4><ul>
-<li><strong>二维高斯模糊</strong>：SIFT算法是在不同的尺度空间上查找关键点，而尺度空间的获取需要使用高斯模糊来实现，Lindeberg等人已证明高斯卷积核是实现尺度变换的唯一变换核，并且是唯一的线性核。</li>
-<li><strong>尺度空间在实现时使用高斯金字塔表示</strong><ol>
-<li>对图像做不同尺度的高斯模糊；</li>
-<li>对图像做降采样(隔点采样)。</li>
-</ol>
-</li>
-<li><strong>高斯差分近似实现高斯拉普拉斯变换</strong>：多尺度相减等效拉普拉斯</li>
-<li><strong>利用相邻差分图像，求取极值点</strong></li>
-<li><strong>DOG金字塔存在-1层</strong> :防止丢掉最高层采样率,即图像本身</li>
-<li><strong>关键点定位</strong>：<ol>
-<li>关键点检测</li>
-<li>消除边缘相应：利用Hessian矩阵（<strong>Hessian矩阵可用来求极值点，正定为极小值，负定为极大值，有正有负为鞍点</strong>）</li>
-</ol>
-</li>
-<li><strong>特征描述子生成</strong><ol>
-<li>根据每个特征点所在的高斯尺度（sigma）,确定梯度方向计算半径。</li>
-<li>在半径内找到4<em>4</em>8个特征描述子。</li>
-<li>特征描述子就是梯度方向以及大小。</li>
-</ol>
-</li>
-</ul><a id="more"></a>
-
-<h3 id="Surf原理："><a href="#Surf原理：" class="headerlink" title="Surf原理："></a>Surf原理：</h3><p>参考链接：<a href="http://blog.csdn.net/tostq/article/details/49472709" target="_blank" rel="noopener">http://blog.csdn.net/tostq/article/details/49472709</a></p>
-<h3 id="Harris角点检测："><a href="#Harris角点检测：" class="headerlink" title="Harris角点检测："></a>Harris角点检测：</h3><p>参考链接：<a href="http://www.360doc.com/content/15/1212/23/20007814_519967668.shtml" target="_blank" rel="noopener">http://www.360doc.com/content/15/1212/23/20007814_519967668.shtml</a> </p>
-<h4 id="关键点理解-1"><a href="#关键点理解-1" class="headerlink" title="关键点理解"></a>关键点理解</h4><ul>
-<li>滑动窗口，向不同方向滑动，灰度变化较大，则证明是角点。</li>
-<li>利用泰勒展开式，详情公示看参考链接</li>
-<li>转化二次函数，<strong>矩阵M的特征值为椭圆长轴短轴长度</strong>:<blockquote>
-<ul>
-<li>如果α，β都很小，说明高斯windows中的图像接近平坦。  </li>
-<li>如果一个大一个小，则表示检测到边。 </li>
-<li>如果α，β都很大，那么表示检测到了角点。</li>
-</ul>
-</blockquote>
-</li>
-</ul>
-<h3 id="颜色特征："><a href="#颜色特征：" class="headerlink" title="颜色特征："></a>颜色特征：</h3><p>参考链接:<a href="http://blog.csdn.net/tiandijun/article/details/45562163" target="_blank" rel="noopener">http://blog.csdn.net/tiandijun/article/details/45562163</a></p>
-<h4 id="颜色直方图"><a href="#颜色直方图" class="headerlink" title="颜色直方图"></a>颜色直方图</h4><ul>
-<li>用颜色空间三个分量的剥离得到颜色直方图，之后通过观察实验数据发现将图像进行旋转变换、缩放变换、模糊变换后图像的颜色直方图改变不大，即图像直方图对图像的物理变换是不敏感的。因此常提取颜色特征并用颜色直方图应用于衡量和比较两幅图像的全局差。另外，如果图像可以分为多个区域，并且前景与背景颜色分布具有明显差异，则颜色直方图呈现双峰形。</li>
-<li>颜色直方图也有其缺点：由于颜色直方图是全局颜色统计的结果，因此丢失了像素点间的位置特征。可能有几幅图像具有相同或相近的颜色直方图，但其图像像素位置分布完全不同。因此，图像与颜色直方图得多对一关系使得颜色直方图在识别前景物体上不能获得很好的效果。  </li>
-</ul>
-<h4 id="颜色矩"><a href="#颜色矩" class="headerlink" title="颜色矩"></a>颜色矩</h4><ul>
-<li>颜色矩是一种有效的颜色特征，由Stricker和Orengo提出[41]，该方法利用线性代数中矩的概念，将图像中的颜色分布用其矩表示。利用颜色一阶矩（平均值Average）、颜色二阶矩（方差Variance）和颜色三阶矩（偏斜度Skewness）来描述颜色分布。与颜色直方图不同，利用颜色矩进行图像描述无需量化图像特征。由于每个像素具有颜色空间的三个颜色通道，因此图像的颜色矩有9个分量来描述。由于颜色矩的维度较少，因此常将颜色矩与其他图像特征综合使用。</li>
-</ul>
-<h3 id="纹理特征（LBP特征）"><a href="#纹理特征（LBP特征）" class="headerlink" title="纹理特征（LBP特征）"></a>纹理特征（LBP特征）</h3><p>参考链接：<a href="http://blog.csdn.net/tiandijun/article/details/45561981" target="_blank" rel="noopener">http://blog.csdn.net/tiandijun/article/details/45561981</a>     </p>
-<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>原始的LBP算子定义为在3*3的窗口内，以窗口中心像素为阈值，将相邻的8个像素的灰度值与其进行比较，若周围像素值大于中心像素值，则该像素点的位置被标记为1，否则为0。这样，3*3邻域内的8个点经比较可产生8位二进制数（<strong>通常转换为十进制数即LBP码，共256种</strong>），即得到该窗口中心像素点的LBP值，并用这个值来反映该区域的纹理信息。如下图所示：<br><img src="http://img.blog.csdn.net/20150507154003000?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdGlhbmRpanVu/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="LBP">  </p>
-<h4 id="LBP算法步骤"><a href="#LBP算法步骤" class="headerlink" title="LBP算法步骤"></a>LBP算法步骤</h4><ul>
-<li>1.用3*3的模板对图像每个像素进行处理，比较当前像素和周围像素的大小，将大于当前像素的置1，小于的置0。</li>
-<li>2.对这周围八个像素进行编码，这八个0和1正好是可以组成一个byte数，然后按一定的规则组成这个无符号数。</li>
-<li>3.把这个数赋值给当前像素。</li>
-<li>4.通常对处理后的图像进行区域划分，比如分成4<em>4 、10\</em>10或16*16的区域，对每个区域求得直方图，得到16、100或256个直方图。（划分都不是固定的）</li>
-<li>5.这些直方图就是特征了，可以根据需要任意使用了。</li>
-</ul>
-<h3 id="HOG特征"><a href="#HOG特征" class="headerlink" title="HOG特征"></a>HOG特征</h3><p>参考链接：<a href="http://blog.csdn.net/hujingshuang/article/details/47337707/" target="_blank" rel="noopener">http://blog.csdn.net/hujingshuang/article/details/47337707/</a></p>
-<h4 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h4><p>是一种用于表征图像局部梯度方向和梯度强度分布特性的描述符。其主要思想是：在边缘具体位置未知的情况下，边缘方向的分布也可以很好的表示行人目标的外形轮廓。Dalal等提出的HOG+SVM算法，在进行行人检测取得了极大地成功后，更多新算法不断涌现，不过大都是以HOG+SVM的思路为主线。</p>
-<h4 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h4><h5 id="颜色空间归一化"><a href="#颜色空间归一化" class="headerlink" title="颜色空间归一化"></a>颜色空间归一化</h5><ul>
-<li>灰度化</li>
-<li>Gamma校正：采用方法为平方根或者对数法，计算后采用归一化操作到0-255。</li>
-</ul>
-<h5 id="梯度计算"><a href="#梯度计算" class="headerlink" title="梯度计算"></a>梯度计算</h5><ul>
-<li>利用差分，分别计算x方向以及y方向的梯度</li>
-<li>sqrt(x*x+y*y)得到梯度，arctan(y/x)求角度</li>
-</ul>
-<h5 id="梯度方向直方图"><a href="#梯度方向直方图" class="headerlink" title="梯度方向直方图"></a>梯度方向直方图</h5><ul>
-<li>统计9个角度，每20度为一组</li>
-</ul>
-<h5 id="重叠块直方图归一化"><a href="#重叠块直方图归一化" class="headerlink" title="重叠块直方图归一化"></a>重叠块直方图归一化</h5><p>由于图像中光照情况和背景的变化多样，梯度值的变化范围会比较大，因而良好的特征标准化对于检测率的提高相当重要。标准化的方法多种多样，大多数的都是将cell放在block中，然后标准化每个block。以上述图像为例，共得到27x38个cell，也就是将图像划分成了27x38个单元；将上下左右相邻的2x2个cells当做一个block整体，如下所示（为方便观察，每个颜色框故意错开了一点），黑色的8x8像素为一个cell，红、蓝、黄、粉红、绿框都是一个block，即每个框内2x2的cell组成一个block。故27x38个cell可划分成26x37个block，每个block为16x16像素。相邻block之间是有重叠的，这样有效的利用了相邻像素信息，对检测结果有很大的帮助。<br><img src="http://img.blog.csdn.net/20150807151120252" alt="图像"></p>
-<h5 id="HOG特征-1"><a href="#HOG特征-1" class="headerlink" title="HOG特征"></a>HOG特征</h5><p>实际上，在运用的时候，我们通常是选取一幅图像中的一个窗口来进行特征提取，依然以上述220X310大小图像为例，经过缩放处理后为216x304，但并不直接提取整个图像的HOG特征，而是用一个固定大小的窗口在图像上滑动，滑动的间隔为8个像素，OpenCV中默认的窗口大小为128x64（高128，宽64），即有(128÷8)x(64÷8)=16x8个cell，也即有15x7个block，这样一来一幅图像就可以取到(27-16)x(38-8)=11x30=330个窗口。现在提取每个窗口的HOG特征，则可得到105x36=3780维HOG特征向量。</p>
+        <blockquote>
+<p>目标检测中的小目标的检测一直是一个难题，同样也有很多方法被提出来优化小目标的识别，使用图像金字塔进行多尺度检测是一个比较常用的方法，但是使用图像金字塔往往会带来巨大的资源消耗，本篇文章就针对这个问题，提出了一个解决利用图像金字塔进行多尺度训练时间长、资源消耗大的方法，其在<a href="https://blog.csdn.net/Chunfengyanyulove/article/details/87646305" target="_blank" rel="noopener">SNIP</a>的方法上发展而来，通过采样多个chips,并将chips缩放到相同的尺度（这点有点像RCNN）进行训练，不仅仅实现了多尺度，还提高了3倍的速度，并且保证了精度。</p>
+</blockquote><a id="more"></a>
+<hr>
+<h4 id="重要链接"><a href="#重要链接" class="headerlink" title="重要链接"></a>重要链接</h4><p><strong>论文名称: SNIPER: Efficient Multi-Scale Training</strong></p>
+<p><strong>作者：Bharat Singh &amp; Mahyar Najibi &amp; Larry S.Davis</strong></p>
+<p><a href="https://arxiv.org/abs/1805.09300" target="_blank" rel="noopener"><strong>论文链接</strong>https://arxiv.org/abs/1805.09300：</a></p>
+<p><a href="https://github.com/bharatsingh430/snip" target="_blank" rel="noopener"><strong>代码链接</strong>：https://github.com/bharatsingh430/snip</a></p>
+<p><strong>如果出现图像或者公式显示不完整，请访问本人CSDN博客</strong></p>
+<p><a href="https://blog.csdn.net/Chunfengyanyulove/article/details/88560947" target="_blank" rel="noopener"><strong>CSDN博客地址：https://blog.csdn.net/Chunfengyanyulove/article/details/88560947</strong></a></p>
+<hr>
+<h4 id="简要概述文章精华"><a href="#简要概述文章精华" class="headerlink" title="简要概述文章精华"></a>简要概述文章精华</h4><p><strong>目标检测中的小目标的检测一直是一个难题，同样也有很多方法被提出来优化小目标的识别，使用图像金字塔进行多尺度检测是一个比较常用的方法，但是使用图像金字塔往往会带来巨大的资源消耗，本篇文章就针对这个问题，提出了一个解决利用图像金字塔进行多尺度训练时间长、资源消耗大的方法，其在<a href="https://blog.csdn.net/Chunfengyanyulove/article/details/87646305" target="_blank" rel="noopener">SNIP</a>的方法上发展而来，通过采样多个chips,并将chips缩放到相同的尺度（这点有点像RCNN）进行训练，不仅仅实现了多尺度，还提高了3倍的速度，并且保证了精度。</strong></p>
+<p>其实早在RCNN网络，就已经采用了多尺度训练方法，我们回顾一下RCNN方法：</p>
+<p>R-CNN首先通过selective search生成候选区域（region proposals）然后将proposal缩放成224x224大小的图片。<strong>R-CNN将不同大小的region proposal缩放成固定大小，实际上就引入了 multi-scale ，任何尺寸的region proposal都相当于一个scale</strong>。RCNN最主要的问题在于提取特征时，CNN需要在每一个候选区域上跑一遍，候选区域之间的交叠使得特征被重复提取, 造成了严重的速度瓶颈, 降低了计算效率。</p>
+<p>Fast RCNN的提出主要是解决了R-CNN的速度问题，它通过将selective search生成的候选区域映射到feature map上，实现了候选区域间的卷积计算共享，同时由于共同参与计算，Fast R-CNN也能更多的获取到全局信息（contex）。而同时提出的 ROI pooling也将对应到feature map上的候选区域池化到相同的大小，ROI pooling 在某种程度上也可以引进尺度不变性，因为可以将不同大小的region proposal（连同 object）在feature map层面池化到固定大小。但它的问题是前面的卷积层部分是只在一个scale上进行的，这正是为了实现卷积计算共享所带来的一点负面影响，因为是卷积计算共享，所以不同大小的目标没有办法进行不同比例的缩放操作，所以相对于原图大小来说，它们都处于一个scale。这影响了尺度不变性 ，因此为了弥补这一点，在训练或者inference时，会使用image pyramid的操作，直接把原图放大&amp;缩小后送入同一网络进行训练。但是image pyramid有一个问题，就是在缩放原图时，object也会跟着缩放，这就导致原来比较大的object变得更大了，原来更小的object变得更小。这在R-CNN中是不存在这个问题的。</p>
+<p><strong>SNIPER就是借鉴RCNN的方法，有点类似将RCNN与Fast RCNN的思想结合到一块的感觉</strong>。</p>
+<p>下面介绍一下SNIPER是怎么做的。</p>
+<p>SNIPER同样是采用多尺度的，将图像缩放到3个尺度（这里跟SNIP是一致的），但是SNIPER不是直接利用尺度变换后的图像进行训练，而是在3个尺度中，根据一定的规则提取一定大小的chip，然后将chip缩放到固定大小（512*512），最后只利用这些chip进行模型的训练。</p>
+<p><strong>chip是如何生成的？</strong></p>
+<p>将图像缩放到不同的尺度，然后利用K*K的滑窗来选取多个chip</p>
+<p><strong>提取chip后，如何筛选出需要的chip即positive chip</strong></p>
+<p>对于每一个尺度，我们会设置一个目标范围[r1,r2]，当ground truth是在此范围内的才会参与训练，不然过大或者过小的gt都会被pass，这里选取chip的方式就是依次选取包含ground truth最多的chip，直到所有的ground truth都包含，这些chips就组成了训练的正样本。</p>
+<p>如下图所示，左边图是将提取的chip都画在了一张图上，其中虚线代表的就是选取的positive chip，其中绿框代表的是ground truth，这里展示了4个positive chip。右边图代表的是将选取的chip缩放到固定尺度然后进行训练，图中红色的框代表由于不符合前面设定的ground truth的范围而忽略的ground truth.</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1g12f3fkf1ij20lk0bwqej.jpg" alt></p>
+<p>这样，SNIPER便可以使用较小尺度的chip进行训练了，而不需要使用尺度较大的金字塔图像了，这就在一定程度上减少了计算量。</p>
+<p><strong>负样本的选取</strong></p>
+<p>我们使用的chip包含了所有的positive instance，但是很多的背景却被pass掉了，这就容易导致背景被判断为正样本，增加了误判的概率，所以，我们还需要把前面pass掉的背景再捞回一部分加入到训练中，如何往回捞数据呢?</p>
+<p>首先，我们先训一个不是很准确的RPN，用来帮我们找到那些可能会误判的样例，因此RPN不需要特别准，提取RPN后，首先去掉那些跟positive chip存在交叠的proposal，然后在剩余的proposal中，挑选那些可以最大程度覆盖其他proposal的proposal，这里说的可能有点绕，我们看下面的图像就比较清晰了。如下图所示，第二排的红点代表proposal的中心，选择的proposal最大程度的覆盖红点，但是不能与第一排的ground truth存在交叠。就有点利用hard example进行训练的意思。</p>
+<p>注：文章中使用RPN生成chips的过程，并不是模型训练的过程，只是算法的一个预处理过程，而且RPN也不是必须使用不可，使用其他方法也可替代，如Selective Search方法。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1g12g7s9iq0j20ld0b9167.jpg" alt></p>
+<p><strong>网络训练的细节参数，这里就不介绍了，感兴趣的读者可以在论文中自行查看</strong></p>
+<p><strong>训练好了如何inference呢？</strong></p>
+<p>inference的时候，将原图缩放到3个尺寸：480-512、800-1280、1400-2000，然后结果使用soft-nms进行合并。</p>
+<p><strong>实验结果</strong></p>
+<p>下图展示了未使用negtive chips时的召回结果，可以发现不使用negtive chips确实召回会高一些，因为不考虑误判呀。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1g12j6y40kuj20ls043dgl.jpg" alt></p>
+<p>但是计算精度就不行了，下表可以看出，使用negtive chips是可以增加其精度的。本文的sniper均是使用3个scale的，如果将scale降为2，如下表第二行所示，其mAP存在一定的下降，这也说明了多尺度的重要性。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1g12j97dj6cj20le04x0tp.jpg" alt></p>
+<p>最后与其他方法以及采用不同backbone的实验对比结果<br><img src="http://ww1.sinaimg.cn/large/87675bbbly1g12k08fdzwj20li09tq5p.jpg" alt></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>本文是在snip的基础上，对snip进行的改进，由于snip是使用多尺度进行训练的，这样不仅使得训练的时间成倍的增加，而且当尺度较大的时候，对于机器GPU的要求也会相应的增加，因此作者在其基础上改进得到sniper，sniper不仅实现了snip的多尺度，同时使用较小的chip进行训练，不仅仅提高了3倍的训练速度，还保证了精度，此方法值得我们学习。</p>
 
     </div>
 
@@ -355,24 +329,21 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Image-Processing/" rel="tag"># Image Processing</a>
+              <a href="/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" rel="tag"># 目标检测</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2019/11/07/shuffleNet-v2/" rel="next" title="shuffleNet V2">
-                  <i class="fa fa-chevron-left"></i> shuffleNet V2
+                <a href="/2019/11/20/extremeNet/" rel="next" title="ExtremeNet(Bottom-up Object Detection by Grouping Extreme and Center Points)">
+                  <i class="fa fa-chevron-left"></i> ExtremeNet(Bottom-up Object Detection by Grouping Extreme and Center Points)
                 </a>
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-                <a href="/2019/11/07/edgeDetection/" rel="prev" title="边缘检测总结">
-                  边缘检测总结 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
       </footer>
@@ -412,7 +383,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#SIFT原理："><span class="nav-number">1.</span> <span class="nav-text">SIFT原理：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#关键点理解"><span class="nav-number">1.1.</span> <span class="nav-text">关键点理解</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Surf原理："><span class="nav-number">2.</span> <span class="nav-text">Surf原理：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Harris角点检测："><span class="nav-number">3.</span> <span class="nav-text">Harris角点检测：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#关键点理解-1"><span class="nav-number">3.1.</span> <span class="nav-text">关键点理解</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#颜色特征："><span class="nav-number">4.</span> <span class="nav-text">颜色特征：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#颜色直方图"><span class="nav-number">4.1.</span> <span class="nav-text">颜色直方图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#颜色矩"><span class="nav-number">4.2.</span> <span class="nav-text">颜色矩</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#纹理特征（LBP特征）"><span class="nav-number">5.</span> <span class="nav-text">纹理特征（LBP特征）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#原理"><span class="nav-number">5.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LBP算法步骤"><span class="nav-number">5.2.</span> <span class="nav-text">LBP算法步骤</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HOG特征"><span class="nav-number">6.</span> <span class="nav-text">HOG特征</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#原理-1"><span class="nav-number">6.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#步骤"><span class="nav-number">6.2.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#颜色空间归一化"><span class="nav-number">6.2.1.</span> <span class="nav-text">颜色空间归一化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#梯度计算"><span class="nav-number">6.2.2.</span> <span class="nav-text">梯度计算</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#梯度方向直方图"><span class="nav-number">6.2.3.</span> <span class="nav-text">梯度方向直方图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#重叠块直方图归一化"><span class="nav-number">6.2.4.</span> <span class="nav-text">重叠块直方图归一化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#HOG特征-1"><span class="nav-number">6.2.5.</span> <span class="nav-text">HOG特征</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#重要链接"><span class="nav-number">1.</span> <span class="nav-text">重要链接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简要概述文章精华"><span class="nav-number">2.</span> <span class="nav-text">简要概述文章精华</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
