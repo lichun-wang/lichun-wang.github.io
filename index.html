@@ -202,6 +202,406 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/12/25/consitent-optimization/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/25/consitent-optimization/" class="post-title-link" itemprop="url">Consistent Optimization for Single-Shot Object Detection - 你的anchor用对了吗</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-12-25 09:01:26 / 修改时间：09:16:03" itemprop="dateCreated datePublished" datetime="2019-12-25T09:01:26-05:00">2019-12-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Papers/" itemprop="url" rel="index">
+                    <span itemprop="name">Papers</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/12/25/consitent-optimization/" class="post-meta-item leancloud_visitors" data-flag-title="Consistent Optimization for Single-Shot Object Detection - 你的anchor用对了吗" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/12/25/consitent-optimization/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/12/25/consitent-optimization/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>本篇论文中，作者提出在one stage目标检测中影响网络精度的一个原因在于<strong>优化的目标与inference设置的不一致性（misalignment between the optimization target and inference configurations），解释来说就是，现在流行的目标检测方法，一般会有两个分支，一个分类，一个坐标框回归，而这两个分支往往是独立的，都是对原始anchor进行处理，这就会带来一个问题，我们在进行分类的时候，使用的是原始的anchor，而在坐标框回归后，很可能回归后的anchor与原始anchor已经产生了不同，这样使用原始anchor的分类结果作为回归后的anchor的分类得分就不准确了</strong>，本篇论文就是围绕着解决这个问题来进行的。乍一看本篇文章，感觉与Cascade RCNN有点像，采用的方法同样是对网络输出的结果进行refine，来达到提升网络精度的效果，但是其出发点是不同的，<a href="https://blog.csdn.net/Chunfengyanyulove/article/details/86414810" target="_blank" rel="noopener">Cascade R-CNN</a>的出发点是解决IOU阈值的设置带来的噪声问题，而consistent optimization的出发点是解决分类anchor与回归后的anchor不一致的问题。并且<strong>consistent optimization方法只是修改了RetinaNet网络的loss，改动不大，整体上时间消耗也没有增加，原则上说，其也不算是cascade方法，只是思想相近而已，但是本方法的实用性还是很强的。</strong></p>
+</blockquote>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/25/consitent-optimization/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/12/25/mxnet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/25/mxnet/" class="post-title-link" itemprop="url">MXNet</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-12-25 08:59:23 / 修改时间：09:15:06" itemprop="dateCreated datePublished" datetime="2019-12-25T08:59:23-05:00">2019-12-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/technology/" itemprop="url" rel="index">
+                    <span itemprop="name">technology</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/12/25/mxnet/" class="post-meta-item leancloud_visitors" data-flag-title="MXNet" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/12/25/mxnet/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/12/25/mxnet/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>自己使用时候总结的MXNet一些基本操作及介绍,深度学习训练框架MXNet的基本操作都在这里了</p>
+</blockquote><h3 id="一、基础篇"><a href="#一、基础篇" class="headerlink" title="一、基础篇"></a>一、基础篇</h3><h4 id="NDArray介绍篇"><a href="#NDArray介绍篇" class="headerlink" title="NDArray介绍篇"></a>NDArray介绍篇</h4><p>在mxnet中，<strong>NDArray是所有运算的核心数据结构，mxnet中的所有数据均使用NDArray进行表示</strong>，NDarray有点类似于numpy中的ndarray，操作上面也与numpy很相似，但是NDArray提供了numpy.ndarray所不具备的操作，比如:<strong>GPU,CPU的切换，自动求梯度的运算等等</strong>，这也是为什么mxnet要重新封装一个NDArray的原因。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/25/mxnet/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/25/mobilenet-v3/" class="post-title-link" itemprop="url">mobilenet-v3</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-12-25 08:50:21 / 修改时间：09:14:22" itemprop="dateCreated datePublished" datetime="2019-12-25T08:50:21-05:00">2019-12-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Paper-Reading/" itemprop="url" rel="index">
+                    <span itemprop="name">Paper Reading</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/12/25/mobilenet-v3/" class="post-meta-item leancloud_visitors" data-flag-title="mobilenet-v3" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/12/25/mobilenet-v3/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/12/25/mobilenet-v3/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>mobilenet-v3是Google继mobilenet-v2之后的又一力作，作为mobilenet系列的新成员，自然效果会提升，mobilenet-v3提供了两个版本，分别为mobilenet-v3 large 以及mobilenet-v3 small，分别适用于对资源不同要求的情况，论文中提到，<strong>mobilenet-v3 small在imagenet分类任务上，较mobilenet-v2，精度提高了大约3.2%，时间却减少了15%，mobilenet-v3 large在imagenet分类任务上，较mobilenet-v2，精度提高了大约4.6%，时间减少了5%，mobilenet-v3 large 与v2相比，在COCO上达到相同的精度，速度快了25%</strong>，同时在分割算法上也有一定的提高。本文还有一个亮点在于，<strong>网络的设计利用了NAS（network architecture search）算法以及NetAdapt algorithm算法</strong>。并且，本文还介绍了一些提升网络效果的trick，这些trick也提升了不少的精度以及速度。</p>
+</blockquote>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/25/mobilenet-v3/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/12/25/git/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/25/git/" class="post-title-link" itemprop="url">Git操作总结</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-12-25 08:46:57 / 修改时间：09:09:06" itemprop="dateCreated datePublished" datetime="2019-12-25T08:46:57-05:00">2019-12-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/technology/" itemprop="url" rel="index">
+                    <span itemprop="name">technology</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/12/25/git/" class="post-meta-item leancloud_visitors" data-flag-title="Git操作总结" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/12/25/git/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/12/25/git/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>git基本操作总结</p>
+</blockquote><h3 id="git更新操作（最经常使用-）"><a href="#git更新操作（最经常使用-）" class="headerlink" title="git更新操作（最经常使用 ）"></a>git更新操作（最经常使用 ）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git status           <span class="comment">#查看git当前状态</span></span><br><span class="line">git diff server.py   <span class="comment">#查看server.py 在git当中</span></span><br><span class="line">git add .            <span class="comment">#将当前修改提交到 git</span></span><br><span class="line">git commit -m “change threshold <span class="keyword">for</span> higher precision”</span><br><span class="line">git branch</span><br><span class="line">git push origin master</span><br><span class="line">git push --<span class="built_in">set</span>-upstream origin vulgar <span class="comment">#设置上传的分支</span></span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/25/git/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/12/22/docker/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -227,7 +627,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2019-12-22 08:01:52 / 修改时间：08:07:03" itemprop="dateCreated datePublished" datetime="2019-12-22T08:01:52-05:00">2019-12-22</time>
+              <time title="创建时间：2019-12-22 08:01:52 / 修改时间：08:40:09" itemprop="dateCreated datePublished" datetime="2019-12-22T08:01:52-05:00">2019-12-22</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -820,409 +1220,11 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/12/dpn/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.png">
-      <meta itemprop="name" content="Spring Wang">
-      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Spring's Idea">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/11/12/dpn/" class="post-title-link" itemprop="url">DPN</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2019-11-12 09:22:30 / 修改时间：09:29:34" itemprop="dateCreated datePublished" datetime="2019-11-12T09:22:30-05:00">2019-11-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Paper-Reading/" itemprop="url" rel="index">
-                    <span itemprop="name">Paper Reading</span>
-                  </a>
-                </span>
-            </span>
-
-          
-            <span id="/2019/11/12/dpn/" class="post-meta-item leancloud_visitors" data-flag-title="DPN" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2019/11/12/dpn/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/12/dpn/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>DPN是在resneXt,denseNet之后，对resnet系列的进一步创新，作者巧妙的将resnet与denseNet相结合，提出了dual path architectures，构造了DPN网络结构。<br>那么DPN的创新点有哪些呢？如下：</p><p>DPN具有<strong>更小的模型以及更少的计算量，具有更好的训练速度</strong>。作者在论文中的描述为：[<br>In particular，on the ImageNet-1k dataset, a shallow DPN surpasses the best ResNeXt-101 with 26% smaller model size, 25% less computational cost and 8% lower memory consumption.]</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/11/12/dpn/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/12/densenet/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.png">
-      <meta itemprop="name" content="Spring Wang">
-      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Spring's Idea">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/11/12/densenet/" class="post-title-link" itemprop="url">DenseNet</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2019-11-12 09:22:23 / 修改时间：09:31:43" itemprop="dateCreated datePublished" datetime="2019-11-12T09:22:23-05:00">2019-11-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Paper-Reading/" itemprop="url" rel="index">
-                    <span itemprop="name">Paper Reading</span>
-                  </a>
-                </span>
-            </span>
-
-          
-            <span id="/2019/11/12/densenet/" class="post-meta-item leancloud_visitors" data-flag-title="DenseNet" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2019/11/12/densenet/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/12/densenet/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a href="https://arxiv.org/abs/1608.06993" target="_blank" rel="noopener">原文链接：https://arxiv.org/abs/1608.06993</a></p><p><a href="https://github.com/liuzhuang13/DenseNet" target="_blank" rel="noopener">DenseNet原版代码：https://github.com/liuzhuang13/DenseNet</a></p><p><strong>如果出现图像或者公式显示不完整，可以访问如下博客：</strong></p><p><a href="http://blog.csdn.net/Chunfengyanyulove/article/details/79476475" target="_blank" rel="noopener">CSDN博客：http://blog.csdn.net/Chunfengyanyulove/article/details/79476475</a></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/11/12/densenet/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/12/resnext/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.png">
-      <meta itemprop="name" content="Spring Wang">
-      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Spring's Idea">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/11/12/resnext/" class="post-title-link" itemprop="url">ResNeXt：Aggregated Residual Transformations for Deep Neural Networks</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2019-11-12 09:15:25 / 修改时间：09:20:06" itemprop="dateCreated datePublished" datetime="2019-11-12T09:15:25-05:00">2019-11-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Paper-Reading/" itemprop="url" rel="index">
-                    <span itemprop="name">Paper Reading</span>
-                  </a>
-                </span>
-            </span>
-
-          
-            <span id="/2019/11/12/resnext/" class="post-meta-item leancloud_visitors" data-flag-title="ResNeXt：Aggregated Residual Transformations for Deep Neural Networks" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2019/11/12/resnext/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/12/resnext/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a href="https://arxiv.org/abs/1611.05431" target="_blank" rel="noopener">论文链接：https://arxiv.org/abs/1611.05431</a></p><p><strong>如出现图像显示不完整，或者公式显示不完整，可访问如下博客</strong></p><p><a href="http://blog.csdn.net/chunfengyanyulove/article/details/79450450" target="_blank" rel="noopener">CSDN博客地址：http://blog.csdn.net/chunfengyanyulove/article/details/79450450</a></p><p><strong>创新点：ResNeXt在ResNet的基础上，结合ResNet的block stack策略以及Inception结构分组卷积的思想，设计aggregrated transformations策略，在不增加模型复杂度的情况下，提高了模型识别的准确率，虽然没有提出特别新奇的网络结构，但是ResNeXt利用更简单的拓扑结构在不增加参数的情况下取得更好的效果，值得借鉴与思考。</strong></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/11/12/resnext/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/07/sort/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.png">
-      <meta itemprop="name" content="Spring Wang">
-      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Spring's Idea">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/11/07/sort/" class="post-title-link" itemprop="url">Sort,排序算法总结</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-11-07 09:03:40" itemprop="dateCreated datePublished" datetime="2019-11-07T09:03:40-05:00">2019-11-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-11-15 09:24:02" itemprop="dateModified" datetime="2019-11-15T09:24:02-05:00">2019-11-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/algorithm/" itemprop="url" rel="index">
-                    <span itemprop="name">algorithm</span>
-                  </a>
-                </span>
-            </span>
-
-          
-            <span id="/2019/11/07/sort/" class="post-meta-item leancloud_visitors" data-flag-title="Sort,排序算法总结" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2019/11/07/sort/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/07/sort/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="排序算法总结"><a href="#排序算法总结" class="headerlink" title="排序算法总结"></a>排序算法总结</h3><p><a href="http://blog.csdn.net/han_xiaoyang/article/details/12163251" target="_blank" rel="noopener">详细参考链接,寒小阳CSDN</a> </p><h4 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h4><p>介绍：主要就是partition过程。  </p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">quickSort(<span class="keyword">int</span> arr[], <span class="keyword">int</span> left,<span class="keyword">int</span> right)  </span><br><span class="line">&#123;</span><br><span class="line">   <span class="keyword">if</span>(left &lt; right)</span><br><span class="line">   &#123; </span><br><span class="line">      <span class="keyword">int</span> mid = partition(arr,left,right);</span><br><span class="line">      quickSort(arr,left,mid<span class="number">-1</span>);</span><br><span class="line">      quickSort(arr,mid+<span class="number">1</span>,right);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span> arr[],<span class="keyword">int</span> left, <span class="keyword">int</span> right)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">     <span class="keyword">if</span>(right &lt;= left)</span><br><span class="line">        <span class="keyword">return</span> left;</span><br><span class="line">     <span class="keyword">int</span> key = arr[left];</span><br><span class="line">     <span class="keyword">while</span>(left &lt; right)</span><br><span class="line">     &#123;</span><br><span class="line">          <span class="keyword">while</span>(arr[right] &gt; key) right--;</span><br><span class="line">            arr[right] = arr[left];</span><br><span class="line">          <span class="keyword">while</span>(arr[left] &lt; key) left++</span><br><span class="line">            arr[left] = arr[right];</span><br><span class="line">     &#125;</span><br><span class="line">     arr[left] = key;</span><br><span class="line">     <span class="keyword">return</span> left;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/11/07/sort/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1268,7 +1270,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1281,7 +1283,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
