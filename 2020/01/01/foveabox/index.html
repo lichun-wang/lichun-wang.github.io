@@ -71,7 +71,7 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;01&#x2F;01&#x2F;foveabox&#x2F;10.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;01&#x2F;01&#x2F;foveabox&#x2F;11.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;01&#x2F;01&#x2F;foveabox&#x2F;12.png">
-<meta property="og:updated_time" content="2020-01-01T13:23:40.177Z">
+<meta property="og:updated_time" content="2020-01-01T13:24:22.256Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;01&#x2F;01&#x2F;foveabox&#x2F;1.png">
 
@@ -241,7 +241,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-01-01 08:16:43 / 修改时间：08:23:40" itemprop="dateCreated datePublished" datetime="2020-01-01T08:16:43-05:00">2020-01-01</time>
+              <time title="创建时间：2020-01-01 08:16:43 / 修改时间：08:24:22" itemprop="dateCreated datePublished" datetime="2020-01-01T08:16:43-05:00">2020-01-01</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -314,7 +314,7 @@
 <p><img src="1.png" alt="1.png"></p>
 <p>在FoveaBox中，共有5个level分出subnet，分别是$P_{l},l=3,4,…,7$,每个level输出的特征图的大小为$\frac{1}{2^{l}}$</p>
 <h4 id="Scale-Assignment"><a href="#Scale-Assignment" class="headerlink" title="Scale Assignment"></a>Scale Assignment</h4><p>由于目标尺寸变换范围较大，FoveaBox跟SSD方法一致，同样采用了不同的level预测不同尺寸的目标的方法，<strong>另外在FCOS中（一个跟FoveaBox很相似的anchor free目标检测方法），解释到，使用多level预测的目的是为了解决anchor free的时候，目标重叠的问题，因为重叠就没有办法分配正负样本了，这样可以有效减少目标重合。</strong></p>
-<p>这里作者将7个level的尺寸设置成$32^{2}$-$512^{2}$,用公式表示就是$S_{l}=4^{l}S_{0}$其中$S_{0}=16,l=3,4,…,7$,并且，为了控制不同level之间的重合度，作者增加了<code>$\eta$</code>参数，进一步调节不同level的尺度范围,$[\frac{S_{l}}{\eta_{2}},S_{l}\eta^{2}]$，通过调节参数，一个目标可能会在多个level中进行检测。</p>
+<p>这里作者将7个level的尺寸设置成$32^{2}$-$512^{2}$,用公式表示就是$S_{l}=4^{l}S_{0}$其中$S_{0}=16,l=3,4,…,7$,并且，为了控制不同level之间的重合度，作者增加了$\eta$参数，进一步调节不同level的尺度范围,$[\frac{S_{l}}{\eta_{2}},S_{l}\eta^{2}]$，通过调节参数，一个目标可能会在多个level中进行检测。</p>
 <h4 id="Object-Fovea"><a href="#Object-Fovea" class="headerlink" title="Object Fovea"></a>Object Fovea</h4><p>接下来我们来看一下，Fovea在训练中如何定义正负样本。</p>
 <p>Fovea是anchor free的，所以在计算正负样本的时候，不需要想anchor那样计算IOU，fovea直接将ground-truth映射到对应level的特征图上，公式如下：</p>
 <p><img src="3.png" alt="3.png"></p>
