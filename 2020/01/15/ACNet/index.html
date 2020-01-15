@@ -51,32 +51,27 @@
   };
 </script>
 
-  <meta name="description" content="论文名称：ShuffleNet V2: Practical Guidelines for Efficient CNN Architecture Design论文地址：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1807.11164目前，CNN网络在图像识别领域大放异彩，从最初的AlexNet到后面的GoogLeNet,ResNet,识别精度越来越高，但是除了精度之外，模型的计算复杂度也越来越引起大">
-<meta name="keywords" content="Deep Learning,Classification,Paper Reading">
+  <meta name="description" content="ACNet，借鉴了模型加速的一些方法，在原始的dxd的卷积上，通过增加并行的1xd以及dx1卷积（即AC Block），实现模型精度的增强，同时在部署阶段，又将dxd、1xd、dx1卷积通过公式进行合并计算得到新的dxd卷积，并没有增加原有dxd卷积的计算量以及inference的时间，精度速度双收，作者将ACBlock应用于多个网络，效果还是比较显著的，值得借鉴。">
+<meta name="keywords" content="ACNet">
 <meta property="og:type" content="article">
-<meta property="og:title" content="shuffleNet V2">
-<meta property="og:url" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2019&#x2F;11&#x2F;07&#x2F;shuffleNet-v2&#x2F;index.html">
+<meta property="og:title" content="ACNet">
+<meta property="og:url" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;01&#x2F;15&#x2F;ACNet&#x2F;index.html">
 <meta property="og:site_name" content="Spring&#39;s Idea">
-<meta property="og:description" content="论文名称：ShuffleNet V2: Practical Guidelines for Efficient CNN Architecture Design论文地址：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1807.11164目前，CNN网络在图像识别领域大放异彩，从最初的AlexNet到后面的GoogLeNet,ResNet,识别精度越来越高，但是除了精度之外，模型的计算复杂度也越来越引起大">
+<meta property="og:description" content="ACNet，借鉴了模型加速的一些方法，在原始的dxd的卷积上，通过增加并行的1xd以及dx1卷积（即AC Block），实现模型精度的增强，同时在部署阶段，又将dxd、1xd、dx1卷积通过公式进行合并计算得到新的dxd卷积，并没有增加原有dxd卷积的计算量以及inference的时间，精度速度双收，作者将ACBlock应用于多个网络，效果还是比较显著的，值得借鉴。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1fuafjti05hj20u40mcwh8.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1fuagiwaovjj20ub0cgq8i.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1fuaim5hxnyj20tq09dgnc.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1fuajvk9d6hj20u30a4mym.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1fubhxt9qduj20pj085dgj.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1fubi8w9rsdj20tt0am0uk.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1fubiux5vr1j20tu09ewg2.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1fubjrmf2k6j20u60ih768.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1fubnnptljtj20tx0hq0v0.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1fu890fyzz8j20w80f4tax.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1fuctjwfljdj20jf0odgq9.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1fucu2vj7gbj20eu04xdgb.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1fucu8q1wauj20iv07umyj.jpg">
-<meta property="og:updated_time" content="2019-11-07T13:39:12.338Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;01&#x2F;15&#x2F;ACNet&#x2F;1.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;01&#x2F;15&#x2F;ACNet&#x2F;2.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;01&#x2F;15&#x2F;ACNet&#x2F;3.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;01&#x2F;15&#x2F;ACNet&#x2F;4.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;01&#x2F;15&#x2F;ACNet&#x2F;5.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;01&#x2F;15&#x2F;ACNet&#x2F;6.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;01&#x2F;15&#x2F;ACNet&#x2F;7.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;01&#x2F;15&#x2F;ACNet&#x2F;8.png">
+<meta property="og:updated_time" content="2020-01-15T14:10:14.661Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1fuafjti05hj20u40mcwh8.jpg">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;01&#x2F;15&#x2F;ACNet&#x2F;1.png">
 
-<link rel="canonical" href="https://www.wanglichun.tech/2019/11/07/shuffleNet-v2/">
+<link rel="canonical" href="https://www.wanglichun.tech/2020/01/15/ACNet/">
 
 
 <script id="page-configurations">
@@ -90,7 +85,7 @@
   };
 </script>
 
-  <title>shuffleNet V2 | Spring's Idea</title>
+  <title>ACNet | Spring's Idea</title>
   
 
 
@@ -218,7 +213,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/07/shuffleNet-v2/">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/01/15/ACNet/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.png">
@@ -231,7 +226,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          shuffleNet V2
+          ACNet
         </h1>
 
         <div class="post-meta">
@@ -242,7 +237,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2019-11-07 08:33:29 / 修改时间：08:39:12" itemprop="dateCreated datePublished" datetime="2019-11-07T08:33:29-05:00">2019-11-07</time>
+              <time title="创建时间：2020-01-15 09:02:42 / 修改时间：09:10:14" itemprop="dateCreated datePublished" datetime="2020-01-15T09:02:42-05:00">2020-01-15</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -250,14 +245,14 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Paper-Reading/" itemprop="url" rel="index">
-                    <span itemprop="name">Paper Reading</span>
+                  <a href="/categories/Classification/" itemprop="url" rel="index">
+                    <span itemprop="name">Classification</span>
                   </a>
                 </span>
             </span>
 
           
-            <span id="/2019/11/07/shuffleNet-v2/" class="post-meta-item leancloud_visitors" data-flag-title="shuffleNet V2" title="阅读次数">
+            <span id="/2020/01/15/ACNet/" class="post-meta-item leancloud_visitors" data-flag-title="ACNet" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -272,8 +267,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2019/11/07/shuffleNet-v2/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/07/shuffleNet-v2/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/01/15/ACNet/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/01/15/ACNet/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -288,94 +283,49 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><strong>论文名称：ShuffleNet V2: Practical Guidelines for Efficient CNN Architecture Design</strong></p><p><a href="https://arxiv.org/abs/1807.11164" target="_blank" rel="noopener">论文地址：https://arxiv.org/abs/1807.11164</a></p><p>目前，CNN网络在图像识别领域大放异彩，从最初的AlexNet到后面的GoogLeNet,ResNet,识别精度越来越高，但是除了精度之外，模型的计算复杂度也越来越引起大家的思考，如何降低网络的复杂度，以使网络可以高效的运行在诸如手机登移动端设备，也得到了众多研究者的研究。本文便主要在这方面发力，提出了提高网络速度设计的4个准则，并基于此设计了shuffleNet v2,在速度、精度均超过了目前的主流轻量级网络（shuffleNet v1, mobileNet v2等）,本文是Face++提出，发表于ECCV2018.</p><a id="more"></a>
+        <blockquote>
+<p>ACNet，借鉴了模型加速的一些方法，在原始的dxd的卷积上，通过增加并行的1xd以及dx1卷积（即AC Block），实现模型精度的增强，同时在部署阶段，又将dxd、1xd、dx1卷积通过公式进行合并计算得到新的dxd卷积，并没有增加原有dxd卷积的计算量以及inference的时间，精度速度双收，作者将ACBlock应用于多个网络，效果还是比较显著的，值得借鉴。</p>
+</blockquote><a id="more"></a>
+<hr>
+<p>论文名称：ACNet: Strengthening the Kernel Skeletons for Powerful CNN via Asymmetric Convolution Blocks</p>
+<p>作者：Xiaohan Ding &amp; Yuchen Guo 等</p>
+<p>论文链接：<a href="https://arxiv.org/abs/1908.03930" target="_blank" rel="noopener">https://arxiv.org/abs/1908.03930</a></p>
+<hr>
+<h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><p>提升网络的精度以及速度，一直是广大研究人员孜孜不倦的追求。那么<strong>如何提升网络的精度</strong>？我们可以看看网络的发展，从VGG-&gt;ResNet-&gt;DenseNet-&gt;SENet-&gt;FPN等，网络的结构在逐渐的复杂，从VGG单纯的stack模式，到ResNet引入identity　mapping，到DenseNet的Dense　Connecting以及SENet的attention，FPN的不同特征图的叠加，网络的发展使其变得越来越复杂。<strong>那么如何提升网络的速度</strong>？模型压缩：剪枝、量化。总的来说，大体就是通过各种方法减少计算量，减少运算中的中间变量，减少网络的复杂度。</p>
+<p>这篇文章的最大创新点就在于<strong>虽然对网络结构进行了稍微的修改，提出了ACB模块，（网络的修改，结合了Inception论文中的方法，还是挺巧妙的），提高了精度，但是在部署的时候，通过计算合并，并没有增加网络的计算量，保持了原来的速度，下图是ACB模块简单的图示，左边是训练时的结构，右面是部署时的合并</strong>。</p>
+<p><img src="1.png" alt="1.png"></p>
+<h3 id="ACB-Asymmetric-Convolution-Block"><a href="#ACB-Asymmetric-Convolution-Block" class="headerlink" title="ACB(Asymmetric Convolution Block)"></a>ACB(Asymmetric Convolution Block)</h3><p>如上图所示，ACB模块就是将原本dxd的卷积，修改为3个平行并列的卷积，分别为原来的dxd以及新增的1xd以及dx1,上图中的展示为d=3的情况，虽然d不限制，不过大部分网络d都是等于3的。然后将3个平行输出的特征图做相加操作。</p>
+<p>ACB由于并没有对网络结构进行大的调整，仅仅是调整了3x3的卷积，所以ACB模块可以应用于任何现有的网络，只要替换卷积就可以了。</p>
+<p>在inception v3中，已经使用过这种方法，利用1x7和7x1替换原有的7x7的卷积，减少参数量的同时并没有降低精度，但其中也提到替换的结构在网络的低层表现不是很好。</p>
+<p>分支可以使用如下Pytorch代码实现，比较简单：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">branch3x3dbl_1 = conv_block(c3, c3, kernel_size=(<span class="number">3</span>, <span class="number">3</span>), padding=(<span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line">branch3x3dbl_2 = conv_block(c3, c3, kernel_size=(<span class="number">3</span>, <span class="number">1</span>), padding=(<span class="number">1</span>, <span class="number">0</span>))</span><br><span class="line">branch3x3dbl_3 = conv_block(c3, c3, kernel_size=(<span class="number">1</span>, <span class="number">3</span>), padding=(<span class="number">0</span>, <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
 
-
-<p>下面详细介绍一下这篇文章</p>
-<p>作者在开篇首先指出，目前评价一个网络的复杂度的指标往往是FLOPs(<strong>FLOPs简单解释就是网络执行了多少的multiply-adds操作</strong>)，但是这种评价指标往往是不正确的，因为FLOPs可能不能反映出网络模型的执行速度或者时延，如下图所示：</p>
-<p>通过观察可以发现图中(c,d)可以发现，具有相似的FLOPs的网络，执行的速度却不一样。</p>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fuafjti05hj20u40mcwh8.jpg" alt></p>
-<p>那么，为什么会出现这个矛盾呢？作者解释有两个原因：</p>
-<ul>
-<li>一些严重影响速度的因素没有考虑在FLOPs中。比如<strong>MAC</strong>（memory access cost内存访问成本）。比如分组卷积（group convolution）就会消耗较大的MAC。<strong>并行度</strong>，如果网络的并行度较高，那么速度就会有显著的提升。</li>
-<li>计算平台的不同，比如tensor运行的使用会提高计算速度，（但是最近发现，即使通过分解（decomposition）可以减少75%的FLOPs，但是计算速度却便慢了，究其原因是因为最近吃的cudnn加强了对3*3conv计算的优化，3*3卷积并不是1*1卷积计算速度的9倍这么简单）</li>
-</ul>
-<p>基于以上的分析，作者提出了2个需要考虑的网络执行效率对比的设计准则：</p>
-<ul>
-<li>使用正确的速度度量方式去掉FLOPs</li>
-<li>并且要在目标计算平台上计算，不然结果不具有代表性。</li>
-</ul>
-<p>如下这张图是作者分别在GPU(1080ti， cudnn7.0)以及ARM（高通骁龙810）环境下的网络运行时间展示，可以发现，除了卷积部分，还有很大部分时间在做其他的事情，这也说明，仅仅使用FLOPs是不够的。并且从该图可可以看出ARM相比较于GPU确实慢了一些，假设读取数据时间一致，GPU中卷积操作只占到将近一半，而ARM中已经占到了约90%。</p>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fuagiwaovjj20ub0cgq8i.jpg" alt></p>
-<p>基于此，作者做了如下的分析？</p>
-<p><strong>G1:输入输出具有相同channel的时候，内存消耗是最小的</strong></p>
-<p>为什么这么说：</p>
-<p>由于目前主流网络均使用的depthwise separable convolutions，其中pointwise convolution占据了很大一块的运算量，这个在shuffleNet V1中有说明<a href="https://blog.csdn.net/Chunfengyanyulove/article/details/81664890" target="_blank" rel="noopener">详细参见博客：shuffleNet V1</a>，作者以1*1网络为例，假设feature map的大小为h*w输入输出channel分别为c1和c2,那么：</p>
-<p>FLOPs:</p>
-<p>$$B=hw(c_1*1*1*c_2)=hwc_1c_2$$</p>
-<p>MAC:</p>
-<p>$$MAC=hw(c_1+c_2)+c_1*c_2$$</p>
-<p>(这里解释一下这个是怎么计算的：因为特征图大小为hw，在计算1*1卷积过程中我们需要将将所有的输入特征图和卷积核载入cache一次，这样需要$hwc_1+c_1c_2$次访存；然后需要将计算结果返回到内存，需要$hwc_2$次访存。)</p>
-<p>利用均值不等式（$c_1+c_2 &gt;= 2\sqrt{c_1c_2}$）化简可以得到：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MAC&gt;=2\sqrt&#123;hwB&#125;+\frac&#123;B&#125; &#123;hw&#125;</span><br></pre></td></tr></table></figure>
-
-<p>根据这个结果可以发现，当$c_1,c_2$相等的时候，可以取到最小值。</p>
-<p><strong>得证</strong></p>
-<p>下图的结果是作者的实验，实验结果同样支持<strong>G1</strong>结论。</p>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fuaim5hxnyj20tq09dgnc.jpg" alt></p>
-<p><strong>G2: Excessive group convolution increases Map</strong></p>
-<p>group convolution最大的作用在于改变了所有channel间的dense convolution变为sparse卷积，（解释一下：如果没有group，每个output feature的每个cell是上层所有channel的feature map对应的cell的卷积结果，而分组之后，只需要计算组内的cell卷积结果，计算量就自然少了很多）</p>
-<p><strong>在固定的FLOPs条件下，采用group convolution可以使用更多的channel，这也是为什么采用group convolution提高精度的主要手段，但是增加了channel的同时，也增加了更多的MAC</strong></p>
-<p>采用分组卷积的MAC计算如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MAC=hw(c_1+c_2)+\frac&#123;c_1c_2&#125;&#123;g&#125;</span><br><span class="line"></span><br><span class="line">MAC=hwc_1+\frac&#123;Bg&#125;&#123;c_1&#125;+\frac&#123;B&#125;&#123;hw&#125;</span><br><span class="line"></span><br><span class="line">B = \frac&#123;hwc_1c_2&#125;&#123;g&#125;</span><br></pre></td></tr></table></figure>
-
-<p>由上面公式可以很清楚的看出来，MAC会随着g的增加而增加，同样的，作者进行了实验，验证这个结论，如下：</p>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fuajvk9d6hj20u30a4mym.jpg" alt></p>
-<p>可见，随着group的增大，速度在明显减慢。</p>
-<p><strong>G3: Network fragmentation reduces degree of parallelism</strong></p>
-<p>比如googLeNet等网络，每个单元有很多的分支（multi-path），包括横向的和竖向的，如下图所示：</p>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fubhxt9qduj20pj085dgj.jpg" alt></p>
-<p><strong>虽然这种分支结构对于提升精度有一定效果，但是却影响了模型的效率，主要原因在于影响了模型计算的并行度</strong></p>
-<p>为了证明这种multi-path对于网络执行速度的影响，作者分别设计了不同的multi-path并进行实验，实验结果如下：</p>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fubi8w9rsdj20tt0am0uk.jpg" alt></p>
-<p>观察实验结果可以发现，在GPU上多个fragment的网络的时间消耗增加明显，在CPU上增加不明显但是同样在增加。</p>
-<p><strong>G4: Element-wise operations are non-negligible</strong></p>
-<p>element-wise operation包括比如：ReLU，addtensor,addbias等，根据Fig2，我们可以发现，element操作的耗时也是挺大的，这波操作不容忽视。</p>
-<p><strong>注：另外作者在这提到，depthwise convolution（group数等于通道数，每个卷积核只卷积一个channel）也认为是一种element-wise操作</strong></p>
-<p>为了证明这个观点，作者利用resnet的一个block进行实验，将ReLU以及short-cut作为elemet-wise进行实验对比，实验结果如下图所示：</p>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fubiux5vr1j20tu09ewg2.jpg" alt></p>
-<p>根据实验结果可以发现，ReLU以及short-cut操作如果都是no，速度为2842 batches/s，加入后为2427 batches/s，速度下降的还是挺明显的，CPU中，也是一样的趋势。</p>
-<p>所以，一个高效的网络应该具备这些因素：</p>
-<ul>
-<li>use balance convolution，input channel == output channel</li>
-<li>consider of group convolution</li>
-<li>reduce the degree of fragmentation</li>
-<li>reduce element-wise operation</li>
-</ul>
-<p>基于此，作者在shuffleNet的基础上，设计了<strong>shuffleNet V2:一个轻量级的速度高精度也高的网络结构。</strong></p>
-<p>下面介绍一下shuffleNet V2</p>
-<p>在了解shuffleNet V2之前，可以先了解一下<a href="https://blog.csdn.net/Chunfengyanyulove/article/details/81664890" target="_blank" rel="noopener">shuffleNet V1</a></p>
-<p>先show一张shuffleNet V2 与shuffleNet的对比图</p>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fubjrmf2k6j20u60ih768.jpg" alt></p>
-<p>其中图（a,b）是shuffleNet的结构，图（c,d）是shuffleNet的改进结构，比较（a）与（c），可以发现，读了一个split操作，这也是shuffleNet V2的创新点，全称是channel split，其做法就是，首先将channel分成两个分支，c-c’和c’,为了满足G3,减少多分支计算，一个分支直接传下来，另一个分支包含了3个卷积，并且都是input-channel== output-channel的（符合G1），并且两个point-wise convolution不再使用group操作（满足G2）,最终，两个分支进行concat操作（满足G4）,后面的shuffle操作用来进行两个分支的信息交流。</p>
-<p>对于需要down sampling的模块，如图（d）所示，将split操作去除，然后stride=2进行操作，这样输出的维度便增加了一倍。</p>
-<p>最终，通过该block的堆叠，得到shuffleNet V2,结构如下图所示：其中repeat对应不同block的个数。本文中c’ = c/2</p>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fubnnptljtj20tx0hq0v0.jpg" alt></p>
-<p>整体结构与shuffleNet V1基本一致,shuffleNet V1结构如下图所示：</p>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fu890fyzz8j20w80f4tax.jpg" alt></p>
-<p>唯一不同的是在global pooling的前面增加了Conv5（1*1的卷积层），来进行特征的融合。</p>
-<p>shuffleNet V2不仅仅efficient同时具有很高的精度，这主要有如下两个原因：</p>
-<ul>
-<li>第一个原因是：由于高效，可以增加更多的channel，增加网络的容量。</li>
-<li>另外采用split使得一部分特征直接与下面block相连，这可以被看做是一种<strong>特征复用</strong> </li>
-</ul>
-<p>下图是作者在多个模型的测试对比结果（包括mobileNet,CondenseNet,IGCV2,IGCV3等）：</p>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fuctjwfljdj20jf0odgq9.jpg" alt></p>
-<p>根据该图可以发现，MobileNet v1在GPU上面的速度是最快的，甚至超过了shuffleNet V2,mobileNet V1主要使用了depthwise conv以及pointwise conv，其fragment较少，符合<strong>G3</strong>的标准，另外IGCV2与IGCV3的速度较慢主要是因为使用了较多的group</p>
-<p>另外，作者提到，利用SE-Net操作，分类精度会提升大约0.5%左右。将shuffleNet-V2堆叠50层，与shuffleNet v1以及resnet-50相比，精度有一定的提升，如下图：<br><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fucu2vj7gbj20eu04xdgb.jpg" alt></p>
-<p>另外，作者在COCO数据集上进行检测的测试，采用Light-Head框架，检测结果如下图所示：</p>
-<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fucu8q1wauj20iv07umyj.jpg" alt></p>
-<p>可见，shuffleNet V2在相同FLOPs下，其精度最高，同时作者也指出：<strong>对于分类精度：ShuffleNet v2 &gt; MobileNet V2 &gt; ShuffleNet v1 &gt; Xception, 但是对于检测的结果是：ShuffleNet v2 &gt; Xception &gt; ShuffleNet v1 &gt; MobileNet v2</strong>,为什么会出现这种情况呢？作者解释到，可能是由于Xception较大的感受野，基于此为了增大感受野，作者在每个block的第一个pointwise convolution前面加入了一个3*3的depthwise convolution ，为shuffleNet v2<em>,可见上图的v2</em>确实在精度上有所提升。</p>
+<p>ACB其实比较简单，下面介绍一下fusion操作吧。</p>
+<h3 id="Fusion"><a href="#Fusion" class="headerlink" title="Fusion"></a>Fusion</h3><p>下图所展示的就是卷积的fusion，很好理解，不多介绍了。</p>
+<p><img src="2.png" alt="2.png"></p>
+<p>卷积后面接BN是比较常见的操作，下面详细一下带BN的fusion，如下图所示，I代表特征图。</p>
+<p><img src="3.png" alt="3.png"></p>
+<p>这张图已经很清晰的描述的计算过程，有的时候一图抵千言，第一行就是原始的操作，BN fusion，可以将每行的I提取出来，就变成了第二行，branch fusion就是将卷积操作合并到一起，然后将后面的参数统一计算成b，因为模型训练完成这些参数都是固定的，也就可以很方便的进行合并计算出来了，这是模型加速时候的常规操作。</p>
+<p>还是比较简单的。</p>
+<h4 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h4><p>首先在ImageNet上面还是有效果的，可以看到不论是top1还是top5都有一定程度的提升。</p>
+<p><img src="4.png" alt="4.png"></p>
+<p><strong>加下来探索一下哪里产生的作用比较大</strong></p>
+<p>作者对比了如下三个变量：</p>
+<ol>
+<li>horizontal kernels</li>
+<li>vertical kernels</li>
+<li>batch normalization</li>
+</ol>
+<p>可以发现，horizontal以及vertical kernels都会产生一定的积极效果，结合BN之后，效果就跟明显了。</p>
+<p><img src="5.png" alt="5.png"></p>
+<p>另外作者进行实验证明了卷积核的骨架的作用性，下面的实验中，作者在训练好的模型中，分别将卷积核的骨架随机置为0，角点随机置为0以及全部随机置为0，sparsity ratio代表将多少的比例设置为0。可以发现，骨架的影响是最大的，下降幅度非常快，而角点相对来说要慢一点。 </p>
+<p><img src="6.png" alt="6.png"></p>
+<p>最后作者探究了kernel内值的重要性，采用的方法就是，利用所有数值的绝对值来当做当前kernel值的重要性，然后对所有的kernel首先进行归一化（layerwise），然后对经过归一化的kernel取均值得到最终的重要性，最终作者得到的结果如下：</p>
+<p><img src="7.png" alt="7.png"></p>
+<p>可以看到，正常的kernel分布相对较平均，中间最大达到了0.9以上，其他的基本在0.8以上，但是ACNet使得骨架部分的权重明显增加，这也可以说明ACNet对于骨架部分的增强，使得模型效果的提升（上个实验已经证明了骨架的重要性）</p>
+<p>那如果ACNet不是在kernel骨架中间相加，而是在kernel的右下角相加呢？如上图figure 6(c)所示，实验证明，这样对于边界是具有一定的增强作用的，但是在CIFAR上面的表现没有在中间相加的效果好，并且同样采用上面将一部分kernel置为0的方法，结果如下图，右下角的影响变得很大，当然还是没有骨架大，进一步侧面说明的骨架的重要性。</p>
+<p><img src="8.png" alt="8.png"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文虽然方法都比较简单，但是关键在于想法很不错，利用增强骨架的能力提高模型的效果，同时在部署阶段，使用参数融合，减少计算量，还不影响速度，值得学习借鉴。</p>
 
     </div>
 
@@ -385,26 +335,21 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Deep-Learning/" rel="tag"># Deep Learning</a>
-              <a href="/tags/Classification/" rel="tag"># Classification</a>
-              <a href="/tags/Paper-Reading/" rel="tag"># Paper Reading</a>
+              <a href="/tags/ACNet/" rel="tag"># ACNet</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2019/11/07/shuffleNet/" rel="next" title="shuffleNet">
-                  <i class="fa fa-chevron-left"></i> shuffleNet
+                <a href="/2020/01/01/foveabox/" rel="next" title="FoveaBox">
+                  <i class="fa fa-chevron-left"></i> FoveaBox
                 </a>
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-                <a href="/2019/11/07/image-feature/" rel="prev" title="图像特征点检测方法总结">
-                  图像特征点检测方法总结 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
       </footer>
@@ -444,6 +389,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#摘要"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ACB-Asymmetric-Convolution-Block"><span class="nav-number">2.</span> <span class="nav-text">ACB(Asymmetric Convolution Block)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fusion"><span class="nav-number">3.</span> <span class="nav-text">Fusion</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实验"><span class="nav-number">3.1.</span> <span class="nav-text">实验</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
