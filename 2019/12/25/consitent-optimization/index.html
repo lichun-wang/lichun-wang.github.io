@@ -52,7 +52,7 @@
 </script>
 
   <meta name="description" content="本篇论文中，作者提出在one stage目标检测中影响网络精度的一个原因在于优化的目标与inference设置的不一致性（misalignment between the optimization target and inference configurations），解释来说就是，现在流行的目标检测方法，一般会有两个分支，一个分类，一个坐标框回归，而这两个分支往往是独立的，都是对原始anch">
-<meta name="keywords" content="目标检测">
+<meta name="keywords" content="Consistent Optimization">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Consistent Optimization for Single-Shot Object Detection - 你的anchor用对了吗">
 <meta property="og:url" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2019&#x2F;12&#x2F;25&#x2F;consitent-optimization&#x2F;index.html">
@@ -71,7 +71,7 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2019&#x2F;12&#x2F;25&#x2F;consitent-optimization&#x2F;8.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2019&#x2F;12&#x2F;25&#x2F;consitent-optimization&#x2F;9.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2019&#x2F;12&#x2F;25&#x2F;consitent-optimization&#x2F;10.png">
-<meta property="og:updated_time" content="2019-12-25T14:16:03.901Z">
+<meta property="og:updated_time" content="2020-01-16T13:55:08.568Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2019&#x2F;12&#x2F;25&#x2F;consitent-optimization&#x2F;1.png">
 
@@ -239,18 +239,24 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2019-12-25 09:01:26 / 修改时间：09:16:03" itemprop="dateCreated datePublished" datetime="2019-12-25T09:01:26-05:00">2019-12-25</time>
+              <time title="创建时间：2019-12-25 09:01:26" itemprop="dateCreated datePublished" datetime="2019-12-25T09:01:26-05:00">2019-12-25</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 08:55:08" itemprop="dateModified" datetime="2020-01-16T08:55:08-05:00">2020-01-16</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Papers/" itemprop="url" rel="index">
-                    <span itemprop="name">Papers</span>
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
                   </a>
                 </span>
             </span>
@@ -349,7 +355,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" rel="tag"># 目标检测</a>
+              <a href="/tags/Consistent-Optimization/" rel="tag"># Consistent Optimization</a>
           </div>
 
         
@@ -429,13 +435,13 @@
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
