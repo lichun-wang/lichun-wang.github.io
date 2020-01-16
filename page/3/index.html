@@ -202,6 +202,223 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/07/image-feature/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/07/image-feature/" class="post-title-link" itemprop="url">图像特征点检测方法总结</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-11-07 08:47:29 / 修改时间：09:01:20" itemprop="dateCreated datePublished" datetime="2019-11-07T08:47:29-05:00">2019-11-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Image-Processing/" itemprop="url" rel="index">
+                    <span itemprop="name">Image Processing</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/07/image-feature/" class="post-meta-item leancloud_visitors" data-flag-title="图像特征点检测方法总结" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/07/image-feature/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/07/image-feature/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="SIFT原理："><a href="#SIFT原理：" class="headerlink" title="SIFT原理："></a>SIFT原理：</h3><p>参考链接：<a href="http://blog.csdn.net/zddblog/article/details/7521424" target="_blank" rel="noopener">http://blog.csdn.net/zddblog/article/details/7521424</a></p><h4 id="关键点理解"><a href="#关键点理解" class="headerlink" title="关键点理解"></a>关键点理解</h4><ul>
+<li><strong>二维高斯模糊</strong>：SIFT算法是在不同的尺度空间上查找关键点，而尺度空间的获取需要使用高斯模糊来实现，Lindeberg等人已证明高斯卷积核是实现尺度变换的唯一变换核，并且是唯一的线性核。</li>
+<li><strong>尺度空间在实现时使用高斯金字塔表示</strong><ol>
+<li>对图像做不同尺度的高斯模糊；</li>
+<li>对图像做降采样(隔点采样)。</li>
+</ol>
+</li>
+<li><strong>高斯差分近似实现高斯拉普拉斯变换</strong>：多尺度相减等效拉普拉斯</li>
+<li><strong>利用相邻差分图像，求取极值点</strong></li>
+<li><strong>DOG金字塔存在-1层</strong> :防止丢掉最高层采样率,即图像本身</li>
+<li><strong>关键点定位</strong>：<ol>
+<li>关键点检测</li>
+<li>消除边缘相应：利用Hessian矩阵（<strong>Hessian矩阵可用来求极值点，正定为极小值，负定为极大值，有正有负为鞍点</strong>）</li>
+</ol>
+</li>
+<li><strong>特征描述子生成</strong><ol>
+<li>根据每个特征点所在的高斯尺度（sigma）,确定梯度方向计算半径。</li>
+<li>在半径内找到4<em>4</em>8个特征描述子。</li>
+<li>特征描述子就是梯度方向以及大小。</li>
+</ol>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/07/image-feature/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/07/shuffleNet-v2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/07/shuffleNet-v2/" class="post-title-link" itemprop="url">shuffleNet V2</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-11-07 08:33:29 / 修改时间：08:39:12" itemprop="dateCreated datePublished" datetime="2019-11-07T08:33:29-05:00">2019-11-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Paper-Reading/" itemprop="url" rel="index">
+                    <span itemprop="name">Paper Reading</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/07/shuffleNet-v2/" class="post-meta-item leancloud_visitors" data-flag-title="shuffleNet V2" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/07/shuffleNet-v2/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/07/shuffleNet-v2/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><strong>论文名称：ShuffleNet V2: Practical Guidelines for Efficient CNN Architecture Design</strong></p><p><a href="https://arxiv.org/abs/1807.11164" target="_blank" rel="noopener">论文地址：https://arxiv.org/abs/1807.11164</a></p><p>目前，CNN网络在图像识别领域大放异彩，从最初的AlexNet到后面的GoogLeNet,ResNet,识别精度越来越高，但是除了精度之外，模型的计算复杂度也越来越引起大家的思考，如何降低网络的复杂度，以使网络可以高效的运行在诸如手机登移动端设备，也得到了众多研究者的研究。本文便主要在这方面发力，提出了提高网络速度设计的4个准则，并基于此设计了shuffleNet v2,在速度、精度均超过了目前的主流轻量级网络（shuffleNet v1, mobileNet v2等）,本文是Face++提出，发表于ECCV2018.</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/07/shuffleNet-v2/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/07/shuffleNet/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -748,7 +965,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">27</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -761,7 +978,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
