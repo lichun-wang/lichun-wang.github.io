@@ -51,25 +51,25 @@
   };
 </script>
 
-  <meta name="description" content="Resnet是2015年ImageNet比赛的冠军，不仅在分类上标线优秀，在目标检测中同样取得好成绩，Resnet将网络层数进一步加深，甚至达到1000+层。 论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1512.03385如出现图像显示不完整，或者公式显示不完整，可访问如下博客CSDN:http:&#x2F;&#x2F;blog.csdn.net&#x2F;chunfengyanyulove&#x2F;article&#x2F;de">
+  <meta name="description" content="Resnet是2015年ImageNet比赛的冠军，不仅在分类上标线优秀，在目标检测中同样取得好成绩，Resnet将网络层数进一步加深，甚至达到1000+层。ResNet的表现以至于后面的网络都是在其基础上进行修改得到的，可以说ResNet是一个划时代的网络，被广泛应用于工业界。 下面简单介绍一下这个网络。">
 <meta name="keywords" content="ResNet">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ResNet(Deep Residual Learning for Image Recognition)">
 <meta property="og:url" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;02&#x2F;16&#x2F;resnet&#x2F;index.html">
 <meta property="og:site_name" content="Spring&#39;s Idea">
-<meta property="og:description" content="Resnet是2015年ImageNet比赛的冠军，不仅在分类上标线优秀，在目标检测中同样取得好成绩，Resnet将网络层数进一步加深，甚至达到1000+层。 论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1512.03385如出现图像显示不完整，或者公式显示不完整，可访问如下博客CSDN:http:&#x2F;&#x2F;blog.csdn.net&#x2F;chunfengyanyulove&#x2F;article&#x2F;de">
+<meta property="og:description" content="Resnet是2015年ImageNet比赛的冠军，不仅在分类上标线优秀，在目标检测中同样取得好成绩，Resnet将网络层数进一步加深，甚至达到1000+层。ResNet的表现以至于后面的网络都是在其基础上进行修改得到的，可以说ResNet是一个划时代的网络，被广泛应用于工业界。 下面简单介绍一下这个网络。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20151216155525063">
-<meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20151216160852064">
-<meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20151216164510071">
-<meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20151217083446928">
-<meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20180204170146217?watermark&#x2F;2&#x2F;text&#x2F;aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=&#x2F;font&#x2F;5a6L5L2T&#x2F;fontsize&#x2F;400&#x2F;fill&#x2F;I0JBQkFCMA==&#x2F;dissolve&#x2F;70&#x2F;gravity&#x2F;SouthEast">
-<meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20151217083726957">
-<meta property="og:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20151217083734116">
-<meta property="og:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;145616-8bb29032c4783264.png?imageMogr2&#x2F;auto-orient&#x2F;strip%7CimageView2&#x2F;2&#x2F;w&#x2F;700">
-<meta property="og:updated_time" content="2020-02-16T08:14:25.703Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;02&#x2F;16&#x2F;resnet&#x2F;1.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;02&#x2F;16&#x2F;resnet&#x2F;2.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;02&#x2F;16&#x2F;resnet&#x2F;3.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;02&#x2F;16&#x2F;resnet&#x2F;4.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;02&#x2F;16&#x2F;resnet&#x2F;5.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;02&#x2F;16&#x2F;resnet&#x2F;6.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;02&#x2F;16&#x2F;resnet&#x2F;7.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;02&#x2F;16&#x2F;resnet&#x2F;8.png">
+<meta property="og:updated_time" content="2020-02-16T14:00:07.888Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http:&#x2F;&#x2F;img.blog.csdn.net&#x2F;20151216155525063">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;02&#x2F;16&#x2F;resnet&#x2F;1.png">
 
 <link rel="canonical" href="https://www.wanglichun.tech/2020/02/16/resnet/">
 
@@ -236,7 +236,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-02-16 03:14:25" itemprop="dateCreated datePublished" datetime="2020-02-16T03:14:25-05:00">2020-02-16</time>
+              <time title="创建时间：2020-02-16 09:00:07" itemprop="dateCreated datePublished" datetime="2020-02-16T09:00:07-05:00">2020-02-16</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -283,15 +283,11 @@
 
       
         <blockquote>
-<p>Resnet是2015年ImageNet比赛的冠军，不仅在分类上标线优秀，在目标检测中同样取得好成绩，Resnet将网络层数进一步加深，甚至达到1000+层。</p>
-</blockquote><hr><p><a href="https://arxiv.org/abs/1512.03385" target="_blank" rel="noopener">论文链接：https://arxiv.org/abs/1512.03385</a></p><p><strong>如出现图像显示不完整，或者公式显示不完整，可访问如下博客</strong></p><p><a href="http://blog.csdn.net/chunfengyanyulove/article/details/79253656" target="_blank" rel="noopener">CSDN:http://blog.csdn.net/chunfengyanyulove/article/details/79253656</a></p><a id="more"></a>
+<p>Resnet是2015年ImageNet比赛的冠军，不仅在分类上标线优秀，在目标检测中同样取得好成绩，Resnet将网络层数进一步加深，甚至达到1000+层。ResNet的表现以至于后面的网络都是在其基础上进行修改得到的，可以说ResNet是一个划时代的网络，被广泛应用于工业界。</p>
+</blockquote><p>下面简单介绍一下这个网络。</p><a id="more"></a>
 
-
-
-
-<hr>
 <h3 id="Degradation"><a href="#Degradation" class="headerlink" title="Degradation"></a>Degradation</h3><ul>
-<li><p>根据经验，如果没有发生梯度消失、弥散现象，网络层数越深效果会越好，但是作者实验发现，虽然网络层数增加，但是训练会出现饱和现象，精度反而没有浅层网络精度高了，作者将这种现象称为Degradation问题，如下图所示。<br><img src="http://img.blog.csdn.net/20151216155525063" alt="http://img.blog.csdn.net/20151216155525063"></p>
+<li><p>根据经验，如果没有发生梯度消失、弥散现象，网络层数越深效果会越好，但是作者实验发现，虽然网络层数增加，但是训练会出现饱和现象，精度反而没有浅层网络精度高了，作者将这种现象称为Degradation问题，如下图所示。<br><img src="1.png" alt="1.png"></p>
 </li>
 <li><p>如果仅仅在浅层网络后面增加几层，在不出现过拟合的情况下，效果应该会比浅层网络效果好，但是实验结果却不一定好，这也表明，不是所有的网络都容易优化到最好。</p>
 </li>
@@ -300,7 +296,7 @@
 <li><p>残差网络通过如下结构实现。</p>
 </li>
 </ul>
-<p><img src="http://img.blog.csdn.net/20151216160852064" alt="http://img.blog.csdn.net/20151216160852064"></p>
+<p><img src="2.png" alt="2.png"></p>
 <h3 id="Deep-Residual-Learning"><a href="#Deep-Residual-Learning" class="headerlink" title="Deep Residual Learning"></a>Deep Residual Learning</h3><h4 id="Identity-Mapping-by-Shortcuts"><a href="#Identity-Mapping-by-Shortcuts" class="headerlink" title="Identity Mapping by Shortcuts"></a>Identity Mapping by Shortcuts</h4><p>如上图是一个building block,公式定义如下：</p>
 <p>$$y=F(x,W_{i})+x$$</p>
 <ul>
@@ -326,7 +322,7 @@
 <li>对于所有的block均使用线性投影。</li>
 </ol>
 </blockquote>
-<p><img src="http://img.blog.csdn.net/20151216164510071" alt="http://img.blog.csdn.net/20151216164510071"></p>
+<p><img src="3.png" alt="3.png"></p>
 <h4 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h4><ul>
 <li>图片resize：短边长random.randint(256,480)，裁剪到224＊224，随机采样，含水平翻转，减均值。</li>
 <li>conv和activation间加batch normalization</li>
@@ -336,7 +332,7 @@
 <li>momentum：0.9</li>
 <li>没用dropout</li>
 </ul>
-<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><p><img src="http://img.blog.csdn.net/20151217083446928" alt="http://img.blog.csdn.net/20151217083446928"></p>
+<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><p><img src="4.png" alt="4.png"></p>
 <p>作者通过实验证明：</p>
 <p>1、34层与18层网络比较：</p>
 <blockquote>
@@ -352,10 +348,10 @@
 </blockquote>
 <p>3、将两层网络变为三层网络：</p>
 <blockquote>
-<p>三层分别是1×1、3×3，和1×1的卷积层，其中1×1层负责先减少后增加（恢复）尺寸的，使3×3层具有较小的输入/输出尺寸瓶颈，如下图所示：<br><img src="http://img.blog.csdn.net/20180204170146217?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"><br>识别精度如下图所示：<br><img src="http://img.blog.csdn.net/20151217083726957" alt="http://img.blog.csdn.net/20151217083726957"><br><img src="http://img.blog.csdn.net/20151217083734116" alt="http://img.blog.csdn.net/20151217083734116"></p>
+<p>三层分别是1×1、3×3，和1×1的卷积层，其中1×1层负责先减少后增加（恢复）尺寸的，使3×3层具有较小的输入/输出尺寸瓶颈，如下图所示：<br><img src="5.png" alt="5.png"><br>识别精度如下图所示：<br><img src="6.png" alt="6.png"><br><img src="7.png" alt="7.png"></p>
 </blockquote>
 <p>进一步的，作者在CIFAR-10数据集进行分析。同时，作者又搭建了更加变态的1202层的网络，对于这么深的网络，优化依然并不困难，但是出现了过拟合的问题，这是很正常的，作者也说了以后会对这个1202层的模型进行进一步的改进。</p>
-<p>分析结果如下图：<br><img src="https://upload-images.jianshu.io/upload_images/145616-8bb29032c4783264.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt="https://upload-images.jianshu.io/upload_images/145616-8bb29032c4783264.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700"></p>
+<p>分析结果如下图：<br><img src="8.png" alt="8.png"></p>
 <h4 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h4><p><a href="https://github.com/KaimingHe/deep-residual-networks" target="_blank" rel="noopener">resnet caffe 实现：https://github.com/KaimingHe/deep-residual-networks</a></p>
 <hr>
 <p>补充resnet代码实现MxNet版</p>
@@ -379,17 +375,14 @@
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2020/02/16/tricks-of-train/" rel="next" title="Bag of Tricks for Image Classification with Convolutional Neural Networks">
-                  <i class="fa fa-chevron-left"></i> Bag of Tricks for Image Classification with Convolutional Neural Networks
+                <a href="/2020/02/16/FASF/" rel="next" title="FASF">
+                  <i class="fa fa-chevron-left"></i> FASF
                 </a>
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-                <a href="/2020/02/16/FASF/" rel="prev" title="FASF">
-                  FASF <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
       </footer>
@@ -445,7 +438,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -458,7 +451,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

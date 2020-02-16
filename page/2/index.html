@@ -202,6 +202,218 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/12/25/consitent-optimization/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/25/consitent-optimization/" class="post-title-link" itemprop="url">Consistent Optimization for Single-Shot Object Detection - 你的anchor用对了吗</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-25 09:01:26" itemprop="dateCreated datePublished" datetime="2019-12-25T09:01:26-05:00">2019-12-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 08:55:08" itemprop="dateModified" datetime="2020-01-16T08:55:08-05:00">2020-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/12/25/consitent-optimization/" class="post-meta-item leancloud_visitors" data-flag-title="Consistent Optimization for Single-Shot Object Detection - 你的anchor用对了吗" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/12/25/consitent-optimization/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/12/25/consitent-optimization/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>本篇论文中，作者提出在one stage目标检测中影响网络精度的一个原因在于<strong>优化的目标与inference设置的不一致性（misalignment between the optimization target and inference configurations），解释来说就是，现在流行的目标检测方法，一般会有两个分支，一个分类，一个坐标框回归，而这两个分支往往是独立的，都是对原始anchor进行处理，这就会带来一个问题，我们在进行分类的时候，使用的是原始的anchor，而在坐标框回归后，很可能回归后的anchor与原始anchor已经产生了不同，这样使用原始anchor的分类结果作为回归后的anchor的分类得分就不准确了</strong>，本篇论文就是围绕着解决这个问题来进行的。乍一看本篇文章，感觉与Cascade RCNN有点像，采用的方法同样是对网络输出的结果进行refine，来达到提升网络精度的效果，但是其出发点是不同的，<a href="https://blog.csdn.net/Chunfengyanyulove/article/details/86414810" target="_blank" rel="noopener">Cascade R-CNN</a>的出发点是解决IOU阈值的设置带来的噪声问题，而consistent optimization的出发点是解决分类anchor与回归后的anchor不一致的问题。并且<strong>consistent optimization方法只是修改了RetinaNet网络的loss，改动不大，整体上时间消耗也没有增加，原则上说，其也不算是cascade方法，只是思想相近而已，但是本方法的实用性还是很强的。</strong></p>
+</blockquote>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/25/consitent-optimization/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/12/25/mxnet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/25/mxnet/" class="post-title-link" itemprop="url">MXNet</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-25 08:59:23" itemprop="dateCreated datePublished" datetime="2019-12-25T08:59:23-05:00">2019-12-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 08:48:15" itemprop="dateModified" datetime="2020-01-16T08:48:15-05:00">2020-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Technology/" itemprop="url" rel="index">
+                    <span itemprop="name">Technology</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/12/25/mxnet/" class="post-meta-item leancloud_visitors" data-flag-title="MXNet" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/12/25/mxnet/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/12/25/mxnet/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>自己使用时候总结的MXNet一些基本操作及介绍,深度学习训练框架MXNet的基本操作都在这里了</p>
+</blockquote><h3 id="一、基础篇"><a href="#一、基础篇" class="headerlink" title="一、基础篇"></a>一、基础篇</h3><h4 id="NDArray介绍篇"><a href="#NDArray介绍篇" class="headerlink" title="NDArray介绍篇"></a>NDArray介绍篇</h4><p>在mxnet中，<strong>NDArray是所有运算的核心数据结构，mxnet中的所有数据均使用NDArray进行表示</strong>，NDarray有点类似于numpy中的ndarray，操作上面也与numpy很相似，但是NDArray提供了numpy.ndarray所不具备的操作，比如:<strong>GPU,CPU的切换，自动求梯度的运算等等</strong>，这也是为什么mxnet要重新封装一个NDArray的原因。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/25/mxnet/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -520,112 +732,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/20/snip/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.png">
-      <meta itemprop="name" content="Spring Wang">
-      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Spring's Idea">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/11/20/snip/" class="post-title-link" itemprop="url">SNIP</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-11-20 09:39:26" itemprop="dateCreated datePublished" datetime="2019-11-20T09:39:26-05:00">2019-11-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-16 07:24:06" itemprop="dateModified" datetime="2020-02-16T07:24:06-05:00">2020-02-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Detection/" itemprop="url" rel="index">
-                    <span itemprop="name">Detection</span>
-                  </a>
-                </span>
-            </span>
-
-          
-            <span id="/2019/11/20/snip/" class="post-meta-item leancloud_visitors" data-flag-title="SNIP" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2019/11/20/snip/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/20/snip/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>本篇文章是一篇优化目标检测精度的文章，在two stage方法上进行模型优化的，文章的主要关注点在于目标尺度（Scale）。基于作者对目标尺度的实验与分析，设计了SNIP方法，该方法实验证明，可以有效提高目标检测的精度</p>
-</blockquote><hr><p><strong>论文名称:An Analysis of Scale Invariance in Object Detection – SNIP</strong></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/11/20/snip/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/20/snipper/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -709,6 +815,112 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2019/11/20/snipper/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/20/snip/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/20/snip/" class="post-title-link" itemprop="url">SNIP</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-20 09:39:26" itemprop="dateCreated datePublished" datetime="2019-11-20T09:39:26-05:00">2019-11-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 07:24:06" itemprop="dateModified" datetime="2020-02-16T07:24:06-05:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/20/snip/" class="post-meta-item leancloud_visitors" data-flag-title="SNIP" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/20/snip/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/20/snip/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>本篇文章是一篇优化目标检测精度的文章，在two stage方法上进行模型优化的，文章的主要关注点在于目标尺度（Scale）。基于作者对目标尺度的实验与分析，设计了SNIP方法，该方法实验证明，可以有效提高目标检测的精度</p>
+</blockquote><hr><p><strong>论文名称:An Analysis of Scale Invariance in Object Detection – SNIP</strong></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/20/snip/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -838,6 +1050,117 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/18/faster-rcnn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/18/faster-rcnn/" class="post-title-link" itemprop="url">Faster-RCNN</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-18 09:47:44" itemprop="dateCreated datePublished" datetime="2019-11-18T09:47:44-05:00">2019-11-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 08:17:58" itemprop="dateModified" datetime="2020-02-16T08:17:58-05:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/18/faster-rcnn/" class="post-meta-item leancloud_visitors" data-flag-title="Faster-RCNN" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/18/faster-rcnn/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/18/faster-rcnn/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><a href="https://arxiv.org/abs/1506.01497" target="_blank" rel="noopener">论文链接：https://arxiv.org/abs/1506.01497</a></p><p><strong>如出现图像显示不完整，或者公式显示不完整，可访问如下博客</strong></p><p><a href="https://blog.csdn.net/chunfengyanyulove/article/details/80037396" target="_blank" rel="noopener">CSDN博客地址：https://blog.csdn.net/chunfengyanyulove/article/details/80037396</a></p><hr><h4 id="创新点"><a href="#创新点" class="headerlink" title="创新点"></a>创新点</h4><ul>
+<li>目前object detection的成功主要在于region proposal方法以及region-based CNN网络方法。</li>
+<li>region proposal耗时成为object detection的瓶颈。</li>
+<li>作者设计提出RPN网络，替代region proposal方法的同时，实现end-to-end网络。</li>
+<li>rpn网络利用特征图实现region proposal，使得时间降低到10ms/张。</li>
+<li>rpn利用“anchor”实现多尺度，多方向的变换。（论文中同时介绍了其他的方法，比如图像金字塔，但是感觉还是anchor比较实用）</li>
+<li>为了保证rpn与fast rcnn的一致，作者提出了一种交替训练的方法。</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/18/faster-rcnn/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/18/fast-rcnn/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -940,330 +1263,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/18/faster-rcnn/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.png">
-      <meta itemprop="name" content="Spring Wang">
-      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Spring's Idea">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/11/18/faster-rcnn/" class="post-title-link" itemprop="url">Faster-RCNN</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-11-18 09:47:44" itemprop="dateCreated datePublished" datetime="2019-11-18T09:47:44-05:00">2019-11-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-16 03:23:12" itemprop="dateModified" datetime="2020-02-16T03:23:12-05:00">2020-02-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Detection/" itemprop="url" rel="index">
-                    <span itemprop="name">Detection</span>
-                  </a>
-                </span>
-            </span>
-
-          
-            <span id="/2019/11/18/faster-rcnn/" class="post-meta-item leancloud_visitors" data-flag-title="Faster-RCNN" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2019/11/18/faster-rcnn/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/18/faster-rcnn/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a href="https://arxiv.org/abs/1506.01497" target="_blank" rel="noopener">论文链接：https://arxiv.org/abs/1506.01497</a></p><p><strong>如出现图像显示不完整，或者公式显示不完整，可访问如下博客</strong></p><p><a href="https://blog.csdn.net/chunfengyanyulove/article/details/80037396" target="_blank" rel="noopener">CSDN博客地址：https://blog.csdn.net/chunfengyanyulove/article/details/80037396</a></p><hr><h4 id="创新点"><a href="#创新点" class="headerlink" title="创新点"></a>创新点</h4><ul>
-<li>目前object detection的成功主要在于region proposal方法以及region-based CNN网络方法。</li>
-<li>region proposal耗时成为object detection的瓶颈。</li>
-<li>作者设计提出RPN网络，替代region proposal方法的同时，实现end-to-end网络。</li>
-<li>rpn网络利用特征图实现region proposal，使得时间降低到10ms/张。</li>
-<li>rpn利用“anchor”实现多尺度，多方向的变换。（论文中同时介绍了其他的方法，比如图像金字塔，但是感觉还是anchor比较实用）</li>
-<li>为了保证rpn与fast rcnn的一致，作者提出了一种交替训练的方法。</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/11/18/faster-rcnn/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/18/fpn/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.png">
-      <meta itemprop="name" content="Spring Wang">
-      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Spring's Idea">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/11/18/fpn/" class="post-title-link" itemprop="url">FPN</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-11-18 09:47:44" itemprop="dateCreated datePublished" datetime="2019-11-18T09:47:44-05:00">2019-11-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-16 09:58:14" itemprop="dateModified" datetime="2020-02-16T09:58:14-05:00">2020-02-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Detection/" itemprop="url" rel="index">
-                    <span itemprop="name">Detection</span>
-                  </a>
-                </span>
-            </span>
-
-          
-            <span id="/2019/11/18/fpn/" class="post-meta-item leancloud_visitors" data-flag-title="FPN" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2019/11/18/fpn/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/18/fpn/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a href="https://arxiv.org/abs/1612.03144" target="_blank" rel="noopener">论文链接：https://arxiv.org/abs/1612.03144</a></p><hr><h4 id="FPN-创新点"><a href="#FPN-创新点" class="headerlink" title="FPN 创新点"></a>FPN 创新点</h4><ul>
-<li>低层特征信息与高层语义信息的特征融合</li>
-<li>有利于小目标的检测</li>
-</ul><h4 id="写在前面的话"><a href="#写在前面的话" class="headerlink" title="写在前面的话"></a>写在前面的话</h4><p>FPN的全称是<strong>Feature Pyramid Networks[特征金字塔网络]</strong>， 图像金子塔是什么？图像金字塔其实在很早便被提出，像比如SIFT,SURF,HOG等传统的特征提取方法均使用了图像金字塔，想了解传统特征提取方法的参考博文<a href="http://wanglichun.tech/algorithm/Sift.html" target="_blank" rel="noopener">http://wanglichun.tech/algorithm/Sift.html</a>,但是在深度学习中，一直没有被使用，其实主要原因在于深度学习中图像的计算量较大，采用金字塔，多一个scale就相当于多了一倍的计算量，这个时候内存很有可能扛不住了，可是为了达到多尺度的检测该怎么办呢？</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/11/18/fpn/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/18/maskrcnn/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.png">
-      <meta itemprop="name" content="Spring Wang">
-      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Spring's Idea">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/11/18/maskrcnn/" class="post-title-link" itemprop="url">Mask RCNN</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-11-18 09:47:44" itemprop="dateCreated datePublished" datetime="2019-11-18T09:47:44-05:00">2019-11-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-16 09:58:54" itemprop="dateModified" datetime="2020-02-16T09:58:54-05:00">2020-02-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Segmentation/" itemprop="url" rel="index">
-                    <span itemprop="name">Segmentation</span>
-                  </a>
-                </span>
-            </span>
-
-          
-            <span id="/2019/11/18/maskrcnn/" class="post-meta-item leancloud_visitors" data-flag-title="Mask RCNN" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2019/11/18/maskrcnn/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/18/maskrcnn/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>Mask R-CNN是He Kaiming大神2017年的力作，其在进行目标检测的同时进行实例分割，取得了出色的效果，其在没有任何trick的情况下，取得了COCO 2016比赛的冠军。<strong>其网络的设计也比较简单，在Faster R-CNN基础上，在原本的两个分支上（分类+坐标回归）增加了一个分支进行语义分割</strong>，如下图所示：</p>
-</blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/11/18/maskrcnn/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1314,7 +1313,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1327,7 +1326,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
