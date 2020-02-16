@@ -51,13 +51,13 @@
   };
 </script>
 
-  <meta name="description" content="论文名称：ShuffleNet V2: Practical Guidelines for Efficient CNN Architecture Design论文地址：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1807.11164目前，CNN网络在图像识别领域大放异彩，从最初的AlexNet到后面的GoogLeNet,ResNet,识别精度越来越高，但是除了精度之外，模型的计算复杂度也越来越引起大">
+  <meta name="description" content="目前，CNN网络在图像识别领域大放异彩，从最初的AlexNet到后面的GoogLeNet,ResNet,识别精度越来越高，但是除了精度之外，模型的计算复杂度也越来越引起大家的思考，如何降低网络的复杂度，以使网络可以高效的运行在诸如手机登移动端设备，也得到了众多研究者的研究。本文便主要在这方面发力，提出了提高网络速度设计的4个准则，并基于此设计了shuffleNet v2,在速度、精度均超过了目前">
 <meta name="keywords" content="ShuffleNet">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ShuffleNet V2">
 <meta property="og:url" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2019&#x2F;11&#x2F;07&#x2F;shuffleNet-v2&#x2F;index.html">
 <meta property="og:site_name" content="Spring&#39;s Idea">
-<meta property="og:description" content="论文名称：ShuffleNet V2: Practical Guidelines for Efficient CNN Architecture Design论文地址：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1807.11164目前，CNN网络在图像识别领域大放异彩，从最初的AlexNet到后面的GoogLeNet,ResNet,识别精度越来越高，但是除了精度之外，模型的计算复杂度也越来越引起大">
+<meta property="og:description" content="目前，CNN网络在图像识别领域大放异彩，从最初的AlexNet到后面的GoogLeNet,ResNet,识别精度越来越高，但是除了精度之外，模型的计算复杂度也越来越引起大家的思考，如何降低网络的复杂度，以使网络可以高效的运行在诸如手机登移动端设备，也得到了众多研究者的研究。本文便主要在这方面发力，提出了提高网络速度设计的4个准则，并基于此设计了shuffleNet v2,在速度、精度均超过了目前">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1fuafjti05hj20u40mcwh8.jpg">
 <meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1fuagiwaovjj20ub0cgq8i.jpg">
@@ -72,7 +72,7 @@
 <meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1fuctjwfljdj20jf0odgq9.jpg">
 <meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbgy1fucu2vj7gbj20eu04xdgb.jpg">
 <meta property="og:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1fucu8q1wauj20iv07umyj.jpg">
-<meta property="og:updated_time" content="2020-01-16T13:50:18.181Z">
+<meta property="og:updated_time" content="2020-02-16T03:40:08.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;ww1.sinaimg.cn&#x2F;large&#x2F;87675bbbly1fuafjti05hj20u40mcwh8.jpg">
 
@@ -248,7 +248,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-16 08:50:18" itemprop="dateModified" datetime="2020-01-16T08:50:18-05:00">2020-01-16</time>
+                <time title="修改时间：2020-02-15 22:40:08" itemprop="dateModified" datetime="2020-02-15T22:40:08-05:00">2020-02-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -294,9 +294,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><strong>论文名称：ShuffleNet V2: Practical Guidelines for Efficient CNN Architecture Design</strong></p><p><a href="https://arxiv.org/abs/1807.11164" target="_blank" rel="noopener">论文地址：https://arxiv.org/abs/1807.11164</a></p><p>目前，CNN网络在图像识别领域大放异彩，从最初的AlexNet到后面的GoogLeNet,ResNet,识别精度越来越高，但是除了精度之外，模型的计算复杂度也越来越引起大家的思考，如何降低网络的复杂度，以使网络可以高效的运行在诸如手机登移动端设备，也得到了众多研究者的研究。本文便主要在这方面发力，提出了提高网络速度设计的4个准则，并基于此设计了shuffleNet v2,在速度、精度均超过了目前的主流轻量级网络（shuffleNet v1, mobileNet v2等）,本文是Face++提出，发表于ECCV2018.</p><a id="more"></a>
-
-
+        <blockquote>
+<p>目前，CNN网络在图像识别领域大放异彩，从最初的AlexNet到后面的GoogLeNet,ResNet,识别精度越来越高，但是除了精度之外，模型的计算复杂度也越来越引起大家的思考，如何降低网络的复杂度，以使网络可以高效的运行在诸如手机登移动端设备，也得到了众多研究者的研究。本文便主要在这方面发力，提出了提高网络速度设计的4个准则，并基于此设计了shuffleNet v2,在速度、精度均超过了目前的主流轻量级网络（shuffleNet v1, mobileNet v2等）,本文是Face++提出，发表于ECCV2018.</p>
+</blockquote><a id="more"></a>
+<hr>
+<p><strong>论文名称：ShuffleNet V2: Practical Guidelines for Efficient CNN Architecture Design</strong></p>
+<p><a href="https://arxiv.org/abs/1807.11164" target="_blank" rel="noopener">论文地址：https://arxiv.org/abs/1807.11164</a></p>
+<hr>
 <p>下面详细介绍一下这篇文章</p>
 <p>作者在开篇首先指出，目前评价一个网络的复杂度的指标往往是FLOPs(<strong>FLOPs简单解释就是网络执行了多少的multiply-adds操作</strong>)，但是这种评价指标往往是不正确的，因为FLOPs可能不能反映出网络模型的执行速度或者时延，如下图所示：</p>
 <p>通过观察可以发现图中(c,d)可以发现，具有相似的FLOPs的网络，执行的速度却不一样。</p>
@@ -463,20 +467,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">35</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-count">33</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
