@@ -67,7 +67,7 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;05&#x2F;16&#x2F;resnest&#x2F;5.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;05&#x2F;16&#x2F;resnest&#x2F;6.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;05&#x2F;16&#x2F;resnest&#x2F;7.png">
-<meta property="og:updated_time" content="2020-05-16T15:08:37.917Z">
+<meta property="og:updated_time" content="2020-05-16T15:21:53.423Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;www.wanglichun.tech&#x2F;2020&#x2F;05&#x2F;16&#x2F;resnest&#x2F;0.png">
 
@@ -237,7 +237,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-05-16 11:04:33 / 修改时间：11:08:37" itemprop="dateCreated datePublished" datetime="2020-05-16T11:04:33-04:00">2020-05-16</time>
+              <time title="创建时间：2020-05-16 11:04:33 / 修改时间：11:21:53" itemprop="dateCreated datePublished" datetime="2020-05-16T11:04:33-04:00">2020-05-16</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -307,7 +307,7 @@
 <li>cardinality组内的attention</li>
 </ol>
 <p><img src="2.png" alt="2.png"></p>
-<p>这个可以参上上面的流程图，首先对每组的输出进行element-wise summation,用以融合不同特征图的特征。然后通过Global pooling得到全局统计信息，进而通过一层全连接层+bn+relu，然后再通过一层全连接层得到加softmax，计算出各个组的attention值，然后对原来的输入进行加权，得到输出结果后进一步求和得到最终的输出结果。</p>
+<p>这个可以参考上面的流程图，首先对每组的输出进行element-wise summation,用以融合不同特征图的特征。然后通过Global pooling得到全局统计信息，进而通过一层全连接层+bn+relu，然后再通过一层全连接层得到加softmax，计算出各个组的attention值，然后对原来的输入进行加权，得到输出结果后进一步求和得到最终的输出结果。</p>
 <blockquote>
 <p>总体来看，跟senet有点像，只不过多了一些分组求和的操作，如果将radix=1，那么就跟senet基本一致了。另外senet是使用sigmoid计算激活值，而resnest使用的是softmax来计算激活值，更增加了channel之间的联系,这里会有不同。</p>
 </blockquote>
@@ -418,20 +418,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">42</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-count">39</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
