@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="在程序开发过程中，经常需要我们去配置各种开发环境，而本地与线上还可能存在环境依赖的不同，导致出现一些不知名的bug，这个时候不要抓头，是时候使用docker来帮你排忧解难了,下面我通过下面几个篇章来介绍Docker.  原理介绍篇Docker是什么docker是linux容器的一种封装，提供简单易用的容器使用接口。它是最流行的Linux容器解决方案。 简单来说就是，docker可以将你的环境进行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker的使用与总结">
+<meta property="og:url" content="https://www.wanglichun.tech/2019/12/22/docker/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="在程序开发过程中，经常需要我们去配置各种开发环境，而本地与线上还可能存在环境依赖的不同，导致出现一些不知名的bug，这个时候不要抓头，是时候使用docker来帮你排忧解难了,下面我通过下面几个篇章来介绍Docker.  原理介绍篇Docker是什么docker是linux容器的一种封装，提供简单易用的容器使用接口。它是最流行的Linux容器解决方案。 简单来说就是，docker可以将你的环境进行">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-12-22T00:01:52.000Z">
+<meta property="article:modified_time" content="2020-01-16T05:53:52.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="工具类">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2019/12/22/docker/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Docker的使用与总结 | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/12/22/docker/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Docker的使用与总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-22 08:01:52" itemprop="dateCreated datePublished" datetime="2019-12-22T08:01:52+08:00">2019-12-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 13:53:52" itemprop="dateModified" datetime="2020-01-16T13:53:52+08:00">2020-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Technology/" itemprop="url" rel="index">
+                    <span itemprop="name">Technology</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/12/22/docker/" class="post-meta-item leancloud_visitors" data-flag-title="Docker的使用与总结" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/12/22/docker/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/12/22/docker/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>在程序开发过程中，经常需要我们去配置各种开发环境，而本地与线上还可能存在环境依赖的不同，导致出现一些不知名的bug，这个时候不要抓头，是时候使用docker来帮你排忧解难了,下面我通过下面几个篇章来介绍Docker.</p>
+</blockquote>
+<h3 id="原理介绍篇"><a href="#原理介绍篇" class="headerlink" title="原理介绍篇"></a>原理介绍篇</h3><h4 id="Docker是什么"><a href="#Docker是什么" class="headerlink" title="Docker是什么"></a>Docker是什么</h4><p>docker是linux容器的一种封装，提供简单易用的容器使用接口。它是最流行的Linux容器解决方案。</p>
+<p>简单来说就是，docker可以将你的环境进行封装，并且程序在docker内运行，有了docker，你就再也不用担心环境问题了。</p>
+<h4 id="Docker的优势"><a href="#Docker的优势" class="headerlink" title="Docker的优势"></a>Docker的优势</h4><p><strong>更高效的利用系统资源</strong></p>
+<p>由于容器不需要进行硬件虚拟以及运行完整操作系统等额外开销，Docker 对系统 资源的利用率更高。</p>
+<p>无论是应用执行速度、内存损耗或者文件存储速度，都要比传 统虚拟机技术更高效。因此，相比虚拟机技术，一个相同配置的主机，往往可以运 行更多数量的应用。</p>
+<p><strong>更快速的启动时间</strong></p>
+<p>传统的虚拟机技术启动应用服务往往需要数分钟，而 Docker 容器应用，由于直接 运行于宿主内核，无需启动完整的操作系统，因此可以做到秒级、甚至毫秒级的启 动时间。大大的节约了开发、测试、部署的时间。</p>
+<p><strong>一致的运行环境</strong></p>
+<p>开发过程中一个常见的问题是环境一致性问题。由于开发环境、测试环境、生产环 境不一致，导致有些 bug 并未在开发过程中被发现。</p>
+<p>而 Docker 的镜像提供了除内 核外完整的运行时环境，确保了应用运行环境一致性，从而不会再出现 “这段代码 在我机器上没问题啊” 这类问题。</p>
+<p><strong>持续交付和部署</strong></p>
+<p>对开发和运维(DevOps)人员来说，最希望的就是一次创建或配置，可以在任意 地方正常运行。</p>
+<p>使用 Docker 可以通过定制应用镜像来实现持续集成、持续交付、部署。开发人员 可以通过 Dockerfile 来进行镜像构建，并结合持续集成(Continuous Integration) 系 统进行集成测试，而运维人员则可以直接在生产环境中快速部署该镜像，甚至结合 持续部署(Continuous Delivery/Deployment) 系统进行自动部署。</p>
+<p>而且使用 Dockerfile 使镜像构建透明化，不仅仅开发团队可以理解应用运行环 境，也方便运维团队理解应用运行所需条件，帮助更好的生产环境中部署该镜像。</p>
+<p><strong>更轻松的迁移</strong></p>
+<p>由于 Docker 确保了执行环境的一致性，使得应用的迁移更加容易。Docker 可以在 很多平台上运行，无论是物理机、虚拟机、公有云、私有云，甚至是笔记本，其运 行结果是一致的。</p>
+<p>因此用户可以很轻易的将在一个平台上运行的应用，迁移到另一 个平台上，而不用担心运行环境的变化导致应用无法正常运行的情况。</p>
+<h3 id="安装篇"><a href="#安装篇" class="headerlink" title="安装篇"></a>安装篇</h3><p>一般，如果使用GPU，一般要安装<strong>Docker, Nvidia-Docker,Docker-Compose,Nvidia-Docker-Compse</strong></p>
+<h4 id="Docker的安装"><a href="#Docker的安装" class="headerlink" title="Docker的安装"></a>Docker的安装</h4><p>参考官方安装链接： <a target="_blank" rel="noopener" href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">https://docs.docker.com/install/linux/docker-ce/ubuntu/</a></p>
+<p>按官方教程docker ce（community edtion），并按教程测试docker是否成功安装。比如我们以Ubuntu Xenial 16.04 (LTS)为例：<br>下载Docker安装包，在这里<a target="_blank" rel="noopener" href="https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/%E6%8C%91%E9%80%89%E6%9C%80%E6%96%B0%E7%9A%84Docker%E7%89%88%E6%9C%AC%E3%80%82">https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/挑选最新的Docker版本。</a><br>安装：sudo dpkg -i /path/to/package.deb<br>测试：sudo docker run hello-world<br>(可选）Linux环境下的权限变更，这样不用每次docker命令都加sudo，自己没服务器权限找管理员变更。</p>
+<h4 id="Nvidia-Docker-的安装"><a href="#Nvidia-Docker-的安装" class="headerlink" title="Nvidia-Docker 的安装"></a>Nvidia-Docker 的安装</h4><p>参考官方安装链接： <a target="_blank" rel="noopener" href="https://github.com/NVIDIA/nvidia-docker">https://github.com/NVIDIA/nvidia-docker</a></p>
+<p>nvidia-docker已经升级到nvidia-docker2，本测试是在nvidia-docker 1.0基础上完成的，1.0的安装方法请看上面教程链接。</p>
+<p>Test nvidia-smi with the latest official CUDA image</p>
+<p>docker run –runtime=nvidia –rm nvidia/cuda nvidia-smi</p>
+<h4 id="docker-compose的安装"><a href="#docker-compose的安装" class="headerlink" title="docker-compose的安装"></a>docker-compose的安装</h4><p>参考官方安装链接：<a target="_blank" rel="noopener" href="https://docs.docker.com/compose/install/">https://docs.docker.com/compose/install/</a></p>
+<p>到<a target="_blank" rel="noopener" href="https://github.com/docker/compose/releases%E4%B8%8B%E8%BD%BDlinux%E7%89%88%E6%9C%AC%E3%80%82">https://github.com/docker/compose/releases下载linux版本。</a><br>重命名为docker-compose并放到/usr/local/bin/下面<br>增加执行权限：sudo chmod +x /usr/local/bin/docker-compose<br>测试： docker-compose –version</p>
+<h4 id="nvidia-docker-compose的安装"><a href="#nvidia-docker-compose的安装" class="headerlink" title="nvidia-docker-compose的安装"></a>nvidia-docker-compose的安装</h4><p>sudo pip install nvidia-docker-compose</p>
+<p>注意：nvidia-docker-compose和nvidia-docker2不兼容，如果安装了nvidia-docker2，那就不需要安装这个compose了</p>
+<h3 id="使用篇"><a href="#使用篇" class="headerlink" title="使用篇"></a>使用篇</h3><p>使用容器必然需要容器镜像，镜像是容器环境的存储形式。容器的运行要从镜像开始。</p>
+<h4 id="如何构建镜像？"><a href="#如何构建镜像？" class="headerlink" title="如何构建镜像？"></a>如何构建镜像？</h4><p>1.简单方法，docker pull</p>
+<p>dockerhub上面存在很多别人上传好的镜像，如果有合适的可以自己从上面直接拉，很方便。命令如下：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull pytorch/pytorch:1.3-cuda10.1-cudnn7-runtime</span><br></pre></td></tr></tbody></table></figure>
+
+
+<p>2.在docker内直接安装</p>
+<p>如果在dockerhub上面拉下来的镜像满足了你大部分的需求，但是缺少了几个环境怎么办呢？可以在已经拉下来的镜像中直接安装，安装完对应的库之后，commit就可以了。</p>
+<p>例子如下：</p>
+<p>在ubuntu容器中安装vim后保存。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run -it ubuntu   # 运行docker</span><br><span class="line">yum install -y vim      # 安装vim</span><br><span class="line">exit                    # 退出</span><br><span class="line">docker container ls -a  # 查看容器,找到刚才安装后的容器</span><br><span class="line">docker commit 059fdea031ba chaoyu/centos-vim  # 提交容器，前面参数是id,后面参数是名字</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>但是这种方式不推荐，因为安装了哪些东西，容易忘记，不好复现</strong></p>
+<p>3.通过Dockerfile安装</p>
+<p>Dockerfile可以帮助你解决2中，时间长，容易忘记，不好复现的问题，通过Dockerfile，你可以从你的基础镜像开始，一步一步的安装，得到最终的结果。</p>
+<p>就像下面这样：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FROM centos</span><br><span class="line">RUN yum install wget</span><br><span class="line">RUN wget -O redis.tar.gz "http://download.redis.io/releases/redis-5.0.3.tar.gz"</span><br><span class="line">RUN tar -xvf redis.tar.gz</span><br><span class="line">以上执行会创建 3 层镜像。可简化为以下格式：</span><br><span class="line">FROM centos</span><br><span class="line">RUN yum install wget \</span><br><span class="line">    &amp;&amp; wget -O redis.tar.gz "http://download.redis.io/releases/redis-5.0.3.tar.gz" \</span><br><span class="line">    &amp;&amp; tar -xvf redis.tar.gz</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>下面是构建Dockerfile常用命令的一些解释</strong></p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu:14.04 #带有tag的base image</span><br><span class="line"></span><br><span class="line">LABEL version=“1.0” #容器元信息，帮助信息，Metadata，类似于代码注释</span><br><span class="line">LABEL maintainer=“yc_uuu@163.com"</span><br><span class="line"></span><br><span class="line">#对于复杂的RUN命令，避免无用的分层，多条命令用反斜线换行，合成一条命令！</span><br><span class="line">RUN yum update &amp;&amp; yum install -y vim \</span><br><span class="line">    Python-dev #反斜线换行</span><br><span class="line">RUN /bin/bash -c "source $HOME/.bashrc;echo $HOME”</span><br><span class="line"></span><br><span class="line">WORKDIR /app #相当于linux的cd命令，改变目录，尽量使用绝对路径！！！不要用RUN cd</span><br><span class="line">RUN pwd     # 打印结果应该是/test/demo</span><br><span class="line"></span><br><span class="line">ADD and COPY </span><br><span class="line">ADD hello /  # 把本地文件添加到镜像中，吧本地的hello可执行文件拷贝到镜像的/目录</span><br><span class="line">ADD test.tar.gz /  # 添加到根目录并解压</span><br><span class="line"></span><br><span class="line">WORKDIR /root</span><br><span class="line">ADD hello test/  # 进入/root/ 添加hello可执行命令到test目录下，也就是/root/test/hello 一个绝对路径</span><br><span class="line">COPY hello test/  # 等同于上述ADD效果</span><br><span class="line"></span><br><span class="line">ADD与COPY</span><br><span class="line">   - 优先使用COPY命令</span><br><span class="line">    -ADD除了COPY功能还有解压功能</span><br><span class="line">添加远程文件/目录使用curl或wget</span><br><span class="line"></span><br><span class="line">ENV # 环境变量，尽可能使用ENV增加可维护性</span><br><span class="line">ENV MYSQL_VERSION 5.6 # 设置一个mysql常量</span><br><span class="line">RUN yum install -y mysql-server=“${MYSQL_VERSION}” </span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>构建好Dockerfile之后，就可以使用下面的命令构建镜像了</strong></p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker build -t [docker name] .</span><br><span class="line">docker build --network=host  -t [docker name]  .      ### 修改网络,使用本机网络，如果有些库安装的时候下载不下来可以试试这个参数。</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="镜像的运行"><a href="#镜像的运行" class="headerlink" title="镜像的运行"></a>镜像的运行</h4><p>1.启动一个bash终端,允许用户进行交互</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -it -v $HOME/history:/history/ dockername /bin/bash  </span><br><span class="line"></span><br><span class="line">或者指定运行网络为主机网络：</span><br><span class="line"></span><br><span class="line">docker run --net=host --rm -it -v $HOME/history:/history/  pytorch:nightly-gpu /bin/bash </span><br><span class="line"></span><br><span class="line"># --name  给容器定义一个名称</span><br><span class="line"># -i 让容器的标准输入保持打开。</span><br><span class="line"># -t 让Docker分配一个伪终端,并绑定到容器的标准输入上。</span><br><span class="line"># -v 将本机路径映射到容器中，实现在容器中的操作。</span><br><span class="line"># /bin/bash 指定docker容器，用shell解释器交互。</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<p>2.利用docker-compose运行docker服务</p>
+<p>上面1中的命令好长，如果映射多个路径岂不很麻烦，而且启动容器后，没有办法与本地文件进行交互，有没有更方便的使用容器的方法？当然有</p>
+<p>使用docker-compose，docker-compose可以实现本地文件到docker内的映射，这样你在本地直接修改程序，docker内就同步修改了，比较方便。</p>
+<p>使用docker-compose首先要创建docker-compose.yml文件，参考如下：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># yml配置文件格式版本为2, 镜像名字为webspring</span><br><span class="line">version: '2'</span><br><span class="line">services:</span><br><span class="line">  webspring:</span><br><span class="line">    build: .  # 如果没有下面image的镜像，默认在当前路径下的Dockerfile运行</span><br><span class="line">    image: tf-demo/docker:0.0.1  # 默认运行的镜像</span><br><span class="line"># 映射端口</span><br><span class="line">    shm_size: '2gb' ## 代表交换空间，可省略</span><br><span class="line">    ports:</span><br><span class="line">    - "8888:8888"</span><br><span class="line">    - "8887:6006"</span><br><span class="line"># 映射文件路径</span><br><span class="line">    volumes:</span><br><span class="line">    - .:/app</span><br></pre></td></tr></tbody></table></figure>
+
+
+<p>创建好后，运行下面的命令启动服务就可以啦。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose run --rm  webspring bash</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="停止容器"><a href="#停止容器" class="headerlink" title="停止容器"></a>停止容器</h4><p>1.在运行的容器中，使用exits退出<br>2.直接将对应的docker stop掉</p>
+<blockquote>
+<p>这里一般先使用docker ps查看docker的运行情况，然后使用 docker stop xxxx 来将对应的容器停止掉。</p>
+</blockquote>
+<p><strong>记得经常去清一下缓存(很重要)：</strong></p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm $(docker ps -qf status=exited)</span><br></pre></td></tr></tbody></table></figure>
+
+
+<h4 id="发布到仓库"><a href="#发布到仓库" class="headerlink" title="发布到仓库"></a>发布到仓库</h4><p>docker提供了一个类似于github的仓库docker hub，官方网站（需注册使用）<br><a target="_blank" rel="noopener" href="https://hub.docker.com/">https://hub.docker.com/</a></p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 注册docker id后，在linux中登录dockerhub</span><br><span class="line">docker login</span><br><span class="line"></span><br><span class="line"># 注意要保证image的tag是账户名，如果镜像名字不对，需要改一下tag</span><br><span class="line">docker tag haha/vim springwang/vim</span><br><span class="line"># 语法是：  docker tag   仓库名   springwang/仓库名</span><br><span class="line"></span><br><span class="line"># 推送docker image到dockerhub</span><br><span class="line">docker push springwang/vim:latest</span><br><span class="line"></span><br><span class="line"># 去dockerhub中检查镜像</span><br><span class="line"># 先删除本地镜像，然后再测试下载pull 镜像文件</span><br><span class="line">docker pull springwang/vim:latest</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="保持到本地"><a href="#保持到本地" class="headerlink" title="保持到本地"></a>保持到本地</h4><ol>
+<li>保存镜像</li>
+</ol>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker save imageID &gt; filename</span><br><span class="line">docker load &lt; filename</span><br></pre></td></tr></tbody></table></figure>
+
+<ol start="2">
+<li>保存容器</li>
+</ol>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker export containID &gt; filename</span><br><span class="line">docker <span class="keyword">import</span> filename [newname]</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="多用户使用docker"><a href="#多用户使用docker" class="headerlink" title="多用户使用docker"></a>多用户使用docker</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1. 创建docker用户组</span><br><span class="line">sudo groupadd docker </span><br><span class="line"></span><br><span class="line">2. 应用用户加入docker用户组</span><br><span class="line">sudo usermod -aG docker ${USER} </span><br><span class="line">3. 重启docker服务</span><br><span class="line">sudo systemctl restart docker</span><br><span class="line"></span><br><span class="line">4.查看docker信息</span><br><span class="line">docker info</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="Docker-常用命令总结"><a href="#Docker-常用命令总结" class="headerlink" title="Docker 常用命令总结"></a>Docker 常用命令总结</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">docker search  hello-docker  # 搜索hello-docker的镜像</span><br><span class="line">docker search centos # 搜索centos镜像</span><br><span class="line">docker pull hello-docker # 获取centos镜像</span><br><span class="line">docker run  hello-world   #运行一个docker镜像，产生一个容器实例（也可以通过镜像id前三位运行）</span><br><span class="line">docker image ls  # 查看本地所有镜像</span><br><span class="line">docker images  # 查看docker镜像</span><br><span class="line">docker image rmi -f hello-docker # 删除centos镜像</span><br><span class="line">docker ps  #列出正在运行的容器（如果创建容器中没有进程正在运行，容器就会立即停止）</span><br><span class="line">docker ps -a  # 列出所有运行过的容器记录</span><br><span class="line">docker save centos &gt; /opt/centos.tar.gz  # 导出docker镜像至本地</span><br><span class="line">docker load &lt; /opt/centos.tar.gz   #导入本地镜像到docker镜像库</span><br><span class="line">docker stop  `docker ps -aq`  # 停止所有正在运行的容器</span><br><span class="line">docker  rm `docker ps -aq`    # 一次性删除所有容器记录</span><br><span class="line">docker rmi  `docker images -aq`   # 一次性删除所有本地的镜像记录</span><br><span class="line">docker container ls -a # 检查运行中的容器</span><br><span class="line">docker tag id  new_name  # 重命名docker images</span><br><span class="line">docker system prune  # 清楚docker缓存</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ol>
+<li>dockerignore容易被.gitignore给忽略掉，所以需要使用如下代码上传才行:<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git add -f .dockerignore</span><br></pre></td></tr></tbody></table></figure></li>
+<li>在pycharm中使用docker进行操作:<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/27114995">https://zhuanlan.zhihu.com/p/27114995</a></li>
+</ol>
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%B7%A5%E5%85%B7%E7%B1%BB/" rel="tag"># 工具类</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/20/snip/" rel="next" title="SNIP">
+                  <i class="fa fa-chevron-left"></i> SNIP
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/12/25/git/" rel="prev" title="Git操作总结">
+                  Git操作总结 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D%E7%AF%87"><span class="nav-number">1.</span> <span class="nav-text">原理介绍篇</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.1.</span> <span class="nav-text">Docker是什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="nav-number">1.2.</span> <span class="nav-text">Docker的优势</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%AF%87"><span class="nav-number">2.</span> <span class="nav-text">安装篇</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.</span> <span class="nav-text">Docker的安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Nvidia-Docker-%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">2.2.</span> <span class="nav-text">Nvidia-Docker 的安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#docker-compose%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">2.3.</span> <span class="nav-text">docker-compose的安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nvidia-docker-compose%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">2.4.</span> <span class="nav-text">nvidia-docker-compose的安装</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%AF%87"><span class="nav-number">3.</span> <span class="nav-text">使用篇</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%9E%84%E5%BB%BA%E9%95%9C%E5%83%8F%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">如何构建镜像？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E7%9A%84%E8%BF%90%E8%A1%8C"><span class="nav-number">3.2.</span> <span class="nav-text">镜像的运行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%81%9C%E6%AD%A2%E5%AE%B9%E5%99%A8"><span class="nav-number">3.3.</span> <span class="nav-text">停止容器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%91%E5%B8%83%E5%88%B0%E4%BB%93%E5%BA%93"><span class="nav-number">3.4.</span> <span class="nav-text">发布到仓库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%9D%E6%8C%81%E5%88%B0%E6%9C%AC%E5%9C%B0"><span class="nav-number">3.5.</span> <span class="nav-text">保持到本地</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E7%94%A8%E6%88%B7%E4%BD%BF%E7%94%A8docker"><span class="nav-number">3.6.</span> <span class="nav-text">多用户使用docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93"><span class="nav-number">3.7.</span> <span class="nav-text">Docker 常用命令总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">4.</span> <span class="nav-text">其他</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

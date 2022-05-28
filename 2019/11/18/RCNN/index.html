@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="知识点总结 首先利用Selective Search方法提取Region Proposal Region Proposal缩放后送入到CNN网络，为什么要缩放，因为fc层要求固定大小的输入。 CNN提取特征后，送入到后面的SVM进行分类（这里还涉及到难例挖掘） 回归部分，利用4个线性回归，对proposal的坐标计算。 CNN使用预训练模型，然后在VOC上进行finetune   重要链接论文链接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="R-CNN">
+<meta property="og:url" content="https://www.wanglichun.tech/2019/11/18/RCNN/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="知识点总结 首先利用Selective Search方法提取Region Proposal Region Proposal缩放后送入到CNN网络，为什么要缩放，因为fc层要求固定大小的输入。 CNN提取特征后，送入到后面的SVM进行分类（这里还涉及到难例挖掘） 回归部分，利用4个线性回归，对proposal的坐标计算。 CNN使用预训练模型，然后在VOC上进行finetune   重要链接论文链接">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://img-blog.csdn.net/20180313195405918?watermark/2/text/Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="http://img-blog.csdn.net/20180313202105697?watermark/2/text/Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="http://img-blog.csdn.net/20180314090358635?watermark/2/text/Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://www.wanglichun.tech/1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2.png">
+<meta property="article:published_time" content="2019-11-18T01:37:03.000Z">
+<meta property="article:modified_time" content="2020-01-16T05:48:34.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="RCNN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://img-blog.csdn.net/20180313195405918?watermark/2/text/Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2019/11/18/RCNN/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>R-CNN | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/18/RCNN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          R-CNN
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-18 09:37:03" itemprop="dateCreated datePublished" datetime="2019-11-18T09:37:03+08:00">2019-11-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 13:48:34" itemprop="dateModified" datetime="2020-01-16T13:48:34+08:00">2020-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/18/RCNN/" class="post-meta-item leancloud_visitors" data-flag-title="R-CNN" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/18/RCNN/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/18/RCNN/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><h5 id="知识点总结"><a href="#知识点总结" class="headerlink" title="知识点总结"></a>知识点总结</h5><ul>
+<li>首先利用Selective Search方法提取Region Proposal</li>
+<li>Region Proposal<strong>缩放</strong>后送入到CNN网络，为什么要缩放，因为fc层要求固定大小的输入。</li>
+<li>CNN提取特征后，送入到后面的SVM进行分类（这里还涉及到难例挖掘）</li>
+<li>回归部分，利用4个线性回归，对proposal的坐标计算。</li>
+<li>CNN使用预训练模型，然后在VOC上进行finetune</li>
+</ul>
+<hr>
+<h5 id="重要链接"><a href="#重要链接" class="headerlink" title="重要链接"></a>重要链接</h5><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1311.2524">论文链接：https://arxiv.org/abs/1311.2524</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/rbgirshick/rcnn">GitHub代码链接：https://github.com/rbgirshick/rcnn</a></p>
+<p><strong>如果出现图片或者公式显示不完整，可访问图像博客</strong></p>
+<p><a target="_blank" rel="noopener" href="http://blog.csdn.net/Chunfengyanyulove/article/details/79548472">CSDN博客：http://blog.csdn.net/Chunfengyanyulove/article/details/79548472</a></p>
+<hr>
+<h5 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h5><p>R-CNN是将深度学习用于目标检测的鼻祖之作，在目标检测精度几年不在提升之后，得到了约30%的精度提升，之后，开启了深度学习在目标检测领域的一统天下，包括后面提出的Fast R-CNN、Faster R-CNN等，不仅在精度上有了进一步的提升，在速度上也有较大的进步。</p>
+<p>那么，作者实如何引入深度学习，又是为什么会产生如此大的提升，作者又是怎么做的呢？下面做详细介绍：</p>
+<p>在深度学习之前，目标检测的方法多是使用人工提取的图像低层特征的组合（如：SIFT、HOG等），这样不仅图像提取的特征的维度非常大，而且由于其特征较为低级，很难突破瓶颈，导致在2010-2012年，图像目标检测的精度提升缓慢。</p>
+<p>在2012年，AlexNet横空出世，在图像分类领域一枝独秀，作者在AlexNet以及特征多级提取的思想作用下，作者设计了R-CNN，并通过多次试验，达到了30%的精度提升。</p>
+<p>那么R-CNN是怎么干的呢？如下图：</p>
+<p><img src="http://img-blog.csdn.net/20180313195405918?watermark/2/text/Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="R-CNN结构图"></p>
+<p>简单描述为：R-CNN首先利用Selective Search方法提取图像候选框，然后将候选框缩放到227*227，放入CNN网络（AlexNet）提取特征，CNN后，利用SVM进行类别分类。</p>
+<p>那么为什么要这么做？每一步的细节又是什么样的呢？</p>
+<h5 id="利用Selective-Search提取候选框"><a href="#利用Selective-Search提取候选框" class="headerlink" title="利用Selective Search提取候选框"></a>利用Selective Search提取候选框</h5><p>跟图像分类不同的是，目标检测需要对目标进行精确的定位，作者论文提到了如下一些方法：</p>
+<ol>
+<li>直接使用回归进行定位，但是作者说该方法效果较差。</li>
+<li>利用sliding-window，但是由于特征提取中我们的网络较深，所以最后提取的特征感受野较大，这使得sliding-window方法受限。</li>
+<li>recognition using regions<blockquote>
+<p>该方法通过类似Selective Search等方法，在图像中提取大量的候选框，然后对每一个候选框进行特征提取分析，找到做好的定位。与Selective Search相似的算法也比较多，作者选择Selective Search也是由于Selective Search可控性较强，而且速度还可以。</p>
+</blockquote>
+</li>
+</ol>
+<p>在提取候选框之后，便需要将图像输入到CNN中提取特征，作者又是如何做的呢？</p>
+<h5 id="输入图像处理方式"><a href="#输入图像处理方式" class="headerlink" title="输入图像处理方式"></a>输入图像处理方式</h5><p>由于Selective Search提取的候选框的大小不一，但是CNN要求输入的图像大小固定（227*227），所以需要对SS方法提取的图像进行变换，作者尝试了几种方法如下：</p>
+<p>1、直接截取较大的矩形区域，然后缩放到227*227。</p>
+<p>2、直接填充训练图像的均值，得到矩形区域，然后缩放到227*227。</p>
+<p>3、直接缩放到227*227。</p>
+<p>4、对上述方法，预留16个像素的边界。</p>
+<p>截取方法如下图所示，其中B、C、D分别对应1、2、3，每组的第一行为没有预留边界，第二行为预留了16个像素边界。</p>
+<p><img src="http://img-blog.csdn.net/20180313202105697?watermark/2/text/Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="截取方式图"></p>
+<p>作者通过实验发现，采用直接缩放，并且预留16个像素边界的实验效果最好。</p>
+<p>输入图像的问题解决了，那么该如何训练我们的网络呢？这里又遇到了第二个问题，训练数据集较小。</p>
+<h5 id="训练网络"><a href="#训练网络" class="headerlink" title="训练网络"></a>训练网络</h5><p>由于在目标检测中，我们的数据量有限，所以作者首先采用ImageNet数据集预训练网络模型，然后利用VOC数据集进行fine-tuning，由于VOC数据集只包含20类，所以作者调整CNN模型只输出21类（20类+背景），并且为了增大数据集，作者将与Ground Truth的IOU大于0.5的Region Proposal标记为正样本，其余的为负样本，在训练的时候batch size为128，其中32个正样本，96个负样本。</p>
+<h5 id="训练SVM分类器"><a href="#训练SVM分类器" class="headerlink" title="训练SVM分类器"></a>训练SVM分类器</h5><p>为了得到每个对象的类别，作者为每个类别训练了一个SVM分类器，作者将每个类别的Ground Truth作为正样本，对于IOU小于0.3的region proposal作为负样本。<br>并且由于训练的数据较大，需要占用较大内存，所以作者利用<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/46292829">standard hard negative mining</a>方法进行训练，实验证明该方法收敛迅速。</p>
+<blockquote>
+<p>0.3这个阈值是作者通过grid search试出来的，{0，0.1，0.2，0.3，0.4，0.5}逐一试。</p>
+</blockquote>
+<h5 id="为什么训练CNN与训练SVM采用不同的训练样本？"><a href="#为什么训练CNN与训练SVM采用不同的训练样本？" class="headerlink" title="为什么训练CNN与训练SVM采用不同的训练样本？"></a>为什么训练CNN与训练SVM采用不同的训练样本？</h5><p>这个参数的选择也是作者实验做出来的效果，采用该定义的时候，效果较好。<br>同样作者为了解释这个现象同样进行了对比实验，作者首先利用预训练的CNN提取的特征训练SVM，在训练过程中，作者发现，存在一些优化方法可以优化结果，这就包括本文式样的fine-tuning方法，然后作者使用训练SVM的样本定义方法进行fine-tuning，但是作者发现效果没有本文最后确定的方法好，作者解释如下：</p>
+<p>对于在训练CNN以及SVM的时候，正负样本的定义不同，主要在于训练数据集有限。作者采用IOU为0.5增加了将近30倍的训练数据，这可以有效的在fine-tuning的过程中<strong>防止过拟合</strong>，但是由于使用了这些数据，导致其在目标定位中的精度下降。<br>这就带来了另一个问题，我们为什么不直接在网络后面利用回归进行检测而是训练SVM分类器呢？作者实际上使用softmax进行了测试，但是作者发现，其精度降低了，导致精度降低的主要有几方面，如：进行fine-tuning时候的目标精度本身就存在偏差，不是ground truth，另外softmax的训练采用的是随机的负样本而不是采用的hard negatives样本。<br>另外，作者提出，不使用SVM应该也可以达到类似的精度，可以进行进一步的研究。</p>
+<h5 id="Bounding-box-Regression"><a href="#Bounding-box-Regression" class="headerlink" title="Bounding-box Regression"></a>Bounding-box Regression</h5><p>进一步的，作者设计了Bounding-box Regression用于对坐标进行微调，使得得到的目标更接近于ground truth</p>
+<p>对于region proposal 以及ground truth，本文分别用如下代替：</p>
+<p>$$P_i=(P_{x}^{i},P_{y}^{i},P_{w}^{i},P_{h}^{i})$$</p>
+<p>$$G_i=(G_{x}^{i},G_{y}^{i},G_{w}^{i},G_{h}^{i})$$</p>
+<p>其中x,y为中心点坐标，w和h分别为长和宽。<br>作者通过线性变换，计算P的偏移量，得到预测坐标如下：</p>
+<p>$$\hat{G}_{x} = P_wd_x(P)+P_x$$</p>
+<p>$$\hat{G}_{y} = P_hd_y(P)+P_y$$</p>
+<p>$$\hat{G}_{w} = P_wexp(d_w(P))$$</p>
+<p>$$\hat{G}_{h} = P_wexp(d_h(P))$$</p>
+<p>其中$d_*(P)$代表一种线性变换，对pool5特征进行计算,我们标记特征为$\phi_5(P)$，$d_*(P)=w_*^T\phi_5(P)$，作者设定优化函数为：</p>
+<p>$w_*=argmin_{w_*}\sum(t_*^i-w_*^T\phi_5(P^i))^2+\lambda||w_*||$</p>
+<p>$t_*$定义如下：</p>
+<p>$$t_x=(G_x-P_x)/P_w$$</p>
+<p>$$t_y=(G_y-P_y)/P_h$$</p>
+<p>$$t_w=log(G_w/P_w)$$</p>
+<p>$$t_h=log(G_h/P_h)$$</p>
+<blockquote>
+<p>这里分析一下，为什么作者在x,y分别除了w和h，原因在于其偏移量产生的loss与proposal的大小有关，比如同样是向左偏移10个像素，如果proposal是100*100和10*10产生的误差是不一样的，所以作者除了w和h。</p>
+</blockquote>
+<p>并且作者指出，必须选用有用的（P，G）组合才行，如果P离Ground Truth较远，那么进行转换便没有意义了，所以，这里作者只选用了距离ground truth较近的目标进行回归，作者设定的参数是IOU为0.6。</p>
+<h5 id="R-CNN精度对比"><a href="#R-CNN精度对比" class="headerlink" title="R-CNN精度对比"></a>R-CNN精度对比</h5><p>作者对比了R-CNN（是否包含bounding box方法），以及其他算法的精度，测试结果见下图，由下图可以发现，R-CNN BB的精度遥遥领先。</p>
+<p><img src="http://img-blog.csdn.net/20180314090358635?watermark/2/text/Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<h5 id="学习特征可视化"><a href="#学习特征可视化" class="headerlink" title="学习特征可视化"></a>学习特征可视化</h5><p>作者设计了一种无须参数的可视化方式，来判断每个unit学到的是什么，该方法首先选定一个特定的unit，然后在10万个region proposal中找到激活值最大的前几个，并利用非极大值抑制，最后显示出学到的区域，作者在CNN网络的pool5后进行实验，作者论文中展示了6组测试结果，如下：</p>
+<p><img src="/1.png" alt="这里写图片描述"></p>
+<h5 id="Ablation-studies"><a href="#Ablation-studies" class="headerlink" title="Ablation studies"></a>Ablation studies</h5><p>为了验证不同层在检测中的作用，作者进行了如下对比实验，实验结果如下图：</p>
+<ul>
+<li>针对pool5，fc6，fc7层的分类能力对比，作者发现，其实pool5的分类能力已经很强，fc6和fc7虽然占有大量的参数，但是并没有取得实质的提升。row1-3</li>
+<li>对pool5,fc6,fc7采用fune-tuning进行实验对比，作者发现，fune-tuning之后，模型的识别能力提升了近8%，fc6和fc7提升明显，但是pool5提升不明显，这样说明了pool5提取的特征具有一定的泛化性。row 4-7</li>
+<li>与其他方法进行对比，优势明显。row 8-10<br><img src="/2.png" alt="这里写图片描述"></li>
+</ul>
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/RCNN/" rel="tag"># RCNN</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/18/refinedet/" rel="next" title="RefineDet">
+                  <i class="fa fa-chevron-left"></i> RefineDet
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/11/18/retinaNet/" rel="prev" title="RetinaNet(Focal loss)">
+                  RetinaNet(Focal loss) <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">知识点总结</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E9%93%BE%E6%8E%A5"><span class="nav-number">2.</span> <span class="nav-text">重要链接</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%AD%A3%E6%96%87"><span class="nav-number">3.</span> <span class="nav-text">正文</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%A9%E7%94%A8Selective-Search%E6%8F%90%E5%8F%96%E5%80%99%E9%80%89%E6%A1%86"><span class="nav-number">4.</span> <span class="nav-text">利用Selective Search提取候选框</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F"><span class="nav-number">5.</span> <span class="nav-text">输入图像处理方式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E7%BD%91%E7%BB%9C"><span class="nav-number">6.</span> <span class="nav-text">训练网络</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83SVM%E5%88%86%E7%B1%BB%E5%99%A8"><span class="nav-number">7.</span> <span class="nav-text">训练SVM分类器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AE%AD%E7%BB%83CNN%E4%B8%8E%E8%AE%AD%E7%BB%83SVM%E9%87%87%E7%94%A8%E4%B8%8D%E5%90%8C%E7%9A%84%E8%AE%AD%E7%BB%83%E6%A0%B7%E6%9C%AC%EF%BC%9F"><span class="nav-number">8.</span> <span class="nav-text">为什么训练CNN与训练SVM采用不同的训练样本？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Bounding-box-Regression"><span class="nav-number">9.</span> <span class="nav-text">Bounding-box Regression</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#R-CNN%E7%B2%BE%E5%BA%A6%E5%AF%B9%E6%AF%94"><span class="nav-number">10.</span> <span class="nav-text">R-CNN精度对比</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E7%89%B9%E5%BE%81%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">11.</span> <span class="nav-text">学习特征可视化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Ablation-studies"><span class="nav-number">12.</span> <span class="nav-text">Ablation studies</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

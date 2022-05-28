@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="由于深度学习模型大小以及计算资源的限制，导致将深度学习模型部署到如移动端的时候会受到一定的限制，为了解决这个问题，就形成了一个新的领域：模型压缩，即减少模型的参数以及计算量，并且依然保证模型的精度。常见的方法比如：量化、剪枝、蒸馏等，本文便是“剪枝”当中一篇非常经典的文章，也是比较有效果的一篇文章。本文方法其实比较简单：首先，使用L1 regularization对BN层的scaling fac">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Network Slimming">
+<meta property="og:url" content="https://www.wanglichun.tech/2020/06/24/network-slimming/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="由于深度学习模型大小以及计算资源的限制，导致将深度学习模型部署到如移动端的时候会受到一定的限制，为了解决这个问题，就形成了一个新的领域：模型压缩，即减少模型的参数以及计算量，并且依然保证模型的精度。常见的方法比如：量化、剪枝、蒸馏等，本文便是“剪枝”当中一篇非常经典的文章，也是比较有效果的一篇文章。本文方法其实比较简单：首先，使用L1 regularization对BN层的scaling fac">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wanglichun.tech/0.png">
+<meta property="og:image" content="https://www.wanglichun.tech/1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/4.png">
+<meta property="og:image" content="https://www.wanglichun.tech/5.png">
+<meta property="og:image" content="https://www.wanglichun.tech/6.png">
+<meta property="article:published_time" content="2020-06-24T01:55:45.000Z">
+<meta property="article:modified_time" content="2020-11-28T05:27:16.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="Pruning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.wanglichun.tech/0.png">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2020/06/24/network-slimming/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Network Slimming | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/06/24/network-slimming/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Network Slimming
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-24 09:55:45" itemprop="dateCreated datePublished" datetime="2020-06-24T09:55:45+08:00">2020-06-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-28 13:27:16" itemprop="dateModified" datetime="2020-11-28T13:27:16+08:00">2020-11-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Model-Compression/" itemprop="url" rel="index">
+                    <span itemprop="name">Model Compression</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/06/24/network-slimming/" class="post-meta-item leancloud_visitors" data-flag-title="Network Slimming" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/06/24/network-slimming/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/06/24/network-slimming/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>由于深度学习模型大小以及计算资源的限制，导致将深度学习模型部署到如移动端的时候会受到一定的限制，为了解决这个问题，就形成了一个新的领域：模型压缩，即减少模型的参数以及计算量，并且依然保证模型的精度。常见的方法比如：量化、剪枝、蒸馏等，本文便是“剪枝”当中一篇非常经典的文章，也是比较有效果的一篇文章。本文方法其实比较简单：首先，使用L1 regularization对BN层的scaling factor进行稀疏化训练，然后将scaling factor较小的参数相连接的filter减掉，达到减少模型size的目标。最后再重新finetune剪枝后的网络，以达到更好的效果。</p>
+</blockquote>
+<hr>
+<p>论文名称：Learning Efficient Convolutional Networks through Network Slimming</p>
+<p>作者： Zhuang Liu &amp; Jianguo Li 等</p>
+<p>论文链接： <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1708.06519">https://arxiv.org/abs/1708.06519</a></p>
+<p>github：<a target="_blank" rel="noopener" href="https://github.com/liuzhuang13/slimming">https://github.com/liuzhuang13/slimming</a></p>
+<hr>
+<h3 id="模型压缩加速方法介绍"><a href="#模型压缩加速方法介绍" class="headerlink" title="模型压缩加速方法介绍"></a>模型压缩加速方法介绍</h3><ul>
+<li>Low-rank Decomposition</li>
+</ul>
+<p>采用奇异值分解等方法对权重矩阵进行分解，以达到减少矩阵大小的作用，这种方法适用于全连接层，大概可以减少3倍的模型大小，但是对于卷积层，作用不大。</p>
+<ul>
+<li>Weight Quantization</li>
+</ul>
+<p>参数量化，比如将参数量化的int8,或者量化到-1,0,1,可以较大的提升模型的速度，但是这种方法往往较难保证精度，精度一般都会下降。</p>
+<ul>
+<li>Weight Pruning / Sparsifying</li>
+</ul>
+<p>参数剪枝与稀疏化，将不重要的较小的权重置为0。这就需要矩阵较为稀疏才能起作用。</p>
+<ul>
+<li>Structured Pruning / Sparsifying</li>
+</ul>
+<p>结构化剪枝就是不单单是对每个参数，而是对网络结构进行剪枝，比如：channel，neurons,layers等</p>
+<h3 id="本文方法：Network-Slimming"><a href="#本文方法：Network-Slimming" class="headerlink" title="本文方法：Network Slimming"></a>本文方法：Network Slimming</h3><h4 id="Advantage-of-Channel-level-Sparsity"><a href="#Advantage-of-Channel-level-Sparsity" class="headerlink" title="Advantage of Channel-level Sparsity"></a>Advantage of Channel-level Sparsity</h4><p>首先需要指出的是，稀疏化可以应用在各个level： weight-level, kernel-level, channel-level, layer-level. 其中weight-level的稀疏化程度最高，也可以达到最大的压缩率，但是在weight-level进行加速，往往需要特殊的软硬件加速器，来对稀疏的模型进行加速。</p>
+<p>与其相反的layer-level,相对比较简单，不需要特殊的硬件，但是对layer比较多的时候才具有一定的效果，比如50个layer以上，想想可以理解，把50个layer减到40个layer可能还能保留一定的精度。但是10个layer减少到5个layer,差别就比较大了。</p>
+<p>相比之下，channel-level就是一种很好的平衡，即不需要特殊的硬件同时还保留了一定的复杂度。</p>
+<p>但是channel-level依然具有一定得挑战，由于channel-level的剪枝会影响到输入和输出，这就使得直接在预训练模型上面将权重减掉是不行的，因为一般不会存在输入和输出都接近0的情况。据统计，一般情况，也就减掉约10%是对精度影响不大的。</p>
+<p>如何解决这个问题呢？</p>
+<p>本文的方法是引入scale参数$\gamma$,将其作用于每一个channel,与输出weight相乘，然后在训练的时候，一起训练这个$\gamma$参数，并对其增加 正则，使其稀疏化，稀疏化后，将$\gamma$参数较小的值减掉就可以了。</p>
+<p>Loss公式表示就是如下：</p>
+<p>$$L = \sum_{x,y}l(f(x,W),y)+\lambda\sum (g(\gamma))$$</p>
+<p>为了达到稀疏化的效果，这里g()采用的是L1范数。</p>
+<p>整个过程如下图所示：</p>
+<p><img src="/0.png" alt="0.png"></p>
+<p>引入的scale参数放在哪里呢？</p>
+<p>我们知道BN层在深度网络中起到了很大的作用，使得网络可以快速的收敛，而且BN层往往是被插入到conv层的后面的，并且BN也是在channel-level进行计算的，基于此，我们可以直接利用BN层的$\gamma$来当做我们上面设计的参数，对channel进行筛选。</p>
+<p>由于对$\gamma$参数加入了L1 正则化，所以训练过后，该参数会较为稀疏，所以在训练后，可以根据阈值，对网络进行裁剪，将$\gamma$小于阈值的对应channel减掉，就得到了新的网络。但是这样得到的网络大小减少了，自然精度会稍有下降，所以我们需要再对其进行fine-tune操作，恢复期精度，整个流程可以迭代进行如下图所示：</p>
+<p><img src="/1.png" alt="1.png"></p>
+<p>对BN层增加L1 正则化参数的方法也很简单，如下代码可以实现，就是在网络反向传播后，对BN层的参数加上其值的sign()就可以了，为什么可以这样做呢？其实按照正常公式推理，需要将增加的BN的loss对参数求导，而由于loss是L1正则，也就是绝对值，所以求导后也就变成了1，-1, 0三个值，所以也就是如下代码的解释了。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def updateBN(model):</span><br><span class="line">    for n, m in model.named_modules():</span><br><span class="line">        if isinstance(m, nn.BatchNorm2d):</span><br><span class="line">            m.weight.grad.data.add_(args.s*torch.sign(m.weight.data))  </span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p>show几张图吧</p>
+<p><img src="/3.png" alt="3.png"></p>
+<p><img src="/2.png" alt="2.png"></p>
+<p><img src="/4.png" alt="4.png"></p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>如下图是剪枝比例与精度的关系，可以发现，当减值比例超过40%的时候，精度下降非常明显。但是经过finetune，基本还是可以恢复的，但是到70%以上，恢复的就比较难了。</p>
+<p><img src="/5.png" alt="5.png"></p>
+<p>对于正则化的效果，作者也进行了一定的分析，作者分别对正则化系数进行了分析，分别实验了0,10e-4,10e-5的结果，结果如下图所示，可见，随着系数的增加，BN层的scale参数也越来越接近0，说明稀疏化的作用还是比较明显的。</p>
+<p><img src="/6.png" alt="6.png"></p>
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Pruning/" rel="tag"># Pruning</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/05/16/yolov4/" rel="next" title="YOLO-V4">
+                  <i class="fa fa-chevron-left"></i> YOLO-V4
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/11/28/pruingfromscratch/" rel="prev" title="Pruning From Scratch">
+                  Pruning From Scratch <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E5%8E%8B%E7%BC%A9%E5%8A%A0%E9%80%9F%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">模型压缩加速方法介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E6%96%87%E6%96%B9%E6%B3%95%EF%BC%9ANetwork-Slimming"><span class="nav-number">2.</span> <span class="nav-text">本文方法：Network Slimming</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Advantage-of-Channel-level-Sparsity"><span class="nav-number">2.1.</span> <span class="nav-text">Advantage of Channel-level Sparsity</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">3.</span> <span class="nav-text">实验结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">4.</span> <span class="nav-text">分析</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

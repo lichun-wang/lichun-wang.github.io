@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1506.01497 如出现图像显示不完整，或者公式显示不完整，可访问如下博客 CSDN博客地址：https:&#x2F;&#x2F;blog.csdn.net&#x2F;chunfengyanyulove&#x2F;article&#x2F;details&#x2F;80037396  创新点 目前object detection的成功主要在于region proposal方法以及region-bas">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Faster-RCNN">
+<meta property="og:url" content="https://www.wanglichun.tech/2019/11/18/faster-rcnn/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1506.01497 如出现图像显示不完整，或者公式显示不完整，可访问如下博客 CSDN博客地址：https:&#x2F;&#x2F;blog.csdn.net&#x2F;chunfengyanyulove&#x2F;article&#x2F;details&#x2F;80037396  创新点 目前object detection的成功主要在于region proposal方法以及region-bas">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wanglichun.tech/1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/4.png">
+<meta property="article:published_time" content="2019-11-18T01:47:44.000Z">
+<meta property="article:modified_time" content="2020-02-16T05:17:58.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="Faster-RCNN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.wanglichun.tech/1.png">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2019/11/18/faster-rcnn/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Faster-RCNN | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/18/faster-rcnn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Faster-RCNN
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-18 09:47:44" itemprop="dateCreated datePublished" datetime="2019-11-18T09:47:44+08:00">2019-11-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 13:17:58" itemprop="dateModified" datetime="2020-02-16T13:17:58+08:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/18/faster-rcnn/" class="post-meta-item leancloud_visitors" data-flag-title="Faster-RCNN" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/18/faster-rcnn/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/18/faster-rcnn/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1506.01497">论文链接：https://arxiv.org/abs/1506.01497</a></p>
+<p><strong>如出现图像显示不完整，或者公式显示不完整，可访问如下博客</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/chunfengyanyulove/article/details/80037396">CSDN博客地址：https://blog.csdn.net/chunfengyanyulove/article/details/80037396</a></p>
+<hr>
+<h4 id="创新点"><a href="#创新点" class="headerlink" title="创新点"></a>创新点</h4><ul>
+<li>目前object detection的成功主要在于region proposal方法以及region-based CNN网络方法。</li>
+<li>region proposal耗时成为object detection的瓶颈。</li>
+<li>作者设计提出RPN网络，替代region proposal方法的同时，实现end-to-end网络。</li>
+<li>rpn网络利用特征图实现region proposal，使得时间降低到10ms/张。</li>
+<li>rpn利用“anchor”实现多尺度，多方向的变换。（论文中同时介绍了其他的方法，比如图像金字塔，但是感觉还是anchor比较实用）</li>
+<li>为了保证rpn与fast rcnn的一致，作者提出了一种交替训练的方法。</li>
+</ul>
+<h4 id="Faster-R-CNN详解"><a href="#Faster-R-CNN详解" class="headerlink" title="Faster R-CNN详解"></a>Faster R-CNN详解</h4><p>Faster RCNN整体结构采用Fast R-CNN，另外利用设计的RPN网络替代Selective Search方法实现region的生成，如下图所示：</p>
+<p><img src="/1.png" alt="这里写图片描述"></p>
+<center>图：faster r-cnn示意图</center>
+
+<h5 id="RPN-网络"><a href="#RPN-网络" class="headerlink" title="RPN 网络"></a>RPN 网络</h5><p>RPN网络的输入为任意尺寸的图像，输出为一系列的矩形框以及是否为object的得分。</p>
+<p>RPN网络采用n*n（默认n取3）的滑动窗口，首先通过卷积进行降维（实验默认是ZF-256维,VGG-512维），然后分别连接两个全连接层reg以及cls，实现回归与分类。</p>
+<p><img src="/2.png" alt="这里写图片描述"></p>
+<center>rpn结构示意图</center>
+##### anchor
+
+<ul>
+<li>对于每个滑动窗口，rpn网络预测k个region proposal区域，这样reg网络便产生4k个输出代表着坐标，cls产生2k个输出，代表在是否为object</li>
+<li>k个不同大小的rp区域作者称之为anchor，faster r-cnn默认提取9个anchor，分别对应3个尺寸（作者默认为128，256，512），3个长宽比（作者默认为：1：1，1：2，2：1），如下是对应图像宽度缩放到600采用ZF网络时候对应的anchor的尺寸。</li>
+</ul>
+<p><img src="/3.png" alt="这里写图片描述"></p>
+<ul>
+<li><p>平移不变性。</p>
+</li>
+<li><p>相比较与multibox，采用本文方法的参数量大幅降低。</p>
+</li>
+<li><p>multi-scale anchor，常用的多尺度方法如下，（a）为图像金字塔比较耗时，（b）为多尺度滤波器，本文选择方法（c）。</p>
+<p><img src="/4.png" alt="这里写图片描述"></p>
+</li>
+</ul>
+<h5 id="loss-function"><a href="#loss-function" class="headerlink" title="loss function"></a>loss function</h5><p>anchor 正负样本的分配：</p>
+<ul>
+<li>与IOU重合度最大的标记被正样本</li>
+<li>与IOU重合度大于70%的标记为正样本</li>
+<li>与IOU重合度小于30%的标记为负样本。</li>
+</ul>
+<p>loss function定于如下：</p>
+<p>$L(p_i,t_i)=\frac{1}{N_{cls}}\sum_{i}L_{cls}(p_i,p_i^*)+\lambda\sum_ip_i^*L_{reg}(t_i,t_i^*)$</p>
+<p>这里，$p_i$代表预测anchor为object的概率，如果anchor为正样本，$p_i^*$为1否则为0。</p>
+<p>$t_i$为bounding box的4个坐标，$p_i^*L_{reg}$代表，当anchor为正时计算reg坐标回归，否则不计算坐标回归。</p>
+<p>$L_{cls}$为log 损失<br>$L_{reg}$为smooth L1损失</p>
+<p>bounding box regression 的参数坐标定义为：</p>
+<p>$t_x = (x-x_a)/w_a,t_y=(y-y_a)/h_a$</p>
+<p>$t_w=log(w/w_a),t_h=log(h/h_a)$</p>
+<p>$t_x^* = (x^*-x_a)/w_a,t_y^*=(y^*-y_a)/h_a$</p>
+<p>$t_w^*=log(w^*/w_a),t_h^*=log(h^*/h_a)$</p>
+<h6 id="rpn的训练"><a href="#rpn的训练" class="headerlink" title="rpn的训练"></a>rpn的训练</h6><p>RPN训练的时候，每个mini-batch便是一张图片。由于正负样本较多，训练时,每张图像随机采样256个anchor,正负样本的比例是1:1，如果正样本较少，用负样本补充。</p>
+<h5 id="Faster-R-CNN的训练"><a href="#Faster-R-CNN的训练" class="headerlink" title="Faster R-CNN的训练"></a>Faster R-CNN的训练</h5><p>对于Faster R-CNN的训练，本文作者采用了4步交替训练方法，以达到fast r-cnn与rpn网络的统一性。</p>
+<p>1、利用ImageNet预训练模型进行训练RPN。<br>2、利用第一步的RPN，训练Fast R-CNN。<br>3、保持Fast R-CNN前面网络不变，训练RPN，使得Fast R-CNN与RPN共享卷积。<br>4、保持共享卷积不变，，训练Fast R-CNN后面的网络。</p>
+<hr>
+<p>下面拿代码来说话：</p>
+<h4 id="generate-anchors代码"><a href="#generate-anchors代码" class="headerlink" title="generate anchors代码"></a>generate anchors代码</h4><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_anchors</span>(<span class="params">base_size=<span class="number">16</span>, ratios=[<span class="number">0.5</span>, <span class="number">1</span>, <span class="number">2</span>],</span></span><br><span class="line"><span class="params">                     scales=<span class="number">2</span>**np.arange(<span class="params"><span class="number">3</span>, <span class="number">6</span></span>)</span>):</span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Generate anchor (reference) windows by enumerating aspect ratios X</span></span><br><span class="line"><span class="string">    scales wrt a reference (0, 0, 15, 15) window.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment"># 这里选取16的原因在于，原始图像224x224,conv5卷积层输出feature maps大小为14x14,是16的缩放关系。对于</span></span><br><span class="line">    <span class="comment"># feature maps上的每个点，在width方向最大偏移为14,同理在height上也是14.</span></span><br><span class="line">    <span class="comment"># 在图像左上角生成一个anchors,剩下的anchors在此基础上做偏移即可得到。</span></span><br><span class="line">    <span class="comment"># scales=[8, 16, 32],</span></span><br><span class="line">    <span class="comment">#详细说明，基准坐标[0,0,15,15]利用ratios可以生成3个anchor分别为[0,0,16,16][-4,2,19,14][2.5,-3,13.5,19]</span></span><br><span class="line">    <span class="comment">#然后再乘以变换比例得到9个anchor[128..,256..,512..]</span></span><br><span class="line">    base_anchor = np.array([<span class="number">1</span>, <span class="number">1</span>, base_size, base_size]) - <span class="number">1</span></span><br><span class="line">    ratio_anchors = _ratio_enum(base_anchor, ratios)</span><br><span class="line">    anchors = np.vstack([_scale_enum(ratio_anchors[i, :], scales)</span><br><span class="line">                         <span class="keyword">for</span> i <span class="keyword">in</span> xrange(ratio_anchors.shape[<span class="number">0</span>])])</span><br><span class="line">    <span class="keyword">return</span> anchors</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_whctrs</span>(<span class="params">anchor</span>):</span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Return width, height, x center, and y center for an anchor (window).</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    w = anchor[<span class="number">2</span>] - anchor[<span class="number">0</span>] + <span class="number">1</span></span><br><span class="line">    h = anchor[<span class="number">3</span>] - anchor[<span class="number">1</span>] + <span class="number">1</span></span><br><span class="line">    x_ctr = anchor[<span class="number">0</span>] + <span class="number">0.5</span> * (w - <span class="number">1</span>)</span><br><span class="line">    y_ctr = anchor[<span class="number">1</span>] + <span class="number">0.5</span> * (h - <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> w, h, x_ctr, y_ctr</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_mkanchors</span>(<span class="params">ws, hs, x_ctr, y_ctr</span>):</span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Given a vector of widths (ws) and heights (hs) around a center</span></span><br><span class="line"><span class="string">    (x_ctr, y_ctr), output a set of anchors (windows).</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment"># 对于给定anchor中心坐标和长宽，生成三个anchors,分别时1:0.5, 1:1, 1:2</span></span><br><span class="line">    ws = ws[:, np.newaxis]</span><br><span class="line">    hs = hs[:, np.newaxis]</span><br><span class="line">    anchors = np.hstack((x_ctr - <span class="number">0.5</span> * (ws - <span class="number">1</span>),</span><br><span class="line">                         y_ctr - <span class="number">0.5</span> * (hs - <span class="number">1</span>),</span><br><span class="line">                         x_ctr + <span class="number">0.5</span> * (ws - <span class="number">1</span>),</span><br><span class="line">                         y_ctr + <span class="number">0.5</span> * (hs - <span class="number">1</span>)))</span><br><span class="line">    <span class="keyword">return</span> anchors</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_ratio_enum</span>(<span class="params">anchor, ratios</span>):</span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Enumerate a set of anchors for each aspect ratio wrt an anchor.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    w, h, x_ctr, y_ctr = _whctrs(anchor)  <span class="comment">#返回anchor的中心以及长宽</span></span><br><span class="line">    size = w * h</span><br><span class="line">    size_ratios = size / ratios  <span class="comment">#尺寸 [128,256,512]</span></span><br><span class="line">    ws = np.<span class="built_in">round</span>(np.sqrt(size_ratios))</span><br><span class="line">    hs = np.<span class="built_in">round</span>(ws * ratios)</span><br><span class="line">    anchors = _mkanchors(ws, hs, x_ctr, y_ctr) <span class="comment">#得到[0,0,16,16] [-3.5,2,18.5,13][2.5,-3,12.5,18]</span></span><br><span class="line">    <span class="keyword">return</span> anchors</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_scale_enum</span>(<span class="params">anchor, scales</span>):</span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Enumerate a set of anchors for each scale wrt an anchor.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment"># 对于每一个scale,生成三个anchors，总共可以生成9个anchors</span></span><br><span class="line">    w, h, x_ctr, y_ctr = _whctrs(anchor)</span><br><span class="line">    ws = w * scales</span><br><span class="line">    hs = h * scales</span><br><span class="line">    anchors = _mkanchors(ws, hs, x_ctr, y_ctr)</span><br><span class="line">    <span class="keyword">return</span> anchors</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="anchor-target代码"><a href="#anchor-target代码" class="headerlink" title="anchor_target代码"></a>anchor_target代码</h4><p><code>bottom</code>值得注意的是<code>rpn_cls_score</code>,开始我以为会用到，在阅读代码之后，可以知道它的作用仅仅是为得到feature maps的width,height,用作anchors的生成。在获取anchors之后，<br>可以利用其计算与<code>gt_boxes</code>的overlap值，以此来获得目标还是背景的标签。(ps;这里贴代码时候需要四个空格才给算，也是醉了)上源码：　　</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">AnchorTargetLayer</span>(caffe.Layer):</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">setup</span>(<span class="params">self, bottom, top</span>):</span><br><span class="line">    layer_params = yaml.load(self.param_str_)</span><br><span class="line">    anchor_scales = layer_params.get(<span class="string">'scales'</span>, (<span class="number">8</span>, <span class="number">16</span>, <span class="number">32</span>))</span><br><span class="line">    <span class="comment"># generate 1:0.5, 1:1, 1:2 anchors,利用上述生成anchors方法。</span></span><br><span class="line">    self._anchors = generate_anchors(scales=np.array(anchor_scales))</span><br><span class="line">    self._num_anchors = self._anchors.shape[<span class="number">0</span>]</span><br><span class="line">    self._feat_stride = layer_params[<span class="string">'feat_stride'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'anchors:'</span></span><br><span class="line">        <span class="built_in">print</span> self._anchors</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'anchor shapes:'</span></span><br><span class="line">        <span class="built_in">print</span> np.hstack((</span><br><span class="line">            self._anchors[:, <span class="number">2</span>::<span class="number">4</span>] - self._anchors[:, <span class="number">0</span>::<span class="number">4</span>],</span><br><span class="line">            self._anchors[:, <span class="number">3</span>::<span class="number">4</span>] - self._anchors[:, <span class="number">1</span>::<span class="number">4</span>],</span><br><span class="line">        ))</span><br><span class="line">        self._counts = cfg.EPS</span><br><span class="line">        self._sums = np.zeros((<span class="number">1</span>, <span class="number">4</span>))</span><br><span class="line">        self._squared_sums = np.zeros((<span class="number">1</span>, <span class="number">4</span>))</span><br><span class="line">        self._fg_sum = <span class="number">0</span></span><br><span class="line">        self._bg_sum = <span class="number">0</span></span><br><span class="line">        self._count = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># allow boxes to sit over the edge by a small amount</span></span><br><span class="line">    self._allowed_border = layer_params.get(<span class="string">'allowed_border'</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    height, width = bottom[<span class="number">0</span>].data.shape[-<span class="number">2</span>:]</span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'AnchorTargetLayer: height'</span>, height, <span class="string">'width'</span>, width</span><br><span class="line"></span><br><span class="line">    A = self._num_anchors</span><br><span class="line">    <span class="comment"># labels</span></span><br><span class="line">    top[<span class="number">0</span>].reshape(<span class="number">1</span>, <span class="number">1</span>, A * height, width)</span><br><span class="line">    <span class="comment"># bbox_targets</span></span><br><span class="line">    top[<span class="number">1</span>].reshape(<span class="number">1</span>, A * <span class="number">4</span>, height, width)</span><br><span class="line">    <span class="comment"># bbox_inside_weights</span></span><br><span class="line">    top[<span class="number">2</span>].reshape(<span class="number">1</span>, A * <span class="number">4</span>, height, width)</span><br><span class="line">    <span class="comment"># bbox_outside_weights</span></span><br><span class="line">    top[<span class="number">3</span>].reshape(<span class="number">1</span>, A * <span class="number">4</span>, height, width)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, bottom, top</span>):</span><br><span class="line">    <span class="comment"># Algorithm:</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># for each (H, W) location i</span></span><br><span class="line">    <span class="comment">#   generate 9 anchor boxes centered on cell i</span></span><br><span class="line">    <span class="comment">#   apply predicted bbox deltas at cell i to each of the 9 anchors</span></span><br><span class="line">    <span class="comment"># filter out-of-image anchors</span></span><br><span class="line">    <span class="comment"># measure GT overlap</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">assert</span> bottom[<span class="number">0</span>].data.shape[<span class="number">0</span>] == <span class="number">1</span>, \</span><br><span class="line">        <span class="string">'Only single item batches are supported'</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># map of shape (..., H, W)</span></span><br><span class="line">    <span class="comment"># 利用rpn_cls_score来获得feature_maps的长宽</span></span><br><span class="line">    height, width = bottom[<span class="number">0</span>].data.shape[-<span class="number">2</span>:]</span><br><span class="line">    <span class="comment"># GT boxes (x1, y1, x2, y2, label)</span></span><br><span class="line">    gt_boxes = bottom[<span class="number">1</span>].data</span><br><span class="line">    <span class="comment"># im_info</span></span><br><span class="line">    im_info = bottom[<span class="number">2</span>].data[<span class="number">0</span>, :]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">''</span></span><br><span class="line">        <span class="built_in">print</span> <span class="string">'im_size: ({}, {})'</span>.<span class="built_in">format</span>(im_info[<span class="number">0</span>], im_info[<span class="number">1</span>])</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'scale: {}'</span>.<span class="built_in">format</span>(im_info[<span class="number">2</span>])</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'height, width: ({}, {})'</span>.<span class="built_in">format</span>(height, width)</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'rpn: gt_boxes.shape'</span>, gt_boxes.shape</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'rpn: gt_boxes'</span>, gt_boxes</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 1. Generate proposals from bbox deltas and shifted anchors</span></span><br><span class="line">    <span class="comment"># 利用获得每个anchor相对于图片左上角的anchor的移动步长。</span></span><br><span class="line">    shift_x = np.arange(<span class="number">0</span>, width) * self._feat_stride</span><br><span class="line">    shift_y = np.arange(<span class="number">0</span>, height) * self._feat_stride</span><br><span class="line">    shift_x, shift_y = np.meshgrid(shift_x, shift_y)</span><br><span class="line">    shifts = np.vstack((shift_x.ravel(), shift_y.ravel(),</span><br><span class="line">                        shift_x.ravel(), shift_y.ravel())).transpose()</span><br><span class="line">    <span class="comment"># add A anchors (1, A, 4) to</span></span><br><span class="line">    <span class="comment"># cell K shifts (K, 1, 4) to get</span></span><br><span class="line">    <span class="comment"># shift anchors (K, A, 4)</span></span><br><span class="line">    <span class="comment"># reshape to (K*A, 4) shifted anchors</span></span><br><span class="line">    <span class="comment">#简单说就是对9个anchor,每一个都加上一个位移，得到9*K个位移</span></span><br><span class="line">    A = self._num_anchors</span><br><span class="line">    K = shifts.shape[<span class="number">0</span>]</span><br><span class="line">    <span class="comment"># each anchor add with all shifts to get all anchors</span></span><br><span class="line">    all_anchors = (self._anchors.reshape((<span class="number">1</span>, A, <span class="number">4</span>)) +</span><br><span class="line">                   shifts.reshape((<span class="number">1</span>, K, <span class="number">4</span>)).transpose((<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>)))</span><br><span class="line">    all_anchors = all_anchors.reshape((K * A, <span class="number">4</span>))</span><br><span class="line">    total_anchors = <span class="built_in">int</span>(K * A)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># only keep anchors inside the image</span></span><br><span class="line">    <span class="comment"># 丢弃所有超过边界的anchors,即使是一点点。</span></span><br><span class="line">    inds_inside = np.where(</span><br><span class="line">        (all_anchors[:, <span class="number">0</span>] &gt;= -self._allowed_border) &amp;</span><br><span class="line">        (all_anchors[:, <span class="number">1</span>] &gt;= -self._allowed_border) &amp;</span><br><span class="line">        (all_anchors[:, <span class="number">2</span>] &lt; im_info[<span class="number">1</span>] + self._allowed_border) &amp;  <span class="comment"># width</span></span><br><span class="line">        (all_anchors[:, <span class="number">3</span>] &lt; im_info[<span class="number">0</span>] + self._allowed_border)    <span class="comment"># height</span></span><br><span class="line">    )[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'total_anchors'</span>, total_anchors</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'inds_inside'</span>, <span class="built_in">len</span>(inds_inside)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># keep only inside anchors</span></span><br><span class="line">    anchors = all_anchors[inds_inside, :]</span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'anchors.shape'</span>, anchors.shape</span><br><span class="line"></span><br><span class="line">    <span class="comment"># label: 1 is positive, 0 is negative, -1 is dont care</span></span><br><span class="line">    labels = np.empty((<span class="built_in">len</span>(inds_inside), ), dtype=np.float32)</span><br><span class="line">    labels.fill(-<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># overlaps between the anchors and the gt boxes(x1, y1, x2, y2, cls)</span></span><br><span class="line">    <span class="comment"># overlaps (ex, gt)</span></span><br><span class="line">    <span class="comment"># 这里overlaps是计算所有anchor与ground-truth的重合度，它是一个len(anchors) x len(gt_boxes)的二维数组，每个元素是各个</span></span><br><span class="line">    <span class="comment"># anchor和gt_boxes的overlap值，这个overlap值的计算是这样的：</span></span><br><span class="line">    <span class="comment"># overlap = (重合部分面积) / (anchor面积 + gt_boxes面积 - 重合部分面积)</span></span><br><span class="line">    <span class="comment"># argmax_overlaps是每个anchor对应最大overlap的gt_boxes的下标</span></span><br><span class="line">    <span class="comment"># max_overlaps是每个anchor对应最大的overlap值相对应的</span></span><br><span class="line">    <span class="comment"># gt_argmax_overlaps是每个gt_boxes对应最大overlap的anchor的下标</span></span><br><span class="line">    <span class="comment"># gt_max_overlaps是每个gt_boxes对应最大的overlap值</span></span><br><span class="line">    <span class="comment"># 计算anchors与gt_boxes的overlap</span></span><br><span class="line">    overlaps = bbox_overlaps(</span><br><span class="line">        np.ascontiguousarray(anchors, dtype=np.<span class="built_in">float</span>),</span><br><span class="line">        np.ascontiguousarray(gt_boxes, dtype=np.<span class="built_in">float</span>))</span><br><span class="line">    <span class="comment"># 获取每行最大overlap</span></span><br><span class="line">    argmax_overlaps = overlaps.argmax(axis=<span class="number">1</span>)</span><br><span class="line">    max_overlaps = overlaps[np.arange(<span class="built_in">len</span>(inds_inside)), argmax_overlaps]</span><br><span class="line">    gt_argmax_overlaps = overlaps.argmax(axis=<span class="number">0</span>)</span><br><span class="line">    <span class="comment"># 获取每列最大的overlap, 目的是找到与roi重叠最大的区域，将其标记为1</span></span><br><span class="line">    gt_max_overlaps = overlaps[gt_argmax_overlaps,</span><br><span class="line">                               np.arange(overlaps.shape[<span class="number">1</span>])]</span><br><span class="line">    gt_argmax_overlaps = np.where(overlaps == gt_max_overlaps)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> cfg.TRAIN.RPN_CLOBBER_POSITIVES:</span><br><span class="line">        <span class="comment"># assign bg labels first so that positive labels can clobber them</span></span><br><span class="line">        labels[max_overlaps &lt; cfg.TRAIN.RPN_NEGATIVE_OVERLAP] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># fg label: for each gt, anchor with highest overlap</span></span><br><span class="line">    <span class="comment"># 无论如何，最大的overlap对应的是目标</span></span><br><span class="line">    labels[gt_argmax_overlaps] = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># fg label: above threshold IOU</span></span><br><span class="line">    labels[max_overlaps &gt;= cfg.TRAIN.RPN_POSITIVE_OVERLAP] = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> cfg.TRAIN.RPN_CLOBBER_POSITIVES:</span><br><span class="line">        <span class="comment"># assign bg labels last so that negative labels can clobber positives</span></span><br><span class="line">        labels[max_overlaps &lt; cfg.TRAIN.RPN_NEGATIVE_OVERLAP] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># subsample positive labels if we have too many</span></span><br><span class="line">    <span class="comment"># 如果正标签过多，则进行下采样，提取部分正标签</span></span><br><span class="line">    num_fg = <span class="built_in">int</span>(cfg.TRAIN.RPN_FG_FRACTION * cfg.TRAIN.RPN_BATCHSIZE)</span><br><span class="line">    fg_inds = np.where(labels == <span class="number">1</span>)[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(fg_inds) &gt; num_fg:</span><br><span class="line">        disable_inds = npr.choice( <span class="comment">#随机选择标签为正的标记为-1</span></span><br><span class="line">            fg_inds, size=(<span class="built_in">len</span>(fg_inds) - num_fg), replace=<span class="literal">False</span>)</span><br><span class="line">        labels[disable_inds] = -<span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># subsample negative labels if we have too many</span></span><br><span class="line">    <span class="comment"># 如果负标签过多，则进行下采样，提取部分负标签</span></span><br><span class="line">    num_bg = cfg.TRAIN.RPN_BATCHSIZE - np.<span class="built_in">sum</span>(labels == <span class="number">1</span>)</span><br><span class="line">    bg_inds = np.where(labels == <span class="number">0</span>)[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(bg_inds) &gt; num_bg:</span><br><span class="line">        disable_inds = npr.choice(</span><br><span class="line">            bg_inds, size=(<span class="built_in">len</span>(bg_inds) - num_bg), replace=<span class="literal">False</span>)</span><br><span class="line">        labels[disable_inds] = -<span class="number">1</span></span><br><span class="line">        <span class="comment">#print "was %s inds, disabling %s, now %s inds" % (</span></span><br><span class="line">            <span class="comment">#len(bg_inds), len(disable_inds), np.sum(labels == 0))</span></span><br><span class="line">    <span class="comment">#这里将计算每一个anchor与重合度最高的ground_truth的偏移值</span></span><br><span class="line">    bbox_targets = np.zeros((<span class="built_in">len</span>(inds_inside), <span class="number">4</span>), dtype=np.float32)</span><br><span class="line">    <span class="comment"># transform anchors 's coordinate to [0, 1]</span></span><br><span class="line">    <span class="comment"># 求bbox的回归目标</span></span><br><span class="line">    bbox_targets = _compute_targets(anchors, gt_boxes[argmax_overlaps, :])</span><br><span class="line">    <span class="comment"># inside and outside means that anchors in geboxes or out of gtboxes.</span></span><br><span class="line">    bbox_inside_weights = np.zeros((<span class="built_in">len</span>(inds_inside), <span class="number">4</span>), dtype=np.float32)</span><br><span class="line">    bbox_inside_weights[labels == <span class="number">1</span>, :] = np.array(cfg.TRAIN.RPN_BBOX_INSIDE_WEIGHTS)</span><br><span class="line"></span><br><span class="line">    bbox_outside_weights = np.zeros((<span class="built_in">len</span>(inds_inside), <span class="number">4</span>), dtype=np.float32)</span><br><span class="line">    <span class="keyword">if</span> cfg.TRAIN.RPN_POSITIVE_WEIGHT &lt; <span class="number">0</span>:</span><br><span class="line">        <span class="comment"># uniform weighting of examples (given non-uniform sampling)</span></span><br><span class="line">        num_examples = np.<span class="built_in">sum</span>(labels &gt;= <span class="number">0</span>)</span><br><span class="line">        positive_weights = np.ones((<span class="number">1</span>, <span class="number">4</span>)) * <span class="number">1.0</span> / num_examples</span><br><span class="line">        negative_weights = np.ones((<span class="number">1</span>, <span class="number">4</span>)) * <span class="number">1.0</span> / num_examples</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">assert</span> ((cfg.TRAIN.RPN_POSITIVE_WEIGHT &gt; <span class="number">0</span>) &amp;</span><br><span class="line">                (cfg.TRAIN.RPN_POSITIVE_WEIGHT &lt; <span class="number">1</span>))</span><br><span class="line">        positive_weights = (cfg.TRAIN.RPN_POSITIVE_WEIGHT /</span><br><span class="line">                            np.<span class="built_in">sum</span>(labels == <span class="number">1</span>))</span><br><span class="line">        negative_weights = ((<span class="number">1.0</span> - cfg.TRAIN.RPN_POSITIVE_WEIGHT) /</span><br><span class="line">                            np.<span class="built_in">sum</span>(labels == <span class="number">0</span>))</span><br><span class="line">    bbox_outside_weights[labels == <span class="number">1</span>, :] = positive_weights</span><br><span class="line">    bbox_outside_weights[labels == <span class="number">0</span>, :] = negative_weights</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        self._sums += bbox_targets[labels == <span class="number">1</span>, :].<span class="built_in">sum</span>(axis=<span class="number">0</span>)</span><br><span class="line">        self._squared_sums += (bbox_targets[labels == <span class="number">1</span>, :] ** <span class="number">2</span>).<span class="built_in">sum</span>(axis=<span class="number">0</span>)</span><br><span class="line">        self._counts += np.<span class="built_in">sum</span>(labels == <span class="number">1</span>)</span><br><span class="line">        means = self._sums / self._counts</span><br><span class="line">        stds = np.sqrt(self._squared_sums / self._counts - means ** <span class="number">2</span>)</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'means:'</span></span><br><span class="line">        <span class="built_in">print</span> means</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'stdevs:'</span></span><br><span class="line">        <span class="built_in">print</span> stds</span><br><span class="line"></span><br><span class="line">    <span class="comment"># map up to original set of anchors</span></span><br><span class="line">    labels = _unmap(labels, total_anchors, inds_inside, fill=-<span class="number">1</span>)</span><br><span class="line">    bbox_targets = _unmap(bbox_targets, total_anchors, inds_inside, fill=<span class="number">0</span>)</span><br><span class="line">    bbox_inside_weights = _unmap(bbox_inside_weights, total_anchors, inds_inside, fill=<span class="number">0</span>)</span><br><span class="line">    bbox_outside_weights = _unmap(bbox_outside_weights, total_anchors, inds_inside, fill=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'rpn: max max_overlap'</span>, np.<span class="built_in">max</span>(max_overlaps)</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'rpn: num_positive'</span>, np.<span class="built_in">sum</span>(labels == <span class="number">1</span>)</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'rpn: num_negative'</span>, np.<span class="built_in">sum</span>(labels == <span class="number">0</span>)</span><br><span class="line">        self._fg_sum += np.<span class="built_in">sum</span>(labels == <span class="number">1</span>)</span><br><span class="line">        self._bg_sum += np.<span class="built_in">sum</span>(labels == <span class="number">0</span>)</span><br><span class="line">        self._count += <span class="number">1</span></span><br><span class="line">        <span class="built_in">print</span> <span class="string">'rpn: num_positive avg'</span>, self._fg_sum / self._count</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'rpn: num_negative avg'</span>, self._bg_sum / self._count</span><br><span class="line"></span><br><span class="line">    <span class="comment"># labels for each anchors, so shape is (1, 1, A * height, width)</span></span><br><span class="line">    labels = labels.reshape((<span class="number">1</span>, height, width, A)).transpose(<span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    labels = labels.reshape((<span class="number">1</span>, <span class="number">1</span>, A * height, width))</span><br><span class="line">    top[<span class="number">0</span>].reshape(*labels.shape)</span><br><span class="line">    top[<span class="number">0</span>].data[...] = labels</span><br><span class="line"></span><br><span class="line">    <span class="comment"># bbox_targets</span></span><br><span class="line">    bbox_targets = bbox_targets \</span><br><span class="line">        .reshape((<span class="number">1</span>, height, width, A * <span class="number">4</span>)).transpose(<span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    top[<span class="number">1</span>].reshape(*bbox_targets.shape)</span><br><span class="line">    top[<span class="number">1</span>].data[...] = bbox_targets</span><br><span class="line"></span><br><span class="line">    <span class="comment"># bbox_inside_weights</span></span><br><span class="line">    bbox_inside_weights = bbox_inside_weights \</span><br><span class="line">        .reshape((<span class="number">1</span>, height, width, A * <span class="number">4</span>)).transpose(<span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">assert</span> bbox_inside_weights.shape[<span class="number">2</span>] == height</span><br><span class="line">    <span class="keyword">assert</span> bbox_inside_weights.shape[<span class="number">3</span>] == width</span><br><span class="line">    top[<span class="number">2</span>].reshape(*bbox_inside_weights.shape)</span><br><span class="line">    top[<span class="number">2</span>].data[...] = bbox_inside_weights</span><br><span class="line"></span><br><span class="line">    <span class="comment"># bbox_outside_weights</span></span><br><span class="line">    bbox_outside_weights = bbox_outside_weights \</span><br><span class="line">        .reshape((<span class="number">1</span>, height, width, A * <span class="number">4</span>)).transpose(<span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">assert</span> bbox_outside_weights.shape[<span class="number">2</span>] == height</span><br><span class="line">    <span class="keyword">assert</span> bbox_outside_weights.shape[<span class="number">3</span>] == width</span><br><span class="line">    top[<span class="number">3</span>].reshape(*bbox_outside_weights.shape)</span><br><span class="line">    top[<span class="number">3</span>].data[...] = bbox_outside_weights</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">backward</span>(<span class="params">self, top, propagate_down, bottom</span>):</span><br><span class="line">    <span class="string">"""This layer does not propagate gradients."""</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">reshape</span>(<span class="params">self, bottom, top</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+
+
+
+
+
+
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Faster-RCNN/" rel="tag"># Faster-RCNN</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/18/fpn/" rel="next" title="FPN">
+                  <i class="fa fa-chevron-left"></i> FPN
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/11/18/fast-rcnn/" rel="prev" title="Fast-RCNN">
+                  Fast-RCNN <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E6%96%B0%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">创新点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Faster-R-CNN%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">Faster R-CNN详解</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#RPN-%E7%BD%91%E7%BB%9C"><span class="nav-number">2.1.</span> <span class="nav-text">RPN 网络</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#loss-function"><span class="nav-number">2.2.</span> <span class="nav-text">loss function</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#rpn%E7%9A%84%E8%AE%AD%E7%BB%83"><span class="nav-number">2.2.1.</span> <span class="nav-text">rpn的训练</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Faster-R-CNN%E7%9A%84%E8%AE%AD%E7%BB%83"><span class="nav-number">2.3.</span> <span class="nav-text">Faster R-CNN的训练</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#generate-anchors%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">generate anchors代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#anchor-target%E4%BB%A3%E7%A0%81"><span class="nav-number">4.</span> <span class="nav-text">anchor_target代码</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

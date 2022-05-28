@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="shuffleNet是face++在2017年提出，目的是提高深度模型的执行效率，可在移动端执行。   论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1707.01083  摘要我们知道深度学习网络在包括图像识别等多个领域发展迅速，但是随着模型的深度越来越深，模型的参数量越来越大，现如今模型一般都跑的GPU上面，那么如何能在嵌入式或者移动端使用深度学习也是目前研究比较多的领域，shuff">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ShuffleNet">
+<meta property="og:url" content="https://www.wanglichun.tech/2019/11/07/shuffleNet/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="shuffleNet是face++在2017年提出，目的是提高深度模型的执行效率，可在移动端执行。   论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1707.01083  摘要我们知道深度学习网络在包括图像识别等多个领域发展迅速，但是随着模型的深度越来越深，模型的参数量越来越大，现如今模型一般都跑的GPU上面，那么如何能在嵌入式或者移动端使用深度学习也是目前研究比较多的领域，shuff">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbgy1fu81twbwsqj208z065ac3.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbgy1fu86xldurnj20wd0f0jt2.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fu882ajbdnj20w10f60tz.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fu890fyzz8j20w80f4tax.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbgy1fu91rok7ldj20jm04wmxq.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbgy1fu9254im8oj20jj06ggmg.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fu928v6kghj20qw059t9g.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbgy1fu92ah1scoj20ku08qwfq.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fu94b13jf3j20qn06ct9z.jpg">
+<meta property="article:published_time" content="2019-11-07T00:33:19.000Z">
+<meta property="article:modified_time" content="2020-02-16T00:02:08.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="ShuffleNet">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/87675bbbgy1fu81twbwsqj208z065ac3.jpg">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2019/11/07/shuffleNet/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>ShuffleNet | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/07/shuffleNet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ShuffleNet
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-07 08:33:19" itemprop="dateCreated datePublished" datetime="2019-11-07T08:33:19+08:00">2019-11-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 08:02:08" itemprop="dateModified" datetime="2020-02-16T08:02:08+08:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Classification/" itemprop="url" rel="index">
+                    <span itemprop="name">Classification</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/07/shuffleNet/" class="post-meta-item leancloud_visitors" data-flag-title="ShuffleNet" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/07/shuffleNet/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/07/shuffleNet/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>shuffleNet是face++在2017年提出，目的是提高深度模型的执行效率，可在移动端执行。</p>
+</blockquote>
+<hr>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1707.01083">论文链接：https://arxiv.org/abs/1707.01083</a></p>
+<hr>
+<h5 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h5><p>我们知道深度学习网络在包括图像识别等多个领域发展迅速，但是随着模型的深度越来越深，模型的参数量越来越大，现如今模型一般都跑的GPU上面，那么如何能在嵌入式或者移动端使用深度学习也是目前研究比较多的领域，shufflenet便是其中一个成果。<strong>shuffleNet主要有两个创新点：（1）pointwise group convolution，（2）channel shuffle。</strong></p>
+<p><strong>在模型效果方面，作者通过实验证明，在ImageNet classfication任务中，shuffleNet相比较于mobileNet，top-1的错误率降低了7.8个百分点。另外在移动端，在相同的精度下，shuffleNet的速度是alexNet的13倍。</strong></p>
+<p><strong>与shuffleNet相关的两个网络，一个是Xception，一个是MobileNet，有兴趣的读者可以看一下这两个网络</strong></p>
+<h5 id="shuffleNet策略之一：分组卷积"><a href="#shuffleNet策略之一：分组卷积" class="headerlink" title="shuffleNet策略之一：分组卷积"></a>shuffleNet策略之一：分组卷积</h5><p>为了提高网络的效率，除了<strong>剪枝、量化</strong>等手段，另一个主要的手段便是在网络设计阶段在保证精度的情况下减少一定的网络参数量，分组卷积便是这样的一个手段，<strong>这里解释一下什么是分组卷积，举个例子，比如你的特征图有64个channel，分成2个组，每个组的32个特征图分别处理，得到结果之后再进行合并，这就是分组卷积了，另外补充一个，depthwise separable convolution是分组卷积的一个特例，其就是特征图有几个channel，我就分为几个组，保证每个组只有一个特征图进行处理，这是在mobileNet中提出的，shuffleNet用到了分组卷积以及depthwise separable convolution</strong>。其实分组卷积在alexnet中便被使用，当时受限于GPU的显存，alex将网络分别在两个GPU上同时训练，另一个比较火的分组卷积网络便是resneXt，resneXt通过分组卷积，比resnet精度提高了一些，但是resneXt的分组卷积也有一个缺点：**dense 1*1卷积耗费了大量的计算，占到了总计算量的93.3%**，怎么计算出来的呢？下面说明一下：</p>
+<p>首先明确一下resnext一个unit的网络结构：如下图：</p>
+<p>下面我们假设输入的特征图大小为d*d，来计算一下该网络结构的计算量：首先对于最上面的降维:$256*1*d*d*4$,中间的计算量为：$4*3*3*d*d*4$,最后的输出的计算量为：$4*1*1*d*d*256$,则最终pointwise所占的计算量为：$\frac{256*1*1*d*d*4*2}{256*1*1*d*d*4*2+4*3*3*d*d*4}$ = $\frac{14}{15}$ =93.3%,由此可见，如果1*1降维太多的话（channel数减少太多），1*1卷积网络的参数量就占bottleneck主导地位了。</p>
+<p><strong>注：分组卷积，比如原来是128维，3*3后变仍为128维，通过分组卷积分为32组，那就是输入4维，输出仍为4维，并不是输入为4维输出为128维，如果是128维，那跟没分组也没啥区别了，笔者在这就搞晕了，算了半天也不对</strong></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fu81twbwsqj208z065ac3.jpg" alt="resneXt unit结构"></p>
+<h5 id="shuffleNet是怎么操作的呢？"><a href="#shuffleNet是怎么操作的呢？" class="headerlink" title="shuffleNet是怎么操作的呢？"></a>shuffleNet是怎么操作的呢？</h5><p>首先，为了解决1*1卷积在分组unit中计算量占比较大，作者提出在1*1卷积中同样使用分组卷积，但是这样会带来一个问题，就是组内的channel之间的相关性很弱，那怎么解决这个问题呢？作者提出了使用shuffle操作，来帮助信息在不同的channel间进行流动。如下图（a）就是单纯的对1*1卷积（pointwise conv）进行分组操作，根据不同的颜色可以发现，其实不同组之间没有交集，图（b，c）显示利用shuffle操作，增加不同channel之间的关联性。<strong>具体怎么操作呢？假设，我们将卷积层分为g组每组n个channel，则共有g*n个channel，（b,g*n,h,w）,首先reshape成（b,g，n,h,w）然后transpose为（b,n,g,h,w）,shuffle后在reshape成（b,n*g,h,w）</strong>，<strong>channel是可微的，可以嵌入到end-to-end网络中</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">channel_shuffle</span>(<span class="params">data, groups</span>):</span><br><span class="line">	data = mx.sym.reshape(data, shape=(<span class="number">0</span>, -<span class="number">4</span>, groups, -<span class="number">1</span>, -<span class="number">2</span>))</span><br><span class="line">	data = mx.sym.swapaxes(data, <span class="number">1</span>, <span class="number">2</span>) <span class="comment"># </span></span><br><span class="line">	data = mx.sym.reshape(data, shape=(<span class="number">0</span>, -<span class="number">3</span>, -<span class="number">2</span>))</span><br><span class="line">	<span class="keyword">return</span> data</span><br></pre></td></tr></tbody></table></figure>
+
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fu86xldurnj20wd0f0jt2.jpg"></p>
+<p>基于此，作者设计网络如下：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fu882ajbdnj20w10f60tz.jpg"></p>
+<p>作者首先设计了bottleneck unit如下图（a）,作者使用3*3的depthwise convolution，然后，利用group conv替换了pointwise group convolution，在其后增加了channel shuffle operation操作，如下图（b）所示</p>
+<p><strong>shuffleNet实际上就是对resnext的1*1的pointwise-conv进行分组卷积，进一步降低参数量，然后采用Depth-wise-conv进行卷积（同样有效减少参数量），最后再使用分组卷积进行1*1的的计算，并且在最终的输出上采用concat进行叠加</strong></p>
+<p><strong>特别说明，作者使用了BN层，但是在最后的BN后面没有使用relu，这点也是Xception以及mobileNet v2所介绍的</strong></p>
+<p>另外为了增加stride操作，作者这里做了2个改变（i）增加了3*3的average pooling在shortcut上面，（ii）shortcut的相加变为了相乘，使得channel增加。</p>
+<p>下面是shuffleNet每个unit的计算量的对比：(其中c代表输入channel,m代表输出channel，g代表分组卷积组数)</p>
+<p>resnet: $h*w*c*1*1*m*2 + h*w*m*3*3*m$</p>
+<p>resneXt: $h*w*c*1*1*m/g*g*2 + h*w*m/g*3*3*m/g*g$</p>
+<p>shuffleNet: $h*w*c/g*1*1*m/g*g*2 + h*w*m/g*3*3*1*g$</p>
+<p>化简的结果,可见shuffleNet的计算量小了很多：</p>
+<p>resnet: $hw(2cm+9m^{2})$</p>
+<p>resneXt: $hw(2cm+9m^2/g)$</p>
+<p>shuffleNet: $hw(2cm/g+9m)$</p>
+<p>shuffleNet网络详细结构图如下：</p>
+<p>在每个Stage中的一个block设置stride=2,来减少特征图的大小，其他的保持特征图大小不变，bottleneck中channel输出为输入的1/4,下图table中显示了不同的group的结果，<br><img src="http://ww1.sinaimg.cn/large/87675bbbly1fu890fyzz8j20w80f4tax.jpg"></p>
+<h5 id="对比实验"><a href="#对比实验" class="headerlink" title="对比实验"></a>对比实验</h5><p>1.首先针对Pointwise Group</p>
+<p>Convolutions的效果如下图所示：【其中0.5*代表channel数为原来的0.5倍】</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fu91rok7ldj20jm04wmxq.jpg"></p>
+<p>可见group的增加对模型的效果有一定的提升，并且实验证明，channel的增加有利于模型精度。</p>
+<p>2.针对channel shuffle的作用：</p>
+<p>根据下表可以观察到，shuffle效果还是比较明显的</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fu9254im8oj20jj06ggmg.jpg"></p>
+<p>3.与其他unit的对比：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fu928v6kghj20qw059t9g.jpg"></p>
+<ol start="4">
+<li>与mobileNet的对比</li>
+</ol>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fu92ah1scoj20ku08qwfq.jpg"></p>
+<p>最后作者在mobile中进行上实验，发现group取3是精度与效率的trade-off，与不同的网络对于结果如下：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fu94b13jf3j20qn06ct9z.jpg"></p>
+<p>可见shuffleNet的效率还是杠杠滴</p>
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ShuffleNet/" rel="tag"># ShuffleNet</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/07/cplusplus/" rel="next" title="C++面试-知识点总结">
+                  <i class="fa fa-chevron-left"></i> C++面试-知识点总结
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/11/07/shuffleNet-v2/" rel="prev" title="ShuffleNet V2">
+                  ShuffleNet V2 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#shuffleNet%E7%AD%96%E7%95%A5%E4%B9%8B%E4%B8%80%EF%BC%9A%E5%88%86%E7%BB%84%E5%8D%B7%E7%A7%AF"><span class="nav-number">2.</span> <span class="nav-text">shuffleNet策略之一：分组卷积</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#shuffleNet%E6%98%AF%E6%80%8E%E4%B9%88%E6%93%8D%E4%BD%9C%E7%9A%84%E5%91%A2%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">shuffleNet是怎么操作的呢？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94%E5%AE%9E%E9%AA%8C"><span class="nav-number">4.</span> <span class="nav-text">对比实验</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

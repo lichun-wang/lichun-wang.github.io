@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="本篇论文是亚马逊MXNet团队的又一力作，目前预训练模型已经在MXNet官网上面公布，从效果上看，网络的精确度提升还是很明显的，实现了较好的speed与accuracy的trade-off。精度提升的点主要在于两方面，一方面resnest使用了前面MXNet团队总结的训练模型的tricks，另一方面设计了split-attention block结构，在并没有改变resnet原始结构的情况下，提">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ResNeSt">
+<meta property="og:url" content="https://www.wanglichun.tech/2020/05/16/resnest/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="本篇论文是亚马逊MXNet团队的又一力作，目前预训练模型已经在MXNet官网上面公布，从效果上看，网络的精确度提升还是很明显的，实现了较好的speed与accuracy的trade-off。精度提升的点主要在于两方面，一方面resnest使用了前面MXNet团队总结的训练模型的tricks，另一方面设计了split-attention block结构，在并没有改变resnet原始结构的情况下，提">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wanglichun.tech/0.png">
+<meta property="og:image" content="https://www.wanglichun.tech/1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/4.png">
+<meta property="og:image" content="https://www.wanglichun.tech/5.png">
+<meta property="og:image" content="https://www.wanglichun.tech/6.png">
+<meta property="og:image" content="https://www.wanglichun.tech/7.png">
+<meta property="article:published_time" content="2020-05-16T03:04:33.000Z">
+<meta property="article:modified_time" content="2020-05-16T07:21:52.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="ResNeSt">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.wanglichun.tech/0.png">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2020/05/16/resnest/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>ResNeSt | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/05/16/resnest/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ResNeSt
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-05-16 11:04:33 / 修改时间：15:21:52" itemprop="dateCreated datePublished" datetime="2020-05-16T11:04:33+08:00">2020-05-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Classification/" itemprop="url" rel="index">
+                    <span itemprop="name">Classification</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/05/16/resnest/" class="post-meta-item leancloud_visitors" data-flag-title="ResNeSt" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/05/16/resnest/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/16/resnest/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>本篇论文是亚马逊MXNet团队的又一力作，目前预训练模型已经在MXNet官网上面公布，从效果上看，网络的精确度提升还是很明显的，实现了较好的speed与accuracy的trade-off。精度提升的点主要在于两方面，一方面resnest使用了前面MXNet团队总结的训练模型的tricks，另一方面设计了split-attention block结构，在并没有改变resnet原始结构的情况下，提高了网络的识别能力。并且ResNeSt可以轻易的移植到其他的使用resnet作为backbone的任务中，比如目标检测、分割、姿态估计等,非常方便。</p>
+</blockquote>
+<hr>
+<p>作者：亚马逊MXNet那帮人</p>
+<p>论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2004.08955">https://arxiv.org/abs/2004.08955</a></p>
+<p>开源代码：<a target="_blank" rel="noopener" href="https://github.com/zhanghang1989/ResNeSt">https://github.com/zhanghang1989/ResNeSt</a></p>
+<hr>
+<h3 id="ResNeSt介绍"><a href="#ResNeSt介绍" class="headerlink" title="ResNeSt介绍"></a>ResNeSt介绍</h3><p>ResNeSt可以说是亚马逊在上一篇训练方法总结论文的又一升级版，没有看过那篇文章的小伙伴可以<a href="https://www.wanglichun.tech/2020/02/16/tricks-of-train/">点击链接查看</a>，这篇论文总结了一些训练模型时候提点的trick，还是很实用的。在ResNeSt这篇文章中，作者不仅采用了哪些tricks,而且提出了Split-Attention block方法，可以实现feature-map groups间的attention，提高识别能力的同时还保留了resnet的结构，使得其可以轻易替换任何的以resnet为backbone的模型，而且模型的效率也跟resnet差不多，这就非常的人性化了。</p>
+<p>ResNeSt的表现也是out performance的，ResNeSt-50在ImageNet上可以达到81.13%的准确率。将Faster-RCNN的backbone由resnet50替换成resnest50，模型在MS-COCO的map可以从39.3%提升到42.3%，提升3个点，效果明显的，可以一试。</p>
+<p>ResNeSt在accuracy与latency的表现可以看下图的分析结果。并且在检测以及分割上都有不错的表现。</p>
+<p><img src="/0.png" alt="0.png"></p>
+<h3 id="ResNeSt创新点"><a href="#ResNeSt创新点" class="headerlink" title="ResNeSt创新点"></a>ResNeSt创新点</h3><h4 id="Split-Attention-Block"><a href="#Split-Attention-Block" class="headerlink" title="Split-Attention Block"></a>Split-Attention Block</h4><p>首先介绍一下Split-Attention Block，在介绍Split-Attention Block之前，首先介绍一下Feature-map Group的概念，什么是Feature-map Group呢？这个概念是在ResNeXt中提出的，简单来说就是分组卷积中的那个‘组’的概念，在ResNeXt中，‘组’被称cardinality参数所划分。在ResNeSt中，作者同样引入了cardinality，不仅如此，作者在每个组内，进一步引入了radix参数，在组内实现了二次划分，相当于做了<strong>两级</strong>分组卷积,所以，在ResNeSt中的最终分组数为Group=Cardinality * Radix,简单记为G=C*R.</p>
+<p>在每个Group内，特征图依次通过1x1和3x3的网络。</p>
+<p>如下图所示，可以看到ResNeSt中的Cardinality以及Radix参数。看图可以发现在分组之后，Cardinality组内是通过Split Attention进行特征融合的，那么这个Split-Attention是怎么做的呢？</p>
+<p><img src="/1.png" alt="1.png"></p>
+<p>接下来介绍一下本篇文章的重点：</p>
+<ul>
+<li>Split-Attention。</li>
+</ul>
+<ol>
+<li>cardinality组内的attention</li>
+</ol>
+<p><img src="/2.png" alt="2.png"></p>
+<p>这个可以参考上面的流程图，首先对每组的输出进行element-wise summation,用以融合不同特征图的特征。然后通过Global pooling得到全局统计信息，进而通过一层全连接层+bn+relu，然后再通过一层全连接层得到加softmax，计算出各个组的attention值，然后对原来的输入进行加权，得到输出结果后进一步求和得到最终的输出结果。</p>
+<blockquote>
+<p>总体来看，跟senet有点像，只不过多了一些分组求和的操作，如果将radix=1，那么就跟senet基本一致了。另外senet是使用sigmoid计算激活值，而resnest使用的是softmax来计算激活值，更增加了channel之间的联系,这里会有不同。</p>
+</blockquote>
+<p>看代码就很清晰了。</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">    x = self.conv(x)</span><br><span class="line">    <span class="keyword">if</span> self.use_bn:</span><br><span class="line">        x = self.bn0(x)</span><br><span class="line">    <span class="keyword">if</span> self.dropblock_prob &gt; <span class="number">0.0</span>:</span><br><span class="line">        x = self.dropblock(x)</span><br><span class="line">    x = self.relu(x)</span><br><span class="line"></span><br><span class="line">    batch, rchannel = x.shape[:<span class="number">2</span>]</span><br><span class="line">    <span class="keyword">if</span> self.radix &gt; <span class="number">1</span>:</span><br><span class="line">        splited = torch.split(x, rchannel//self.radix, dim=<span class="number">1</span>)</span><br><span class="line">        gap = <span class="built_in">sum</span>(splited) </span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        gap = x</span><br><span class="line">    gap = F.adaptive_avg_pool2d(gap, <span class="number">1</span>)</span><br><span class="line">    gap = self.fc1(gap)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> self.use_bn:</span><br><span class="line">        gap = self.bn1(gap)</span><br><span class="line">    gap = self.relu(gap)</span><br><span class="line"></span><br><span class="line">    atten = self.fc2(gap)</span><br><span class="line">    atten = self.rsoftmax(atten).view(batch, -<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> self.radix &gt; <span class="number">1</span>:</span><br><span class="line">        attens = torch.split(atten, rchannel//self.radix, dim=<span class="number">1</span>)</span><br><span class="line">        out = <span class="built_in">sum</span>([att*split <span class="keyword">for</span> (att, split) <span class="keyword">in</span> <span class="built_in">zip</span>(attens, splited)])</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        out = atten * x</span><br><span class="line">    <span class="keyword">return</span> out.contiguous()</span><br></pre></td></tr></tbody></table></figure>
+<ol start="2">
+<li>cardinality组间的concat</li>
+</ol>
+<p>在每个Cardinality组内做好attention之后，通过concat将特征图进行合并。</p>
+<p>同样的的，跟resnet一样，每个block会有一个identity map。</p>
+<p><strong>另外，虽然看起来分组进行attention好像挺复杂的，但是其实，它完全可以通过分组卷积，以及分组全连接以及softmax来实现，计算效率不会因为分支多而受到影响。</strong></p>
+<h3 id="其他tricks"><a href="#其他tricks" class="headerlink" title="其他tricks"></a>其他tricks</h3><p>其他的一些tricks设计，可以参考开头提到的那篇亚马逊mxnet团队的训练技巧的总结文章，都应用到了resnest上面，包括label smoothing, mixup，v1d结构等。<br>另外还有一个auto augmentation，就是通过自动搜索的方法，去检索最合适的24个augment，然后训练的时候随机的选择augment</p>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p>首先跟其他的resnet网络变种相比，resnest的精度还是很具有竞争力的。</p>
+<p><img src="/3.png" alt="3.png"></p>
+<p>跟目前stage of art网络对比结果如下：可见resnest在速度精度也都表现的很出色。</p>
+<p><img src="/4.png" alt="4.png"></p>
+<p><strong>其中的resnest-fast网络就是将计算attention中的下采样放到3x3之前，减少计算量，gluoncv中提供的预训练模型都是放在之前的</strong></p>
+<ul>
+<li>radix与cardinality的对比</li>
+</ul>
+<p>对比结果如下：其中s代表radix,x代表cardinality,d代表网络的width， 0s代表的就是标准的residual block,经过对比2s1x64d，是一个比较好的速度与精度平衡的选择。</p>
+<p><img src="/5.png" alt="5.png"></p>
+<ul>
+<li>在检测网络的表现</li>
+</ul>
+<p><img src="/6.png" alt="6.png"></p>
+<h4 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h4><p>实际上在实现的过程中，是采用下图所示的网络结构实现的，更有利于使用模块化的处理方式以及GPU加速。为啥这种方法更有利于模块化呢？看图可以看出来，其实它只进行了一次split-attention,而cardinality-major方法（论文中介绍的）进行了多次的split-attention，自然并行化要差一些。</p>
+<p><img src="/7.png" alt="7.png"></p>
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ResNeSt/" rel="tag"># ResNeSt</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/03/08/ghostnet/" rel="next" title="GhostNet(CVPR2020)">
+                  <i class="fa fa-chevron-left"></i> GhostNet(CVPR2020)
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/05/16/yolov4/" rel="prev" title="YOLO-V4">
+                  YOLO-V4 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#ResNeSt%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">ResNeSt介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ResNeSt%E5%88%9B%E6%96%B0%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">ResNeSt创新点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Split-Attention-Block"><span class="nav-number">2.1.</span> <span class="nav-text">Split-Attention Block</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96tricks"><span class="nav-number">3.</span> <span class="nav-text">其他tricks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">4.</span> <span class="nav-text">实验结果</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%99%84%E5%BD%95"><span class="nav-number">4.1.</span> <span class="nav-text">附录</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="ACNet，借鉴了模型加速的一些方法，在原始的dxd的卷积上，通过增加并行的1xd以及dx1卷积（即AC Block），实现模型精度的增强，同时在部署阶段，又将dxd、1xd、dx1卷积通过公式进行合并计算得到新的dxd卷积，并没有增加原有dxd卷积的计算量以及inference的时间，精度速度双收，作者将ACBlock应用于多个网络，效果还是比较显著的，值得借鉴。   论文名称：ACNet:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ACNet">
+<meta property="og:url" content="https://www.wanglichun.tech/2020/01/15/ACNet/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="ACNet，借鉴了模型加速的一些方法，在原始的dxd的卷积上，通过增加并行的1xd以及dx1卷积（即AC Block），实现模型精度的增强，同时在部署阶段，又将dxd、1xd、dx1卷积通过公式进行合并计算得到新的dxd卷积，并没有增加原有dxd卷积的计算量以及inference的时间，精度速度双收，作者将ACBlock应用于多个网络，效果还是比较显著的，值得借鉴。   论文名称：ACNet:">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wanglichun.tech/1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/4.png">
+<meta property="og:image" content="https://www.wanglichun.tech/5.png">
+<meta property="og:image" content="https://www.wanglichun.tech/6.png">
+<meta property="og:image" content="https://www.wanglichun.tech/7.png">
+<meta property="og:image" content="https://www.wanglichun.tech/8.png">
+<meta property="article:published_time" content="2020-01-15T01:02:42.000Z">
+<meta property="article:modified_time" content="2020-01-15T06:14:20.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="ACNet">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.wanglichun.tech/1.png">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2020/01/15/ACNet/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>ACNet | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/01/15/ACNet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ACNet
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-01-15 09:02:42 / 修改时间：14:14:20" itemprop="dateCreated datePublished" datetime="2020-01-15T09:02:42+08:00">2020-01-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Classification/" itemprop="url" rel="index">
+                    <span itemprop="name">Classification</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/01/15/ACNet/" class="post-meta-item leancloud_visitors" data-flag-title="ACNet" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/01/15/ACNet/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/01/15/ACNet/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>ACNet，借鉴了模型加速的一些方法，在原始的dxd的卷积上，通过增加并行的1xd以及dx1卷积（即AC Block），实现模型精度的增强，同时在部署阶段，又将dxd、1xd、dx1卷积通过公式进行合并计算得到新的dxd卷积，并没有增加原有dxd卷积的计算量以及inference的时间，精度速度双收，作者将ACBlock应用于多个网络，效果还是比较显著的，值得借鉴。</p>
+</blockquote>
+<hr>
+<p>论文名称：ACNet: Strengthening the Kernel Skeletons for Powerful CNN via Asymmetric Convolution Blocks</p>
+<p>作者：Xiaohan Ding &amp; Yuchen Guo 等</p>
+<p>论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1908.03930">https://arxiv.org/abs/1908.03930</a></p>
+<hr>
+<h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><p>提升网络的精度以及速度，一直是广大研究人员孜孜不倦的追求。那么<strong>如何提升网络的精度</strong>？我们可以看看网络的发展，从VGG-&gt;ResNet-&gt;DenseNet-&gt;SENet-&gt;FPN等，网络的结构在逐渐的复杂，从VGG单纯的stack模式，到ResNet引入identity　mapping，到DenseNet的Dense　Connecting以及SENet的attention，FPN的不同特征图的叠加，网络的发展使其变得越来越复杂。<strong>那么如何提升网络的速度</strong>？模型压缩：剪枝、量化。总的来说，大体就是通过各种方法减少计算量，减少运算中的中间变量，减少网络的复杂度。</p>
+<p>这篇文章的最大创新点就在于<strong>虽然对网络结构进行了稍微的修改，提出了ACB模块，（网络的修改，结合了Inception论文中的方法，还是挺巧妙的），提高了精度，但是在部署的时候，通过计算合并，并没有增加网络的计算量，保持了原来的速度，下图是ACB模块简单的图示，左边是训练时的结构，右面是部署时的合并</strong>。</p>
+<p><img src="/1.png" alt="1.png"></p>
+<h3 id="ACB-Asymmetric-Convolution-Block"><a href="#ACB-Asymmetric-Convolution-Block" class="headerlink" title="ACB(Asymmetric Convolution Block)"></a>ACB(Asymmetric Convolution Block)</h3><p>如上图所示，ACB模块就是将原本dxd的卷积，修改为3个平行并列的卷积，分别为原来的dxd以及新增的1xd以及dx1,上图中的展示为d=3的情况，虽然d不限制，不过大部分网络d都是等于3的。然后将3个平行输出的特征图做相加操作。</p>
+<p>ACB由于并没有对网络结构进行大的调整，仅仅是调整了3x3的卷积，所以ACB模块可以应用于任何现有的网络，只要替换卷积就可以了。</p>
+<p>在inception v3中，已经使用过这种方法，利用1x7和7x1替换原有的7x7的卷积，减少参数量的同时并没有降低精度，但其中也提到替换的结构在网络的低层表现不是很好。</p>
+<p>分支可以使用如下Pytorch代码实现，比较简单：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">branch3x3dbl_1 = conv_block(c3, c3, kernel_size=(<span class="number">3</span>, <span class="number">3</span>), padding=(<span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line">branch3x3dbl_2 = conv_block(c3, c3, kernel_size=(<span class="number">3</span>, <span class="number">1</span>), padding=(<span class="number">1</span>, <span class="number">0</span>))</span><br><span class="line">branch3x3dbl_3 = conv_block(c3, c3, kernel_size=(<span class="number">1</span>, <span class="number">3</span>), padding=(<span class="number">0</span>, <span class="number">1</span>))</span><br></pre></td></tr></tbody></table></figure>
+
+<p>ACB其实比较简单，下面介绍一下fusion操作吧。</p>
+<h3 id="Fusion"><a href="#Fusion" class="headerlink" title="Fusion"></a>Fusion</h3><p>下图所展示的就是卷积的fusion，很好理解，不多介绍了。</p>
+<p><img src="/2.png" alt="2.png"></p>
+<p>卷积后面接BN是比较常见的操作，下面详细一下带BN的fusion，如下图所示，I代表特征图。</p>
+<p><img src="/3.png" alt="3.png"></p>
+<p>这张图已经很清晰的描述的计算过程，有的时候一图抵千言，第一行就是原始的操作，BN fusion，可以将每行的I提取出来，就变成了第二行，branch fusion就是将卷积操作合并到一起，然后将后面的参数统一计算成b，因为模型训练完成这些参数都是固定的，也就可以很方便的进行合并计算出来了，这是模型加速时候的常规操作。</p>
+<p>还是比较简单的。</p>
+<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><p>首先在ImageNet上面还是有效果的，可以看到不论是top1还是top5都有一定程度的提升。</p>
+<p><img src="/4.png" alt="4.png"></p>
+<p><strong>加下来探索一下哪里产生的作用比较大</strong></p>
+<p>作者对比了如下三个变量：</p>
+<ol>
+<li>horizontal kernels</li>
+<li>vertical kernels</li>
+<li>batch normalization</li>
+</ol>
+<p>可以发现，horizontal以及vertical kernels都会产生一定的积极效果，结合BN之后，效果就跟明显了。</p>
+<p><img src="/5.png" alt="5.png"></p>
+<p>另外作者进行实验证明了卷积核的骨架的作用性，下面的实验中，作者在训练好的模型中，分别将卷积核的骨架随机置为0，角点随机置为0以及全部随机置为0，sparsity ratio代表将多少的比例设置为0。可以发现，骨架的影响是最大的，下降幅度非常快，而角点相对来说要慢一点。 </p>
+<p><img src="/6.png" alt="6.png"></p>
+<p>最后作者探究了kernel内值的重要性，采用的方法就是，利用所有数值的绝对值来当做当前kernel值的重要性，然后对所有的kernel首先进行归一化（layerwise），然后对经过归一化的kernel取均值得到最终的重要性，最终作者得到的结果如下：</p>
+<p><img src="/7.png" alt="7.png"></p>
+<p>可以看到，正常的kernel分布相对较平均，中间最大达到了0.9以上，其他的基本在0.8以上，但是ACNet使得骨架部分的权重明显增加，这也可以说明ACNet对于骨架部分的增强，使得模型效果的提升（上个实验已经证明了骨架的重要性）</p>
+<p>那如果ACNet不是在kernel骨架中间相加，而是在kernel的右下角相加呢？如上图figure 6(c)所示，实验证明，这样对于边界是具有一定的增强作用的，但是在CIFAR上面的表现没有在中间相加的效果好，并且同样采用上面将一部分kernel置为0的方法，结果如下图，右下角的影响变得很大，当然还是没有骨架大，进一步侧面说明的骨架的重要性。</p>
+<p><img src="/8.png" alt="8.png"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文虽然方法都比较简单，但是关键在于想法很不错，利用增强骨架的能力提高模型的效果，同时在部署阶段，使用参数融合，减少计算量，还不影响速度，值得学习借鉴。</p>
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ACNet/" rel="tag"># ACNet</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/01/01/foveabox/" rel="next" title="FoveaBox">
+                  <i class="fa fa-chevron-left"></i> FoveaBox
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/01/16/YOLO/" rel="prev" title="YOLO">
+                  YOLO <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ACB-Asymmetric-Convolution-Block"><span class="nav-number">2.</span> <span class="nav-text">ACB(Asymmetric Convolution Block)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fusion"><span class="nav-number">3.</span> <span class="nav-text">Fusion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C"><span class="nav-number">4.</span> <span class="nav-text">实验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

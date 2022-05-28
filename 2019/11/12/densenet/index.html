@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="原文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1608.06993 DenseNet原版代码：https:&#x2F;&#x2F;github.com&#x2F;liuzhuang13&#x2F;DenseNet 如果出现图像或者公式显示不完整，可以访问如下博客： CSDN博客：http:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove&#x2F;article&#x2F;details&#x2F;79476475 创新点：DenseNet">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DenseNet">
+<meta property="og:url" content="https://www.wanglichun.tech/2019/11/12/densenet/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="原文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1608.06993 DenseNet原版代码：https:&#x2F;&#x2F;github.com&#x2F;liuzhuang13&#x2F;DenseNet 如果出现图像或者公式显示不完整，可以访问如下博客： CSDN博客：http:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove&#x2F;article&#x2F;details&#x2F;79476475 创新点：DenseNet">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://img.blog.csdn.net/20180306185904712?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="http://img.blog.csdn.net/20180306200052989?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="http://img.blog.csdn.net/20180306210121233?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="http://img.blog.csdn.net/20180307193557492?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="http://img.blog.csdn.net/20180307200059691?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="http://img.blog.csdn.net/20180307202444623?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbgy1frvio3hy1wj208t0muq3c.jpg">
+<meta property="article:published_time" content="2019-11-12T01:22:23.000Z">
+<meta property="article:modified_time" content="2020-01-16T05:44:48.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="DenseNet">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20180306185904712?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2019/11/12/densenet/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>DenseNet | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/12/densenet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DenseNet
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-12 09:22:23" itemprop="dateCreated datePublished" datetime="2019-11-12T09:22:23+08:00">2019-11-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 13:44:48" itemprop="dateModified" datetime="2020-01-16T13:44:48+08:00">2020-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Classification/" itemprop="url" rel="index">
+                    <span itemprop="name">Classification</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/12/densenet/" class="post-meta-item leancloud_visitors" data-flag-title="DenseNet" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/12/densenet/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/12/densenet/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1608.06993">原文链接：https://arxiv.org/abs/1608.06993</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/liuzhuang13/DenseNet">DenseNet原版代码：https://github.com/liuzhuang13/DenseNet</a></p>
+<p><strong>如果出现图像或者公式显示不完整，可以访问如下博客：</strong></p>
+<p><a target="_blank" rel="noopener" href="http://blog.csdn.net/Chunfengyanyulove/article/details/79476475">CSDN博客：http://blog.csdn.net/Chunfengyanyulove/article/details/79476475</a></p>
+<p><strong>创新点：DenseNet作为2017CVPR最佳论文，其在ResNet基础上，提出了更优秀的shortcut方式，Dense Connection 不仅能使得feature更加强健，还能带来更快的收敛速度。并且DenseNet具有比ResNet更少的参数，在测试时具有更快的速度</strong></p>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>在传统的ResNet中，layer与layer之间具有L个connection，DenseNet在ResNet的shorter connection的基础上，在每个Layer之间均加入shorter connection，共包含</p>
+<p>$$\frac{L(L+1)}{2}$$</p>
+<p>个连接。如下图1所示。<br>不同于ResNet，DenseNet采用concatenation的方式进行特征图的叠加，而ResNet采用相加的方式进行叠加。<br>DenseNet 特征重用，使得denseNet更容易去训练，具有更高的效率。<br><img src="http://img.blog.csdn.net/20180306185904712?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<center>图1，5layers dense block</center>
+
+<p>DenseNet需要更少的参数，<br>作者指出，最近对ResNet的研究表明，ResNet的很多层在训练的过程中贡献较小，甚至可以随机的丢弃一些层，并且ResNet的参数量较大，说明ResNet其实寻找一定的冗余性，基于此，作者提出设计DenseNet，DenseNet网络中的每一层都直接与其前面层相连，实现特征的重复利用；同时把网络的每一层设计得特别窄，即只学习非常少的特征图，达到降低冗余性的目的。</p>
+<ul>
+<li>DenseNet改善了图像信息以及梯度在网络中的传递，使得训练更加容易。</li>
+<li>Dense Connection具有正则化效果，可以降低小训练集上的过拟合。</li>
+</ul>
+<h3 id="DenseNet"><a href="#DenseNet" class="headerlink" title="DenseNet"></a>DenseNet</h3><p><strong>Dense Connectivity</strong></p>
+<p>Resnet:</p>
+<p>$$x_l=H_l(x_{l-1})+x_{l-1}$$</p>
+<p>DenseNet:</p>
+<p>$$x_l=H_l([x_0,x_1,…,x_{l-1}])$$</p>
+<p><strong>composite function</strong></p>
+<p>BN-ReLU-Conv(3*3)</p>
+<p><strong>pooling layers</strong></p>
+<p>当特征图大小发生变化时候，便无法进行特征图的concatenation操作，因此DenseNet采用block结构，block结构之间设计为BN-Conv(1*1)-Average Pooling(2*2)，可利用Conv(1*1)进行模型压缩。<br>结构如下图所示：</p>
+<p><img src="http://img.blog.csdn.net/20180306200052989?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p><strong>Growth rate</strong><br>由于DenseNet采用的是concatenation的连接方式，如果每层产生k个feature maps，则将会产生</p>
+<p>$$k*(l-1)+k_0$$</p>
+<p>个特征图，为了防止网络变得很宽，k需要被限制为一个较小的数，作者将k称作growth rate。</p>
+<p><strong>bottleneck layers</strong><br>同样为了降低网络的宽度，DenseNet同样利用1*1卷积进行降维，Dense Block被设计为：<br>DenseNet-B结构：BN-ReLU-Conv(1*1)-BN-ReLU-Conv(3*3)<br>其中1*1的filter-num为growth rate 的 4倍<br>3*3的filter-num为growth rate</p>
+<p><strong>Compression</strong><br>在block之间，可以利用卷积进行模型维度压缩，在本文实验中，作者设置压缩比例为0.5。</p>
+<p>block之间的channels变换：<br>n_channels += units[i]*growth_rate</p>
+<p>compression进行模型压缩的channel变化：<br>n_channels =int(math.floor(n_channels*reduction))</p>
+<p><strong>模型详细描述如下：</strong><br><img src="http://img.blog.csdn.net/20180306210121233?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><p>作者首先在CIFAR SVHN ImageNet进行分类实验。</p>
+<p><strong>CIFAR 与 SVHN</strong><br>实验结果如下图所示：</p>
+<ul>
+<li>实验表明，在Accuracy中，DenseNet表现非常好，DenseNet-BC(L=190 and k=40)在多个数据集中均具有最好的表现，并且通过实验可以发现，随着DenseNet模型容量的增加，模型的精度有提升。</li>
+<li>通过实验可以看出，DenseNet的参数数量较少，说明DenseNet模型参数具有更高的有效性。</li>
+<li>DenseNet不容易过拟合</li>
+</ul>
+<p><img src="http://img.blog.csdn.net/20180307193557492?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p><strong>ImageNet</strong></p>
+<p>如下图为ResNet与DenseNet在ImageNet上的实验对比图，作者采用近乎相同的参数配置进行实验，从实验结果如下，左图是在不同的parameters下的实验结果，右图为不同flops下实验的结果。对比可见，DenseNet的优越性。</p>
+<p><img src="http://img.blog.csdn.net/20180307200059691?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p>还有一个自然而然的问题就是，这么多的密集连接，是不是全部都是必要的，有没有可能去掉一些也不会影响网络的性能？论文里面有一个热力图（heatmap），直观上刻画了各个连接的强度。从图中可以观察到网络中比较靠后的层确实也会用到非常浅层的特征。</p>
+<p><img src="http://img.blog.csdn.net/20180307202444623?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<hr>
+<h3 id="20180601补充"><a href="#20180601补充" class="headerlink" title="20180601补充"></a>20180601补充</h3><p>densenet 网络结构图：</p>
+<p>从该图可以发现，其实densenet的单个结构，类似于将resnet的element-wise sum 变换成为了concat操作，这样带来的一个问题自然是网络特征图的厚度增加会比较明显，所以，作者采用了较小的特征图的维度进行增加，所以densenet初始的number-out就比较小，</p>
+<p>如果采用bottle-neck操作，每个block中1*1的卷积和的数量是growth_rate的4倍，估计可能是提高维度会取得较好效果吧，一般bottle-neck在网络层数较深的时候使用。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1frvio3hy1wj208t0muq3c.jpg"></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/bruinxiong/densenet.mxnet/blob/master/symbol_densenet.py">mxnet,实现代码链接</a></p>
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/DenseNet/" rel="tag"># DenseNet</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/12/resnext/" rel="next" title="ResNeXt：Aggregated Residual Transformations for Deep Neural Networks">
+                  <i class="fa fa-chevron-left"></i> ResNeXt：Aggregated Residual Transformations for Deep Neural Networks
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/11/12/dpn/" rel="prev" title="DPN">
+                  DPN <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DenseNet"><span class="nav-number">2.</span> <span class="nav-text">DenseNet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C"><span class="nav-number">3.</span> <span class="nav-text">实验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#20180601%E8%A1%A5%E5%85%85"><span class="nav-number">4.</span> <span class="nav-text">20180601补充</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="目标检测中的小目标的检测一直是一个难题，同样也有很多方法被提出来优化小目标的识别，使用图像金字塔进行多尺度检测是一个比较常用的方法，但是使用图像金字塔往往会带来巨大的资源消耗，本篇文章就针对这个问题，提出了一个解决利用图像金字塔进行多尺度训练时间长、资源消耗大的方法，其在SNIP的方法上发展而来，通过采样多个chips,并将chips缩放到相同的尺度（这点有点像RCNN）进行训练，不仅仅实现了多">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SNIPER(Efficient Multi-Scale Training)">
+<meta property="og:url" content="https://www.wanglichun.tech/2019/11/20/snipper/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="目标检测中的小目标的检测一直是一个难题，同样也有很多方法被提出来优化小目标的识别，使用图像金字塔进行多尺度检测是一个比较常用的方法，但是使用图像金字塔往往会带来巨大的资源消耗，本篇文章就针对这个问题，提出了一个解决利用图像金字塔进行多尺度训练时间长、资源消耗大的方法，其在SNIP的方法上发展而来，通过采样多个chips,并将chips缩放到相同的尺度（这点有点像RCNN）进行训练，不仅仅实现了多">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1g12f3fkf1ij20lk0bwqej.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1g12g7s9iq0j20ld0b9167.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1g12j6y40kuj20ls043dgl.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1g12j97dj6cj20le04x0tp.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1g12k08fdzwj20li09tq5p.jpg">
+<meta property="article:published_time" content="2019-11-20T01:39:26.000Z">
+<meta property="article:modified_time" content="2020-01-16T05:50:36.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="SNIPER">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/87675bbbly1g12f3fkf1ij20lk0bwqej.jpg">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2019/11/20/snipper/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>SNIPER(Efficient Multi-Scale Training) | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/20/snipper/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SNIPER(Efficient Multi-Scale Training)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-20 09:39:26" itemprop="dateCreated datePublished" datetime="2019-11-20T09:39:26+08:00">2019-11-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 13:50:36" itemprop="dateModified" datetime="2020-01-16T13:50:36+08:00">2020-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/20/snipper/" class="post-meta-item leancloud_visitors" data-flag-title="SNIPER(Efficient Multi-Scale Training)" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/20/snipper/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/20/snipper/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>目标检测中的小目标的检测一直是一个难题，同样也有很多方法被提出来优化小目标的识别，使用图像金字塔进行多尺度检测是一个比较常用的方法，但是使用图像金字塔往往会带来巨大的资源消耗，本篇文章就针对这个问题，提出了一个解决利用图像金字塔进行多尺度训练时间长、资源消耗大的方法，其在<a target="_blank" rel="noopener" href="https://blog.csdn.net/Chunfengyanyulove/article/details/87646305">SNIP</a>的方法上发展而来，通过采样多个chips,并将chips缩放到相同的尺度（这点有点像RCNN）进行训练，不仅仅实现了多尺度，还提高了3倍的速度，并且保证了精度。</p>
+</blockquote>
+<hr>
+<h4 id="重要链接"><a href="#重要链接" class="headerlink" title="重要链接"></a>重要链接</h4><p><strong>论文名称: SNIPER: Efficient Multi-Scale Training</strong></p>
+<p><strong>作者：Bharat Singh &amp; Mahyar Najibi &amp; Larry S.Davis</strong></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1805.09300"><strong>论文链接</strong>https://arxiv.org/abs/1805.09300：</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/bharatsingh430/snip"><strong>代码链接</strong>：https://github.com/bharatsingh430/snip</a></p>
+<p><strong>如果出现图像或者公式显示不完整，请访问本人CSDN博客</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Chunfengyanyulove/article/details/88560947"><strong>CSDN博客地址：https://blog.csdn.net/Chunfengyanyulove/article/details/88560947</strong></a></p>
+<hr>
+<h4 id="简要概述文章精华"><a href="#简要概述文章精华" class="headerlink" title="简要概述文章精华"></a>简要概述文章精华</h4><p><strong>目标检测中的小目标的检测一直是一个难题，同样也有很多方法被提出来优化小目标的识别，使用图像金字塔进行多尺度检测是一个比较常用的方法，但是使用图像金字塔往往会带来巨大的资源消耗，本篇文章就针对这个问题，提出了一个解决利用图像金字塔进行多尺度训练时间长、资源消耗大的方法，其在<a target="_blank" rel="noopener" href="https://blog.csdn.net/Chunfengyanyulove/article/details/87646305">SNIP</a>的方法上发展而来，通过采样多个chips,并将chips缩放到相同的尺度（这点有点像RCNN）进行训练，不仅仅实现了多尺度，还提高了3倍的速度，并且保证了精度。</strong></p>
+<p>其实早在RCNN网络，就已经采用了多尺度训练方法，我们回顾一下RCNN方法：</p>
+<p>R-CNN首先通过selective search生成候选区域（region proposals）然后将proposal缩放成224x224大小的图片。<strong>R-CNN将不同大小的region proposal缩放成固定大小，实际上就引入了 multi-scale ，任何尺寸的region proposal都相当于一个scale</strong>。RCNN最主要的问题在于提取特征时，CNN需要在每一个候选区域上跑一遍，候选区域之间的交叠使得特征被重复提取, 造成了严重的速度瓶颈, 降低了计算效率。</p>
+<p>Fast RCNN的提出主要是解决了R-CNN的速度问题，它通过将selective search生成的候选区域映射到feature map上，实现了候选区域间的卷积计算共享，同时由于共同参与计算，Fast R-CNN也能更多的获取到全局信息（contex）。而同时提出的 ROI pooling也将对应到feature map上的候选区域池化到相同的大小，ROI pooling 在某种程度上也可以引进尺度不变性，因为可以将不同大小的region proposal（连同 object）在feature map层面池化到固定大小。但它的问题是前面的卷积层部分是只在一个scale上进行的，这正是为了实现卷积计算共享所带来的一点负面影响，因为是卷积计算共享，所以不同大小的目标没有办法进行不同比例的缩放操作，所以相对于原图大小来说，它们都处于一个scale。这影响了尺度不变性 ，因此为了弥补这一点，在训练或者inference时，会使用image pyramid的操作，直接把原图放大&amp;缩小后送入同一网络进行训练。但是image pyramid有一个问题，就是在缩放原图时，object也会跟着缩放，这就导致原来比较大的object变得更大了，原来更小的object变得更小。这在R-CNN中是不存在这个问题的。</p>
+<p><strong>SNIPER就是借鉴RCNN的方法，有点类似将RCNN与Fast RCNN的思想结合到一块的感觉</strong>。</p>
+<p>下面介绍一下SNIPER是怎么做的。</p>
+<p>SNIPER同样是采用多尺度的，将图像缩放到3个尺度（这里跟SNIP是一致的），但是SNIPER不是直接利用尺度变换后的图像进行训练，而是在3个尺度中，根据一定的规则提取一定大小的chip，然后将chip缩放到固定大小（512*512），最后只利用这些chip进行模型的训练。</p>
+<p><strong>chip是如何生成的？</strong></p>
+<p>将图像缩放到不同的尺度，然后利用K*K的滑窗来选取多个chip</p>
+<p><strong>提取chip后，如何筛选出需要的chip即positive chip</strong></p>
+<p>对于每一个尺度，我们会设置一个目标范围[r1,r2]，当ground truth是在此范围内的才会参与训练，不然过大或者过小的gt都会被pass，这里选取chip的方式就是依次选取包含ground truth最多的chip，直到所有的ground truth都包含，这些chips就组成了训练的正样本。</p>
+<p>如下图所示，左边图是将提取的chip都画在了一张图上，其中虚线代表的就是选取的positive chip，其中绿框代表的是ground truth，这里展示了4个positive chip。右边图代表的是将选取的chip缩放到固定尺度然后进行训练，图中红色的框代表由于不符合前面设定的ground truth的范围而忽略的ground truth.</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1g12f3fkf1ij20lk0bwqej.jpg"></p>
+<p>这样，SNIPER便可以使用较小尺度的chip进行训练了，而不需要使用尺度较大的金字塔图像了，这就在一定程度上减少了计算量。</p>
+<p><strong>负样本的选取</strong></p>
+<p>我们使用的chip包含了所有的positive instance，但是很多的背景却被pass掉了，这就容易导致背景被判断为正样本，增加了误判的概率，所以，我们还需要把前面pass掉的背景再捞回一部分加入到训练中，如何往回捞数据呢?</p>
+<p>首先，我们先训一个不是很准确的RPN，用来帮我们找到那些可能会误判的样例，因此RPN不需要特别准，提取RPN后，首先去掉那些跟positive chip存在交叠的proposal，然后在剩余的proposal中，挑选那些可以最大程度覆盖其他proposal的proposal，这里说的可能有点绕，我们看下面的图像就比较清晰了。如下图所示，第二排的红点代表proposal的中心，选择的proposal最大程度的覆盖红点，但是不能与第一排的ground truth存在交叠。就有点利用hard example进行训练的意思。</p>
+<p>注：文章中使用RPN生成chips的过程，并不是模型训练的过程，只是算法的一个预处理过程，而且RPN也不是必须使用不可，使用其他方法也可替代，如Selective Search方法。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1g12g7s9iq0j20ld0b9167.jpg"></p>
+<p><strong>网络训练的细节参数，这里就不介绍了，感兴趣的读者可以在论文中自行查看</strong></p>
+<p><strong>训练好了如何inference呢？</strong></p>
+<p>inference的时候，将原图缩放到3个尺寸：480-512、800-1280、1400-2000，然后结果使用soft-nms进行合并。</p>
+<p><strong>实验结果</strong></p>
+<p>下图展示了未使用negtive chips时的召回结果，可以发现不使用negtive chips确实召回会高一些，因为不考虑误判呀。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1g12j6y40kuj20ls043dgl.jpg"></p>
+<p>但是计算精度就不行了，下表可以看出，使用negtive chips是可以增加其精度的。本文的sniper均是使用3个scale的，如果将scale降为2，如下表第二行所示，其mAP存在一定的下降，这也说明了多尺度的重要性。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1g12j97dj6cj20le04x0tp.jpg"></p>
+<p>最后与其他方法以及采用不同backbone的实验对比结果<br><img src="http://ww1.sinaimg.cn/large/87675bbbly1g12k08fdzwj20li09tq5p.jpg"></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>本文是在snip的基础上，对snip进行的改进，由于snip是使用多尺度进行训练的，这样不仅使得训练的时间成倍的增加，而且当尺度较大的时候，对于机器GPU的要求也会相应的增加，因此作者在其基础上改进得到sniper，sniper不仅实现了snip的多尺度，同时使用较小的chip进行训练，不仅仅提高了3倍的训练速度，还保证了精度，此方法值得我们学习。</p>
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/SNIPER/" rel="tag"># SNIPER</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/20/extremeNet/" rel="next" title="ExtremeNet(Bottom-up Object Detection by Grouping Extreme and Center Points)">
+                  <i class="fa fa-chevron-left"></i> ExtremeNet(Bottom-up Object Detection by Grouping Extreme and Center Points)
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/11/20/snip/" rel="prev" title="SNIP">
+                  SNIP <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E9%93%BE%E6%8E%A5"><span class="nav-number">1.</span> <span class="nav-text">重要链接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%80%E8%A6%81%E6%A6%82%E8%BF%B0%E6%96%87%E7%AB%A0%E7%B2%BE%E5%8D%8E"><span class="nav-number">2.</span> <span class="nav-text">简要概述文章精华</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

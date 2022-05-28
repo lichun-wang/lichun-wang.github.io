@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="本篇文章是CVPR2019的一篇Anchor-Free的文章，是一篇很好的Anchor Free的目标检测的文章，目前基于anchor的目标检测方法，大多采用不同的level预测不同尺度的instance，而分配规则往往是人为设计的，这导致anchor的匹配策略可能不是最优的。那有没有更优的匹配方法？文章从level选取的点进行切入，利用FASF实现不同的instance在不同level的动态分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FASF">
+<meta property="og:url" content="https://www.wanglichun.tech/2020/02/16/FASF/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="本篇文章是CVPR2019的一篇Anchor-Free的文章，是一篇很好的Anchor Free的目标检测的文章，目前基于anchor的目标检测方法，大多采用不同的level预测不同尺度的instance，而分配规则往往是人为设计的，这导致anchor的匹配策略可能不是最优的。那有没有更优的匹配方法？文章从level选取的点进行切入，利用FASF实现不同的instance在不同level的动态分">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wanglichun.tech/1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/4.png">
+<meta property="og:image" content="https://www.wanglichun.tech/5.png">
+<meta property="og:image" content="https://www.wanglichun.tech/6.png">
+<meta property="article:published_time" content="2020-02-16T00:21:19.000Z">
+<meta property="article:modified_time" content="2020-02-16T00:10:08.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="FASF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.wanglichun.tech/1.png">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2020/02/16/FASF/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>FASF | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/02/16/FASF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          FASF
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-02-16 08:21:19 / 修改时间：08:10:08" itemprop="dateCreated datePublished" datetime="2020-02-16T08:21:19+08:00">2020-02-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/02/16/FASF/" class="post-meta-item leancloud_visitors" data-flag-title="FASF" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/02/16/FASF/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/02/16/FASF/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>本篇文章是CVPR2019的一篇Anchor-Free的文章，是一篇很好的Anchor Free的目标检测的文章，目前基于anchor的目标检测方法，大多采用不同的level预测不同尺度的instance，而分配规则往往是人为设计的，这导致anchor的匹配策略可能不是最优的。那有没有更优的匹配方法？文章从level选取的点进行切入，利用FASF实现不同的instance在不同level的动态分配，实现了level的动态选择，并且anchor free方法取得了较好的mAP，另外作者设计了anchor free跟anchor-based相结合的方法，进一步提升模型效果，取得了可观的结果。</p>
+</blockquote>
+<hr>
+<p>论文名称：Feature Selective Anchor-Free Module for Single-Shot Object Detection</p>
+<p>作者：Chenchen Zhu &amp; Yihui He  &amp; Marios Savvides</p>
+<p>论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1903.00621">https://arxiv.org/abs/1903.00621</a></p>
+<hr>
+<h3 id="Back-Ground"><a href="#Back-Ground" class="headerlink" title="Back Ground"></a>Back Ground</h3><p>目标检测的一个挑战在于尺度的变化，目前解决问题的方法包括：特征金字塔、multi-level、anchor boxes等。特征金字塔以及anchor-based已经取得了不错的效果。但是存在一定的限制：</p>
+<ol>
+<li>启发式的特征选择。</li>
+<li>重叠的anchor的选择。</li>
+</ol>
+<p>目前基于anchor的目标检测方法，大多采用不同的level预测不同尺度的instance，而分配规则往往是人为设计的，这导致anchor的匹配策略可能不是最优的。本文提出了feature selective anchor-free module来解决这个限制。并且FASF可以与anchor-based 分支协同并行工作，提高模型效果。在COCO上，可以达到44.6%的mAP</p>
+<h3 id="Feature-Selective-Anchor-Free"><a href="#Feature-Selective-Anchor-Free" class="headerlink" title="Feature Selective Anchor Free"></a>Feature Selective Anchor Free</h3><h4 id="Network-Architecture"><a href="#Network-Architecture" class="headerlink" title="Network Architecture"></a>Network Architecture</h4><p>FSAF的结构展示如下图，作者的实验是以RetinaNet为基础，所以下图的主干部分代表的是RetinaNet的FPN结构，同样的从P3-P7引出subnets进行分类与预测，如下图所示，P3-P7对应的分辨率<code>$1/2^l$</code>。</p>
+<p><img src="/1.png" alt="1.png"></p>
+<p>FSAF重点是下图中引出来的Anchor-Free branch,分类的分支，通过一个3x3的卷积以及sigmoid得到WxHxK的特征图，用于预测K个类别，至于回归分支，通过一个3x3的卷积以及ReLU得到WxHx4的特征图，用于预测每个实例的坐标框。</p>
+<h4 id="Ground-Truth-and-Loss"><a href="#Ground-Truth-and-Loss" class="headerlink" title="Ground Truth and Loss"></a>Ground Truth and Loss</h4><p>首先，如何定义正负样本呢？如下图所示，Groud Truth是汽车的蓝框，正样本便是中间图中白色的部分，当然除了正样本也不全是负样本，在正负样本之间还有一部分忽略样本，论文中正样本占比为宽度的0.2，忽略部分界限占比为宽度的0.5，所以每个level在宽度比例0.2-0.5的一圈是不加入训练，另外，不同level的界限间的像素也同样不加入训练，用公式表示是：<code>$(b^{i}_{e}-b^{l}_{e});(b_{i}^{l-1},b_{i}^{l+1})$</code>(其实不加入训练这里，论文描述的挺复杂，其实计算后发现，就是每层的Ground Truth往外扩一圈)，其余的就为负样本。并且如果两个实例在同一个level重合了，以小的那个为主。</p>
+<p><strong>训练的时候分类采用的是Focal loss，box回归的是边界的上下左右，这里使用的是IOU Loss</strong></p>
+<p><img src="/2.png" alt="2.png"></p>
+<h4 id="Online-Feature-Selection"><a href="#Online-Feature-Selection" class="headerlink" title="Online Feature Selection"></a>Online Feature Selection</h4><p>这部分是本篇文章的精髓所在，如果自动去给不同的instance分配合适的level进行预测呢？<br>其实答案也很简单，就如下图所示，作者分别对不同的level的分支结果求loss，然后选择loss最小的那个作为该实例的分支。</p>
+<p><img src="/3.png" alt="3.png"></p>
+<h4 id="Joint-Inference-and-Training"><a href="#Joint-Inference-and-Training" class="headerlink" title="Joint Inference and Training"></a>Joint Inference and Training</h4><p>这部分将介绍，如何将anchor-based与anchor-free方法结合起来，如上面图Figure 4所示。</p>
+<p>首先，在训练的时候，保持anchor-based的分支参数不变。在inference的时候，将anchor based得到的box以及anchor free得到的box一起用非极大值一致的方法，得到最终的结果。</p>
+<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><h4 id="FASF-模块的效果以及online-feature-selection的重要性。"><a href="#FASF-模块的效果以及online-feature-selection的重要性。" class="headerlink" title="FASF 模块的效果以及online feature selection的重要性。"></a>FASF 模块的效果以及online feature selection的重要性。</h4><p>下图是在RetinaNet上使用FASF模块的效果，可以看出，其实只使用FASF的效果已经要好于RetinaNet了，并且在实验中可以看出，如果不使用online feature selection 效果也不错的，但是没有使用online feature selection效果好，相差了大约10个点。</p>
+<p><img src="/4.png" alt="4.png"></p>
+<h4 id="FASF选择的level到底怎么样？"><a href="#FASF选择的level到底怎么样？" class="headerlink" title="FASF选择的level到底怎么样？"></a>FASF选择的level到底怎么样？</h4><p>实验表明，大部分的检测框还是遵循原来的设计的，前面的level检测小目标，后面的level检测大目标，但是也有特例，就是下图中红色框框住的那些就是，level发生了变化。</p>
+<p><img src="/5.png" alt="5.png"></p>
+<h4 id="FASF与SOTA相比较"><a href="#FASF与SOTA相比较" class="headerlink" title="FASF与SOTA相比较"></a>FASF与SOTA相比较</h4><p><img src="/6.png" alt="6.png"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这篇文章同样是一篇很好的Anchor Free的目标检测的文章，文章从level选取的点进行切入，利用Anchor实现不同的instance在不同level的动态分配，设计了FASF方法进行level的动态选择，并且设计了anchor free跟anchor-based相结合，提升模型效果，取得了可观的结果。</p>
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/FASF/" rel="tag"># FASF</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/01/16/YOLO-v2/" rel="next" title="YOLO V2(YOLO 9000)">
+                  <i class="fa fa-chevron-left"></i> YOLO V2(YOLO 9000)
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/02/25/linux/" rel="prev" title="Linux常用操作总结">
+                  Linux常用操作总结 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Back-Ground"><span class="nav-number">1.</span> <span class="nav-text">Back Ground</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Feature-Selective-Anchor-Free"><span class="nav-number">2.</span> <span class="nav-text">Feature Selective Anchor Free</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Network-Architecture"><span class="nav-number">2.1.</span> <span class="nav-text">Network Architecture</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Ground-Truth-and-Loss"><span class="nav-number">2.2.</span> <span class="nav-text">Ground Truth and Loss</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Online-Feature-Selection"><span class="nav-number">2.3.</span> <span class="nav-text">Online Feature Selection</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Joint-Inference-and-Training"><span class="nav-number">2.4.</span> <span class="nav-text">Joint Inference and Training</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C"><span class="nav-number">3.</span> <span class="nav-text">实验</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#FASF-%E6%A8%A1%E5%9D%97%E7%9A%84%E6%95%88%E6%9E%9C%E4%BB%A5%E5%8F%8Aonline-feature-selection%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7%E3%80%82"><span class="nav-number">3.1.</span> <span class="nav-text">FASF 模块的效果以及online feature selection的重要性。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FASF%E9%80%89%E6%8B%A9%E7%9A%84level%E5%88%B0%E5%BA%95%E6%80%8E%E4%B9%88%E6%A0%B7%EF%BC%9F"><span class="nav-number">3.2.</span> <span class="nav-text">FASF选择的level到底怎么样？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FASF%E4%B8%8ESOTA%E7%9B%B8%E6%AF%94%E8%BE%83"><span class="nav-number">3.3.</span> <span class="nav-text">FASF与SOTA相比较</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

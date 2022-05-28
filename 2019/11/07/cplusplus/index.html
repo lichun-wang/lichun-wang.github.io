@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="虚函数与纯虚函数的比较 虚函数为了重载和多态的需要，在基类中是有定义的，即便定义是空，所以子类中可以重写也可以不写基类中的此函数。 纯虚函数在基类中是没有定义的，必须在子类中加以实现。 虚拟函数就是为了对“如果你以一个基础类指针指向一个衍生类对象，那么通过该指针，你只能访问基础类定义的成员函数”这条规则反其道而行之的设计。 多态的真正体现就是基类指针访问子类对象。 虚函数动态联编，虚函数表。在函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++面试-知识点总结">
+<meta property="og:url" content="https://www.wanglichun.tech/2019/11/07/cplusplus/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="虚函数与纯虚函数的比较 虚函数为了重载和多态的需要，在基类中是有定义的，即便定义是空，所以子类中可以重写也可以不写基类中的此函数。 纯虚函数在基类中是没有定义的，必须在子类中加以实现。 虚拟函数就是为了对“如果你以一个基础类指针指向一个衍生类对象，那么通过该指针，你只能访问基础类定义的成员函数”这条规则反其道而行之的设计。 多态的真正体现就是基类指针访问子类对象。 虚函数动态联编，虚函数表。在函数">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wanglichun.tech/1.png">
+<meta property="article:published_time" content="2019-11-07T00:19:24.000Z">
+<meta property="article:modified_time" content="2019-11-07T05:30:00.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="coding">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.wanglichun.tech/1.png">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2019/11/07/cplusplus/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>C++面试-知识点总结 | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/07/cplusplus/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C++面试-知识点总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-11-07 08:19:24 / 修改时间：13:30:00" itemprop="dateCreated datePublished" datetime="2019-11-07T08:19:24+08:00">2019-11-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Program/" itemprop="url" rel="index">
+                    <span itemprop="name">Program</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/07/cplusplus/" class="post-meta-item leancloud_visitors" data-flag-title="C++面试-知识点总结" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/07/cplusplus/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/07/cplusplus/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><h3 id="虚函数与纯虚函数的比较"><a href="#虚函数与纯虚函数的比较" class="headerlink" title="虚函数与纯虚函数的比较"></a>虚函数与纯虚函数的比较</h3><ul>
+<li>虚函数为了重载和多态的需要，在基类中是有定义的，即便定义是空，所以子类中可以重写也可以不写基类中的此函数。</li>
+<li>纯虚函数在基类中是没有定义的，必须在子类中加以实现。</li>
+<li>虚拟函数就是为了对“如果你以一个基础类指针指向一个衍生类对象，那么通过该指针，你只能访问基础类定义的成员函数”这条规则反其道而行之的设计。</li>
+<li>多态的真正体现就是基类指针访问子类对象。</li>
+<li>虚函数动态联编，虚函数表。<br>在函数编译过程中，父类子类中的成员函数的名字是不一样的，可以区分，然后函数如果调用成员变量，函数会默认传进去一个该类的指针，进行调用。</li>
+</ul>
+<h3 id="重载、覆盖（重写）、隐藏区别"><a href="#重载、覆盖（重写）、隐藏区别" class="headerlink" title="重载、覆盖（重写）、隐藏区别"></a>重载、覆盖（重写）、隐藏区别</h3><ul>
+<li><p>重载， 参数不同的同名函数，不关心返回值。并不是两个函数的名字相同就能构成重载。全局函数和类的成员函数同名不算重载，因为函数的作用域不同。<strong>对于函数重载，out(float a)和out( int a) 当调用 out(1)时，是正确的， 当调用out(0.5)时，编译错误，因为编译器无法确定应该如何进行类型转换。</strong></p>
+</li>
+<li><p>隐藏， 是指派生类的函数屏蔽了与其同名的基类函数，注意只要同名函数，不管参数列表是否相同，基类函数都会被隐藏。  </p>
+</li>
+<li><p>覆盖， 重写的基类中被重写的函数必须有virtual修饰。    </p>
+</li>
+<li><p>函数重载只是动态的多态性，在编译阶段，给不同的函数不同的函数名，而虚函数实现运行时多态。</p>
+<h4 id="重载、覆盖、隐藏补充"><a href="#重载、覆盖、隐藏补充" class="headerlink" title="重载、覆盖、隐藏补充"></a>重载、覆盖、隐藏补充</h4></li>
+<li><p>重载</p>
+<blockquote>
+<p>成员函数被重载的特征：<br>（1）相同的范围（在同一个类中）；<br> （2）函数名字相同；<br> （3）参数不同；<br> （4）virtual关键字可有可无。  </p>
+</blockquote>
+</li>
+<li><p>覆盖</p>
+<blockquote>
+<p>覆盖是指派生类函数覆盖基类函数，特征是：<br> （1）不同的范围（分别位于派生类与基类）；<br> （2）函数名字相同；<br> （3）参数相同；<br> （4）基类函数必须有virtual关键字。  </p>
+</blockquote>
+</li>
+<li><p>令人迷惑的隐藏规则</p>
+<blockquote>
+<p>本来仅仅区别重载与覆盖并不算困难，但是C++的隐藏规则使问题复杂性陡然增加。这里“隐藏”是指派生类的函数屏蔽了与其同名的基类函数，规则如下：<br> （1）如果派生类的函数与基类的函数同名，但是参数不同。此时，不论有无virtual关键字，基类的函数将被隐藏（注意别与重载混淆）。<br> （2）如果派生类的函数与基类的函数同名，并且参数也相同，但是基类函数没有virtual关键字。此时，基类的函数被隐藏（注意别与覆盖混淆）。</p>
+</blockquote>
+</li>
+</ul>
+<p>总结起来就是，如果同一个类中，是重载，父类和子类，函数名字相同参数相同，有virtual是覆盖，没有就是隐藏。</p>
+<h3 id="内联函数"><a href="#内联函数" class="headerlink" title="内联函数"></a>内联函数</h3><ul>
+<li>在函数前面加上inline进行声明。</li>
+<li>内联函数在函数调用位置处直接展开。</li>
+<li>内联函数可以避免函数调用时的开销，保存寄存器恢复寄存器之类的。适合于规模较小的函数。</li>
+<li>关键字inline必须与函数定义体放在一起才能使函数成为内联，仅将inline放在函数声明前面不起任何作用。inline是一种“用于实现的关键字”，而不是一种“用于声明的关键字”。</li>
+</ul>
+<h4 id="内联函数相比较于-define定义函数-aa-有什么优点？"><a href="#内联函数相比较于-define定义函数-aa-有什么优点？" class="headerlink" title="内联函数相比较于 #define定义函数 aa() 有什么优点？"></a>内联函数相比较于 #define定义函数 aa() 有什么优点？</h4><ul>
+<li>代码放到符号表中，用到的时候直接进行替换。</li>
+<li>编译器可以对它进行参数检查。</li>
+<li>inline可以是类的成员函数，对类内成员进行访问。</li>
+</ul>
+<h3 id="函数指针（c-primer第五版，p221）"><a href="#函数指针（c-primer第五版，p221）" class="headerlink" title="函数指针（c++ primer第五版，p221）"></a>函数指针（c++ primer第五版，p221）</h3><h3 id="const-成员函数"><a href="#const-成员函数" class="headerlink" title="const 成员函数"></a>const 成员函数</h3><ul>
+<li>const 放在函数的后面，只能用在类中，代表该函数不可修改类中变量。  </li>
+<li>const aa(类) 只能调用const函数。</li>
+</ul>
+<h3 id="父类指针指向子类对象问题"><a href="#父类指针指向子类对象问题" class="headerlink" title="父类指针指向子类对象问题"></a>父类指针指向子类对象问题</h3><ul>
+<li>到底调用那个函数要根据指针的原型来确定，而不是根据指针实际指向的对象类型确定，即指针是什么类型，就调用什么类型的函数。</li>
+<li>虚函数除外，虚函数调用最根源的函数，对象是什么类型，就调用相应的函数。</li>
+</ul>
+<h3 id="c-各个存储区"><a href="#c-各个存储区" class="headerlink" title="c++各个存储区"></a>c++各个存储区</h3><p>在C++中，内存分成5个区，他们分别是堆、栈、自由存储区、全局/静态存储区和常量存储区。<br>链接：<a target="_blank" rel="noopener" href="http://www.cnblogs.com/hanyonglu/archive/2011/04/12/2014212.html">http://www.cnblogs.com/hanyonglu/archive/2011/04/12/2014212.html</a></p>
+<h3 id="接7，对static的讨论"><a href="#接7，对static的讨论" class="headerlink" title="接7，对static的讨论"></a>接7，对static的讨论</h3><ul>
+<li>static 放在静态存储区，并不随着退出函数释放空间。  </li>
+<li>规定作用域。<br>如下，输出 10 12 13  <figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">fun</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">      <span class="type">static</span> <span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">      cout &lt;&lt; <span class="string">"fun "</span> &lt;&lt; a &lt;&lt; endl;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">fun2</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">      <span class="type">static</span> <span class="type">int</span> b = <span class="number">12</span>;</span><br><span class="line">      cout &lt;&lt; <span class="string">"fun2 "</span> &lt;&lt; b++ &lt;&lt; endl;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">      <span class="built_in">fun</span>();</span><br><span class="line">      <span class="built_in">fun2</span>();</span><br><span class="line">      <span class="built_in">fun2</span>();</span><br><span class="line">      <span class="built_in">getchar</span>();</span><br><span class="line">      <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+<li>char st[10] = “abcde”,在内存中存在两份拷贝，一份在常量存储区上，一份在栈上，函数退出之后，栈上内存释放，如果想让栈上的存储区不释放，可以将其声明为static 放在静态存储区上。</li>
+</ul>
+<h3 id="如何去掉const变量的const特性。"><a href="#如何去掉const变量的const特性。" class="headerlink" title="如何去掉const变量的const特性。"></a>如何去掉const变量的const特性。</h3><p>利用const_cast去除掉const的特性。  </p>
+<h3 id="static-cast是强制类型转换的关键字，类似于c语言中的（int）a，static-cast-a-等价于-（int）a"><a href="#static-cast是强制类型转换的关键字，类似于c语言中的（int）a，static-cast-a-等价于-（int）a" class="headerlink" title="static_cast是强制类型转换的关键字，类似于c语言中的（int）a，static_cast a  等价于  （int）a"></a>static_cast是强制类型转换的关键字，类似于c语言中的（int）a，static_cast<int> a  等价于  （int）a</int></h3><h3 id="程序错误处理"><a href="#程序错误处理" class="headerlink" title="程序错误处理"></a>程序错误处理</h3><p>对输入输出，用断言，用异常处理机制。</p>
+<h3 id="c-构造函数，拷贝构造函数"><a href="#c-构造函数，拷贝构造函数" class="headerlink" title="c++ 构造函数，拷贝构造函数"></a>c++ 构造函数，拷贝构造函数</h3><h4 id="问题引入"><a href="#问题引入" class="headerlink" title="问题引入:"></a>问题引入:</h4><figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>; </span><br><span class="line">A a; </span><br><span class="line">A b = a 与 A b; b = a  有什么区别?</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="解答："><a href="#解答：" class="headerlink" title="解答："></a>解答：</h4><p>A b =  a  与  A  b(a) 代表着相同的意义，这里调用拷贝构造函数，拷贝构造函数如果没有重载的话，默认为浅拷贝。<br>构造函数调用的次序，先父类，子类，析构函数的顺序，先子类后父类。</p>
+<h3 id="c-中-private-protected-public"><a href="#c-中-private-protected-public" class="headerlink" title="c++中 private protected public"></a>c++中 private protected public</h3><ul>
+<li>private成员只能被本类成员（类内）和友元访问，不能被派生类访问。</li>
+<li>protected成员可以被派生类访问。</li>
+<li>public继承：基类public成员，protected成员，private成员的访问属性在派生类中分别变成：public, protected, private</li>
+<li>protected继承：基类public成员，protected成员，private成员的访问属性在派生类中分别变成：protected, protected, private</li>
+<li>private继承：基类public成员，protected成员，private成员的访问属性在派生类中分别变成：private, private, private</li>
+</ul>
+<h3 id="当数组作为函数参数输入时，数组自动转化为指针，sizeof-x3D-4-。"><a href="#当数组作为函数参数输入时，数组自动转化为指针，sizeof-x3D-4-。" class="headerlink" title="当数组作为函数参数输入时，数组自动转化为指针，sizeof = 4 。"></a>当数组作为函数参数输入时，数组自动转化为指针，sizeof = 4 。</h3><h3 id="const-char-p1等-容易混淆的概念"><a href="#const-char-p1等-容易混淆的概念" class="headerlink" title="const char * p1等 容易混淆的概念"></a>const char * p1等 容易混淆的概念</h3><ul>
+<li>const char * p1 = “hello”;</li>
+<li>char *const p2 = “hello”;</li>
+<li>*翻译成point to ，从右往左读，便可以知道这个是什么。</li>
+<li>指针常量，是指向常量的指针。</li>
+<li>常量指针，是指针就是个常量。</li>
+</ul>
+<h3 id="哪些运算符不能被重载"><a href="#哪些运算符不能被重载" class="headerlink" title="哪些运算符不能被重载"></a>哪些运算符不能被重载</h3><ul>
+<li>::</li>
+<li>.* </li>
+<li>.   </li>
+<li>?  :</li>
+</ul>
+<h3 id="类方法，指的是类的静态方法，即static关键字修饰的方法。"><a href="#类方法，指的是类的静态方法，即static关键字修饰的方法。" class="headerlink" title="类方法，指的是类的静态方法，即static关键字修饰的方法。"></a>类方法，指的是类的静态方法，即static关键字修饰的方法。</h3><p>静态方法只能使用该静态方法所在类的静态数据成员和静态方法。这是因为使用静态方法时，该静态方法所在类可能还没有对象。静态方法中没有this指针。<br>总结：</p>
+<ul>
+<li>出现在类体外的函数不能指定关键字static；</li>
+<li>静态成员之间可以互相访问，包括静态成员函数访问静态数据成员和访问静态成员函数；</li>
+<li>非静态成员函数可以任意地访问静态成员函数和静态数据成员；</li>
+<li>静态成员函数不能访问非静态成员函数和非静态数据成员；</li>
+<li>由于没有this指针的额外开销，因此静态成员函数与类的全局函数相比，速度上会有少许的增长；静态成员函数里面不允许使用this指针。</li>
+<li>调用静态成员函数，可以用成员访问操作符(.)和(-&gt;)为一个类的对象或指向类对象的指调用静态成员函数。</li>
+<li>静态成员函数，如果是private，在类外面是不允许调用的。</li>
+</ul>
+<h3 id="hash桶"><a href="#hash桶" class="headerlink" title="hash桶"></a>hash桶</h3><ul>
+<li>hash表关键点2个： 1 hash函数，2冲突处理。</li>
+<li>hash函数可以有很多，取余数等。</li>
+<li>hash冲突处理，1次探测，2次探测，链表（hash桶）法。</li>
+</ul>
+<h3 id="reinterpret-cast-expression"><a href="#reinterpret-cast-expression" class="headerlink" title="reinterpret_cast  (expression)"></a>reinterpret_cast <new_type> (expression)</new_type></h3><p>reinterpret_cast运算符是用来处理无关类型之间的转换；它会产生一个新的值，这个值会有与原始参数（expressoin）有完全相同的比特位。</p>
+<h3 id="运算符重载"><a href="#运算符重载" class="headerlink" title="运算符重载"></a>运算符重载</h3><ul>
+<li>c++重载运算符的时候，返回的是引用还是值，这个取决于返回运算符本身，如果需要返回运算符本身的值就是引用（即左值）【比如，=系列，+=，-=，*=，/= 】,如果不能返回值本身就需要返回值（如：= - * /等）。  </li>
+<li>在类外部时候，重载运算符如下，声明为友元函数。这个如果不声明为友元，放在类内，codeblocks会报错，类内只接受一个参数或者0个参数<br>如：类外  friend classType operator+(classType&amp; left, classType&amp; right);<br>类内  classType operator+(classType&amp; right );<br><img src="/1.png"></li>
+</ul>
+<h3 id="递归栈问题，可以采用尾递归解决"><a href="#递归栈问题，可以采用尾递归解决" class="headerlink" title="递归栈问题，可以采用尾递归解决"></a>递归栈问题，可以采用尾递归解决</h3><h3 id="new一个内存然后free会产生什么问题"><a href="#new一个内存然后free会产生什么问题" class="headerlink" title="new一个内存然后free会产生什么问题"></a>new一个内存然后free会产生什么问题</h3><ul>
+<li>delete会调用析构函数，free不会调用，会出现内存溢出问题。  </li>
+<li>如果用free释放“new创建的动态对象”，那么该对象因无法执行析构函数而可能导致程序出错。如果用delete释放“malloc申请的动态内存”，理论上讲程序不会出错，但是该程序的可读性很差。所以new/delete必须配对使用，malloc/free也一样。</li>
+</ul>
+<h3 id="new，malloc最大分配多大空间。"><a href="#new，malloc最大分配多大空间。" class="headerlink" title="new，malloc最大分配多大空间。"></a>new，malloc最大分配多大空间。</h3><p>理论上是内存的大小，如果32位，最大就是4G，但是实际中，会小一些，因为运行时的限制。</p>
+<h3 id="运行时，栈空间多大？"><a href="#运行时，栈空间多大？" class="headerlink" title="运行时，栈空间多大？"></a>运行时，栈空间多大？</h3><p>跟os有关。比如windows，在链接时确定栈的大小（可以由连接器的选项指定，如果未指定则用默认值1MB） VS2013开辟的默认栈空间是1M。</p>
+<h3 id="static全局变量与普通全局变量的一个区别"><a href="#static全局变量与普通全局变量的一个区别" class="headerlink" title="static全局变量与普通全局变量的一个区别"></a>static全局变量与普通全局变量的一个区别</h3><p>这两者的区别在于非静态全局变量的作用域是整个源程序，当一个源程序由多个源文件组成时，非静态的全局变量在各个源文件中都是有效的。而静态全局变量则限制了其作用域， 即只在定义该变量的源文件内有效， 在同一源程序的其它源文件中不能使用它。</p>
+<h3 id="全局变量，静态全局变量，默认初值为0-或者-null"><a href="#全局变量，静态全局变量，默认初值为0-或者-null" class="headerlink" title="全局变量，静态全局变量，默认初值为0 或者 null"></a>全局变量，静态全局变量，默认初值为0 或者 null</h3><p>全局变量和static变量就是这种方式分配内存的。内存在程序编译的时候就已经分配好，这块内存在程序的整个运行期间都存在。</p>
+<h3 id="编译原理理解记录"><a href="#编译原理理解记录" class="headerlink" title="编译原理理解记录"></a>编译原理理解记录</h3><ul>
+<li>程序编写到运行需要经历 预编译，编译，链接，生成exe等阶段。.cpp与.h的的作用在于.h中进行声明，cpp在编译的时候，遇到声明会做一个标记，然后在链接的时候会找到相应的函数。<br>每个cpp是单独编译的。不然编译顺序不同，结果不同了。</li>
+<li>.h中不要包含变量的定义，因为定义后，如果多个cpp引用这个变量，在链接阶段会出现重复定义<br>一个工程中，是不会出现一模一样的函数定义的。那样在链接的时候会报错。</li>
+</ul>
+<h3 id="string-find（）返回类型"><a href="#string-find（）返回类型" class="headerlink" title="string find（）返回类型"></a>string find（）返回类型</h3><ul>
+<li>string::size_type 为find返回的类型，如果只是使用int，容易出错，对于跨机器效果不好。</li>
+<li>size_type为string和vector的find的返回类型，需要注意。</li>
+<li>npos为find的失败的返回值。</li>
+</ul>
+<h3 id="const修饰类中变量问题"><a href="#const修饰类中变量问题" class="headerlink" title="const修饰类中变量问题"></a>const修饰类中变量问题</h3><p>非常重要的一点，也是常犯的错误，有时我们希望某些常量只在类中有效，所以想当然地觉得应该用const修饰数据成员来实现。但是const数据成员只在某个对象生存期内是常量，而对于整个类而言却是可变的，因为类可以创建多个对象，不同的对象const 数据成员的值可以不同。<br>所以：不能在类声明中初始化const数据成员。因为类的对象未被创建时，编译器不知道SIZE的值是什么。const数据成员的初始化只能在类构造函数的初始化表中进行。<br>如果想建立在整个类中都恒定的常量。const数据成员是完成不了滴，应该用类中的枚举常量来实现。</p>
+<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">{…</span><br><span class="line">  <span class="keyword">enum</span> { SIZE1 = <span class="number">100</span>, SIZE2 = <span class="number">200</span>}; <span class="comment">//  枚举常量</span></span><br><span class="line">  <span class="type">int</span> array1[SIZE1];</span><br><span class="line">  <span class="type">int</span> array2[SIZE2];</span><br><span class="line">};</span><br></pre></td></tr></tbody></table></figure>
+
+<p>枚举常量不会占用对象的存储空间，它们在编译时被全部求值。枚举常量的缺点是：它的隐含数据类型是整数，其最大值有限，且不能表示浮点数（如PI=3.14159）。<br><strong>如果想定义非int型变量怎么办呢？可以使用静态常量：static const int size.</strong></p>
+<h3 id="关于引用有一些非常重要的规则"><a href="#关于引用有一些非常重要的规则" class="headerlink" title="关于引用有一些非常重要的规则"></a>关于引用有一些非常重要的规则</h3><ul>
+<li>引用被创建的同时必须被初始化（指针则可以在任何时候被初始化）。</li>
+<li>不能有NULL引用，引用必须与合法的存储单元关联（指针则可以是NULL）。 </li>
+<li>一旦引用被初始化，就不能改变引用的关系（指针则可以随时改变所指的对象）。</li>
+<li>引用没有const。</li>
+<li>引用是受限了的指针，只允许取内容，不能改变所指向。</li>
+</ul>
+<h3 id="编程规范"><a href="#编程规范" class="headerlink" title="编程规范"></a>编程规范</h3><p>编程时候要注意，分配内存的时候检查是否分配成功，并且初始化，释放的时候，要对其指向null,避免产生野指针。</p>
+<h3 id="常量存储区的数据不能更改"><a href="#常量存储区的数据不能更改" class="headerlink" title="常量存储区的数据不能更改"></a>常量存储区的数据不能更改</h3><h3 id="数组名是指针常量，不能更改指向"><a href="#数组名是指针常量，不能更改指向" class="headerlink" title="数组名是指针常量，不能更改指向"></a>数组名是指针常量，不能更改指向</h3><h3 id="指针与内存"><a href="#指针与内存" class="headerlink" title="指针与内存"></a>指针与内存</h3><ul>
+<li>指针消亡了，并不表示它所指的内存会被自动释放。</li>
+<li>内存被释放了，并不表示指针会消亡或者成了NULL指针。</li>
+</ul>
+<h3 id="new-A-与-new-A-区别"><a href="#new-A-与-new-A-区别" class="headerlink" title="new A 与 new A()区别"></a>new A 与 new A()区别</h3><p>new A 与 new A() 都是调用默认构造函数，但是当类型只有 int 等pod类型时候，初始化不同版本可能会不同。</p>
+<h3 id="multable修饰变量一直可变，-用在类中被const修饰的函数中。"><a href="#multable修饰变量一直可变，-用在类中被const修饰的函数中。" class="headerlink" title="multable修饰变量一直可变， 用在类中被const修饰的函数中。"></a>multable修饰变量一直可变， 用在类中被const修饰的函数中。</h3><h3 id="函数的参数缺省值只能出现在函数的声明中，而不能出现在定义体中。"><a href="#函数的参数缺省值只能出现在函数的声明中，而不能出现在定义体中。" class="headerlink" title="函数的参数缺省值只能出现在函数的声明中，而不能出现在定义体中。"></a>函数的参数缺省值只能出现在函数的声明中，而不能出现在定义体中。</h3><h3 id="define和内联函数容易产生的错误"><a href="#define和内联函数容易产生的错误" class="headerlink" title="define和内联函数容易产生的错误"></a>define和内联函数容易产生的错误</h3><figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> MAX(a, b) (a) &gt; (b) ? (a) : (b)  </span></span><br><span class="line">result = (i) &gt; (j) ? (i) : (j) + <span class="number">2</span> ; </span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><ul>
+<li>如果类存在继承关系，派生类必须在其初始化表里调用基类的构造函数。</li>
+<li>初始化表中调用构造函数，如下例：<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">B::<span class="built_in">B</span>(<span class="type">int</span> x, <span class="type">int</span> y): <span class="built_in">A</span>(x) <span class="comment">// 在初始化表里调用A的构造函数  </span></span><br><span class="line">{</span><br><span class="line">…</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+<li>成员对象初始化的次序完全不受它们在初始化表中次序的影响，只由成员对象在类中声明的次序决定。这是因为类的声明是唯一的，而类的构造函数可以有多个，因此会有多个不同次序的初始化表。如果成员对象按照初始化表的次序进行构造，这将导致析构函数无法得到唯一的逆序。</li>
+</ul>
+<h3 id="拷贝构造函数与赋值函数"><a href="#拷贝构造函数与赋值函数" class="headerlink" title="拷贝构造函数与赋值函数"></a>拷贝构造函数与赋值函数</h3><figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">String <span class="title">a</span><span class="params">(“hello”)</span></span>;  </span><br><span class="line"><span class="function">String <span class="title">b</span><span class="params">(“world”)</span></span>;  </span><br><span class="line">String c = a; <span class="comment">//调用了拷贝构造函数，最好写成c(a);   </span></span><br><span class="line">c = b; <span class="comment">// 调用了赋值函数  </span></span><br></pre></td></tr></tbody></table></figure>
+<h3 id="以string类为例，拷贝构造函数与赋值函数的步骤，-string类要掌握"><a href="#以string类为例，拷贝构造函数与赋值函数的步骤，-string类要掌握" class="headerlink" title="以string类为例，拷贝构造函数与赋值函数的步骤， string类要掌握"></a>以string类为例，拷贝构造函数与赋值函数的步骤， string类要掌握</h3><figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">String::<span class="built_in">String</span>(<span class="type">const</span> <span class="type">char</span> *str)   <span class="comment">// String的普通构造函数 </span></span><br><span class="line">{   </span><br><span class="line"><span class="keyword">if</span>(str==<span class="literal">NULL</span>)   </span><br><span class="line">{   </span><br><span class="line">m_data = <span class="keyword">new</span> <span class="type">char</span>[<span class="number">1</span>];   </span><br><span class="line">*m_data = ‘\<span class="number">0</span>’;   </span><br><span class="line">}   </span><br><span class="line"><span class="keyword">else</span>   </span><br><span class="line">{   </span><br><span class="line"><span class="type">int</span> length = <span class="built_in">strlen</span>(str);   </span><br><span class="line">m_data = <span class="keyword">new</span> <span class="type">char</span>[length+<span class="number">1</span>];   </span><br><span class="line"><span class="built_in">strcpy</span>(m_data, str);   </span><br><span class="line">}   </span><br><span class="line">}   </span><br><span class="line">String::~<span class="built_in">String</span>(<span class="type">void</span>)   <span class="comment">// String的析构函数  </span></span><br><span class="line">{   </span><br><span class="line"><span class="keyword">delete</span> [] m_data;   </span><br><span class="line"><span class="comment">// 由于m_data是内部数据类型，也可以写成delete m_data;   </span></span><br><span class="line">}  </span><br><span class="line"><span class="comment">// 拷贝构造函数  </span></span><br><span class="line">String::<span class="built_in">String</span>(<span class="type">const</span> String &amp;other)   </span><br><span class="line">{   </span><br><span class="line"><span class="comment">// 允许操作other的私有成员m_data   </span></span><br><span class="line"><span class="type">int</span> length = <span class="built_in">strlen</span>(other.m_data);   </span><br><span class="line">m_data = <span class="keyword">new</span> <span class="type">char</span>[length+<span class="number">1</span>];   </span><br><span class="line"><span class="built_in">strcpy</span>(m_data, other.m_data);   </span><br><span class="line">}   </span><br><span class="line"><span class="comment">// 赋值函数  </span></span><br><span class="line">String &amp; String::operate =(<span class="type">const</span> String &amp;other)   </span><br><span class="line">{   </span><br><span class="line"><span class="comment">// (1) 检查自赋值  </span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">this</span> == &amp;other)   </span><br><span class="line"><span class="keyword">return</span> *<span class="keyword">this</span>;   </span><br><span class="line"><span class="comment">// (2) 释放原有的内存资源  </span></span><br><span class="line"><span class="keyword">delete</span> [] m_data;   </span><br><span class="line"><span class="comment">// （3）分配新的内存资源，并复制内容  </span></span><br><span class="line"><span class="type">int</span> length = <span class="built_in">strlen</span>(other.m_data);   </span><br><span class="line">m_data = <span class="keyword">new</span> <span class="type">char</span>[length+<span class="number">1</span>];   </span><br><span class="line"><span class="built_in">strcpy</span>(m_data, other.m_data);   </span><br><span class="line"><span class="comment">// （4）返回本对象的引用  </span></span><br><span class="line"><span class="keyword">return</span> *<span class="keyword">this</span>;   </span><br><span class="line">} </span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="基类与派生类构造函数"><a href="#基类与派生类构造函数" class="headerlink" title="基类与派生类构造函数"></a>基类与派生类构造函数</h3><ul>
+<li>基类的构造函数、析构函数、赋值函数都不能被派生类继承。如果类之间存在继承关系，在编写上述基本函数时应注意以下事项：</li>
+<li>派生类的构造函数应在其初始化表里调用基类的构造函数。 </li>
+<li>基类与派生类的析构函数应该为虚（即加virtual关键字）。</li>
+</ul>
+<h3 id="说说拷贝构造函数和赋值运算符"><a href="#说说拷贝构造函数和赋值运算符" class="headerlink" title="说说拷贝构造函数和赋值运算符"></a>说说拷贝构造函数和赋值运算符</h3><h4 id="拷贝构造函数和赋值运算符有以下两个不同之处："><a href="#拷贝构造函数和赋值运算符有以下两个不同之处：" class="headerlink" title="拷贝构造函数和赋值运算符有以下两个不同之处："></a>拷贝构造函数和赋值运算符有以下两个不同之处：</h4><ul>
+<li>拷贝构造函数生成新的类对象，而赋值运算符不能。 </li>
+<li>由于拷贝构造函数是直接构造一个新的类对象，所以在初始化这个对象之前不用检验源对象是否和新建对象相同。而赋值运算符则需要这个操作，另外赋值运算中如果原来的对象中有内存分配要先把内存释放掉。</li>
+</ul>
+<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">8</span>、递归与非递归将链表反转</span><br><span class="line"><span class="comment">/********************************************************* </span></span><br><span class="line"><span class="comment">非递归的翻转实际上就是使用循环，依次后移指针， </span></span><br><span class="line"><span class="comment">并将遇到的链表指针反转 </span></span><br><span class="line"><span class="comment">*********************************************************/</span>  </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ReserveList</span><span class="params">(List * plist)</span>        <span class="comment">//非递归实现，  </span></span></span><br><span class="line"><span class="function"></span>{  </span><br><span class="line">ListNode * phead;   <span class="comment">//新链表的头 开始的第一个节点  </span></span><br><span class="line">ListNode * pt;   <span class="comment">//旧链表的头 开始的第二个节点  </span></span><br><span class="line">ListNode * pn;   <span class="comment">//旧链表头的下一个  </span></span><br><span class="line">phead = plist-&gt;head;  </span><br><span class="line"><span class="keyword">if</span>(phead &amp;&amp; phead-&gt;next&amp;&amp; phead-&gt;next-&gt;next)    <span class="comment">//首先确定  </span></span><br><span class="line">{  </span><br><span class="line">phead = plist-&gt;head-&gt;next;    <span class="comment">//新链表就是以第一个节点开始，依次在表头添加节点，添加的节点是旧链表的第一个节点  </span></span><br><span class="line">pt = phead-&gt;next;     <span class="comment">//旧链表，旧链表被取走头结点之后放入新链表的表头，  </span></span><br><span class="line">pn = pt-&gt;next;  </span><br><span class="line">phead-&gt;next = <span class="number">0</span>;  </span><br><span class="line"><span class="keyword">while</span>(pt)  </span><br><span class="line">{  </span><br><span class="line">pn = pt-&gt;next;    <span class="comment">//pn是旧链表的第二个节点  </span></span><br><span class="line">pt -&gt;next = phead;   <span class="comment">//取旧链表的第一个节点插入新链表  </span></span><br><span class="line">phead = pt;  </span><br><span class="line">pt = pn;     <span class="comment">//旧链表往后移动  </span></span><br><span class="line">}  </span><br><span class="line">}  </span><br><span class="line">plist-&gt;head-&gt;next = phead;     <span class="comment">//新链表重新赋值到整个链表  </span></span><br><span class="line">}  </span><br><span class="line"><span class="comment">/********************************************************* </span></span><br><span class="line"><span class="comment">递归思想，原理也是从就链表上依次取元素放入到新链表 </span></span><br><span class="line"><span class="comment">直到原始链表被取完，得到新链表 </span></span><br><span class="line"><span class="comment">*********************************************************/</span>  </span><br><span class="line"><span class="function">ListNode * <span class="title">ReserveListRe</span><span class="params">(ListNode * oldlist,ListNode * newlist)</span>  </span></span><br><span class="line"><span class="function"></span>{  </span><br><span class="line">ListNode * pt;  </span><br><span class="line">pt = oldlist-&gt;next;   <span class="comment">//取旧链表的表头，pt是现在的旧链表  </span></span><br><span class="line">oldlist-&gt;next = newlist; <span class="comment">//就旧链表插入到新链表  </span></span><br><span class="line">newlist = oldlist;   <span class="comment">//如果旧链表是空，表示旧链表被取完了，新链表就是翻转之后的链表  </span></span><br><span class="line"><span class="keyword">return</span> (pt == <span class="literal">NULL</span>) ? newlist : <span class="built_in">ReserveListRe</span>(pt,newlist);  </span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="数组名和指针的区别"><a href="#数组名和指针的区别" class="headerlink" title="数组名和指针的区别"></a>数组名和指针的区别</h3><p>指针是一个变量，有自己对应的存储空间，而数组名仅仅是一个符号，不是变量，因而没有自己对应的存储空间。</p>
+<h3 id="构造函数能否为虚函数，为什么？"><a href="#构造函数能否为虚函数，为什么？" class="headerlink" title="构造函数能否为虚函数，为什么？"></a>构造函数能否为虚函数，为什么？</h3><ul>
+<li>构造函数不能是虚函数。而且不能在构造函数中调用虚函数，因为那样实际执行的是父类的对应函数，因为自己还没有构造好。析构函数可以是虚函数，而且，在一个复杂类结构中，这往往是必须的。析构函数也可以是纯虚函数，但纯虚析构函数必须有定义体，因为析构函数的调用是在子类中隐含的。</li>
+<li>虚函数的动态绑定特性是实现重载的关键技术，动态绑定根据实际的调用情况查询相应类的虚函数表，调用相应的虚函数。</li>
+<li>析构函数如果不定义成虚函数，在用父类指针操作子类对象的时候，在析构的时候容易忘记调用析构函数。</li>
+</ul>
+<h3 id="成员函数通过什么来区分不同对象的成员数据？为什么它能够区分？"><a href="#成员函数通过什么来区分不同对象的成员数据？为什么它能够区分？" class="headerlink" title="成员函数通过什么来区分不同对象的成员数据？为什么它能够区分？"></a>成员函数通过什么来区分不同对象的成员数据？为什么它能够区分？</h3><p>通过this指针来区分的， 因为它指向的是对象的首地址。</p>
+<h3 id="拷贝构造函数在哪几种情况下会被调用？"><a href="#拷贝构造函数在哪几种情况下会被调用？" class="headerlink" title="拷贝构造函数在哪几种情况下会被调用？"></a>拷贝构造函数在哪几种情况下会被调用？</h3><ul>
+<li>当类的一个对象去初始化该类的另一个对象时；</li>
+<li>如果函数的形参是类的对象，调用函数进行形参和实参结合时；</li>
+<li>如果函数的返回值是类对象，函数调用完成返回时。</li>
+</ul>
+<h3 id="流运算符为什么不能通过类的成员函数重载？一般怎么解决？"><a href="#流运算符为什么不能通过类的成员函数重载？一般怎么解决？" class="headerlink" title="流运算符为什么不能通过类的成员函数重载？一般怎么解决？"></a>流运算符为什么不能通过类的成员函数重载？一般怎么解决？</h3><p>因为通过类的成员函数重载必须是运算符的第一个是自己，而对流运算的重载要求第一个参数是流对象。一般通过友元来解决。</p>
+<h3 id="虚拟函数与普通成员函数的区别？内联函数和构造函数能否为虚拟函数？"><a href="#虚拟函数与普通成员函数的区别？内联函数和构造函数能否为虚拟函数？" class="headerlink" title="虚拟函数与普通成员函数的区别？内联函数和构造函数能否为虚拟函数？"></a>虚拟函数与普通成员函数的区别？内联函数和构造函数能否为虚拟函数？</h3><h4 id="区别："><a href="#区别：" class="headerlink" title="区别："></a>区别：</h4><ul>
+<li>虚拟函数有virtual关键字，有虚拟指针和虚函数表，虚拟指针就是虚拟函数的接口，而普通成员函数没有。</li>
+<li>内联函数和构造函数不能为虚拟函数。</li>
+</ul>
+<h3 id="全局变量可不可以定义在可被多个-C文件包含的头文件中？为什么？"><a href="#全局变量可不可以定义在可被多个-C文件包含的头文件中？为什么？" class="headerlink" title="全局变量可不可以定义在可被多个.C文件包含的头文件中？为什么？"></a>全局变量可不可以定义在可被多个.C文件包含的头文件中？为什么？</h3><p>答：可以，在不同的C文件中以static形式来声明同名全局变量。       　　<br>可以在不同的C文件中声明同名的全局变量，前提是其中只能有一个C文件中对此变量赋初值，此时连接不会出错.</p>
+<h3 id="局部变量能否和全局变量重名？"><a href="#局部变量能否和全局变量重名？" class="headerlink" title="局部变量能否和全局变量重名？"></a>局部变量能否和全局变量重名？</h3><p>答：能，局部会屏蔽全局。要用全局变量，需要使用”::” ;局部变量可以与全局变量同名，在函数内引用这个变量时，会用到同名的局部变量，而不会用到全局变量。对于有些编译器而言，在同一个函数内可以定义多个同名的局部变量，比如在两个循环体内都定义一个同名的局部变量，而那个局部变量的作用域就在那个循环体内。</p>
+<h3 id="海量处理（海量数据查找可以用hash表进行）"><a href="#海量处理（海量数据查找可以用hash表进行）" class="headerlink" title="海量处理（海量数据查找可以用hash表进行）"></a>海量处理（海量数据查找可以用hash表进行）</h3><p>44.1：给定a、b两个文件，各存放50亿个url，每个url各占64字节，内存限制是4G，让你找出a、b文件共同的url？<br>答：可以估计每个文件安的大小为5G×64=320G，远远大于内存限制的4G。所以不可能将其完全加载到内存中处理。考虑采取分而治之的方法。</p>
+<h4 id="分而治之-x2F-hash映射："><a href="#分而治之-x2F-hash映射：" class="headerlink" title="分而治之/hash映射："></a>分而治之/hash映射：</h4><p>遍历文件a，对每个url求取映射，然后根据所取得的值将url分别存储到1000个小文件（a1）中。这样每个小文件的大约为300M。遍历文件b，采取和a相同的方式将url分别存储到1000小文件（b1）中。这样处理后，所有可能相同的url都在对应的小文件中，不对应的小文件不可能有相同的url。然后我们只要求出1000对小文件中相同的url即可。  </p>
+<h4 id="hash-set统计："><a href="#hash-set统计：" class="headerlink" title="hash_set统计："></a>hash_set统计：</h4><p>求每对小文件中相同的url时，可以把其中一个小文件的url存储到hash_set中。然后遍历另一个小文件的每个url，看其是否在刚才构建的hash_set中，如果是，那么就是共同的url，存到文件里面就可以了。   </p>
+<h3 id="卡特兰数问http-blog-csdn-net-han-xiaoyang-article-details-11938973"><a href="#卡特兰数问http-blog-csdn-net-han-xiaoyang-article-details-11938973" class="headerlink" title="卡特兰数问http://blog.csdn.net/han_xiaoyang/article/details/11938973"></a>卡特兰数问<a target="_blank" rel="noopener" href="http://blog.csdn.net/han_xiaoyang/article/details/11938973">http://blog.csdn.net/han_xiaoyang/article/details/11938973</a></h3><h3 id="统计出现次数最多的数据"><a href="#统计出现次数最多的数据" class="headerlink" title="统计出现次数最多的数据"></a>统计出现次数最多的数据</h3><p>首先用hashmap统计出现的次数，然后用堆排序找出前n个高频对于大数统计，可以采用并发的方式进行。</p>
+<h3 id="10亿个整数，1G的内存，统计只出现一次的数"><a href="#10亿个整数，1G的内存，统计只出现一次的数" class="headerlink" title="10亿个整数，1G的内存，统计只出现一次的数"></a>10亿个整数，1G的内存，统计只出现一次的数</h3><p>hash桶，先进1000个桶，然后再每个桶内判断。</p>
+<h3 id="海量数据排序，"><a href="#海量数据排序，" class="headerlink" title="海量数据排序，"></a>海量数据排序，</h3><p>利用位操作</p>
+<h3 id="电梯调度算法"><a href="#电梯调度算法" class="headerlink" title="电梯调度算法"></a>电梯调度算法</h3><h4 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h4><p>电梯大家对于大家已经是很熟悉了，现在存在这样的问题，那就是在繁忙的上下班时间，在每层楼电梯都要停。这显然让很多办公室在高层的同志有点受不了。现在要求是这样：由于这个电梯楼层并不高，所以电梯只在一个楼层停，这样做电梯的每个人都在这个楼层走到自己想去的楼层。那么怎么知道电梯每次在哪个楼层停下来呢？在一楼的时候每个乘客选择自己的目的层，电梯可以快速的自动计算出应停的楼层。这个应停的楼层应该保证这次乘坐电梯的所有乘客的爬楼梯层数之和最少（包括上下楼）。</p>
+<h4 id="解法："><a href="#解法：" class="headerlink" title="解法："></a>解法：</h4><p>现在我们来更仔细的分析一下这个问题，看看怎么样优化一下。假设电梯停在第 i 层楼，我们计算出所有乘客总共爬楼梯的层数是Y。如果有N1个乘客想去的楼层在第 i 层之下，有N2个乘客正好想去的楼层是第 i 层，有N3个乘客想去的楼层在第 i 层之上。这个时候，重点来了：如果电梯改停在i-1层，所有目的地在第i - 1层以下的乘客可以少爬1层，总共少爬N1层，所有在i层及以上的乘客要多爬一层，总共多爬N2+N3层，这时总共需要爬Y-N1+N2+N3。</p>
+<p>反之，如果电梯在i+1层停所有目的地在第 i 层以上的乘客可以少爬1层，总共少爬N3层，所有在 i 层及以下的乘客要多爬一层，总共多爬N1+N2层，这时总共需要爬Y+N1+N2-N3层。</p>
+<p>可见，当N1 &gt; N2+N3 时，电梯在第i-1层楼停更好；当N1+N2 &lt;  N3 时，电梯在i+1层停更好。其他情况在第i层更好。<br>如此一来，问题的解法就出来了，从第一层开始考察，计算各位乘客走的楼层的数目，然后根据N1，N2，N3之间的关系进行调整，知道找到最佳楼层，这样算法时间复杂度优化到了O（N）。</p>
+<h3 id="一个父类子类虚函数问题"><a href="#一个父类子类虚函数问题" class="headerlink" title="一个父类子类虚函数问题"></a>一个父类子类虚函数问题</h3><figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">{</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">char</span> <span class="title">f</span><span class="params">()</span></span>{ <span class="keyword">return</span> <span class="string">'f'</span>; }</span><br><span class="line">	<span class="function"><span class="type">char</span> <span class="title">g</span><span class="params">(<span class="type">int</span> n)</span></span>{ <span class="keyword">return</span> <span class="string">'g'</span>; }</span><br><span class="line">};</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> :<span class="keyword">public</span> A</span><br><span class="line">{</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="type">char</span> <span class="title">f</span><span class="params">()</span></span>{ <span class="keyword">return</span> <span class="string">'F'</span>; }</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">char</span> <span class="title">g</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> n)</span></span>{ <span class="keyword">return</span> (<span class="type">char</span>)(<span class="string">'g'</span> + n); }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">	 A * pA = <span class="keyword">new</span> B;</span><br><span class="line">	 A&amp; rA = *(B*)pA;</span><br><span class="line">	 A oA = *(B*)pA;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"%c,%c,%c,%c,%c,%c\n"</span>, pA-&gt;<span class="built_in">f</span>(), pA-&gt;<span class="built_in">g</span>(<span class="number">1u</span>), rA.<span class="built_in">f</span>(),rA.<span class="built_in">g</span>(<span class="number">1</span>), oA.<span class="built_in">f</span>(), oA.<span class="built_in">g</span>(<span class="number">1</span>));</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<p>输出结果：F g F g f g</p>
+<ul>
+<li>(1)没啥说的，正常.</li>
+<li>(2)没啥说的，跟（1）一样，</li>
+<li>(3)类似于用B去初始化A,所有类型已经发生了变换，初始化结束之后，oA的类型就是A，也就不会调用B的虚函数了。</li>
+</ul>
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/coding/" rel="tag"># coding</a>
+              <a href="/tags/C/" rel="tag"># C++</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/06/mobilenet-v2/" rel="next" title="MobileNet V2">
+                  <i class="fa fa-chevron-left"></i> MobileNet V2
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/11/07/shuffleNet/" rel="prev" title="ShuffleNet">
+                  ShuffleNet <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E5%87%BD%E6%95%B0%E4%B8%8E%E7%BA%AF%E8%99%9A%E5%87%BD%E6%95%B0%E7%9A%84%E6%AF%94%E8%BE%83"><span class="nav-number">1.</span> <span class="nav-text">虚函数与纯虚函数的比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E8%BD%BD%E3%80%81%E8%A6%86%E7%9B%96%EF%BC%88%E9%87%8D%E5%86%99%EF%BC%89%E3%80%81%E9%9A%90%E8%97%8F%E5%8C%BA%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">重载、覆盖（重写）、隐藏区别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%8D%E8%BD%BD%E3%80%81%E8%A6%86%E7%9B%96%E3%80%81%E9%9A%90%E8%97%8F%E8%A1%A5%E5%85%85"><span class="nav-number">2.1.</span> <span class="nav-text">重载、覆盖、隐藏补充</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">内联函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0%E7%9B%B8%E6%AF%94%E8%BE%83%E4%BA%8E-define%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0-aa-%E6%9C%89%E4%BB%80%E4%B9%88%E4%BC%98%E7%82%B9%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">内联函数相比较于 #define定义函数 aa() 有什么优点？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E6%8C%87%E9%92%88%EF%BC%88c-primer%E7%AC%AC%E4%BA%94%E7%89%88%EF%BC%8Cp221%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">函数指针（c++ primer第五版，p221）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#const-%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0"><span class="nav-number">5.</span> <span class="nav-text">const 成员函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%88%B6%E7%B1%BB%E6%8C%87%E9%92%88%E6%8C%87%E5%90%91%E5%AD%90%E7%B1%BB%E5%AF%B9%E8%B1%A1%E9%97%AE%E9%A2%98"><span class="nav-number">6.</span> <span class="nav-text">父类指针指向子类对象问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#c-%E5%90%84%E4%B8%AA%E5%AD%98%E5%82%A8%E5%8C%BA"><span class="nav-number">7.</span> <span class="nav-text">c++各个存储区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A57%EF%BC%8C%E5%AF%B9static%E7%9A%84%E8%AE%A8%E8%AE%BA"><span class="nav-number">8.</span> <span class="nav-text">接7，对static的讨论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%8E%BB%E6%8E%89const%E5%8F%98%E9%87%8F%E7%9A%84const%E7%89%B9%E6%80%A7%E3%80%82"><span class="nav-number">9.</span> <span class="nav-text">如何去掉const变量的const特性。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#static-cast%E6%98%AF%E5%BC%BA%E5%88%B6%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97%EF%BC%8C%E7%B1%BB%E4%BC%BC%E4%BA%8Ec%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%EF%BC%88int%EF%BC%89a%EF%BC%8Cstatic-cast-a-%E7%AD%89%E4%BB%B7%E4%BA%8E-%EF%BC%88int%EF%BC%89a"><span class="nav-number">10.</span> <span class="nav-text">static_cast是强制类型转换的关键字，类似于c语言中的（int）a，static_cast a  等价于  （int）a</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="nav-number">11.</span> <span class="nav-text">程序错误处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#c-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%EF%BC%8C%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="nav-number">12.</span> <span class="nav-text">c++ 构造函数，拷贝构造函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%BC%95%E5%85%A5"><span class="nav-number">12.1.</span> <span class="nav-text">问题引入:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E7%AD%94%EF%BC%9A"><span class="nav-number">12.2.</span> <span class="nav-text">解答：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#c-%E4%B8%AD-private-protected-public"><span class="nav-number">13.</span> <span class="nav-text">c++中 private protected public</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%93%E6%95%B0%E7%BB%84%E4%BD%9C%E4%B8%BA%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E8%BE%93%E5%85%A5%E6%97%B6%EF%BC%8C%E6%95%B0%E7%BB%84%E8%87%AA%E5%8A%A8%E8%BD%AC%E5%8C%96%E4%B8%BA%E6%8C%87%E9%92%88%EF%BC%8Csizeof-x3D-4-%E3%80%82"><span class="nav-number">14.</span> <span class="nav-text">当数组作为函数参数输入时，数组自动转化为指针，sizeof &#x3D; 4 。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#const-char-p1%E7%AD%89-%E5%AE%B9%E6%98%93%E6%B7%B7%E6%B7%86%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">15.</span> <span class="nav-text">const char * p1等 容易混淆的概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%93%AA%E4%BA%9B%E8%BF%90%E7%AE%97%E7%AC%A6%E4%B8%8D%E8%83%BD%E8%A2%AB%E9%87%8D%E8%BD%BD"><span class="nav-number">16.</span> <span class="nav-text">哪些运算符不能被重载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E6%96%B9%E6%B3%95%EF%BC%8C%E6%8C%87%E7%9A%84%E6%98%AF%E7%B1%BB%E7%9A%84%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95%EF%BC%8C%E5%8D%B3static%E5%85%B3%E9%94%AE%E5%AD%97%E4%BF%AE%E9%A5%B0%E7%9A%84%E6%96%B9%E6%B3%95%E3%80%82"><span class="nav-number">17.</span> <span class="nav-text">类方法，指的是类的静态方法，即static关键字修饰的方法。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hash%E6%A1%B6"><span class="nav-number">18.</span> <span class="nav-text">hash桶</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reinterpret-cast-expression"><span class="nav-number">19.</span> <span class="nav-text">reinterpret_cast  (expression)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6%E9%87%8D%E8%BD%BD"><span class="nav-number">20.</span> <span class="nav-text">运算符重载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E6%A0%88%E9%97%AE%E9%A2%98%EF%BC%8C%E5%8F%AF%E4%BB%A5%E9%87%87%E7%94%A8%E5%B0%BE%E9%80%92%E5%BD%92%E8%A7%A3%E5%86%B3"><span class="nav-number">21.</span> <span class="nav-text">递归栈问题，可以采用尾递归解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#new%E4%B8%80%E4%B8%AA%E5%86%85%E5%AD%98%E7%84%B6%E5%90%8Efree%E4%BC%9A%E4%BA%A7%E7%94%9F%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">22.</span> <span class="nav-text">new一个内存然后free会产生什么问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#new%EF%BC%8Cmalloc%E6%9C%80%E5%A4%A7%E5%88%86%E9%85%8D%E5%A4%9A%E5%A4%A7%E7%A9%BA%E9%97%B4%E3%80%82"><span class="nav-number">23.</span> <span class="nav-text">new，malloc最大分配多大空间。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%EF%BC%8C%E6%A0%88%E7%A9%BA%E9%97%B4%E5%A4%9A%E5%A4%A7%EF%BC%9F"><span class="nav-number">24.</span> <span class="nav-text">运行时，栈空间多大？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#static%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E4%B8%8E%E6%99%AE%E9%80%9A%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E7%9A%84%E4%B8%80%E4%B8%AA%E5%8C%BA%E5%88%AB"><span class="nav-number">25.</span> <span class="nav-text">static全局变量与普通全局变量的一个区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%EF%BC%8C%E9%9D%99%E6%80%81%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%EF%BC%8C%E9%BB%98%E8%AE%A4%E5%88%9D%E5%80%BC%E4%B8%BA0-%E6%88%96%E8%80%85-null"><span class="nav-number">26.</span> <span class="nav-text">全局变量，静态全局变量，默认初值为0 或者 null</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E7%90%86%E8%A7%A3%E8%AE%B0%E5%BD%95"><span class="nav-number">27.</span> <span class="nav-text">编译原理理解记录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#string-find%EF%BC%88%EF%BC%89%E8%BF%94%E5%9B%9E%E7%B1%BB%E5%9E%8B"><span class="nav-number">28.</span> <span class="nav-text">string find（）返回类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#const%E4%BF%AE%E9%A5%B0%E7%B1%BB%E4%B8%AD%E5%8F%98%E9%87%8F%E9%97%AE%E9%A2%98"><span class="nav-number">29.</span> <span class="nav-text">const修饰类中变量问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%BC%95%E7%94%A8%E6%9C%89%E4%B8%80%E4%BA%9B%E9%9D%9E%E5%B8%B8%E9%87%8D%E8%A6%81%E7%9A%84%E8%A7%84%E5%88%99"><span class="nav-number">30.</span> <span class="nav-text">关于引用有一些非常重要的规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83"><span class="nav-number">31.</span> <span class="nav-text">编程规范</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E9%87%8F%E5%AD%98%E5%82%A8%E5%8C%BA%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%8D%E8%83%BD%E6%9B%B4%E6%94%B9"><span class="nav-number">32.</span> <span class="nav-text">常量存储区的数据不能更改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E5%90%8D%E6%98%AF%E6%8C%87%E9%92%88%E5%B8%B8%E9%87%8F%EF%BC%8C%E4%B8%8D%E8%83%BD%E6%9B%B4%E6%94%B9%E6%8C%87%E5%90%91"><span class="nav-number">33.</span> <span class="nav-text">数组名是指针常量，不能更改指向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E4%B8%8E%E5%86%85%E5%AD%98"><span class="nav-number">34.</span> <span class="nav-text">指针与内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#new-A-%E4%B8%8E-new-A-%E5%8C%BA%E5%88%AB"><span class="nav-number">35.</span> <span class="nav-text">new A 与 new A()区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multable%E4%BF%AE%E9%A5%B0%E5%8F%98%E9%87%8F%E4%B8%80%E7%9B%B4%E5%8F%AF%E5%8F%98%EF%BC%8C-%E7%94%A8%E5%9C%A8%E7%B1%BB%E4%B8%AD%E8%A2%ABconst%E4%BF%AE%E9%A5%B0%E7%9A%84%E5%87%BD%E6%95%B0%E4%B8%AD%E3%80%82"><span class="nav-number">36.</span> <span class="nav-text">multable修饰变量一直可变， 用在类中被const修饰的函数中。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E7%9A%84%E5%8F%82%E6%95%B0%E7%BC%BA%E7%9C%81%E5%80%BC%E5%8F%AA%E8%83%BD%E5%87%BA%E7%8E%B0%E5%9C%A8%E5%87%BD%E6%95%B0%E7%9A%84%E5%A3%B0%E6%98%8E%E4%B8%AD%EF%BC%8C%E8%80%8C%E4%B8%8D%E8%83%BD%E5%87%BA%E7%8E%B0%E5%9C%A8%E5%AE%9A%E4%B9%89%E4%BD%93%E4%B8%AD%E3%80%82"><span class="nav-number">37.</span> <span class="nav-text">函数的参数缺省值只能出现在函数的声明中，而不能出现在定义体中。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#define%E5%92%8C%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0%E5%AE%B9%E6%98%93%E4%BA%A7%E7%94%9F%E7%9A%84%E9%94%99%E8%AF%AF"><span class="nav-number">38.</span> <span class="nav-text">define和内联函数容易产生的错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="nav-number">39.</span> <span class="nav-text">构造函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%B8%8E%E8%B5%8B%E5%80%BC%E5%87%BD%E6%95%B0"><span class="nav-number">40.</span> <span class="nav-text">拷贝构造函数与赋值函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A5string%E7%B1%BB%E4%B8%BA%E4%BE%8B%EF%BC%8C%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%B8%8E%E8%B5%8B%E5%80%BC%E5%87%BD%E6%95%B0%E7%9A%84%E6%AD%A5%E9%AA%A4%EF%BC%8C-string%E7%B1%BB%E8%A6%81%E6%8E%8C%E6%8F%A1"><span class="nav-number">41.</span> <span class="nav-text">以string类为例，拷贝构造函数与赋值函数的步骤， string类要掌握</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%B1%BB%E4%B8%8E%E6%B4%BE%E7%94%9F%E7%B1%BB%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="nav-number">42.</span> <span class="nav-text">基类与派生类构造函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B4%E8%AF%B4%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%92%8C%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">43.</span> <span class="nav-text">说说拷贝构造函数和赋值运算符</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%92%8C%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E6%9C%89%E4%BB%A5%E4%B8%8B%E4%B8%A4%E4%B8%AA%E4%B8%8D%E5%90%8C%E4%B9%8B%E5%A4%84%EF%BC%9A"><span class="nav-number">43.1.</span> <span class="nav-text">拷贝构造函数和赋值运算符有以下两个不同之处：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E5%90%8D%E5%92%8C%E6%8C%87%E9%92%88%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">44.</span> <span class="nav-text">数组名和指针的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E8%83%BD%E5%90%A6%E4%B8%BA%E8%99%9A%E5%87%BD%E6%95%B0%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">45.</span> <span class="nav-text">构造函数能否为虚函数，为什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0%E9%80%9A%E8%BF%87%E4%BB%80%E4%B9%88%E6%9D%A5%E5%8C%BA%E5%88%86%E4%B8%8D%E5%90%8C%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%88%90%E5%91%98%E6%95%B0%E6%8D%AE%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AE%83%E8%83%BD%E5%A4%9F%E5%8C%BA%E5%88%86%EF%BC%9F"><span class="nav-number">46.</span> <span class="nav-text">成员函数通过什么来区分不同对象的成员数据？为什么它能够区分？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%9C%A8%E5%93%AA%E5%87%A0%E7%A7%8D%E6%83%85%E5%86%B5%E4%B8%8B%E4%BC%9A%E8%A2%AB%E8%B0%83%E7%94%A8%EF%BC%9F"><span class="nav-number">47.</span> <span class="nav-text">拷贝构造函数在哪几种情况下会被调用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E8%BF%90%E7%AE%97%E7%AC%A6%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E8%83%BD%E9%80%9A%E8%BF%87%E7%B1%BB%E7%9A%84%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0%E9%87%8D%E8%BD%BD%EF%BC%9F%E4%B8%80%E8%88%AC%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3%EF%BC%9F"><span class="nav-number">48.</span> <span class="nav-text">流运算符为什么不能通过类的成员函数重载？一般怎么解决？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%87%BD%E6%95%B0%E4%B8%8E%E6%99%AE%E9%80%9A%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0%E5%92%8C%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E8%83%BD%E5%90%A6%E4%B8%BA%E8%99%9A%E6%8B%9F%E5%87%BD%E6%95%B0%EF%BC%9F"><span class="nav-number">49.</span> <span class="nav-text">虚拟函数与普通成员函数的区别？内联函数和构造函数能否为虚拟函数？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB%EF%BC%9A"><span class="nav-number">49.1.</span> <span class="nav-text">区别：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E5%8F%AF%E4%B8%8D%E5%8F%AF%E4%BB%A5%E5%AE%9A%E4%B9%89%E5%9C%A8%E5%8F%AF%E8%A2%AB%E5%A4%9A%E4%B8%AA-C%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E7%9A%84%E5%A4%B4%E6%96%87%E4%BB%B6%E4%B8%AD%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">50.</span> <span class="nav-text">全局变量可不可以定义在可被多个.C文件包含的头文件中？为什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E8%83%BD%E5%90%A6%E5%92%8C%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%87%8D%E5%90%8D%EF%BC%9F"><span class="nav-number">51.</span> <span class="nav-text">局部变量能否和全局变量重名？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%B7%E9%87%8F%E5%A4%84%E7%90%86%EF%BC%88%E6%B5%B7%E9%87%8F%E6%95%B0%E6%8D%AE%E6%9F%A5%E6%89%BE%E5%8F%AF%E4%BB%A5%E7%94%A8hash%E8%A1%A8%E8%BF%9B%E8%A1%8C%EF%BC%89"><span class="nav-number">52.</span> <span class="nav-text">海量处理（海量数据查找可以用hash表进行）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E8%80%8C%E6%B2%BB%E4%B9%8B-x2F-hash%E6%98%A0%E5%B0%84%EF%BC%9A"><span class="nav-number">52.1.</span> <span class="nav-text">分而治之&#x2F;hash映射：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hash-set%E7%BB%9F%E8%AE%A1%EF%BC%9A"><span class="nav-number">52.2.</span> <span class="nav-text">hash_set统计：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%A1%E7%89%B9%E5%85%B0%E6%95%B0%E9%97%AEhttp-blog-csdn-net-han-xiaoyang-article-details-11938973"><span class="nav-number">53.</span> <span class="nav-text">卡特兰数问http:&#x2F;&#x2F;blog.csdn.net&#x2F;han_xiaoyang&#x2F;article&#x2F;details&#x2F;11938973</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%9F%E8%AE%A1%E5%87%BA%E7%8E%B0%E6%AC%A1%E6%95%B0%E6%9C%80%E5%A4%9A%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="nav-number">54.</span> <span class="nav-text">统计出现次数最多的数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10%E4%BA%BF%E4%B8%AA%E6%95%B4%E6%95%B0%EF%BC%8C1G%E7%9A%84%E5%86%85%E5%AD%98%EF%BC%8C%E7%BB%9F%E8%AE%A1%E5%8F%AA%E5%87%BA%E7%8E%B0%E4%B8%80%E6%AC%A1%E7%9A%84%E6%95%B0"><span class="nav-number">55.</span> <span class="nav-text">10亿个整数，1G的内存，统计只出现一次的数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%B7%E9%87%8F%E6%95%B0%E6%8D%AE%E6%8E%92%E5%BA%8F%EF%BC%8C"><span class="nav-number">56.</span> <span class="nav-text">海量数据排序，</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E6%A2%AF%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95"><span class="nav-number">57.</span> <span class="nav-text">电梯调度算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="nav-number">57.1.</span> <span class="nav-text">问题：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%EF%BC%9A"><span class="nav-number">57.2.</span> <span class="nav-text">解法：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%88%B6%E7%B1%BB%E5%AD%90%E7%B1%BB%E8%99%9A%E5%87%BD%E6%95%B0%E9%97%AE%E9%A2%98"><span class="nav-number">58.</span> <span class="nav-text">一个父类子类虚函数问题</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="本篇文章是一篇优化目标检测精度的文章，在two stage方法上进行模型优化的，文章的主要关注点在于目标尺度（Scale）。基于作者对目标尺度的实验与分析，设计了SNIP方法，该方法实验证明，可以有效提高目标检测的精度   论文名称:An Analysis of Scale Invariance in Object Detection – SNIP 作者：Bharat Singh &amp; L">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SNIP">
+<meta property="og:url" content="https://www.wanglichun.tech/2019/11/20/snip/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="本篇文章是一篇优化目标检测精度的文章，在two stage方法上进行模型优化的，文章的主要关注点在于目标尺度（Scale）。基于作者对目标尺度的实验与分析，设计了SNIP方法，该方法实验证明，可以有效提高目标检测的精度   论文名称:An Analysis of Scale Invariance in Object Detection – SNIP 作者：Bharat Singh &amp; L">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fzpr76prkzj20d5083jsg.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fzqp6o6kkej20d70biq63.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fzqp8w1dv9j20r407zmz4.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fzqs1x3vb8j20d604dmxp.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fzqvewrs4oj20r908b489.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fzqy0xjyiwj20rc0c2n52.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fzsd9q4f9zj20dh05vwf3.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fzsdl4j65gj20e406kjsq.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fzr0o91wksj20r509stbq.jpg">
+<meta property="article:published_time" content="2019-11-20T01:39:26.000Z">
+<meta property="article:modified_time" content="2020-02-16T04:24:06.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="SNIP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fzpr76prkzj20d5083jsg.jpg">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2019/11/20/snip/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>SNIP | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/20/snip/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SNIP
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-20 09:39:26" itemprop="dateCreated datePublished" datetime="2019-11-20T09:39:26+08:00">2019-11-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 12:24:06" itemprop="dateModified" datetime="2020-02-16T12:24:06+08:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/20/snip/" class="post-meta-item leancloud_visitors" data-flag-title="SNIP" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/20/snip/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/20/snip/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>本篇文章是一篇优化目标检测精度的文章，在two stage方法上进行模型优化的，文章的主要关注点在于目标尺度（Scale）。基于作者对目标尺度的实验与分析，设计了SNIP方法，该方法实验证明，可以有效提高目标检测的精度</p>
+</blockquote>
+<hr>
+<p><strong>论文名称:An Analysis of Scale Invariance in Object Detection – SNIP</strong></p>
+<p><strong>作者：Bharat Singh &amp; Larry S.Davis</strong></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1711.08189"><strong>论文链接</strong>：https://arxiv.org/abs/1711.08189</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/bharatsingh430/snip"><strong>代码链接</strong>：https://github.com/bharatsingh430/snip</a></p>
+<p><strong>如果出现图像或者公式显示不完整，请访问本人CSDN博客</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Chunfengyanyulove/article/details/87646305"><strong>CSDN博客地址：https://blog.csdn.net/Chunfengyanyulove/article/details/87646305</strong></a></p>
+<hr>
+<h4 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h4><p>那么作者对<strong>目标尺度</strong>的分析到底有什么特殊发现呢？</p>
+<p>作者对比了ImageNet以及COCO数据集中目标尺度的差异，目标的尺度统计结果如下图Figure 1所示，其中棕色线以及蓝色线分别对应于ImageNet以及COCO数据集的尺度统计结果，（两条线你可以理解为对尺度数量做累加，最后都会到1），根据统计结果发现，<strong>在ImageNet中，排在中位的尺度是0.554，但是在COCO中，排在中位的尺度是0.106，这就说明了在COCO数据集中，大部分的目标的尺度其实是小于图像面积的1%的</strong>。更糟糕的是，作者统计了COCO中最大的10%的目标以及最小的10%的目标的尺度，<strong>发现最小的10%中，最大的目标尺度是0.024，而最大的10%中，最小的目标尺度为0.472，两者相差了大约20倍</strong>，如图Figure 1中绿色箭头所示。这巨大的差异将成为detector需要面临的巨大的挑战。另外，在进行目标检测的时候，我们一般会采用ImageNet上训练的预训练模型作为检测模型的backbone，而训练imagenet我们常使用的尺度是224*224，而目标检测往往会采用更大一些的尺度，这种分类与检测中存在的尺度的巨大差异也将带来一定的问题，作者将其称为<strong>domain-shift</strong>，本篇文章主要就是解决的就是这两个问题。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzpr76prkzj20d5083jsg.jpg"></p>
+<p>目前在解决尺度变换以及小目标的问题上，已经存在一定的研究并且具有一定的成果，比如，FPN，将浅层特征与深层特征相结合来提高小目标的检测精度，dilated/deformable convolution，扩大检测的感受野来提高对大尺度目标的检测，还有在不同尺度的卷积层预测不同尺度的目标，以及利用多尺度训练或者多尺度inference等。虽然这些方法已经显著的改善了目标检测的结果，但是还有很多问题其实是没有被解决的，这里作者提出了两个疑问：</p>
+<ol>
+<li><strong>为了检测小目标将图像放大是必要的吗？对于小分辨率图像，我们是否可以不放大图像，然后将stride调小一点呢？</strong></li>
+<li><strong>在进行检测器fine-tune的时候，我们是否应该只选择目标尺度在[64,256]范围内的进行训练，因为ImageNet的目标主要集中在该范围内，选择COCO数据集的所有尺度[16,800]进行训练，对效果会有影响吗？</strong></li>
+</ol>
+<p><strong>带着问题，我们一起进行探索</strong></p>
+<h5 id="问题一：对于小目标，是放大图像效果好还是调整stride效果好呢？"><a href="#问题一：对于小目标，是放大图像效果好还是调整stride效果好呢？" class="headerlink" title="问题一：对于小目标，是放大图像效果好还是调整stride效果好呢？"></a>问题一：对于小目标，是放大图像效果好还是调整stride效果好呢？</h5><p>由于目前stage-of-the-art检测器多是在800*1200分辨率进行训练，inference的时候采用的是图像金字塔，这就包括了更高的分辨率1400*2000，那么为了提高小目标的检测，在inference阶段将图像放大来提高小目标的检测效果是否有效果呢？</p>
+<p>这里作者在分类模型上进行了对比实验。</p>
+<p>（1）作者将image图像分别缩放到48*48，64*64，80*80，96*96，128*128,然后在ImageNet上，用224*224训练的模型进行测试，以此来验证对小目标，直接放大后inference的效果，实验结果如下图Figure 4(a)所示，Figure 4(a)为top-1的accuracy，可以发现分辨率被缩放的越低，模型的效果实际上越差，换句话说就是，模型最适应的还是跟训练尺度一样的图像。</p>
+<p>（2）那么既然小目标在分类中表现的不是那么理想，会不会是网络下采样的时候，把小目标的特征丢失了，那么我们是否可以采用多尺度的训练来强化小目标特征的学习呢？将各个尺度的图像都拿来训练。我们知道ResNet101网络的输入是7*7，stride=2的卷积，然后接一个3*3,stride=2的pooling结构，作者进行了如下修改，在输入图像为48*48的时候，使用3*3的卷积，stride=1，对于输入图像是96*96,则使用kernel size 5*5, stride=2. 这也就可以利用小卷积来get到小目标的特征了，实验结果怎么样呢？图Figure 4（b）中CNN-S，可以发现，还是有一定的效果的，比原来的模型效果提升了不少。</p>
+<p>（3）又或者，我们直接将小图放大到224*224去fine-tune我们的模型，结果又会怎么样呢？实验结果如图Figure 4(c)CNN-B-FT，可以发现，实验结果比实验二还要好一些，说明将图像放大后，还是可以get到一些小目标的特征的。<strong>这就是我们平时在进行模型迁移时候的finetune的方法</strong></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzqp6o6kkej20d70biq63.jpg"></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzqp8w1dv9j20r407zmz4.jpg"></p>
+<p>既然在分类中对于小目标，直接放大到224后进行finetune的效果提升较好，那么在检测中会如何呢？</p>
+<p>于是乎，作者在检测模型上进行了一系列实验</p>
+<p>实验一：将图像放大到不同的尺度的效果对比，作者将COCO图像分别放大到800*1400以及1400*2000进行训练，然后在inference的时候，图像尺寸是1400*2000，实验结果如下表Table 1所示，其中800_all以及1400_all分别代表缩放到800以及1400的结果，结果如我们所预期，1400的效果要好一些，毕竟1400图像大，而且训练和测试在相同的尺度内。但是为什么效果提升的这么小呢？只有0.3个百分点。作者猜想原因可能是虽然我们将小目标放大了，但是对于原来本来就很大的图像，就会变得更大以至于较难正确的分类，所以模型的整体精度下降了一些。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzqs1x3vb8j20d604dmxp.jpg"></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzqvewrs4oj20r908b489.jpg"></p>
+<p>实验二：那既然大物体会存在一定的影响，那么我们是否可以忽略大物体，只训练小物体呢，如图Figure 5-2所示，只用其中的小物体进行训练。很遗憾，结果显示，其效果还不如放大到800的效果好尼。。为什么会出现这个现象呢？主要应该是我们丢掉了很多的大样本，样本数量少了，多样性减少自然会产生一定的影响。</p>
+<p>实验三：多尺度训练（Multi-Scale Training），那么既然忽略掉大物体不行，那怎么办呢？使用多尺度是一个解决方法，如图Figure 5(3)所示，将图像缩放到不同的尺度进行训练，这样既可以兼顾大物体又可以对小物体进行一定的优化，实验结果显示，其结果同样没有直接resize到1400的效果好，作者猜想应该是图像中的<strong>极大极小图</strong>影响比较大。</p>
+<p>所以经过这一系列的实验，我们可以总结出，train一个detector，关键点是需要有合适的目标尺度，过大或者过小都会对其产生影响。</p>
+<p><strong>那么我们如何更好的兼顾大目标以及小目标呢？这就需要本文的重点SNIP出场。</strong></p>
+<h4 id="SNIP-Scale-Normalization-for-Image-Pyramids"><a href="#SNIP-Scale-Normalization-for-Image-Pyramids" class="headerlink" title="SNIP(Scale Normalization for Image Pyramids)"></a>SNIP(Scale Normalization for Image Pyramids)</h4><p>SNIP采用的是MST(Multi-Scale-Training)的训练方式，我们知道在MST中，大目标在大图的时候识别的不好，小目标在小图的时候识别效果不好，如何屏蔽掉过大或者过小的目标，我们是否可以只训练在我们理想尺度范围内的目标呢？SNIP采用的方法是所有的目标全部参与到网络训练中，但是对于尺度不同的目标，SNIP设置了3个尺度，每个尺度只检测在自己尺度范围内的目标，并且为了减少domain-shift问题，每次训练SNIP只采用目标尺度在224*224尺度内的目标，而其他目标不参与。</p>
+<p>其结果显示如表Table 1 ,其mAP相比较于MST要提高大约3个点，效果还是比较明显的。</p>
+<p>具体怎么做的呢？</p>
+<p>如下图Figure6所示，SNIP设置了3个尺度范围[s1,e1],[s2,e2],[s3,e3]，分别对应3个图像分辨率，然后在图像训练的过程中，如果gt的box大小在这个范围内，就被标记做valid，否则就被标记为invalid。然后在生成Anchor并给Anchor分配label的时候，检查该Anchor是否和某个invalid gt box的overlap超过0.3，若存在，则该Anchor会被视作invalid Anchor；若不存在，则会被视作valid Anchor，而这些invalid anchor在训练的时候都会被无效化，不会加入到反向传播的过程中，相当于在每个分辨率上，只对大小合适的目标参与训练，这也就符合了作者设计的初衷。相应的，在inference时候，根据图像尺度选择相应的detector，并且经过MST(multi scale train)后，将得到的结果进行rescale以及softNMS得到最终的结果。因为调整了RoI的分辨率与分类的分辨率几乎一致，所以网络fine-tune的效果也较好。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzqy0xjyiwj20rc0c2n52.jpg"></p>
+<h4 id="训练细节"><a href="#训练细节" class="headerlink" title="训练细节"></a>训练细节</h4><p>SNIP选择的网络是Deformable-RFCN，并且选择了3个尺度，分别为[480,800]，[800,1200]，[1400,2000]，其对应的目标有效范围分别是：[120,120+]，[40,160]，[0,80]，其中包含40的重叠。</p>
+<ul>
+<li>RPN网络的一点改变<br>为了提高RPN的效果，作者将conv4与conv5连接在一起，并且使用了7个anchor scales.</li>
+</ul>
+<h4 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h4><p>下表是使用不同尺度方法的模型对比，其中Single scale是使用单一尺度进行训练和测试，单一尺度为（800,1200），MS Test是使用多尺度进行inference，MS Train/Test是使用多尺度进行训练以及使用多尺度进行测试，SNIP为本文方法，从测试结果可以发现，SNIP还是有明显优势的，较MS提高了2个点。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzsd9q4f9zj20dh05vwf3.jpg"></p>
+<p>下表是RPN召回率的结果图，实验结果显示，Baseline的平均召回率只有大约57.6%，SNIP方法的平均召回率达到了64%。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzsdl4j65gj20e406kjsq.jpg"></p>
+<p>下表是SNIP与其他检测网络的精度对比，在实验中，作者使用了DCN以及Soft-NMS.在D-RFCN中相比较于不使用SNIP，使用SNIP后平均精度提高了大约3.5%，观察表中，精度最高的是Faster-RCNN + SNIP（RPN+RCN）,backbone使用ResNet-101,平均精度达到了惊人的44.4%，小目标的建精度达到了56.9%。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzr0o91wksj20r509stbq.jpg"></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>纵观本文，不仅仅作者的方法提高了目标检测的mAP，同等重要的是作者对数据的分析，以及详细的实验证明，从数据中发现问题，进而利用详细的实验证明，进而解决问题，这也是值得我们学习的解决问题的方法。<strong>大数据时代，从数据角度去优化模型，往往会比单纯的杠模型取得更好的效果。</strong></p>
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/SNIP/" rel="tag"># SNIP</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/20/snipper/" rel="next" title="SNIPER(Efficient Multi-Scale Training)">
+                  <i class="fa fa-chevron-left"></i> SNIPER(Efficient Multi-Scale Training)
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/12/22/docker/" rel="prev" title="Docker的使用与总结">
+                  Docker的使用与总结 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A3%E6%96%87"><span class="nav-number">1.</span> <span class="nav-text">正文</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%B8%80%EF%BC%9A%E5%AF%B9%E4%BA%8E%E5%B0%8F%E7%9B%AE%E6%A0%87%EF%BC%8C%E6%98%AF%E6%94%BE%E5%A4%A7%E5%9B%BE%E5%83%8F%E6%95%88%E6%9E%9C%E5%A5%BD%E8%BF%98%E6%98%AF%E8%B0%83%E6%95%B4stride%E6%95%88%E6%9E%9C%E5%A5%BD%E5%91%A2%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">问题一：对于小目标，是放大图像效果好还是调整stride效果好呢？</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SNIP-Scale-Normalization-for-Image-Pyramids"><span class="nav-number">2.</span> <span class="nav-text">SNIP(Scale Normalization for Image Pyramids)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E7%BB%86%E8%8A%82"><span class="nav-number">3.</span> <span class="nav-text">训练细节</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C"><span class="nav-number">4.</span> <span class="nav-text">实验</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

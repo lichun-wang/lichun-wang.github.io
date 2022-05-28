@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="这篇文章读下来，感觉就是一个tricks的集大成，作者实验做的可是真的很详细，好多trick我都没有听过，我看网上有人评论说，可以当做目标检测的入门手册了，哈哈，确实，能做如此多的实验，足见作者的功底。总体来说，文章的创新点不是特别多，大多是在试各种tricks，然后找到效果最好的，文章值得好好的读一读。   论文名称：YOLOv4: Optimal Speed and Accuracy of">
+<meta property="og:type" content="article">
+<meta property="og:title" content="YOLO-V4">
+<meta property="og:url" content="https://www.wanglichun.tech/2020/05/16/yolov4/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="这篇文章读下来，感觉就是一个tricks的集大成，作者实验做的可是真的很详细，好多trick我都没有听过，我看网上有人评论说，可以当做目标检测的入门手册了，哈哈，确实，能做如此多的实验，足见作者的功底。总体来说，文章的创新点不是特别多，大多是在试各种tricks，然后找到效果最好的，文章值得好好的读一读。   论文名称：YOLOv4: Optimal Speed and Accuracy of">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wanglichun.tech/1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/10.png">
+<meta property="og:image" content="https://www.wanglichun.tech/14.png">
+<meta property="og:image" content="https://www.wanglichun.tech/3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/16.png">
+<meta property="og:image" content="https://www.wanglichun.tech/15.png">
+<meta property="og:image" content="https://www.wanglichun.tech/4.png">
+<meta property="og:image" content="https://www.wanglichun.tech/5.png">
+<meta property="og:image" content="https://www.wanglichun.tech/6.png">
+<meta property="og:image" content="https://www.wanglichun.tech/7.png">
+<meta property="og:image" content="c:/Users/wanglichun/Desktop/blog-img/yolov4/8.png">
+<meta property="og:image" content="https://www.wanglichun.tech/0.png">
+<meta property="og:image" content="https://www.wanglichun.tech/11.png">
+<meta property="og:image" content="https://www.wanglichun.tech/12.png">
+<meta property="og:image" content="https://www.wanglichun.tech/13.png">
+<meta property="og:image" content="https://www.wanglichun.tech/conclusion.jpg">
+<meta property="article:published_time" content="2020-05-16T03:04:42.000Z">
+<meta property="article:modified_time" content="2020-05-16T07:16:00.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="YOLO V2">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.wanglichun.tech/1.png">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2020/05/16/yolov4/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>YOLO-V4 | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/05/16/yolov4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          YOLO-V4
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-05-16 11:04:42 / 修改时间：15:16:00" itemprop="dateCreated datePublished" datetime="2020-05-16T11:04:42+08:00">2020-05-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/05/16/yolov4/" class="post-meta-item leancloud_visitors" data-flag-title="YOLO-V4" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/05/16/yolov4/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/16/yolov4/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>这篇文章读下来，感觉就是一个tricks的集大成，作者实验做的可是真的很详细，好多trick我都没有听过，我看网上有人评论说，可以当做目标检测的入门手册了，哈哈，确实，能做如此多的实验，足见作者的功底。总体来说，文章的创新点不是特别多，大多是在试各种tricks，然后找到效果最好的，文章值得好好的读一读。</p>
+</blockquote>
+<hr>
+<p>论文名称：YOLOv4: Optimal Speed and Accuracy of Object Detection</p>
+<p>作者：Alexey Bochkovskiy &amp; Chien-Yao Wang  等</p>
+<p>论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1903.00621">https://arxiv.org/abs/1903.00621</a></p>
+<hr>
+<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p><strong>本文主要创新点在于干了下面几件事</strong></p>
+<p>1、YOLOv4，训练方便，1个1080或者2080就可以训起来了。<br>2、对比了很多tricks,验证了一些trick的影响,并选取了较好的tricks的组合。<br>3、优化了一些现存的方法，使其可以高效的训练在单个GPU上。</p>
+<h4 id="目标检测的网络结构"><a href="#目标检测的网络结构" class="headerlink" title="目标检测的网络结构"></a>目标检测的网络结构</h4><p>下图很清晰的描述了目标检测网络的结构，包括backbone,neck,head等。</p>
+<p><img src="/1.png" alt="1.png"></p>
+<h4 id="bag-of-freebies"><a href="#bag-of-freebies" class="headerlink" title="bag of freebies"></a>bag of freebies</h4><p>什么是bag of freebies呢？就是那些会提高模型效果，但是又不会增加模型部署后latency的方法。</p>
+<ol>
+<li>data augmentation</li>
+</ol>
+<ul>
+<li>random erase、cutout: 随机选取一个矩形，置为0</li>
+<li>hide-and-seek、grid mask: 选取多个举行区域，并置为0</li>
+<li>DropOut、DropConnect、dropBlock<blockquote>
+<p>dropblock很简单，就是随机的drop一块信息,因为采用dropout，虽然随机关闭了部分的神经元，但是其旁边的神经元依然可以传递信息，所以dropblock关闭一块区域，阻断信息的传播。</p>
+</blockquote>
+</li>
+<li>MixUP</li>
+<li>CutMix</li>
+<li>style transfer GAN<blockquote>
+<p>下图示例了一部分augment方法</p>
+</blockquote>
+</li>
+</ul>
+<p><img src="/10.png" alt="10.png"></p>
+<ol start="2">
+<li>problem of semantic distribution bias,  data imbalance between different classes</li>
+</ol>
+<ul>
+<li>hard example mining</li>
+<li>focal loss</li>
+<li>label smoothing</li>
+</ul>
+<ol start="3">
+<li>bbox regression</li>
+</ol>
+<ul>
+<li>IOU loss</li>
+<li>GIOU loss<blockquote>
+<p>$GIOU = IOU -\frac {A_c - U} {A_c}$<code> </code>$L_{GIOU}=1-GIOU$</p>
+</blockquote>
+</li>
+<li>DIOU loss<blockquote>
+<p><img src="/14.png" alt="14.png"></p>
+</blockquote>
+</li>
+<li>CIOU loss</li>
+</ul>
+<h4 id="bag-of-specials"><a href="#bag-of-specials" class="headerlink" title="bag of specials"></a>bag of specials</h4><ol>
+<li>增加感受野</li>
+</ol>
+<ul>
+<li>SPP, </li>
+<li>ASPP, </li>
+<li>RFB</li>
+</ul>
+<ol start="2">
+<li>attention</li>
+</ol>
+<ul>
+<li>channel-wise atention (SENet)</li>
+</ul>
+<p><img src="/3.png" alt="3.png"></p>
+<ul>
+<li>point-wise attention ：SAM(Spatial Attention Module)<blockquote>
+<p>SAM介绍:作者表示不仅在channel层面在spatial层面上也需要网络能明白feature map中哪些部分应该有更高的响应。具体怎么做的呢？如下图，首先，还是使用average pooling和max pooling对输入feature map进行压缩操作，只不过这里的压缩变成了通道层面上的压缩，对输入特征分别在通道维度上做了mean和max操作。最后得到了两个二维的feature，将其按通道维度拼接在一起得到一个通道数为2的feature map，之后使用一个包含单个卷积核的隐藏层对其进行卷积操作，要保证最后得到的feature在spatial维度上与输入的feature map一致，最后通过sigmoid对原来的特征图进行加权。</p>
+</blockquote>
+</li>
+</ul>
+<p><img src="/2.png" alt="2.png"></p>
+<ol start="3">
+<li>activation function</li>
+</ol>
+<ul>
+<li>ReLU</li>
+<li>LReLU</li>
+<li>PReLU</li>
+<li>ReLU6  : quantization network</li>
+<li>Swish</li>
+</ul>
+<blockquote>
+<p>$x*sigmoid(x)$</p>
+</blockquote>
+<blockquote>
+<p><img src="/16.png" alt="16.png"></p>
+</blockquote>
+<ul>
+<li>hard-Swish : quantization network</li>
+<li>Mish</li>
+</ul>
+<blockquote>
+<p>$mish=x*tanh(ln(1+e^x))$</p>
+</blockquote>
+<blockquote>
+<p><img src="/15.png" alt="15.png"><br>4. nms</p>
+</blockquote>
+<ul>
+<li>soft nms</li>
+<li>DIoU NMS</li>
+</ul>
+<h4 id="方法分析"><a href="#方法分析" class="headerlink" title="方法分析"></a>方法分析</h4><p>相比较分类，检测模型应该需要哪些：</p>
+<p>1、更大的输入尺寸，充分保证小尺寸图像的检测能力。</p>
+<p>2、更大的感受野more layers</p>
+<p>3、更多的参数</p>
+<p><strong>最优化的分类模型，不一定适用于检测模型中。</strong></p>
+<h4 id="YOLO-v4"><a href="#YOLO-v4" class="headerlink" title="YOLO v4"></a>YOLO v4</h4><ul>
+<li>backbone : CSPDarknet53</li>
+<li>neck ： PANet path-aggregation neck</li>
+<li>head : anchor based head , as YOLOv3</li>
+<li>no cross-gpu batch normalization</li>
+<li>DropBlock</li>
+<li>Mosaic</li>
+<li>Self-Adversarial Training(SAT)</li>
+<li>modified SAM, PAN and Cross mini-Batch Normalization(CmBN)</li>
+</ul>
+<p><strong>backbone如下</strong></p>
+<p><img src="/4.png" alt="4.png"></p>
+<p><strong>Mosaic</strong></p>
+<p>就是拼图，好处就是减小了目标的尺寸，同时变相增大了batchsize</p>
+<p><img src="/5.png" alt="5.png"></p>
+<ul>
+<li>Self-Adversarial Training(SAT)</li>
+</ul>
+<p>这个有点意思，简单的说就是对一张图像，首先利用网络的参数给原图像增加噪声，类似与攻击，增加其识别难度，然后在对其进行识别，以提高网络的识别能力，有意思。</p>
+<ul>
+<li>Cross mini-Batch Normalization</li>
+</ul>
+<p><img src="/6.png" alt="6.png"></p>
+<p>原始的BN层是在每个mini-batch中计算BN</p>
+<p>CBN的提出是因为当模型较大的时候，单张卡的batch较小，影响模型效果，所以CBN不仅仅利用当前的mini-batch，还利用上几个iter的mini-batch，使得batch变得大一些。</p>
+<p>CmBN类似于BN的升级版，只在mini-batch内部累加BN</p>
+<ul>
+<li>SAM的修改</li>
+</ul>
+<p><img src="/7.png" alt="7.png"></p>
+<p>如图所示，将pooling 修改成了卷积,修改后就变成了point-wise的attention。</p>
+<ul>
+<li>PAN的修改</li>
+</ul>
+<p><img src="C:/Users/wanglichun/Desktop/blog-img/yolov4/8.png" alt="C:\Users\wanglichun\Desktop\blog-img\yolov4\8
+.png"></p>
+<p>PANet原始结构: 自顶向下  自下上顶</p>
+<p><img src="/0.png" alt="0.png"></p>
+<h3 id="实验部分"><a href="#实验部分" class="headerlink" title="实验部分"></a>实验部分</h3><p>作者的实验做的是真的很全，对比的很充分，感兴趣的同学可以自行阅读一下，这里不介绍了，总之就是各种trick的对比。</p>
+<p>最后放一下，不同网络的对比结果。</p>
+<p><img src="/11.png" alt="11.png"><br><img src="/12.png" alt="12.png"><br><img src="/13.png" alt="13.png"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>下面是网上网友总结的YOLO-V4的tricks,很全，大家可以按图查询，查缺补漏。</p>
+<p><img src="/conclusion.jpg" alt="conclusion.jpg"></p>
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/YOLO-V2/" rel="tag"># YOLO V2</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/05/16/resnest/" rel="next" title="ResNeSt">
+                  <i class="fa fa-chevron-left"></i> ResNeSt
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/06/24/network-slimming/" rel="prev" title="Network Slimming">
+                  Network Slimming <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E7%9A%84%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">目标检测的网络结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bag-of-freebies"><span class="nav-number">1.2.</span> <span class="nav-text">bag of freebies</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bag-of-specials"><span class="nav-number">1.3.</span> <span class="nav-text">bag of specials</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">1.4.</span> <span class="nav-text">方法分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#YOLO-v4"><span class="nav-number">1.5.</span> <span class="nav-text">YOLO v4</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E9%83%A8%E5%88%86"><span class="nav-number">2.</span> <span class="nav-text">实验部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

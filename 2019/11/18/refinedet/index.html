@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="论文链接： https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1711.06897 作者代码链接 ： https:&#x2F;&#x2F;github.com&#x2F;sfzhang15&#x2F;RefineDet 如果出现图像显示不完整，或者公式显示不完整，可访问本人CSDN博客 CSDN博客地址：https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove&#x2F;article&#x2F;details&#x2F;84943544  下面进入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RefineDet">
+<meta property="og:url" content="https://www.wanglichun.tech/2019/11/18/refinedet/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="论文链接： https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1711.06897 作者代码链接 ： https:&#x2F;&#x2F;github.com&#x2F;sfzhang15&#x2F;RefineDet 如果出现图像显示不完整，或者公式显示不完整，可访问本人CSDN博客 CSDN博客地址：https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove&#x2F;article&#x2F;details&#x2F;84943544  下面进入">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fy1pfm243ij20wk0jymze.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fy1pvrmir0j20ey0dnq3b.jpg">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?L({p_i},{x_i},{c_i},{t_i},)=\frac{1}{N_{arm}}(\sum_{i}L_b(p_i,[l_i^*\geqslant&amp;space;1]))+\sum_{i}[l_i^*\geq&amp;space;1]L_r(x_i,g_i^*)+\frac{1}{N_{odm}}(\sum_{i}L_m(c_i,l_i^*))+\sum_{i}[l_i^*\geq&amp;space;1]L_r(t_i,g_i^*)">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fy1uh5implj20qj03b0t6.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fy1rxeygcwj210v0kngq8.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fy1rzbxrnij20if08hwfb.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fy1s2t5j4rj20w40nb44z.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fy1s3blpyyj20fi0cz0ud.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fy1s3q9lf9j20w10oxqem.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fy1se3fdb2j20w00hrnpd.jpg">
+<meta property="article:published_time" content="2019-11-17T19:40:20.000Z">
+<meta property="article:modified_time" content="2020-02-16T00:41:46.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="RefineDet">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fy1pfm243ij20wk0jymze.jpg">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2019/11/18/refinedet/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>RefineDet | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/18/refinedet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RefineDet
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-18 03:40:20" itemprop="dateCreated datePublished" datetime="2019-11-18T03:40:20+08:00">2019-11-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 08:41:46" itemprop="dateModified" datetime="2020-02-16T08:41:46+08:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/18/refinedet/" class="post-meta-item leancloud_visitors" data-flag-title="RefineDet" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/18/refinedet/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/18/refinedet/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><p>论文链接： <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1711.06897">https://arxiv.org/abs/1711.06897</a></p>
+<p>作者代码链接 ： <a target="_blank" rel="noopener" href="https://github.com/sfzhang15/RefineDet">https://github.com/sfzhang15/RefineDet</a></p>
+<p><strong>如果出现图像显示不完整，或者公式显示不完整，可访问本人CSDN博客</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Chunfengyanyulove/article/details/84943544">CSDN博客地址：https://blog.csdn.net/Chunfengyanyulove/article/details/84943544</a></p>
+<hr>
+<p>下面进入正题</p>
+<p>在目标检测中，有两个主流的分支，分别是以Faster R-CNN为代表的two stage方法以及以SSD为代表的one stage方法,两者各有优势，总结起来就是：<strong>two stage方法的精度更高，one stage方法的速度更快</strong>。</p>
+<p>是什么造成了这两种方法的不同呢？简而言之，就是对anchor的处理方法。</p>
+<p>two stage方法提取anchor后，对anchor进行了<strong>微调</strong>，然后将处理过的anchor送入到分类与回归器中，而one stage 缺省了anchor处理这步，将提取的anchor直接送入到分类与回归器中，这可以有效的提高速度，但是带来了一定的问题：由于没有对提取的anchor进行处理(筛选)，<strong>导致出现了anchor类别不均衡问题</strong>，负样本的数量肯定是多的，即使SSD采用了比如：对分类loss进行排序，然后控制正负样本比例1:3，依然会存在这个问题，这也就是为什么one stage方法精度达不到two stage方法那么高的原因。</p>
+<p>相比较于one stage方法，two stage方法的优点如下：</p>
+<ul>
+<li>控制了样本不均衡问题。</li>
+<li>利用2个阶段的级联去进行box框坐标的回归。</li>
+<li>利用两个阶段的特征去进行目标的描述。（这里解释一下，是指首先利用RPN网络去判断是否是目标，然后利用后面的网络判断是什么目标以及位置在哪，他们是共享backbone的。）</li>
+</ul>
+<p>既然one stage与two stage精度存在差距的原因已经找到，那么我们是否可以想办法解决这个问题呢？</p>
+<p>当然可以，对于类别不均衡这个问题，很多网络也都给出了不同的方法，比如：<strong>RetinaNet提出使用focal loss去限制负样本的loss比例等</strong></p>
+<p>本文实现的RefineDet其实也是在解决这个问题，本文是如何解决的呢？</p>
+<p>总结起来其实很简单，既然two stage可以解决这个问题，那么我将one stage与two stage方法融合在一起不就可以即取得高精度又实现高效率了。</p>
+<p>下面我们一起看看RefineDet是如何实现的：</p>
+<p>首先我们来看RefineDet的网络结构，如下：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fy1pfm243ij20wk0jymze.jpg"></p>
+<p>上图是本文的关键，观察上图，我们一点点分析：<strong>首先，RefineDet由两个内部连接的模块组成，一个是ARM(anchor refinement module)，（上面部分）, 另一个是ODM(object detection module）,（下面部分）</strong>。<strong>ARM就类似于Faster R-CNN中的RPN网络，一方面用于修正anchor，去掉多余的负样本，减少搜索空间，另一方面，用于对anchor的位置以及尺寸进行修正，使得其更有利于坐标的回归，其实就是两方面的优化嘛，一个是分类，一个是回归。ODM就类似于SSD，只不过接受的是前面修改中过的anchor，并利用该anchor进行分类（multi-class）与回归</strong>。这样，就不再具有了two stage方法的局限性，如Faster R-CNN生成anchor后，再送入后面进行分类与回归比较耗时，同时又使得one stage方法如SSD的anchor进行了处理，使其同时具有one-stage以及two-stage的优点。<strong>另外作者设计了TCB结构，TCB一方面将ARM的feature映射到ODM，另一方面，是将高层的语义信息与低层的信息相融合（就类似于FPN）</strong>，TCB的结构如下图Figure2所示，<strong>这里使用的是Deconv进行特征图的放大，然后利用element-wise sum的方式相加，求和后，连接一个卷积提高特征图的分辨力。</strong></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fy1pvrmir0j20ey0dnq3b.jpg"></p>
+<p>所以，RefineDet总结起来就是如下三点：</p>
+<ul>
+<li>利用两个阶段的回归，提高物体检测的精度</li>
+<li>过滤掉过多的negative anchor，使得正负样本能够平衡一些。</li>
+<li>使用transfer connection block（TCB）将ARM与ODM连接到一起</li>
+</ul>
+<h4 id="细节介绍"><a href="#细节介绍" class="headerlink" title="细节介绍"></a>细节介绍</h4><ul>
+<li>two-step cascaded regression</li>
+</ul>
+<p>RefineDet 首先利用ARM网络第一次调整anchor的位置以及坐标，然后将ARM修正过的anchor传给ODM网络，使得ODM网络可以得到更好的初始化的anchor,进而得到更好的回归效果。<strong>这样说是不是太泛泛了，下面有更详细的</strong><br>首先在ARM网络上，采用类似于SSD的方法，在对应的feature map上面生成对应的anchor。对于feature map上的每个cell，预测4个offset以及是前景还是背景（softmax分类），这样对于每个cell就可以生成对应的refined anchor(修正anchor)，在得到refined anchor后，将refined anchor传给ODM网络，在ODM中再一次进行分类与回归得到最终目标的分类以及目标的位置。<br>另外，ARM与ODM的特征图具有相同的维度。每个anchor产生c+4个输出，分别对应c个类别以及4个坐标，这里跟SSD类似，不一样的是，SSD使用的是default box去预测结果，而refineDet使用的是ARM模块refined过后的anchor去预测结果。这使得refineDet具有更好的检测精度，特别是对小目标物体，（<strong>所以说，对小目标，FPN那一套还是很有用的</strong>）。</p>
+<ul>
+<li>Negative Anchor Filtering</li>
+</ul>
+<p>这个其实很简单，我们知道在one stage方法中，由于是每个cell固定产生anchor的，所以anchor的负样本的量实际上还是很大的，但是大部分其实是没有用的，所以就需要采用一些方法对没有用的anchor进行过滤，可以利用loss进行过滤，也可以利用分类分数进行过滤，在ARM中，是使用的分类的分数进行过滤的方法，就是在训练的过程中，如果ARM判断其negative的confidence（置信度）大于设定的阈值（默认是0.99），则我们在ODM中就自动忽略这个anchor，在inference阶段，如果refined anchor box的negative confidence的值大于阈值，同样也是被忽略的。</p>
+<h4 id="Training-and-Inference"><a href="#Training-and-Inference" class="headerlink" title="Training and Inference"></a>Training and Inference</h4><ul>
+<li><p>数据增强，这个当然是必不可少的，本文数据增强方法参照SSD数据增强方法。</p>
+</li>
+<li><p>backbone network：<strong>网络结构跟SSD基本保持一致。</strong>，作者使用了VGG16以及ResNet-101作为基础网络，当然其他网络也可以，这里只是比较常用。以VGG16为例，跟SSD一样，将fc6和fc7转换为卷积层conv_fc6以及conv_fc7,另外为了更好的利用高层信息，我们在vgg16网络的最后增加了2个额外的卷积层（conv6_1,conv6_2）,对resnet101增加了一个另外的residual block(res6),并且对conv4_3以及conv5_3添加了L2 normalization层，并分别设置scale为10和8，并在反向传播中学习scale。</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">L2Norm</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,n_channels, scale</span>):</span><br><span class="line">        <span class="built_in">super</span>(L2Norm,self).__init__()</span><br><span class="line">        self.n_channels = n_channels</span><br><span class="line">        self.gamma = scale <span class="keyword">or</span> <span class="literal">None</span></span><br><span class="line">        self.eps = <span class="number">1e-10</span></span><br><span class="line">        self.weight = nn.Parameter(torch.Tensor(self.n_channels))</span><br><span class="line">        self.reset_parameters()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reset_parameters</span>(<span class="params">self</span>):</span><br><span class="line">        init.constant(self.weight,self.gamma)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        norm = x.<span class="built_in">pow</span>(<span class="number">2</span>).<span class="built_in">sum</span>(dim=<span class="number">1</span>, keepdim=<span class="literal">True</span>).sqrt()+self.eps</span><br><span class="line">        <span class="comment">#x /= norm</span></span><br><span class="line">        x = torch.div(x,norm)</span><br><span class="line">        out = self.weight.unsqueeze(<span class="number">0</span>).unsqueeze(<span class="number">2</span>).unsqueeze(<span class="number">3</span>).expand_as(x) * x</span><br><span class="line">        <span class="keyword">return</span> out</span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li><p>Anchor Design and Matching：Anchor的设计跟SSD也是比较相似的，不同的是，这里只在4个feature layer上面提取Anchor，分别对应stride为（8，16，32，64）（注：SSD是在6个特征图上，以SSD300为例，分别对应特征图大小为38，19，10，5，3，1），并且不同的feature layer匹配不同大小及尺寸的anchor，scale是stride的4倍即对应的检测尺度为，以320为例子，对应的不同的layer检测的图像尺度为：[ 32， 64， 128， 256 ]，aspect ratio 有3个（0.5，1，2）,正样本同样是overlap最大以及IOU大于0.5，这都没啥特殊的，都是这样的。</p>
+</li>
+<li><p>Hard Negative Mining： 不管对于ARM还是ODM，依然使用类似于SSD的正负样本1：3的比例，手段跟SSD一样，利用分类loss从大到小排序，取前面的部分。</p>
+</li>
+<li><p>Loss Function, 如下：</p>
+</li>
+</ul>
+<p><a href="https://www.codecogs.com/eqnedit.php?latex=L({p_i},{x_i},{c_i},{t_i},)=\frac{1}{N_{arm}}(\sum_{i}L_b(p_i,[l_i^*\geqslant&amp;space;1]))+\sum_{i}[l_i^*\geq&amp;space;1]L_r(x_i,g_i^*)+\frac{1}{N_{odm}}(\sum_{i}L_m(c_i,l_i^*))+\sum_{i}[l_i^*\geq&amp;space;1]L_r(t_i,g_i^*)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?L({p_i},{x_i},{c_i},{t_i},)=\frac{1}{N_{arm}}(\sum_{i}L_b(p_i,[l_i^*\geqslant&amp;space;1]))+\sum_{i}[l_i^*\geq&amp;space;1]L_r(x_i,g_i^*)+\frac{1}{N_{odm}}(\sum_{i}L_m(c_i,l_i^*))+\sum_{i}[l_i^*\geq&amp;space;1]L_r(t_i,g_i^*)" title="L({p_i},{x_i},{c_i},{t_i},)=\frac{1}{N_{arm}}(\sum_{i}L_b(p_i,[l_i^*\geqslant 1]))+\sum_{i}[l_i^*\geq 1]L_r(x_i,g_i^*)+\frac{1}{N_{odm}}(\sum_{i}L_m(c_i,l_i^*))+\sum_{i}[l_i^*\geq 1]L_r(t_i,g_i^*)"></a> </p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fy1uh5implj20qj03b0t6.jpg"></p>
+<ul>
+<li><p>Optimization: VGG-16新添加的两层： 采用xavier初始化参数，  resnet101新添加的residual block： 采用均值为0，方差为0.01的高斯分布进行初始化。默认训练的 batchsize 是32 ，使用SGD方法进行fine-tune训练，momentum取0.9， weight decay为0.0005， learning rate取0.001，learning rate delay。</p>
+</li>
+<li><p>Inference: inference阶段，首先ARM首先利用分类得分阈值过滤掉一部分的负样本，然后计算这部分anchor的location，以及size，然后，将refined anchor传入ODM模块进行分类，每张图像取得分高的400个图像。最终，利用非极大值抑制，保证最终得到200个高分的检测结果作为最终的结果。</p>
+</li>
+<li><p><strong>速度方面：Titan X GPU  图像尺寸：320*320，40.2FPS， 图像尺寸：512*512， 24.1FPS。</strong></p>
+</li>
+</ul>
+<h4 id="实验部分"><a href="#实验部分" class="headerlink" title="实验部分"></a>实验部分</h4><ul>
+<li>VOC的对比实验</li>
+</ul>
+<p>下图显示的是在VOC上的测试结果，可见RefineDet320*320可以达到80%的精度，512<em>512可以达到81.8%的精度，最下面两组是采用multi-scale的测试策略【即将图片缩放到不同的尺度进行测试】，测试结果显示，512的精度可以达到83.8%。RefineDet也是第一个实时的精度超过80%的目标检测算法， SSD512有24564个anchor，而RefineDet512只有16320个anchor。*<em>多尺度也是一个比较有效的提高精度的方法</em></em></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fy1rxeygcwj210v0kngq8.jpg"></p>
+<ul>
+<li>溶解实验</li>
+</ul>
+<blockquote>
+<ul>
+<li>首先，是对负样本滤除效果的验证，作者设计实验，一个是使用所有refined anchor，另一个是正常的使用阈值（0.99）进行过滤，由table 3可以发现，负样本的滤除可以带来大约0.5%的精度提升。</li>
+<li>为验证2个阶段回归的重要性，作者使用不再refined的anchor进行实验，发现其精度有大约2%的下降(表格第2列以及第3列)</li>
+<li>验证TCB的效果，作者直接去掉了TCB连接，直接在ARM上进行分类以及回归，这其实就跟SSD一样了，发现其精度又有了大约1%的下降。分析原因，主要是采用TCB一方面可以从ARM中继承到特征差异，另一方面采用了类似于FPN的特征融合，使得精度得到提升。</li>
+</ul>
+</blockquote>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fy1rzbxrnij20if08hwfb.jpg"></p>
+<ul>
+<li>COCO:</li>
+</ul>
+<p>为了得到更好的效果，这里作者实验使用的basebone是resnet101，对比Table 7，其中带加号的是代表multi-scale test，可见，RefineDet的最好的效果可以达到了41.8%</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fy1s2t5j4rj20w40nb44z.jpg"></p>
+<p><strong>如何提高PASCAL VOC的检测精度？？</strong></p>
+<p><strong>因为PASCAL VOC是COCO的子集，所以我们也可以使用COCO的预训练模型来提高VOC的精度，实验结果如下，通过COCO的预训练模型，RefineDet320可以达到84%的精度，如果是512可以达到85.2%的精度（2007 test），如果使用multi-scale test，精度还可以进一步提高，如下表所示，最高可以达到86%左右</strong></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fy1s3blpyyj20fi0cz0ud.jpg"></p>
+<p>分析RefineDet对不同类别目标的检测效果，如下图，其中第一排是不同类别的比例分布，横轴是检测的数量，那条红色的实线是IOU阈值0.5对应的召回率，虚线是IOU阈值0.1对应的召回率，其中不同颜色分别代表如下：白色代表判断对的，蓝色代表由于位置不对导致的错误，深红表示相近类别的混淆，紫色代表背景，绿色代表其他，</p>
+<p>第二行代表判错的样本中不同类别分布的百分比。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fy1s3q9lf9j20w10oxqem.jpg"></p>
+<p>最后来一张检测结果图：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fy1se3fdb2j20w00hrnpd.jpg"></p>
+<p>以上是本人对RefineDet的理解，如有问题，还请指出~</p>
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/RefineDet/" rel="tag"># RefineDet</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/15/tvm/" rel="next" title="初识 TVM">
+                  <i class="fa fa-chevron-left"></i> 初识 TVM
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/11/18/RCNN/" rel="prev" title="R-CNN">
+                  R-CNN <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%86%E8%8A%82%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">细节介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Training-and-Inference"><span class="nav-number">2.</span> <span class="nav-text">Training and Inference</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E9%83%A8%E5%88%86"><span class="nav-number">3.</span> <span class="nav-text">实验部分</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

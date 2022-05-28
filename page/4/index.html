@@ -1,0 +1,2230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Spring&#39;s Idea">
+<meta property="og:url" content="https://www.wanglichun.tech/page/4/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="Spring Wang">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.wanglichun.tech/page/4/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: true,
+    isPost: false,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/20/snip/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/20/snip/" class="post-title-link" itemprop="url">SNIP</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-20 09:39:26" itemprop="dateCreated datePublished" datetime="2019-11-20T09:39:26+08:00">2019-11-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 12:24:06" itemprop="dateModified" datetime="2020-02-16T12:24:06+08:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/20/snip/" class="post-meta-item leancloud_visitors" data-flag-title="SNIP" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/20/snip/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/20/snip/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>本篇文章是一篇优化目标检测精度的文章，在two stage方法上进行模型优化的，文章的主要关注点在于目标尺度（Scale）。基于作者对目标尺度的实验与分析，设计了SNIP方法，该方法实验证明，可以有效提高目标检测的精度</p>
+</blockquote>
+<hr>
+<p><strong>论文名称:An Analysis of Scale Invariance in Object Detection – SNIP</strong></p>
+<p><strong>作者：Bharat Singh &amp; Larry S.Davis</strong></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1711.08189"><strong>论文链接</strong>：https://arxiv.org/abs/1711.08189</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/bharatsingh430/snip"><strong>代码链接</strong>：https://github.com/bharatsingh430/snip</a></p>
+<p><strong>如果出现图像或者公式显示不完整，请访问本人CSDN博客</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Chunfengyanyulove/article/details/87646305"><strong>CSDN博客地址：https://blog.csdn.net/Chunfengyanyulove/article/details/87646305</strong></a></p>
+<hr>
+<h4 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h4><p>那么作者对<strong>目标尺度</strong>的分析到底有什么特殊发现呢？</p>
+<p>作者对比了ImageNet以及COCO数据集中目标尺度的差异，目标的尺度统计结果如下图Figure 1所示，其中棕色线以及蓝色线分别对应于ImageNet以及COCO数据集的尺度统计结果，（两条线你可以理解为对尺度数量做累加，最后都会到1），根据统计结果发现，<strong>在ImageNet中，排在中位的尺度是0.554，但是在COCO中，排在中位的尺度是0.106，这就说明了在COCO数据集中，大部分的目标的尺度其实是小于图像面积的1%的</strong>。更糟糕的是，作者统计了COCO中最大的10%的目标以及最小的10%的目标的尺度，<strong>发现最小的10%中，最大的目标尺度是0.024，而最大的10%中，最小的目标尺度为0.472，两者相差了大约20倍</strong>，如图Figure 1中绿色箭头所示。这巨大的差异将成为detector需要面临的巨大的挑战。另外，在进行目标检测的时候，我们一般会采用ImageNet上训练的预训练模型作为检测模型的backbone，而训练imagenet我们常使用的尺度是224*224，而目标检测往往会采用更大一些的尺度，这种分类与检测中存在的尺度的巨大差异也将带来一定的问题，作者将其称为<strong>domain-shift</strong>，本篇文章主要就是解决的就是这两个问题。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzpr76prkzj20d5083jsg.jpg"></p>
+<p>目前在解决尺度变换以及小目标的问题上，已经存在一定的研究并且具有一定的成果，比如，FPN，将浅层特征与深层特征相结合来提高小目标的检测精度，dilated/deformable convolution，扩大检测的感受野来提高对大尺度目标的检测，还有在不同尺度的卷积层预测不同尺度的目标，以及利用多尺度训练或者多尺度inference等。虽然这些方法已经显著的改善了目标检测的结果，但是还有很多问题其实是没有被解决的，这里作者提出了两个疑问：</p>
+<ol>
+<li><strong>为了检测小目标将图像放大是必要的吗？对于小分辨率图像，我们是否可以不放大图像，然后将stride调小一点呢？</strong></li>
+<li><strong>在进行检测器fine-tune的时候，我们是否应该只选择目标尺度在[64,256]范围内的进行训练，因为ImageNet的目标主要集中在该范围内，选择COCO数据集的所有尺度[16,800]进行训练，对效果会有影响吗？</strong></li>
+</ol>
+<p><strong>带着问题，我们一起进行探索</strong></p>
+<h5 id="问题一：对于小目标，是放大图像效果好还是调整stride效果好呢？"><a href="#问题一：对于小目标，是放大图像效果好还是调整stride效果好呢？" class="headerlink" title="问题一：对于小目标，是放大图像效果好还是调整stride效果好呢？"></a>问题一：对于小目标，是放大图像效果好还是调整stride效果好呢？</h5><p>由于目前stage-of-the-art检测器多是在800*1200分辨率进行训练，inference的时候采用的是图像金字塔，这就包括了更高的分辨率1400*2000，那么为了提高小目标的检测，在inference阶段将图像放大来提高小目标的检测效果是否有效果呢？</p>
+<p>这里作者在分类模型上进行了对比实验。</p>
+<p>（1）作者将image图像分别缩放到48*48，64*64，80*80，96*96，128*128,然后在ImageNet上，用224*224训练的模型进行测试，以此来验证对小目标，直接放大后inference的效果，实验结果如下图Figure 4(a)所示，Figure 4(a)为top-1的accuracy，可以发现分辨率被缩放的越低，模型的效果实际上越差，换句话说就是，模型最适应的还是跟训练尺度一样的图像。</p>
+<p>（2）那么既然小目标在分类中表现的不是那么理想，会不会是网络下采样的时候，把小目标的特征丢失了，那么我们是否可以采用多尺度的训练来强化小目标特征的学习呢？将各个尺度的图像都拿来训练。我们知道ResNet101网络的输入是7*7，stride=2的卷积，然后接一个3*3,stride=2的pooling结构，作者进行了如下修改，在输入图像为48*48的时候，使用3*3的卷积，stride=1，对于输入图像是96*96,则使用kernel size 5*5, stride=2. 这也就可以利用小卷积来get到小目标的特征了，实验结果怎么样呢？图Figure 4（b）中CNN-S，可以发现，还是有一定的效果的，比原来的模型效果提升了不少。</p>
+<p>（3）又或者，我们直接将小图放大到224*224去fine-tune我们的模型，结果又会怎么样呢？实验结果如图Figure 4(c)CNN-B-FT，可以发现，实验结果比实验二还要好一些，说明将图像放大后，还是可以get到一些小目标的特征的。<strong>这就是我们平时在进行模型迁移时候的finetune的方法</strong></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzqp6o6kkej20d70biq63.jpg"></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzqp8w1dv9j20r407zmz4.jpg"></p>
+<p>既然在分类中对于小目标，直接放大到224后进行finetune的效果提升较好，那么在检测中会如何呢？</p>
+<p>于是乎，作者在检测模型上进行了一系列实验</p>
+<p>实验一：将图像放大到不同的尺度的效果对比，作者将COCO图像分别放大到800*1400以及1400*2000进行训练，然后在inference的时候，图像尺寸是1400*2000，实验结果如下表Table 1所示，其中800_all以及1400_all分别代表缩放到800以及1400的结果，结果如我们所预期，1400的效果要好一些，毕竟1400图像大，而且训练和测试在相同的尺度内。但是为什么效果提升的这么小呢？只有0.3个百分点。作者猜想原因可能是虽然我们将小目标放大了，但是对于原来本来就很大的图像，就会变得更大以至于较难正确的分类，所以模型的整体精度下降了一些。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzqs1x3vb8j20d604dmxp.jpg"></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzqvewrs4oj20r908b489.jpg"></p>
+<p>实验二：那既然大物体会存在一定的影响，那么我们是否可以忽略大物体，只训练小物体呢，如图Figure 5-2所示，只用其中的小物体进行训练。很遗憾，结果显示，其效果还不如放大到800的效果好尼。。为什么会出现这个现象呢？主要应该是我们丢掉了很多的大样本，样本数量少了，多样性减少自然会产生一定的影响。</p>
+<p>实验三：多尺度训练（Multi-Scale Training），那么既然忽略掉大物体不行，那怎么办呢？使用多尺度是一个解决方法，如图Figure 5(3)所示，将图像缩放到不同的尺度进行训练，这样既可以兼顾大物体又可以对小物体进行一定的优化，实验结果显示，其结果同样没有直接resize到1400的效果好，作者猜想应该是图像中的<strong>极大极小图</strong>影响比较大。</p>
+<p>所以经过这一系列的实验，我们可以总结出，train一个detector，关键点是需要有合适的目标尺度，过大或者过小都会对其产生影响。</p>
+<p><strong>那么我们如何更好的兼顾大目标以及小目标呢？这就需要本文的重点SNIP出场。</strong></p>
+<h4 id="SNIP-Scale-Normalization-for-Image-Pyramids"><a href="#SNIP-Scale-Normalization-for-Image-Pyramids" class="headerlink" title="SNIP(Scale Normalization for Image Pyramids)"></a>SNIP(Scale Normalization for Image Pyramids)</h4><p>SNIP采用的是MST(Multi-Scale-Training)的训练方式，我们知道在MST中，大目标在大图的时候识别的不好，小目标在小图的时候识别效果不好，如何屏蔽掉过大或者过小的目标，我们是否可以只训练在我们理想尺度范围内的目标呢？SNIP采用的方法是所有的目标全部参与到网络训练中，但是对于尺度不同的目标，SNIP设置了3个尺度，每个尺度只检测在自己尺度范围内的目标，并且为了减少domain-shift问题，每次训练SNIP只采用目标尺度在224*224尺度内的目标，而其他目标不参与。</p>
+<p>其结果显示如表Table 1 ,其mAP相比较于MST要提高大约3个点，效果还是比较明显的。</p>
+<p>具体怎么做的呢？</p>
+<p>如下图Figure6所示，SNIP设置了3个尺度范围[s1,e1],[s2,e2],[s3,e3]，分别对应3个图像分辨率，然后在图像训练的过程中，如果gt的box大小在这个范围内，就被标记做valid，否则就被标记为invalid。然后在生成Anchor并给Anchor分配label的时候，检查该Anchor是否和某个invalid gt box的overlap超过0.3，若存在，则该Anchor会被视作invalid Anchor；若不存在，则会被视作valid Anchor，而这些invalid anchor在训练的时候都会被无效化，不会加入到反向传播的过程中，相当于在每个分辨率上，只对大小合适的目标参与训练，这也就符合了作者设计的初衷。相应的，在inference时候，根据图像尺度选择相应的detector，并且经过MST(multi scale train)后，将得到的结果进行rescale以及softNMS得到最终的结果。因为调整了RoI的分辨率与分类的分辨率几乎一致，所以网络fine-tune的效果也较好。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzqy0xjyiwj20rc0c2n52.jpg"></p>
+<h4 id="训练细节"><a href="#训练细节" class="headerlink" title="训练细节"></a>训练细节</h4><p>SNIP选择的网络是Deformable-RFCN，并且选择了3个尺度，分别为[480,800]，[800,1200]，[1400,2000]，其对应的目标有效范围分别是：[120,120+]，[40,160]，[0,80]，其中包含40的重叠。</p>
+<ul>
+<li>RPN网络的一点改变<br>为了提高RPN的效果，作者将conv4与conv5连接在一起，并且使用了7个anchor scales.</li>
+</ul>
+<h4 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h4><p>下表是使用不同尺度方法的模型对比，其中Single scale是使用单一尺度进行训练和测试，单一尺度为（800,1200），MS Test是使用多尺度进行inference，MS Train/Test是使用多尺度进行训练以及使用多尺度进行测试，SNIP为本文方法，从测试结果可以发现，SNIP还是有明显优势的，较MS提高了2个点。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzsd9q4f9zj20dh05vwf3.jpg"></p>
+<p>下表是RPN召回率的结果图，实验结果显示，Baseline的平均召回率只有大约57.6%，SNIP方法的平均召回率达到了64%。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzsdl4j65gj20e406kjsq.jpg"></p>
+<p>下表是SNIP与其他检测网络的精度对比，在实验中，作者使用了DCN以及Soft-NMS.在D-RFCN中相比较于不使用SNIP，使用SNIP后平均精度提高了大约3.5%，观察表中，精度最高的是Faster-RCNN + SNIP（RPN+RCN）,backbone使用ResNet-101,平均精度达到了惊人的44.4%，小目标的建精度达到了56.9%。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzr0o91wksj20r509stbq.jpg"></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>纵观本文，不仅仅作者的方法提高了目标检测的mAP，同等重要的是作者对数据的分析，以及详细的实验证明，从数据中发现问题，进而利用详细的实验证明，进而解决问题，这也是值得我们学习的解决问题的方法。<strong>大数据时代，从数据角度去优化模型，往往会比单纯的杠模型取得更好的效果。</strong></p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/20/snip/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/20/snipper/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/20/snipper/" class="post-title-link" itemprop="url">SNIPER(Efficient Multi-Scale Training)</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-20 09:39:26" itemprop="dateCreated datePublished" datetime="2019-11-20T09:39:26+08:00">2019-11-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 13:50:36" itemprop="dateModified" datetime="2020-01-16T13:50:36+08:00">2020-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/20/snipper/" class="post-meta-item leancloud_visitors" data-flag-title="SNIPER(Efficient Multi-Scale Training)" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/20/snipper/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/20/snipper/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>目标检测中的小目标的检测一直是一个难题，同样也有很多方法被提出来优化小目标的识别，使用图像金字塔进行多尺度检测是一个比较常用的方法，但是使用图像金字塔往往会带来巨大的资源消耗，本篇文章就针对这个问题，提出了一个解决利用图像金字塔进行多尺度训练时间长、资源消耗大的方法，其在<a target="_blank" rel="noopener" href="https://blog.csdn.net/Chunfengyanyulove/article/details/87646305">SNIP</a>的方法上发展而来，通过采样多个chips,并将chips缩放到相同的尺度（这点有点像RCNN）进行训练，不仅仅实现了多尺度，还提高了3倍的速度，并且保证了精度。</p>
+</blockquote>
+<hr>
+<h4 id="重要链接"><a href="#重要链接" class="headerlink" title="重要链接"></a>重要链接</h4><p><strong>论文名称: SNIPER: Efficient Multi-Scale Training</strong></p>
+<p><strong>作者：Bharat Singh &amp; Mahyar Najibi &amp; Larry S.Davis</strong></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1805.09300"><strong>论文链接</strong>https://arxiv.org/abs/1805.09300：</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/bharatsingh430/snip"><strong>代码链接</strong>：https://github.com/bharatsingh430/snip</a></p>
+<p><strong>如果出现图像或者公式显示不完整，请访问本人CSDN博客</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Chunfengyanyulove/article/details/88560947"><strong>CSDN博客地址：https://blog.csdn.net/Chunfengyanyulove/article/details/88560947</strong></a></p>
+<hr>
+<h4 id="简要概述文章精华"><a href="#简要概述文章精华" class="headerlink" title="简要概述文章精华"></a>简要概述文章精华</h4><p><strong>目标检测中的小目标的检测一直是一个难题，同样也有很多方法被提出来优化小目标的识别，使用图像金字塔进行多尺度检测是一个比较常用的方法，但是使用图像金字塔往往会带来巨大的资源消耗，本篇文章就针对这个问题，提出了一个解决利用图像金字塔进行多尺度训练时间长、资源消耗大的方法，其在<a target="_blank" rel="noopener" href="https://blog.csdn.net/Chunfengyanyulove/article/details/87646305">SNIP</a>的方法上发展而来，通过采样多个chips,并将chips缩放到相同的尺度（这点有点像RCNN）进行训练，不仅仅实现了多尺度，还提高了3倍的速度，并且保证了精度。</strong></p>
+<p>其实早在RCNN网络，就已经采用了多尺度训练方法，我们回顾一下RCNN方法：</p>
+<p>R-CNN首先通过selective search生成候选区域（region proposals）然后将proposal缩放成224x224大小的图片。<strong>R-CNN将不同大小的region proposal缩放成固定大小，实际上就引入了 multi-scale ，任何尺寸的region proposal都相当于一个scale</strong>。RCNN最主要的问题在于提取特征时，CNN需要在每一个候选区域上跑一遍，候选区域之间的交叠使得特征被重复提取, 造成了严重的速度瓶颈, 降低了计算效率。</p>
+<p>Fast RCNN的提出主要是解决了R-CNN的速度问题，它通过将selective search生成的候选区域映射到feature map上，实现了候选区域间的卷积计算共享，同时由于共同参与计算，Fast R-CNN也能更多的获取到全局信息（contex）。而同时提出的 ROI pooling也将对应到feature map上的候选区域池化到相同的大小，ROI pooling 在某种程度上也可以引进尺度不变性，因为可以将不同大小的region proposal（连同 object）在feature map层面池化到固定大小。但它的问题是前面的卷积层部分是只在一个scale上进行的，这正是为了实现卷积计算共享所带来的一点负面影响，因为是卷积计算共享，所以不同大小的目标没有办法进行不同比例的缩放操作，所以相对于原图大小来说，它们都处于一个scale。这影响了尺度不变性 ，因此为了弥补这一点，在训练或者inference时，会使用image pyramid的操作，直接把原图放大&amp;缩小后送入同一网络进行训练。但是image pyramid有一个问题，就是在缩放原图时，object也会跟着缩放，这就导致原来比较大的object变得更大了，原来更小的object变得更小。这在R-CNN中是不存在这个问题的。</p>
+<p><strong>SNIPER就是借鉴RCNN的方法，有点类似将RCNN与Fast RCNN的思想结合到一块的感觉</strong>。</p>
+<p>下面介绍一下SNIPER是怎么做的。</p>
+<p>SNIPER同样是采用多尺度的，将图像缩放到3个尺度（这里跟SNIP是一致的），但是SNIPER不是直接利用尺度变换后的图像进行训练，而是在3个尺度中，根据一定的规则提取一定大小的chip，然后将chip缩放到固定大小（512*512），最后只利用这些chip进行模型的训练。</p>
+<p><strong>chip是如何生成的？</strong></p>
+<p>将图像缩放到不同的尺度，然后利用K*K的滑窗来选取多个chip</p>
+<p><strong>提取chip后，如何筛选出需要的chip即positive chip</strong></p>
+<p>对于每一个尺度，我们会设置一个目标范围[r1,r2]，当ground truth是在此范围内的才会参与训练，不然过大或者过小的gt都会被pass，这里选取chip的方式就是依次选取包含ground truth最多的chip，直到所有的ground truth都包含，这些chips就组成了训练的正样本。</p>
+<p>如下图所示，左边图是将提取的chip都画在了一张图上，其中虚线代表的就是选取的positive chip，其中绿框代表的是ground truth，这里展示了4个positive chip。右边图代表的是将选取的chip缩放到固定尺度然后进行训练，图中红色的框代表由于不符合前面设定的ground truth的范围而忽略的ground truth.</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1g12f3fkf1ij20lk0bwqej.jpg"></p>
+<p>这样，SNIPER便可以使用较小尺度的chip进行训练了，而不需要使用尺度较大的金字塔图像了，这就在一定程度上减少了计算量。</p>
+<p><strong>负样本的选取</strong></p>
+<p>我们使用的chip包含了所有的positive instance，但是很多的背景却被pass掉了，这就容易导致背景被判断为正样本，增加了误判的概率，所以，我们还需要把前面pass掉的背景再捞回一部分加入到训练中，如何往回捞数据呢?</p>
+<p>首先，我们先训一个不是很准确的RPN，用来帮我们找到那些可能会误判的样例，因此RPN不需要特别准，提取RPN后，首先去掉那些跟positive chip存在交叠的proposal，然后在剩余的proposal中，挑选那些可以最大程度覆盖其他proposal的proposal，这里说的可能有点绕，我们看下面的图像就比较清晰了。如下图所示，第二排的红点代表proposal的中心，选择的proposal最大程度的覆盖红点，但是不能与第一排的ground truth存在交叠。就有点利用hard example进行训练的意思。</p>
+<p>注：文章中使用RPN生成chips的过程，并不是模型训练的过程，只是算法的一个预处理过程，而且RPN也不是必须使用不可，使用其他方法也可替代，如Selective Search方法。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1g12g7s9iq0j20ld0b9167.jpg"></p>
+<p><strong>网络训练的细节参数，这里就不介绍了，感兴趣的读者可以在论文中自行查看</strong></p>
+<p><strong>训练好了如何inference呢？</strong></p>
+<p>inference的时候，将原图缩放到3个尺寸：480-512、800-1280、1400-2000，然后结果使用soft-nms进行合并。</p>
+<p><strong>实验结果</strong></p>
+<p>下图展示了未使用negtive chips时的召回结果，可以发现不使用negtive chips确实召回会高一些，因为不考虑误判呀。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1g12j6y40kuj20ls043dgl.jpg"></p>
+<p>但是计算精度就不行了，下表可以看出，使用negtive chips是可以增加其精度的。本文的sniper均是使用3个scale的，如果将scale降为2，如下表第二行所示，其mAP存在一定的下降，这也说明了多尺度的重要性。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1g12j97dj6cj20le04x0tp.jpg"></p>
+<p>最后与其他方法以及采用不同backbone的实验对比结果<br><img src="http://ww1.sinaimg.cn/large/87675bbbly1g12k08fdzwj20li09tq5p.jpg"></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>本文是在snip的基础上，对snip进行的改进，由于snip是使用多尺度进行训练的，这样不仅使得训练的时间成倍的增加，而且当尺度较大的时候，对于机器GPU的要求也会相应的增加，因此作者在其基础上改进得到sniper，sniper不仅实现了snip的多尺度，同时使用较小的chip进行训练，不仅仅提高了3倍的训练速度，还保证了精度，此方法值得我们学习。</p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/20/snipper/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/20/extremeNet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/20/extremeNet/" class="post-title-link" itemprop="url">ExtremeNet(Bottom-up Object Detection by Grouping Extreme and Center Points)</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-20 09:39:16" itemprop="dateCreated datePublished" datetime="2019-11-20T09:39:16+08:00">2019-11-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 13:46:04" itemprop="dateModified" datetime="2020-01-16T13:46:04+08:00">2020-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/20/extremeNet/" class="post-meta-item leancloud_visitors" data-flag-title="ExtremeNet(Bottom-up Object Detection by Grouping Extreme and Center Points)" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/20/extremeNet/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/20/extremeNet/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>本篇论文是CVPR2019的一篇anchor free的目标检测论文，借鉴了CornerNet的思想，又对其进行了进一步的改进，取得了还不错的效果，不同于CornerNet，本文提出网络ExtremeNet，不再检测目标的左上角点与右下角点，而是检测目标的4个极值点（即最上点，最下点，最左点，最右点），框出目标，极值点示例如下图所示，方法比较新颖，同时也取得了比较不错的效果，在COCO测试集上，取得了43.7%的精度，速度其实没有特别大的优势，大约300ms处理一张图像，下面我们详细介绍一下本篇论文。</p>
+</blockquote>
+<hr>
+<h4 id="重点链接"><a href="#重点链接" class="headerlink" title="重点链接"></a>重点链接</h4><p><strong>论文名称:Bottom-up Object Detection by Grouping Extreme and Center Points</strong></p>
+<p><strong>作者：Xingyi Zhou&amp;Jiacheng Zhuo等</strong></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1901.08043.pdf"><strong>论文链接</strong>：https://arxiv.org/pdf/1901.08043.pdf</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/tianzhi0549/FCOS/"><strong>代码链接</strong>：https://github.com/xingyizhou/ExtremeNet</a></p>
+<hr>
+<p><img src="https://img-blog.csdnimg.cn/2019081114152526.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<h4 id="详细介绍"><a href="#详细介绍" class="headerlink" title="详细介绍"></a>详细介绍</h4><p>随着2015年faster R-CNN网络提出anchor，anchor可以说是目标检测网络的灵魂，同时anchor方法也带领着目标检测领域走向了辉煌，在VOC数据集上的识别精度，从最开始的只有不到50%，到现如今的超过80%，但是传统的方法同样具有一些问题，如下：</p>
+<ul>
+<li>一个规律的矩形框并不能代表一个物体。</li>
+<li>很多的物体并不是与坐标轴平行的，强行使用矩形框包围，会产生很多干扰的背景信息，同时破坏了物体本身的信息，比如形状，姿态等。</li>
+</ul>
+<p>基于这些不足，本文提出了基于extreme point的anchor free检测算法，想法也非常简单，通过检测目标的4个极值点（分别对应上下左右，4个方向），来确定目标的位置以及类别，如上图所示，这样就有效的避免了上面提到了强行使用矩形框包围物体带来的问题。该方法思想借鉴于人体关键点估计。</p>
+<p>那么该方法是怎么做的呢？下图给出了总体的检测流程图。网络首先分别通过上下左右4个heatmap来分别检测上下左右4个极值点，如下图中第一行所示，以及通过Center heatmap来检测中心极值点，如下图左下角所示，当检测到所有的极值点之后，利用匹配算法，将所有极值点进行组合，下图中给出了两个可能的组合示例（中间行，右边图），在得到所有的组合示例之后，通过验证组合中是否存在中心极值点，来对所有的组合示例进行筛选，如果存在中心极值点，则得到了一个目标，如果不存在中心极值点，则该目标框为错误框。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190811142712842.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>说到这里，我们便不得不提一下anchor free领域的重量级网络CornerNet，其实该方法跟CornerNet的思想是很像的，只是采用了不同的方法，CornerNet中是通过检测目标的左上角点以及右下角点来判断目标的，其实也是一种检测目标框的方法，并且由于其左上角以及右下角点并没有在目标上，并没有带有很强的特征，也会带来一定的影响。本文方法就不一样了，检测的极值点肯定是在目标上，极值点的检测也会更简单更准确。</p>
+<p>另外，CornerNet是通过Embeding来进行匹配的，即单独训练了一个匹配层，根据坐标点的在该层上的距离来判断左上角点与右下角点是不是属于同一个框，而本文通过center point来进行检测，即通过检测候选框中是否含有center point来进行判断，换言之，本文方法实际上利用了物体的特征信息，而CornerNet实际上没有用到。</p>
+<h4 id="细节介绍"><a href="#细节介绍" class="headerlink" title="细节介绍"></a>细节介绍</h4><p>下图所示为本文的网络结构，backbone使用的是hourglass104网络，后面接的分别是5个4xCxHxW的heatmap以及4个对应的offsets，C代表类别，这里网络通过不同channel的heatmap预测不同的类别极值点。在预测的时候，网络分别预测了上下左右+中心，5个heatmap，并且对，上下左右的关键点同时预测了offset，因为在backbone网络下采样的过程中，会存在取整时候的精度损失，这里需要学回来，Center heatmap没有预测关键点，主要原因是center point只是用来校验使用，不需要特别高的准确性。</p>
+<p>上下左右以及中心关键点在训练的时候采用的是focal loss，并且同样在gt周围设置了高斯的loss减少策略（这里借鉴于CornerNet，主要原因在于关键点存在一点的偏差实际上没有特别大的影响，所以gt附近的loss适当的减小一点。）<br><img src="https://img-blog.csdnimg.cn/20190811145901882.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>求完了极值点，如何进行极值点的组合呢？下面给出了算法</p>
+<p>首先对所有检测到的极值点（利用T<del>p</del>阈值过滤得到的）进行组合，然后求组合的中心位置，然后在对应的center heatmap上面验证对应的得分，如果得分大于T<del>c</del>，则找到，box的得分用着5个点的得分的平均值代替。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190811151407469.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p><strong>box 鬼影问题</strong></p>
+<p>当出现3个连续的目标在一排或者在一列的时候，容易出现鬼影问题，比如，3个一排，如果选择了最左边的最左点，最右边的最右点，这样在判断中心的时候，可能选择了中间目标的中心点，这样这个box也就被保留下来了，出现了误判，怎么解决这个问题呢？作者选择了一种后处理的方法，如果一个大框中，包含了多个目标（大于等于3个）就将该目标的得分除以2，通过这种方法来一定程度的抑制误检的出现。</p>
+<p><strong>edge聚类问题</strong></p>
+<p>极值点的检测还会出现一个问题，比如汽车，会出现几个顶上好多的极值点，这会导致找不到一个突出的极值点的问题，怎么解决这个问题呢？作者采用了边缘聚类的方法，对水平与竖直方向的极值点，分别向左右两个方向聚类到极小值点，利用这些点的和代替该极值点的分数，这样就使得这种问题的效果好了一下，如下他所示：</p>
+<p><img src="https://img-blog.csdnimg.cn/20190811154420350.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>实验效果</strong></p>
+<p>整体来看，平均AP达到了43.7%，效果还是不错的。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190811154728298.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>本文方法虽然速度不是很快，在实时中无法使用，但是思想还是比较好的，通过极值点来检测目标，感觉相比较与Corner要靠谱一点，希望在这种方法上，看到精度更高速度更快的算法出来吧~~~~</p>
+<p><strong>数据标注问题</strong><br>COCO数据集中并没有极值点的标签，这里作者使用分割的标签来找到极值点，对于边缘平行或者小于3度的边，会存在多个极值点，这里利用中心点来作为极值点。</p>
+<p>另外作者在论文中提到，其实关键点的标注成本是更低的，因为标注框的时候，实际上要找到左上角点，可能要多尝试几次，而标注4个极值点相对比较容易，因为都在物体上嘛。</p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/20/extremeNet/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/18/fast-rcnn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/18/fast-rcnn/" class="post-title-link" itemprop="url">Fast-RCNN</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-18 09:47:44" itemprop="dateCreated datePublished" datetime="2019-11-18T09:47:44+08:00">2019-11-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 13:46:24" itemprop="dateModified" datetime="2020-01-16T13:46:24+08:00">2020-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/18/fast-rcnn/" class="post-meta-item leancloud_visitors" data-flag-title="Fast-RCNN" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/18/fast-rcnn/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/18/fast-rcnn/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>Fast R-CNN是RBG大神于2015年发表的目标检测网络，其在SPP-Net的基础上，通过进一步的改进，使得目标检测精度以及检测速度有了进一步的提升，下面详细介绍Fast R-CNN的创新点。主要创新点在于：1. Fast R-CNN设计了multi-loss方式进行目标分类以及位置回归，不需要进行特征存储到disk，使得效率有了大大的提升，2. 不需要multi-pipeline。3. CNN参数全更新。4. 单个ROI-pooling不再是SPP-Net的多级pooling，ROI pooling可以理解为SPP-Net的特殊形式。5. 使用mini-batch SGD方式进行训练。6. 利用SVD方式进行速度的提升。</p>
+</blockquote>
+<h4 id="重要链接"><a href="#重要链接" class="headerlink" title="重要链接"></a>重要链接</h4><p><strong>如果存在图像公式无法查看可访问如下博客：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/chunfengyanyulove/article/details/79835557">csdn博客：https://blog.csdn.net/chunfengyanyulove/article/details/79835557</a></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1504.08083">论文链接：https://arxiv.org/abs/1504.08083</a></p>
+<h4 id="Q1-SPP-Net存在哪些待改进问题？"><a href="#Q1-SPP-Net存在哪些待改进问题？" class="headerlink" title="Q1:SPP-Net存在哪些待改进问题？"></a>Q1:SPP-Net存在哪些待改进问题？</h4><ol>
+<li>SPP-Net仍然采用R-CNN的策略，<strong>需要将CNN提取的特征存储到disk中</strong>，然后利用SVM分类器进行分类，效率比较低，并且存储比较消耗空间。</li>
+<li><strong>SPP-Net在训练CNN的过程中，对于pooling前面的卷积层并没有进行参数的更新</strong>，这带来了一定精度的损失，在本篇论文中，作者也有对比。</li>
+<li>SPP-Net的训练仍然是multi-pipeline的，无法做到端到端，总体而言比较费劲。</li>
+</ol>
+<h4 id="Q2-Fast-R-CNN做了哪些创新点呢？"><a href="#Q2-Fast-R-CNN做了哪些创新点呢？" class="headerlink" title="Q2:Fast R-CNN做了哪些创新点呢？"></a>Q2:Fast R-CNN做了哪些创新点呢？</h4><ol>
+<li>Fast R-CNN设计了multi-loss方式进行目标分类以及位置回归，不需要进行特征存储到disk，使得效率有了大大的提升，如图1所示。</li>
+<li>不需要multi-pipeline。</li>
+<li>CNN参数全更新。</li>
+<li>单个ROI-pooling不再是SPP-Net的多级pooling，ROI pooling可以理解为SPP-Net的特殊形式.</li>
+<li>使用mini-batch SGD方式进行训练。</li>
+<li>利用SVD方式进行速度的提升。</li>
+</ol>
+<p><img src="/1.png" alt="这里写图片描述"></p>
+<center>Fast R-CNN结构图</center>
+
+<h4 id="Q3-ROI-pooling"><a href="#Q3-ROI-pooling" class="headerlink" title="Q3:ROI-pooling"></a>Q3:ROI-pooling</h4><p>fast r-cnn网络的roi-pooling没有选择与spp-net相同的多级金字塔式的池化，而是选择了单级固定大小的池化，作者也通过实验证明，其实选择多级金字塔池化对精度会有一定的提升，但是影响不大，但是会降低速度，所以有点鸡肋。</p>
+<h4 id="Q4-Fast-R-CNN训练整个网络，而SPP-net只训练了roi-pooling后面的网络"><a href="#Q4-Fast-R-CNN训练整个网络，而SPP-net只训练了roi-pooling后面的网络" class="headerlink" title="Q4: Fast R-CNN训练整个网络，而SPP-net只训练了roi-pooling后面的网络"></a>Q4: Fast R-CNN训练整个网络，而SPP-net只训练了roi-pooling后面的网络</h4><p>为什么SPP-Net没有训练全网络，而只是训练了roi-pooling后面的网络呢？<br>作者给的解释如下：</p>
+<blockquote>
+<p>The root cause is that back-propagation through the SPP layer is highly inefficient when each training sample (i.e.RoI) comes from a different image, which is exactly how R-CNN and SPPnet networks are trained. The inefficiency stems from the fact that each RoI may have a very large receptive field, often spanning the entire input image. Since the forward pass must process the entire receptive field, the training inputs are large (often the entire image).</p>
+</blockquote>
+<blockquote>
+<p>解释一下就是，在R-CNN以及SPPNet的训练策略中，在训练的时候，首先每个图像提取proposal，会提取很多个的proposal,但是在训练的时候，并不是每次前向的都是相同图像的proposal,而是很可能来自不同图像的，而事实是，往往提取的proposal都很大，这样耗时就会很严重，进而导致训练的特别慢。</p>
+</blockquote>
+<p>Fast R-CNN给的方法如下：</p>
+<blockquote>
+<p>作者采用分层SGD训练的方法，默认每次选取2张图像，并在每张图像选取64个roi进行训练，其实就是限制了前向的只能来自两张图像，进而限制了前向的计算量，提升效率。</p>
+</blockquote>
+<blockquote>
+<p>作者说，这种方法由于是在两张提取的proposal,很有可能相似性很大，导致收敛很慢的现象，但是实验证明并没有发生。</p>
+</blockquote>
+<h4 id="Q5-多任务损失设计"><a href="#Q5-多任务损失设计" class="headerlink" title="Q5: 多任务损失设计"></a>Q5: 多任务损失设计</h4><p>Fast R-CNN含有两个输出层，分别用于计算分类结果以及计算检测框的坐标结果。第一个输出层通过softmax计算相应ROI在各个类别中的概率。第二个输出层计算相应ROI的检测框的坐标值。算法采用多任务的损失函数对每个标定的ROI的类型和检测框坐标进行回归计算，损失函数公式如下。其中$L_{cls}$用于计算分类概率损失的函数，是一个softmax损失函数， $L_{loc}$是检测框坐标的损失函数， 定义如下：</p>
+<p>$$L(p,u,t^{u},v)=L_{cls}(p,u) + \lambda[u&gt;=1]L_{loc}(t^u,v)$$</p>
+<p>$$L_{loc}(t^u,v)=\sum_{i in(x,y,w,h)}smooth_{L_{1}}(t_{i}^{u}-v_{i})$$</p>
+<p>$$ if |x|  &lt; 1,smooth_{L_{1}}(x)=0.5x^{2},else,smooth_{L_{1}}(x)=|x|-0.5$$</p>
+<ul>
+<li>在R-CNN以及SPPNet中，使用的是L2 loss,这里使用的是smooth L1 loss, smooth L1 loss相比较于L2 loss，对于离群点更加的鲁棒。</li>
+<li>另外，在正负样本的选取上，选取25%的IOU&gt;0.5的区域作为正样本。IOU在0.1到0.5的选取为负样本。</li>
+</ul>
+<h4 id="Q6-Back-propagation-through-RoI-pooling-layers"><a href="#Q6-Back-propagation-through-RoI-pooling-layers" class="headerlink" title="Q6: Back-propagation through RoI pooling layers."></a>Q6: Back-propagation through RoI pooling layers.</h4><p>简单来说，就是对于每一个mini-batch的ROI区域，因为一张图会有多个ROI区域过ROIPooling,所以在反向传播的时候，对多个ROI的结果进行累加，即如果这个ROI对应的点被选中为最大值，则对其导数进行累加，得到反向传播的梯度：</p>
+<p>$$\frac{\partial_{L}}{\partial_{x_{i}}}=\sum_{r}\sum_{j}[i=i*(r,j)]\frac{\partial_{L}}{\partial_{y_{r,j}}}$$</p>
+<blockquote>
+<p>In words, for each mini-batch RoI r and for each pooling output unit yrj, the partial derivative ∂L/∂yrj is accumulated if i is the argmax selected for yrj by max pooling.</p>
+</blockquote>
+<h4 id="Q7-利用奇异值分解进行提速"><a href="#Q7-利用奇异值分解进行提速" class="headerlink" title="Q7:利用奇异值分解进行提速"></a>Q7:利用奇异值分解进行提速</h4><p>作者提到，在进行前向传播中，将近一半的时间在全连接层，所以如果可以在此进行加速，将对整个网络的速度提升有较大帮助，因此作者提出可以利用奇异值分解。</p>
+<p><img src="/3.png" alt="这里写图片描述"></p>
+<center>图2，奇异值分解效果</center>
+
+<h4 id="Q8-Fast-R-CNN实验效果"><a href="#Q8-Fast-R-CNN实验效果" class="headerlink" title="Q8: Fast R-CNN实验效果"></a>Q8: Fast R-CNN实验效果</h4><p>看图最清晰了。</p>
+<p><img src="/2.png" alt="这里写图片描述"></p>
+<h4 id="Q9-Which-layers-to-fine-tune"><a href="#Q9-Which-layers-to-fine-tune" class="headerlink" title="Q9:Which layers to fine-tune"></a>Q9:Which layers to fine-tune</h4><p>作者通过实验证明，训练CNN网络的时候，前面几层训练带来的精度提升不明显，说明前面提取的特征如：边缘等比较固定有效，对于后面几层的训练对于精度提升比较明显。<br>对于越深的网络越需要训练。</p>
+<h4 id="Q10-作者其他的说明"><a href="#Q10-作者其他的说明" class="headerlink" title="Q10: 作者其他的说明"></a>Q10: 作者其他的说明</h4><ol>
+<li>对于尺度不变的说明，作者实验证明了通过多尺度可以提高检测精度。</li>
+<li>增加proposal有用吗？实验证明不是越多越好，越多反而会下降。</li>
+</ol>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/18/fast-rcnn/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/18/faster-rcnn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/18/faster-rcnn/" class="post-title-link" itemprop="url">Faster-RCNN</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-18 09:47:44" itemprop="dateCreated datePublished" datetime="2019-11-18T09:47:44+08:00">2019-11-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 13:17:58" itemprop="dateModified" datetime="2020-02-16T13:17:58+08:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/18/faster-rcnn/" class="post-meta-item leancloud_visitors" data-flag-title="Faster-RCNN" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/18/faster-rcnn/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/18/faster-rcnn/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1506.01497">论文链接：https://arxiv.org/abs/1506.01497</a></p>
+<p><strong>如出现图像显示不完整，或者公式显示不完整，可访问如下博客</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/chunfengyanyulove/article/details/80037396">CSDN博客地址：https://blog.csdn.net/chunfengyanyulove/article/details/80037396</a></p>
+<hr>
+<h4 id="创新点"><a href="#创新点" class="headerlink" title="创新点"></a>创新点</h4><ul>
+<li>目前object detection的成功主要在于region proposal方法以及region-based CNN网络方法。</li>
+<li>region proposal耗时成为object detection的瓶颈。</li>
+<li>作者设计提出RPN网络，替代region proposal方法的同时，实现end-to-end网络。</li>
+<li>rpn网络利用特征图实现region proposal，使得时间降低到10ms/张。</li>
+<li>rpn利用“anchor”实现多尺度，多方向的变换。（论文中同时介绍了其他的方法，比如图像金字塔，但是感觉还是anchor比较实用）</li>
+<li>为了保证rpn与fast rcnn的一致，作者提出了一种交替训练的方法。</li>
+</ul>
+<h4 id="Faster-R-CNN详解"><a href="#Faster-R-CNN详解" class="headerlink" title="Faster R-CNN详解"></a>Faster R-CNN详解</h4><p>Faster RCNN整体结构采用Fast R-CNN，另外利用设计的RPN网络替代Selective Search方法实现region的生成，如下图所示：</p>
+<p><img src="/1.png" alt="这里写图片描述"></p>
+<center>图：faster r-cnn示意图</center>
+
+<h5 id="RPN-网络"><a href="#RPN-网络" class="headerlink" title="RPN 网络"></a>RPN 网络</h5><p>RPN网络的输入为任意尺寸的图像，输出为一系列的矩形框以及是否为object的得分。</p>
+<p>RPN网络采用n*n（默认n取3）的滑动窗口，首先通过卷积进行降维（实验默认是ZF-256维,VGG-512维），然后分别连接两个全连接层reg以及cls，实现回归与分类。</p>
+<p><img src="/2.png" alt="这里写图片描述"></p>
+<center>rpn结构示意图</center>
+##### anchor
+
+<ul>
+<li>对于每个滑动窗口，rpn网络预测k个region proposal区域，这样reg网络便产生4k个输出代表着坐标，cls产生2k个输出，代表在是否为object</li>
+<li>k个不同大小的rp区域作者称之为anchor，faster r-cnn默认提取9个anchor，分别对应3个尺寸（作者默认为128，256，512），3个长宽比（作者默认为：1：1，1：2，2：1），如下是对应图像宽度缩放到600采用ZF网络时候对应的anchor的尺寸。</li>
+</ul>
+<p><img src="/3.png" alt="这里写图片描述"></p>
+<ul>
+<li><p>平移不变性。</p>
+</li>
+<li><p>相比较与multibox，采用本文方法的参数量大幅降低。</p>
+</li>
+<li><p>multi-scale anchor，常用的多尺度方法如下，（a）为图像金字塔比较耗时，（b）为多尺度滤波器，本文选择方法（c）。</p>
+<p><img src="/4.png" alt="这里写图片描述"></p>
+</li>
+</ul>
+<h5 id="loss-function"><a href="#loss-function" class="headerlink" title="loss function"></a>loss function</h5><p>anchor 正负样本的分配：</p>
+<ul>
+<li>与IOU重合度最大的标记被正样本</li>
+<li>与IOU重合度大于70%的标记为正样本</li>
+<li>与IOU重合度小于30%的标记为负样本。</li>
+</ul>
+<p>loss function定于如下：</p>
+<p>$L(p_i,t_i)=\frac{1}{N_{cls}}\sum_{i}L_{cls}(p_i,p_i^*)+\lambda\sum_ip_i^*L_{reg}(t_i,t_i^*)$</p>
+<p>这里，$p_i$代表预测anchor为object的概率，如果anchor为正样本，$p_i^*$为1否则为0。</p>
+<p>$t_i$为bounding box的4个坐标，$p_i^*L_{reg}$代表，当anchor为正时计算reg坐标回归，否则不计算坐标回归。</p>
+<p>$L_{cls}$为log 损失<br>$L_{reg}$为smooth L1损失</p>
+<p>bounding box regression 的参数坐标定义为：</p>
+<p>$t_x = (x-x_a)/w_a,t_y=(y-y_a)/h_a$</p>
+<p>$t_w=log(w/w_a),t_h=log(h/h_a)$</p>
+<p>$t_x^* = (x^*-x_a)/w_a,t_y^*=(y^*-y_a)/h_a$</p>
+<p>$t_w^*=log(w^*/w_a),t_h^*=log(h^*/h_a)$</p>
+<h6 id="rpn的训练"><a href="#rpn的训练" class="headerlink" title="rpn的训练"></a>rpn的训练</h6><p>RPN训练的时候，每个mini-batch便是一张图片。由于正负样本较多，训练时,每张图像随机采样256个anchor,正负样本的比例是1:1，如果正样本较少，用负样本补充。</p>
+<h5 id="Faster-R-CNN的训练"><a href="#Faster-R-CNN的训练" class="headerlink" title="Faster R-CNN的训练"></a>Faster R-CNN的训练</h5><p>对于Faster R-CNN的训练，本文作者采用了4步交替训练方法，以达到fast r-cnn与rpn网络的统一性。</p>
+<p>1、利用ImageNet预训练模型进行训练RPN。<br>2、利用第一步的RPN，训练Fast R-CNN。<br>3、保持Fast R-CNN前面网络不变，训练RPN，使得Fast R-CNN与RPN共享卷积。<br>4、保持共享卷积不变，，训练Fast R-CNN后面的网络。</p>
+<hr>
+<p>下面拿代码来说话：</p>
+<h4 id="generate-anchors代码"><a href="#generate-anchors代码" class="headerlink" title="generate anchors代码"></a>generate anchors代码</h4><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_anchors</span>(<span class="params">base_size=<span class="number">16</span>, ratios=[<span class="number">0.5</span>, <span class="number">1</span>, <span class="number">2</span>],</span></span><br><span class="line"><span class="params">                     scales=<span class="number">2</span>**np.arange(<span class="params"><span class="number">3</span>, <span class="number">6</span></span>)</span>):</span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Generate anchor (reference) windows by enumerating aspect ratios X</span></span><br><span class="line"><span class="string">    scales wrt a reference (0, 0, 15, 15) window.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment"># 这里选取16的原因在于，原始图像224x224,conv5卷积层输出feature maps大小为14x14,是16的缩放关系。对于</span></span><br><span class="line">    <span class="comment"># feature maps上的每个点，在width方向最大偏移为14,同理在height上也是14.</span></span><br><span class="line">    <span class="comment"># 在图像左上角生成一个anchors,剩下的anchors在此基础上做偏移即可得到。</span></span><br><span class="line">    <span class="comment"># scales=[8, 16, 32],</span></span><br><span class="line">    <span class="comment">#详细说明，基准坐标[0,0,15,15]利用ratios可以生成3个anchor分别为[0,0,16,16][-4,2,19,14][2.5,-3,13.5,19]</span></span><br><span class="line">    <span class="comment">#然后再乘以变换比例得到9个anchor[128..,256..,512..]</span></span><br><span class="line">    base_anchor = np.array([<span class="number">1</span>, <span class="number">1</span>, base_size, base_size]) - <span class="number">1</span></span><br><span class="line">    ratio_anchors = _ratio_enum(base_anchor, ratios)</span><br><span class="line">    anchors = np.vstack([_scale_enum(ratio_anchors[i, :], scales)</span><br><span class="line">                         <span class="keyword">for</span> i <span class="keyword">in</span> xrange(ratio_anchors.shape[<span class="number">0</span>])])</span><br><span class="line">    <span class="keyword">return</span> anchors</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_whctrs</span>(<span class="params">anchor</span>):</span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Return width, height, x center, and y center for an anchor (window).</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    w = anchor[<span class="number">2</span>] - anchor[<span class="number">0</span>] + <span class="number">1</span></span><br><span class="line">    h = anchor[<span class="number">3</span>] - anchor[<span class="number">1</span>] + <span class="number">1</span></span><br><span class="line">    x_ctr = anchor[<span class="number">0</span>] + <span class="number">0.5</span> * (w - <span class="number">1</span>)</span><br><span class="line">    y_ctr = anchor[<span class="number">1</span>] + <span class="number">0.5</span> * (h - <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> w, h, x_ctr, y_ctr</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_mkanchors</span>(<span class="params">ws, hs, x_ctr, y_ctr</span>):</span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Given a vector of widths (ws) and heights (hs) around a center</span></span><br><span class="line"><span class="string">    (x_ctr, y_ctr), output a set of anchors (windows).</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment"># 对于给定anchor中心坐标和长宽，生成三个anchors,分别时1:0.5, 1:1, 1:2</span></span><br><span class="line">    ws = ws[:, np.newaxis]</span><br><span class="line">    hs = hs[:, np.newaxis]</span><br><span class="line">    anchors = np.hstack((x_ctr - <span class="number">0.5</span> * (ws - <span class="number">1</span>),</span><br><span class="line">                         y_ctr - <span class="number">0.5</span> * (hs - <span class="number">1</span>),</span><br><span class="line">                         x_ctr + <span class="number">0.5</span> * (ws - <span class="number">1</span>),</span><br><span class="line">                         y_ctr + <span class="number">0.5</span> * (hs - <span class="number">1</span>)))</span><br><span class="line">    <span class="keyword">return</span> anchors</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_ratio_enum</span>(<span class="params">anchor, ratios</span>):</span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Enumerate a set of anchors for each aspect ratio wrt an anchor.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    w, h, x_ctr, y_ctr = _whctrs(anchor)  <span class="comment">#返回anchor的中心以及长宽</span></span><br><span class="line">    size = w * h</span><br><span class="line">    size_ratios = size / ratios  <span class="comment">#尺寸 [128,256,512]</span></span><br><span class="line">    ws = np.<span class="built_in">round</span>(np.sqrt(size_ratios))</span><br><span class="line">    hs = np.<span class="built_in">round</span>(ws * ratios)</span><br><span class="line">    anchors = _mkanchors(ws, hs, x_ctr, y_ctr) <span class="comment">#得到[0,0,16,16] [-3.5,2,18.5,13][2.5,-3,12.5,18]</span></span><br><span class="line">    <span class="keyword">return</span> anchors</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_scale_enum</span>(<span class="params">anchor, scales</span>):</span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Enumerate a set of anchors for each scale wrt an anchor.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment"># 对于每一个scale,生成三个anchors，总共可以生成9个anchors</span></span><br><span class="line">    w, h, x_ctr, y_ctr = _whctrs(anchor)</span><br><span class="line">    ws = w * scales</span><br><span class="line">    hs = h * scales</span><br><span class="line">    anchors = _mkanchors(ws, hs, x_ctr, y_ctr)</span><br><span class="line">    <span class="keyword">return</span> anchors</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="anchor-target代码"><a href="#anchor-target代码" class="headerlink" title="anchor_target代码"></a>anchor_target代码</h4><p><code>bottom</code>值得注意的是<code>rpn_cls_score</code>,开始我以为会用到，在阅读代码之后，可以知道它的作用仅仅是为得到feature maps的width,height,用作anchors的生成。在获取anchors之后，<br>可以利用其计算与<code>gt_boxes</code>的overlap值，以此来获得目标还是背景的标签。(ps;这里贴代码时候需要四个空格才给算，也是醉了)上源码：　　</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">AnchorTargetLayer</span>(caffe.Layer):</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">setup</span>(<span class="params">self, bottom, top</span>):</span><br><span class="line">    layer_params = yaml.load(self.param_str_)</span><br><span class="line">    anchor_scales = layer_params.get(<span class="string">'scales'</span>, (<span class="number">8</span>, <span class="number">16</span>, <span class="number">32</span>))</span><br><span class="line">    <span class="comment"># generate 1:0.5, 1:1, 1:2 anchors,利用上述生成anchors方法。</span></span><br><span class="line">    self._anchors = generate_anchors(scales=np.array(anchor_scales))</span><br><span class="line">    self._num_anchors = self._anchors.shape[<span class="number">0</span>]</span><br><span class="line">    self._feat_stride = layer_params[<span class="string">'feat_stride'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'anchors:'</span></span><br><span class="line">        <span class="built_in">print</span> self._anchors</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'anchor shapes:'</span></span><br><span class="line">        <span class="built_in">print</span> np.hstack((</span><br><span class="line">            self._anchors[:, <span class="number">2</span>::<span class="number">4</span>] - self._anchors[:, <span class="number">0</span>::<span class="number">4</span>],</span><br><span class="line">            self._anchors[:, <span class="number">3</span>::<span class="number">4</span>] - self._anchors[:, <span class="number">1</span>::<span class="number">4</span>],</span><br><span class="line">        ))</span><br><span class="line">        self._counts = cfg.EPS</span><br><span class="line">        self._sums = np.zeros((<span class="number">1</span>, <span class="number">4</span>))</span><br><span class="line">        self._squared_sums = np.zeros((<span class="number">1</span>, <span class="number">4</span>))</span><br><span class="line">        self._fg_sum = <span class="number">0</span></span><br><span class="line">        self._bg_sum = <span class="number">0</span></span><br><span class="line">        self._count = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># allow boxes to sit over the edge by a small amount</span></span><br><span class="line">    self._allowed_border = layer_params.get(<span class="string">'allowed_border'</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    height, width = bottom[<span class="number">0</span>].data.shape[-<span class="number">2</span>:]</span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'AnchorTargetLayer: height'</span>, height, <span class="string">'width'</span>, width</span><br><span class="line"></span><br><span class="line">    A = self._num_anchors</span><br><span class="line">    <span class="comment"># labels</span></span><br><span class="line">    top[<span class="number">0</span>].reshape(<span class="number">1</span>, <span class="number">1</span>, A * height, width)</span><br><span class="line">    <span class="comment"># bbox_targets</span></span><br><span class="line">    top[<span class="number">1</span>].reshape(<span class="number">1</span>, A * <span class="number">4</span>, height, width)</span><br><span class="line">    <span class="comment"># bbox_inside_weights</span></span><br><span class="line">    top[<span class="number">2</span>].reshape(<span class="number">1</span>, A * <span class="number">4</span>, height, width)</span><br><span class="line">    <span class="comment"># bbox_outside_weights</span></span><br><span class="line">    top[<span class="number">3</span>].reshape(<span class="number">1</span>, A * <span class="number">4</span>, height, width)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, bottom, top</span>):</span><br><span class="line">    <span class="comment"># Algorithm:</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># for each (H, W) location i</span></span><br><span class="line">    <span class="comment">#   generate 9 anchor boxes centered on cell i</span></span><br><span class="line">    <span class="comment">#   apply predicted bbox deltas at cell i to each of the 9 anchors</span></span><br><span class="line">    <span class="comment"># filter out-of-image anchors</span></span><br><span class="line">    <span class="comment"># measure GT overlap</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">assert</span> bottom[<span class="number">0</span>].data.shape[<span class="number">0</span>] == <span class="number">1</span>, \</span><br><span class="line">        <span class="string">'Only single item batches are supported'</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># map of shape (..., H, W)</span></span><br><span class="line">    <span class="comment"># 利用rpn_cls_score来获得feature_maps的长宽</span></span><br><span class="line">    height, width = bottom[<span class="number">0</span>].data.shape[-<span class="number">2</span>:]</span><br><span class="line">    <span class="comment"># GT boxes (x1, y1, x2, y2, label)</span></span><br><span class="line">    gt_boxes = bottom[<span class="number">1</span>].data</span><br><span class="line">    <span class="comment"># im_info</span></span><br><span class="line">    im_info = bottom[<span class="number">2</span>].data[<span class="number">0</span>, :]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">''</span></span><br><span class="line">        <span class="built_in">print</span> <span class="string">'im_size: ({}, {})'</span>.<span class="built_in">format</span>(im_info[<span class="number">0</span>], im_info[<span class="number">1</span>])</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'scale: {}'</span>.<span class="built_in">format</span>(im_info[<span class="number">2</span>])</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'height, width: ({}, {})'</span>.<span class="built_in">format</span>(height, width)</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'rpn: gt_boxes.shape'</span>, gt_boxes.shape</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'rpn: gt_boxes'</span>, gt_boxes</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 1. Generate proposals from bbox deltas and shifted anchors</span></span><br><span class="line">    <span class="comment"># 利用获得每个anchor相对于图片左上角的anchor的移动步长。</span></span><br><span class="line">    shift_x = np.arange(<span class="number">0</span>, width) * self._feat_stride</span><br><span class="line">    shift_y = np.arange(<span class="number">0</span>, height) * self._feat_stride</span><br><span class="line">    shift_x, shift_y = np.meshgrid(shift_x, shift_y)</span><br><span class="line">    shifts = np.vstack((shift_x.ravel(), shift_y.ravel(),</span><br><span class="line">                        shift_x.ravel(), shift_y.ravel())).transpose()</span><br><span class="line">    <span class="comment"># add A anchors (1, A, 4) to</span></span><br><span class="line">    <span class="comment"># cell K shifts (K, 1, 4) to get</span></span><br><span class="line">    <span class="comment"># shift anchors (K, A, 4)</span></span><br><span class="line">    <span class="comment"># reshape to (K*A, 4) shifted anchors</span></span><br><span class="line">    <span class="comment">#简单说就是对9个anchor,每一个都加上一个位移，得到9*K个位移</span></span><br><span class="line">    A = self._num_anchors</span><br><span class="line">    K = shifts.shape[<span class="number">0</span>]</span><br><span class="line">    <span class="comment"># each anchor add with all shifts to get all anchors</span></span><br><span class="line">    all_anchors = (self._anchors.reshape((<span class="number">1</span>, A, <span class="number">4</span>)) +</span><br><span class="line">                   shifts.reshape((<span class="number">1</span>, K, <span class="number">4</span>)).transpose((<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>)))</span><br><span class="line">    all_anchors = all_anchors.reshape((K * A, <span class="number">4</span>))</span><br><span class="line">    total_anchors = <span class="built_in">int</span>(K * A)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># only keep anchors inside the image</span></span><br><span class="line">    <span class="comment"># 丢弃所有超过边界的anchors,即使是一点点。</span></span><br><span class="line">    inds_inside = np.where(</span><br><span class="line">        (all_anchors[:, <span class="number">0</span>] &gt;= -self._allowed_border) &amp;</span><br><span class="line">        (all_anchors[:, <span class="number">1</span>] &gt;= -self._allowed_border) &amp;</span><br><span class="line">        (all_anchors[:, <span class="number">2</span>] &lt; im_info[<span class="number">1</span>] + self._allowed_border) &amp;  <span class="comment"># width</span></span><br><span class="line">        (all_anchors[:, <span class="number">3</span>] &lt; im_info[<span class="number">0</span>] + self._allowed_border)    <span class="comment"># height</span></span><br><span class="line">    )[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'total_anchors'</span>, total_anchors</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'inds_inside'</span>, <span class="built_in">len</span>(inds_inside)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># keep only inside anchors</span></span><br><span class="line">    anchors = all_anchors[inds_inside, :]</span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'anchors.shape'</span>, anchors.shape</span><br><span class="line"></span><br><span class="line">    <span class="comment"># label: 1 is positive, 0 is negative, -1 is dont care</span></span><br><span class="line">    labels = np.empty((<span class="built_in">len</span>(inds_inside), ), dtype=np.float32)</span><br><span class="line">    labels.fill(-<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># overlaps between the anchors and the gt boxes(x1, y1, x2, y2, cls)</span></span><br><span class="line">    <span class="comment"># overlaps (ex, gt)</span></span><br><span class="line">    <span class="comment"># 这里overlaps是计算所有anchor与ground-truth的重合度，它是一个len(anchors) x len(gt_boxes)的二维数组，每个元素是各个</span></span><br><span class="line">    <span class="comment"># anchor和gt_boxes的overlap值，这个overlap值的计算是这样的：</span></span><br><span class="line">    <span class="comment"># overlap = (重合部分面积) / (anchor面积 + gt_boxes面积 - 重合部分面积)</span></span><br><span class="line">    <span class="comment"># argmax_overlaps是每个anchor对应最大overlap的gt_boxes的下标</span></span><br><span class="line">    <span class="comment"># max_overlaps是每个anchor对应最大的overlap值相对应的</span></span><br><span class="line">    <span class="comment"># gt_argmax_overlaps是每个gt_boxes对应最大overlap的anchor的下标</span></span><br><span class="line">    <span class="comment"># gt_max_overlaps是每个gt_boxes对应最大的overlap值</span></span><br><span class="line">    <span class="comment"># 计算anchors与gt_boxes的overlap</span></span><br><span class="line">    overlaps = bbox_overlaps(</span><br><span class="line">        np.ascontiguousarray(anchors, dtype=np.<span class="built_in">float</span>),</span><br><span class="line">        np.ascontiguousarray(gt_boxes, dtype=np.<span class="built_in">float</span>))</span><br><span class="line">    <span class="comment"># 获取每行最大overlap</span></span><br><span class="line">    argmax_overlaps = overlaps.argmax(axis=<span class="number">1</span>)</span><br><span class="line">    max_overlaps = overlaps[np.arange(<span class="built_in">len</span>(inds_inside)), argmax_overlaps]</span><br><span class="line">    gt_argmax_overlaps = overlaps.argmax(axis=<span class="number">0</span>)</span><br><span class="line">    <span class="comment"># 获取每列最大的overlap, 目的是找到与roi重叠最大的区域，将其标记为1</span></span><br><span class="line">    gt_max_overlaps = overlaps[gt_argmax_overlaps,</span><br><span class="line">                               np.arange(overlaps.shape[<span class="number">1</span>])]</span><br><span class="line">    gt_argmax_overlaps = np.where(overlaps == gt_max_overlaps)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> cfg.TRAIN.RPN_CLOBBER_POSITIVES:</span><br><span class="line">        <span class="comment"># assign bg labels first so that positive labels can clobber them</span></span><br><span class="line">        labels[max_overlaps &lt; cfg.TRAIN.RPN_NEGATIVE_OVERLAP] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># fg label: for each gt, anchor with highest overlap</span></span><br><span class="line">    <span class="comment"># 无论如何，最大的overlap对应的是目标</span></span><br><span class="line">    labels[gt_argmax_overlaps] = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># fg label: above threshold IOU</span></span><br><span class="line">    labels[max_overlaps &gt;= cfg.TRAIN.RPN_POSITIVE_OVERLAP] = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> cfg.TRAIN.RPN_CLOBBER_POSITIVES:</span><br><span class="line">        <span class="comment"># assign bg labels last so that negative labels can clobber positives</span></span><br><span class="line">        labels[max_overlaps &lt; cfg.TRAIN.RPN_NEGATIVE_OVERLAP] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># subsample positive labels if we have too many</span></span><br><span class="line">    <span class="comment"># 如果正标签过多，则进行下采样，提取部分正标签</span></span><br><span class="line">    num_fg = <span class="built_in">int</span>(cfg.TRAIN.RPN_FG_FRACTION * cfg.TRAIN.RPN_BATCHSIZE)</span><br><span class="line">    fg_inds = np.where(labels == <span class="number">1</span>)[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(fg_inds) &gt; num_fg:</span><br><span class="line">        disable_inds = npr.choice( <span class="comment">#随机选择标签为正的标记为-1</span></span><br><span class="line">            fg_inds, size=(<span class="built_in">len</span>(fg_inds) - num_fg), replace=<span class="literal">False</span>)</span><br><span class="line">        labels[disable_inds] = -<span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># subsample negative labels if we have too many</span></span><br><span class="line">    <span class="comment"># 如果负标签过多，则进行下采样，提取部分负标签</span></span><br><span class="line">    num_bg = cfg.TRAIN.RPN_BATCHSIZE - np.<span class="built_in">sum</span>(labels == <span class="number">1</span>)</span><br><span class="line">    bg_inds = np.where(labels == <span class="number">0</span>)[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(bg_inds) &gt; num_bg:</span><br><span class="line">        disable_inds = npr.choice(</span><br><span class="line">            bg_inds, size=(<span class="built_in">len</span>(bg_inds) - num_bg), replace=<span class="literal">False</span>)</span><br><span class="line">        labels[disable_inds] = -<span class="number">1</span></span><br><span class="line">        <span class="comment">#print "was %s inds, disabling %s, now %s inds" % (</span></span><br><span class="line">            <span class="comment">#len(bg_inds), len(disable_inds), np.sum(labels == 0))</span></span><br><span class="line">    <span class="comment">#这里将计算每一个anchor与重合度最高的ground_truth的偏移值</span></span><br><span class="line">    bbox_targets = np.zeros((<span class="built_in">len</span>(inds_inside), <span class="number">4</span>), dtype=np.float32)</span><br><span class="line">    <span class="comment"># transform anchors 's coordinate to [0, 1]</span></span><br><span class="line">    <span class="comment"># 求bbox的回归目标</span></span><br><span class="line">    bbox_targets = _compute_targets(anchors, gt_boxes[argmax_overlaps, :])</span><br><span class="line">    <span class="comment"># inside and outside means that anchors in geboxes or out of gtboxes.</span></span><br><span class="line">    bbox_inside_weights = np.zeros((<span class="built_in">len</span>(inds_inside), <span class="number">4</span>), dtype=np.float32)</span><br><span class="line">    bbox_inside_weights[labels == <span class="number">1</span>, :] = np.array(cfg.TRAIN.RPN_BBOX_INSIDE_WEIGHTS)</span><br><span class="line"></span><br><span class="line">    bbox_outside_weights = np.zeros((<span class="built_in">len</span>(inds_inside), <span class="number">4</span>), dtype=np.float32)</span><br><span class="line">    <span class="keyword">if</span> cfg.TRAIN.RPN_POSITIVE_WEIGHT &lt; <span class="number">0</span>:</span><br><span class="line">        <span class="comment"># uniform weighting of examples (given non-uniform sampling)</span></span><br><span class="line">        num_examples = np.<span class="built_in">sum</span>(labels &gt;= <span class="number">0</span>)</span><br><span class="line">        positive_weights = np.ones((<span class="number">1</span>, <span class="number">4</span>)) * <span class="number">1.0</span> / num_examples</span><br><span class="line">        negative_weights = np.ones((<span class="number">1</span>, <span class="number">4</span>)) * <span class="number">1.0</span> / num_examples</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">assert</span> ((cfg.TRAIN.RPN_POSITIVE_WEIGHT &gt; <span class="number">0</span>) &amp;</span><br><span class="line">                (cfg.TRAIN.RPN_POSITIVE_WEIGHT &lt; <span class="number">1</span>))</span><br><span class="line">        positive_weights = (cfg.TRAIN.RPN_POSITIVE_WEIGHT /</span><br><span class="line">                            np.<span class="built_in">sum</span>(labels == <span class="number">1</span>))</span><br><span class="line">        negative_weights = ((<span class="number">1.0</span> - cfg.TRAIN.RPN_POSITIVE_WEIGHT) /</span><br><span class="line">                            np.<span class="built_in">sum</span>(labels == <span class="number">0</span>))</span><br><span class="line">    bbox_outside_weights[labels == <span class="number">1</span>, :] = positive_weights</span><br><span class="line">    bbox_outside_weights[labels == <span class="number">0</span>, :] = negative_weights</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        self._sums += bbox_targets[labels == <span class="number">1</span>, :].<span class="built_in">sum</span>(axis=<span class="number">0</span>)</span><br><span class="line">        self._squared_sums += (bbox_targets[labels == <span class="number">1</span>, :] ** <span class="number">2</span>).<span class="built_in">sum</span>(axis=<span class="number">0</span>)</span><br><span class="line">        self._counts += np.<span class="built_in">sum</span>(labels == <span class="number">1</span>)</span><br><span class="line">        means = self._sums / self._counts</span><br><span class="line">        stds = np.sqrt(self._squared_sums / self._counts - means ** <span class="number">2</span>)</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'means:'</span></span><br><span class="line">        <span class="built_in">print</span> means</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'stdevs:'</span></span><br><span class="line">        <span class="built_in">print</span> stds</span><br><span class="line"></span><br><span class="line">    <span class="comment"># map up to original set of anchors</span></span><br><span class="line">    labels = _unmap(labels, total_anchors, inds_inside, fill=-<span class="number">1</span>)</span><br><span class="line">    bbox_targets = _unmap(bbox_targets, total_anchors, inds_inside, fill=<span class="number">0</span>)</span><br><span class="line">    bbox_inside_weights = _unmap(bbox_inside_weights, total_anchors, inds_inside, fill=<span class="number">0</span>)</span><br><span class="line">    bbox_outside_weights = _unmap(bbox_outside_weights, total_anchors, inds_inside, fill=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> DEBUG:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'rpn: max max_overlap'</span>, np.<span class="built_in">max</span>(max_overlaps)</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'rpn: num_positive'</span>, np.<span class="built_in">sum</span>(labels == <span class="number">1</span>)</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'rpn: num_negative'</span>, np.<span class="built_in">sum</span>(labels == <span class="number">0</span>)</span><br><span class="line">        self._fg_sum += np.<span class="built_in">sum</span>(labels == <span class="number">1</span>)</span><br><span class="line">        self._bg_sum += np.<span class="built_in">sum</span>(labels == <span class="number">0</span>)</span><br><span class="line">        self._count += <span class="number">1</span></span><br><span class="line">        <span class="built_in">print</span> <span class="string">'rpn: num_positive avg'</span>, self._fg_sum / self._count</span><br><span class="line">        <span class="built_in">print</span> <span class="string">'rpn: num_negative avg'</span>, self._bg_sum / self._count</span><br><span class="line"></span><br><span class="line">    <span class="comment"># labels for each anchors, so shape is (1, 1, A * height, width)</span></span><br><span class="line">    labels = labels.reshape((<span class="number">1</span>, height, width, A)).transpose(<span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    labels = labels.reshape((<span class="number">1</span>, <span class="number">1</span>, A * height, width))</span><br><span class="line">    top[<span class="number">0</span>].reshape(*labels.shape)</span><br><span class="line">    top[<span class="number">0</span>].data[...] = labels</span><br><span class="line"></span><br><span class="line">    <span class="comment"># bbox_targets</span></span><br><span class="line">    bbox_targets = bbox_targets \</span><br><span class="line">        .reshape((<span class="number">1</span>, height, width, A * <span class="number">4</span>)).transpose(<span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    top[<span class="number">1</span>].reshape(*bbox_targets.shape)</span><br><span class="line">    top[<span class="number">1</span>].data[...] = bbox_targets</span><br><span class="line"></span><br><span class="line">    <span class="comment"># bbox_inside_weights</span></span><br><span class="line">    bbox_inside_weights = bbox_inside_weights \</span><br><span class="line">        .reshape((<span class="number">1</span>, height, width, A * <span class="number">4</span>)).transpose(<span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">assert</span> bbox_inside_weights.shape[<span class="number">2</span>] == height</span><br><span class="line">    <span class="keyword">assert</span> bbox_inside_weights.shape[<span class="number">3</span>] == width</span><br><span class="line">    top[<span class="number">2</span>].reshape(*bbox_inside_weights.shape)</span><br><span class="line">    top[<span class="number">2</span>].data[...] = bbox_inside_weights</span><br><span class="line"></span><br><span class="line">    <span class="comment"># bbox_outside_weights</span></span><br><span class="line">    bbox_outside_weights = bbox_outside_weights \</span><br><span class="line">        .reshape((<span class="number">1</span>, height, width, A * <span class="number">4</span>)).transpose(<span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">assert</span> bbox_outside_weights.shape[<span class="number">2</span>] == height</span><br><span class="line">    <span class="keyword">assert</span> bbox_outside_weights.shape[<span class="number">3</span>] == width</span><br><span class="line">    top[<span class="number">3</span>].reshape(*bbox_outside_weights.shape)</span><br><span class="line">    top[<span class="number">3</span>].data[...] = bbox_outside_weights</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">backward</span>(<span class="params">self, top, propagate_down, bottom</span>):</span><br><span class="line">    <span class="string">"""This layer does not propagate gradients."""</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">reshape</span>(<span class="params">self, bottom, top</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+
+
+
+
+
+
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/18/faster-rcnn/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/18/fpn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/18/fpn/" class="post-title-link" itemprop="url">FPN</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-18 09:47:44" itemprop="dateCreated datePublished" datetime="2019-11-18T09:47:44+08:00">2019-11-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 14:58:14" itemprop="dateModified" datetime="2020-02-16T14:58:14+08:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/18/fpn/" class="post-meta-item leancloud_visitors" data-flag-title="FPN" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/18/fpn/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/18/fpn/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1612.03144">论文链接：https://arxiv.org/abs/1612.03144</a></p>
+<hr>
+<h4 id="FPN-创新点"><a href="#FPN-创新点" class="headerlink" title="FPN 创新点"></a>FPN 创新点</h4><ul>
+<li>低层特征信息与高层语义信息的特征融合</li>
+<li>有利于小目标的检测</li>
+</ul>
+<h4 id="写在前面的话"><a href="#写在前面的话" class="headerlink" title="写在前面的话"></a>写在前面的话</h4><p>FPN的全称是**Feature Pyramid Networks[特征金字塔网络]**， 图像金子塔是什么？图像金字塔其实在很早便被提出，像比如SIFT,SURF,HOG等传统的特征提取方法均使用了图像金字塔，想了解传统特征提取方法的参考博文<a target="_blank" rel="noopener" href="http://wanglichun.tech/algorithm/Sift.html">http://wanglichun.tech/algorithm/Sift.html</a>,但是在深度学习中，一直没有被使用，其实主要原因在于深度学习中图像的计算量较大，采用金字塔，多一个scale就相当于多了一倍的计算量，这个时候内存很有可能扛不住了，可是为了达到多尺度的检测该怎么办呢？</p>
+<p>那既然图像金字塔行不通，那我们是否可以在特征图上想想办法呢？毕竟特征图的感受野不一样~~~~</p>
+<p>看下面这张图，图(a)代表的是图像特征金子塔（注意，背景是有图片的），图(b)是在一个特征图上进行预测，典型代表就是Faster R-CNN,图(c)是同时在多个特征图上进行预测，但是特征图间没有特征融合，代表作品就是SSD,图(d)就是本文的主角了。<strong>不仅仅在每个特征图进行预测，而且存在一条自顶到下的特征融合，将高层的语义信息与低层的高分辨率进行融合，提高特征的表达能力，更好的实现物体检测。</strong></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1ftwl7zqn33j20fs0gfq63.jpg"></p>
+<p><strong>下面来详细介绍一下 Feature Pyramid Networks</strong></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1ftvlmzxfp0j20fn09v3z4.jpg"></p>
+<p>先放一张图，其实FPN主要就包含两部分，一个是bottom-up pathway，另一个是top-down pathway</p>
+<h4 id="Bottom-up-pathway"><a href="#Bottom-up-pathway" class="headerlink" title="Bottom-up pathway"></a>Bottom-up pathway</h4><p>Bottom-Up pathway代表的是网络的前向传播过程，这个与正常的网络没有差别，论文中作者展示的是resnet网络，对于每一个stage（就是resnet中，特征图大小相同的一组层），作者定义了一个pyramid level（<strong>这里注意这个level在后面会频繁的使用，就是代表每个stage提取的不同大小的特征</strong>）,并且使用每个stage的最后一层输出特征图作为predict的feature map，特别对于resnet，使用每一个residual block的output作为输出，这里用符号表示对应的卷积输出就是**{C2,C3,C4,C5}<strong>对应stride就是{4，8，16，32}（</strong>注，这里没有使用conv1，作者说是由于它较大的内存消耗**）</p>
+<h4 id="Top-down-pathway-论文最大的创新点就在于此"><a href="#Top-down-pathway-论文最大的创新点就在于此" class="headerlink" title="Top-down pathway  论文最大的创新点就在于此"></a>Top-down pathway  论文最大的创新点就在于此</h4><p>该过程就是上图中右边部分的过程，作者通过对高层的feature map进行上采样，然后与低层feature map进行特征融合来进行predict，为什么要这样做呢？<strong>因为低层的特征虽然语义信息较少，但是其由于下采样的次数较少，所以其保留了更好的位置信息。</strong>（<strong>另外这里作者说明了，上采样采用最近邻方法进行</strong>）</p>
+<p><strong>那具体是怎么做的呢？</strong></p>
+<p><strong>首先，对于C5(上面提到的，就是backbone网络的最后输出的特征图)，利用1*1卷积操作，产生最初的feature map,然后对产生的feature map进行上采样，与相同大小的bottom-up map进行融合(bottom-up man就是前向传播时候的特征图)，这里bottom-up采用1*1的卷积进行channel降维，然后与top-down map采用element-wise-add操作，最后在每个merge feature map上面利用3*3卷积来得到最终的feature map并进行预测，为什么用3*3呢？这里作者解释到，3*3可以减少上采样带来的失真效应，最终得到的feature map这里暂时表示为{P2,P3,P4,P5}</strong></p>
+<p>对于Top-down的特征图，论文中固定feature map的channel数为256.所以上面的channel降维都降到256就可以了</p>
+<h4 id="Applications"><a href="#Applications" class="headerlink" title="Applications"></a>Applications</h4><p>这里作者主要是在RPN以及faster rcnn为例进行了应用</p>
+<p><strong>首先对于RPN部分：</strong></p>
+<p>传统的RPN通过一个3*3的卷积产生256维的特征图，然后分别利用1*1的卷积分为两路，一路是进行是否是物体的判断，另一路是判断其坐标框的回归，是否为物体的定义以及bounding box的回归目标是对应的anchor。</p>
+<p><strong>FPN做了哪些改进呢？</strong></p>
+<p>作者主要是利用FPN替换了原始RPN只在单一的特征层进行操作，作者在每个level上进行RPN原始的操作（包括3*3以及后面的1*1进行分类和回归），因为这里是在所有的level上进行操作，所以就不需要在每个level进行多尺度的anchor了，这里就类似于SSD，分别在不同的level检测不同大小的物体，作者设置的是{P2,P3,P4,P5,P6}分别对应{<code>$32^2,64^2,128^2,256^2,512^2$</code>},anchor的比例就是{1：2，1：1，2：1}，所以一共是15个anchor<br>（<strong>注，这里作者一共设置了5个size，分别在5个层，这里作者解释到，P6是在P5层的基础上进行下采样得到的，用于检测512*515大小的目标，对应于resnet faster-rcnn中roi-pooling后面的那个卷积</strong>）</p>
+<p>对于anchor的label与原始的anchor一致，都是IOU最大以及0.5以上为正，0.3以下为负</p>
+<p>实验对比结果见下图：</p>
+<p>从图中（c）可以看出，FPN的效果还是很赞的，AR代表平均召回率。<br>另外作者做了一些其他的对比实验，验证FPN网络中横向连接以及纵向融合的效果，其中d是只有横向连接，e是只有纵向融合，f是只在P2层进行特征提取，可见，d-&gt;e-&gt;f的效果在增加，均要比base-line的效果要好，但是比本文方法较差。可见对于横向连接，纵向融合还是有一定的效果的。这里anchor的数量为什么会差距那么大，主要原因是由于在不同的分辨率上，图像大小不一样，所以采样出来的额anchor数量也就不一样。并且从下面巨大数量的anchor也说明了anchor取得特别多，其实对于效果不一定就会有很大提升。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1ftwi4cr9wjj20vx08o0up.jpg"></p>
+<p><strong>Fast R-CNN部分：</strong></p>
+<p>原始的Fast R-CNN部分，在最后的卷积层提取proposal，通过roi-pooling送入到后面的分类网络以及回归网络，在Fast R-CNN中，改变的方法自然是不仅仅在最后的卷积层，而是根据图像的尺寸选择不同的level进行特征提取，然后进行roi-pooling，那level应该如何选择呢？用下面的公式：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1ftwhb81e9zj20930190sk.jpg"></p>
+<p>举个例子，首先对于k0的定义，如果采用resnet作为基础网络，由于其利用C4作为最后的特征提取层，所以设k0 == 4 ， 这样对于输入为112*112的roi计算出来的k=3。</p>
+<p>然后针对每一个level提取的roi，经过roi-pooling（7*7），后面接2个1024维的fc层，最后接分类和回归网络，这里就与fast-rcnn保持一致了。<br>这里需要注意的是，fast rcnn中，其实是在conv4后面接的roi-pooling，然后接conv5,然后接fc，而fpn中是在conv5后面接roi-pooling然后直接接fc层的。</p>
+<p>下图是作者对fast rcnn部分的测试结果：可以看出FPN的效果还是挺明显的，另外跟RPN一样，作者同样做了一些横向的对比，对比结果可想而知，这里就不多说了。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1ftwjyjrrbmj20w907tjtd.jpg"></p>
+<p>下图是论文与其他算法的精度对比：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1ftwkbatyndj20wi09nmzp.jpg"></p>
+<p><strong>到这里，基本上对FPN网络的介绍就差不多了，FPN仍然采用two stage的方法，精度较faster r-cnn有所提高，但是速度相比较于ssd还是有很大的瓶颈，不过FPN的思想值得借鉴，这在之后的论文中也多次提到</strong></p>
+<h4 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h4><ul>
+<li>问：横向连接的作用是什么？</li>
+</ul>
+<blockquote>
+<p>答：如果不进行特征的融合（也就是说去掉所有的1x1侧连接），虽然理论上分辨率没变，语义也增强了，但是AR下降了10%左右！作者认为这些特征上下采样太多次了，导致它们不适于定位。</p>
+</blockquote>
+<ul>
+<li>问：为什么 FPN 相比去掉深层特征 upsample(bottom-up pyramid)对于小物体检测提升明显？（RPN 步骤 AR 从 30.5 到 44.9，Fast RCNN 步骤 AP 从 24.9 到 33.9）</li>
+</ul>
+<blockquote>
+<p>答：对于小物体，一方面它提高了小目标的分辨率信息；<br>另一方面，如图中的挎包一样，从上到下传递过来的更全局的情景信息可以更准确判断挎包的存在及位置。</p>
+</blockquote>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/18/fpn/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/18/maskrcnn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/18/maskrcnn/" class="post-title-link" itemprop="url">Mask RCNN</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-18 09:47:44" itemprop="dateCreated datePublished" datetime="2019-11-18T09:47:44+08:00">2019-11-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 14:58:54" itemprop="dateModified" datetime="2020-02-16T14:58:54+08:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Segmentation/" itemprop="url" rel="index">
+                    <span itemprop="name">Segmentation</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/18/maskrcnn/" class="post-meta-item leancloud_visitors" data-flag-title="Mask RCNN" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/18/maskrcnn/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/18/maskrcnn/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>Mask R-CNN是He Kaiming大神2017年的力作，其在进行目标检测的同时进行实例分割，取得了出色的效果，其在没有任何trick的情况下，取得了COCO 2016比赛的冠军。<strong>其网络的设计也比较简单，在Faster R-CNN基础上，在原本的两个分支上（分类+坐标回归）增加了一个分支进行语义分割</strong>，如下图所示：</p>
+</blockquote>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwqd6wta1mj20kc07l3zg.jpg"></p>
+<hr>
+<p><a href="%5Bhttps://arxiv.org/abs/1703.06870">论文链接：https://arxiv.org/abs/1703.06870</a></p>
+<hr>
+<h4 id="Mask-R-CNN详细介绍"><a href="#Mask-R-CNN详细介绍" class="headerlink" title="Mask R-CNN详细介绍"></a>Mask R-CNN详细介绍</h4><p><strong>那么为什么该网络会有如此好的效果，又有哪些网络细节呢？下面详细逐一介绍。</strong></p>
+<p>在介绍Mask R-CNN之前，首先了解一下什么是分割，因为Mask R-CNN是做这个的，所以这个首先要搞清楚，看下图，主要介绍了几种不同的分割，其中Mask RCNN做的是其中的==instance segmentation==.</p>
+<ul>
+<li>语义分割（semantic segmentation）：对图像中逐像素进行分类。</li>
+<li>实例分割（instance segmentation）：对图像中的object进行检测，并对检测到的object进行分割。</li>
+<li>全景分割（panoptic segmentation）：对图像中的所有物体进行描述。</li>
+</ul>
+<p>下面这张图很好的表示了这几者分割的区别，如下图可见，全景分割的难度最大：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwqd7eel6lj20jr0e1107.jpg"></p>
+<h4 id="Mask-R-CNN如何取得好结果"><a href="#Mask-R-CNN如何取得好结果" class="headerlink" title="Mask R-CNN如何取得好结果"></a>Mask R-CNN如何取得好结果</h4><p>首先实例分割（instance segmentation）的难点在于：<strong>需要同时检测出目标的位置并且对目标进行分割</strong>，所以这就需要融合目标检测（框出目标的位置）以及语义分割（对像素进行分类，分割出目标）方法。在Mask R-CNN之前，Faster R-CNN在目标检测领域表现较好，同时FCN在语义分割领域表现较好。所以很自然的方法是将Faster R-CNN与FCN相结合嘛，作者也是这么干的，只是作者采用了一个如此巧妙的方法进行结合，并且取得了amazing的结果。</p>
+<blockquote>
+<p>在以前的instance segmentation中，往往是先分割然后识别，这往往是低效的，并且准确率较低，就比如Dai【论文中提到的】，采用级联的方法，先通过bounding-boxes生成segment区域，然后进行分类。</p>
+</blockquote>
+<p><strong>那么Mask R-CNN是怎么做的呢？</strong></p>
+<p>Mask R-CNN是建立在Faster R-CNN基础上的，那么我们首先回顾一下Faster R-CNN，Faster R-CNN是典型的two stage的目标检测方法，首先生成 RPN候选区域， 然后候选区域经过Roi Pooling进行目标检测（包括目标分类以及坐标回归），<strong>分类与回归共享前面的网络</strong>。<br>Mask R-CNN做了哪些改进？Mask R-CNN同样是two stage的，生成RPN部分与Faster R-CNN相同，然后，Mask R-CNN在Faster R-CNN的基础上，增加了第三个支路，输出每个ROI的Mask（<strong>这里是区别于传统方法的最大的不同，传统方法一般是先利用算法生成mask然后再进行分类，这里平行进行</strong>）</p>
+<p><strong>自然而然，这变成一个多任务问题</strong></p>
+<p><strong>网络结构如下</strong></p>
+<p>下图所示是两种典型的Mask R-CNN网络结构，作者借鉴<a target="_blank" rel="noopener" href="https://blog.csdn.net/Chunfengyanyulove/article/details/81390796"><strong>FPN（不了解FPN可以点击参考此博文）</strong></a>的思想，分别设计了两种网络结构，左边的是采用<strong>ResNet or ResNeXt</strong>作为网络的backbone提取特征，右边的网络采用<strong>FPN</strong>网络作为backbone进行特征提取，<strong>并且作者指明，使用FPN作为基础网络的效果其实是最好的。</strong></p>
+<p><strong>对于如何在Faster RCNN中使用FPN网络不了解的读者，可以参考此博文：</strong><a target="_blank" rel="noopener" href="https://blog.csdn.net/Jesse_Mx/article/details/54588085">https://blog.csdn.net/Jesse_Mx/article/details/54588085</a></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwqd8t5cvtj20d70bimyz.jpg"></p>
+<p><strong>损失函数的设计是网络的精髓所在</strong></p>
+<p><strong>Mask R-CNN的损失函数为：</strong>   $L=L_{cls}+L_{box}+L_{mask}$</p>
+<p>这里主要介绍一下$L_{mask}$，$L_{mask}$是对每个像素进行分类，其含有$K<em>m</em>m$维度的输出，K代表类别的数量，m<em>m是提取的ROI图像的大小。$L_{mask}$被定义为 average binary cross-entropy loss（平均二值交叉熵损失函数）。这里解释一下是如何计算的，*<em>首先分割层会输出channel为K的Mask，每个Mask对应一个类别，利用sigmoid函数进行二分类，判断是否是这个类别，然后在计算loss的时候，假如ROI对应的ground-truth的类别是</em></em>$K_{i}$，<strong>则计算第</strong>$K_{i}$<strong>个mask对应的loss，其他的mask对这个loss没有贡献计算二值交叉熵搞的公式如下图中的函数接口</strong>。这里不同于FCN的是，FCN是对每个像素进行softmax分类，分为K个类别，然后计算softmax loss。那在inference的时候选择哪个mask作为最终的输出呢？作者根据分类分支的预测结果进行判断，是不是很神奇，并且作者解释到，利用这种方法比softmax效果要好，【这里我觉得是肯定的，因为简化了loss并且利用了分类信息，应该会有提升的】。<br><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwqd8cbr11j20gc06rmxf.jpg"></p>
+<p><strong>另一个创新点：ROI Align</strong></p>
+<p>另外由于分割需要较准确的像素位置，而Faster R-CNN方法中，在进行Roi-Pooling之前需要进行两次量化操作（第一次是原图像中的目标到conv5之前的缩放，比如缩放32倍，目标大小是600，结果不是整数，需要进行量化舍弃，第二次量化是比如特征图目标是5*5，ROI-pooling后是2*2，这里由于5不是2的倍数，需要再一次进行量化，这样对于Roi Pooling之后的结果就与原来的图像位置相差比较大了），因此作者对ROI-Pooling进行了改进，提出了RoI Align方法，在下采样的时候，对像素进行对准，使得像素更准确一些。</p>
+<p><strong>ROI Align是怎么做的呢？</strong></p>
+<p>ROI-Align取消了所有的量化操作，不再进行4舍5入，如下图所示比较清晰，图中虚线代表特征图，其中黑框代表object的位置，可见object的位置不再是整数，而可能在中间，然后进行2*2的align-pooling,图中的采样点的数量为4，所以可以计算出4个位置，然后对每个位置取距离最近的4个坐标的值取平均求得。采样点的数量怎么计算？  这个可以自己设置，默认是设置4个点。 2*2是4个bin。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwqd7qszgnj20d504z424.jpg"></p>
+<blockquote>
+<p>【补充知识】ROI-Warp：在Roi-Pooling前面增加一层，将Roi区域缩放到固定大小，然后在进行roi-pooling，这样就减少了量化的操作。</p>
+</blockquote>
+<p><strong>网络训练</strong></p>
+<p>这里其实跟Faster R-CNN基本一致，IOU &gt; 0.5的是正样本，并且$L_{mask}$只在正样本的时候才计算，<strong>图像变换到短边 800， 正负样本比例 1：3 ， RPN采用5个scale以及3个aspect ratio。</strong></p>
+<p><strong>inference细节</strong></p>
+<p>采用ResNet作为backbone的Mask R-CNN产生300个候选区域进行分类回归，采用FPN方法的生成1000个候选区域进行分类回归，然后进行非极大值抑制操作，** 最后检测分数前100的区域进行mask检测<strong>，==这里没有使用跟训练一样的并行操作，作者解释说是可以提高精度和效率==，然后mask分支可以预测k个类别的mask，但是这里根据分类的结果，选取对应的第k个类别，得到对应的mask后，再resize到ROI的大小, 然后利用阈值0.5进行二值化即可。（</strong>这里由于resize需要插值操作，所以需要再次进行二值化，m的大小可以参考上图，mask最后并不是ROI大小，而是一个相对较小的图, 所以需要进行resize操作。**）</p>
+<h4 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h4><p>实验效果还是杠杠的，Mask R-CNN轻松打败了上界冠军FCIS（其使用了multi-scale训练，水平翻转测试，OHEM等）</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwqd9a3hhoj20qj05zq4h.jpg"></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwqd9ls1bcj20qv0f74qp.jpg"></p>
+<h4 id="溶解实验"><a href="#溶解实验" class="headerlink" title="溶解实验"></a>溶解实验</h4><p>下面一张图基本上说明了所有的对比问题：</p>
+<ul>
+<li>表(a)，显示了网络越深，效果越好。并且FPN效果要好一些。</li>
+<li>表(b)，sigmoid要比softmax效果好一些。</li>
+<li>表(c,d)，roi-align效果有提升，特别是AP75提升最明显，说明对精度提升很有用。</li>
+<li>表(e)，mask banch采用FCN效果较好（<strong>因为FCN没有破坏空间关系</strong>）</li>
+<li>另外作者实验，mask分支采用不同的方法，方法一：对每个类别预测一个mask ，方法二：所有的都预测一个mask，实验结果每个类预测一个mask别会好一些 30.3 vs 29.7</li>
+</ul>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwqd9xx0z2j20qr0ba424.jpg"></p>
+<p><strong>对于目标检测的结果：</strong></p>
+<p>对比下表，可见，在预测的时候即使不使用mask分支，结果精度也是很高的，下图中’Faster R-CNN, ROIAlign’  是使用ROI Align,而不使用ROI Pooling的结果，较ROI Pooling的结果高了约0.9个点，但是比MaskR-CNN还是低了0.9个点，<strong>这个提升，作者将其归结为多任务训练的提升，由于加入了mask分支，带来的loss改变，间接影响了主干网络的效果。</strong></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwqda5mwhij20r306w762.jpg"></p>
+<p>对于时间消耗来说，Mask R-CNN FPN网络195ms，比Mask R-CNN, ResNet网络的400ms要快一些。</p>
+<p><strong>人体关键点检测：</strong></p>
+<p>与Mask R-CNN进行Mask检测有什么不同呢？</p>
+<ul>
+<li>人体关键点检测，作者对最后m*m的mask进行one-hot编码，并且，mask中只有一个像素点是foreground其他的都是background。</li>
+<li>人体关键点检测，最后的输出是m^2-way 的softmax,  不再是Sigmoid，作者解释说，这有利于单独一个点的检测。</li>
+<li>人体关键点检测， 最后的mask分辨率是56*56，不再是28*28，作者解释，较高的分辨率有利于人体关键点的检测。</li>
+</ul>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwqdan4lrgj21720eonpd.jpg"></p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/18/maskrcnn/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/18/retinaNet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/18/retinaNet/" class="post-title-link" itemprop="url">RetinaNet(Focal loss)</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-18 09:47:44" itemprop="dateCreated datePublished" datetime="2019-11-18T09:47:44+08:00">2019-11-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 08:48:48" itemprop="dateModified" datetime="2020-02-16T08:48:48+08:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/18/retinaNet/" class="post-meta-item leancloud_visitors" data-flag-title="RetinaNet(Focal loss)" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/18/retinaNet/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/18/retinaNet/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1708.02002">论文链接：https://arxiv.org/abs/1708.02002</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/facebookresearch/Detectron">代码链接：https://github.com/facebookresearch/Detectron</a></p>
+<hr>
+<h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><p>为什么two stage方法的精度要比one stage算法的精度高？<br>因为two stage方法使用了rpn网络产生了较好的候选区域，而one stage方法，由于采用了固定的滑框去产生prior，所以较为规律和稠密，因此影响了精度。究其原因，是前景和背景的类别不均衡产生的。</p>
+<p>并且本paper解决这个问题的方法是，修改cross entropy loss，使得loss 更集中于hard example., : Focal Loss </p>
+<p>另外为了验证效果，作者设计了RetinaNet，可以达到one stage的速度， two stage的精度， </p>
+<p>要了解one stage方法以及two stage方法，请访问博客[]，这里不再叙述。</p>
+<p>为什么说正负样本不均是产生的主要原因呢？<br>在R-CNN系列中，通过比如Selective Search, RPN等方法产生的候选区域，约1-2k,过滤掉了大部分的背景区域，然后在进行分类的过程中，使用正负样本1：3或者OHEM方法使得正负样本较为均衡</p>
+<p>在one-stage方法中，由于其规律的生成prior,所以一般会产生约100k左右的候选区域，会含有一定的冗余性，虽然在训练的过程中，同样采用了比如hard example mining方法，但是相对来说还是很低效的。</p>
+<p>林外two-stage方法可以通过降低输入图像分辨率或者减少anchor的方法提高速度，但是one-stage想要提高精度需要提高计算量。</p>
+<p>class imbalance带来的问题：</p>
+<ul>
+<li><p>训练低效，过多的负样本，对于检测框没有作用。</p>
+</li>
+<li><p>过多简单的负样本会压制训练,使得训练效果不好。</p>
+</li>
+<li><p>training is inefficient as most locations are easy negatives that contribute no useful learning signal</p>
+</li>
+<li><p>enmasse the easy nagatives can overwhelm training and lead to degenerate models.</p>
+</li>
+</ul>
+<h3 id="Focal-Loss"><a href="#Focal-Loss" class="headerlink" title="Focal Loss"></a>Focal Loss</h3><p>Focal loss是在交叉熵损失基础上修改的，所以这里有必要先回顾一下交叉熵损失（cross entropy loss）</p>
+<p>交叉熵损失的公式如下，这里给的是简单的binary crossEntropy loss,就是只有两个类别。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwrnaws4qaj208u025q2t.jpg"></p>
+<p>简化一下，我们定义<code>$p_t$</code>如下：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwrnm0kwsrj2063020glf.jpg"></p>
+<p>则，交叉熵损失可以表示成:</p>
+<p>$CE(p_{t})=-log(p_{t})$</p>
+<p>当然为了更好的分析这个函数，我们将他的图像画出来，下面的图像中的蓝色的线就是该函数的曲线了，可以发现，计算是概率比较大的简单样本 <code>$p_{t}$</code> &gt;&gt; 0.5,依然存在一定的loss,所以当这种样本的数量较多的时候，累计起来就会比较大了，甚至会超过那些概率较小的样本（hard example），导致对于那些hard example的学习效果不佳。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwrnqur3f1j20ct0cmq48.jpg"></p>
+<p><strong>那么我们该如何平衡交叉熵损失呢</strong></p>
+<p>最简单的方法就是在交叉熵损失前面添加一个超参数，变成$CE(p_t)=-\alpha log(p_t)$<br>这样就会将这条曲线往下拉一些，如下图所示，使得当概率较大的时候，其影响减小。</p>
+<p><strong>Focal Loss Definition</strong></p>
+<p>借鉴了上面的方法，所以Focal Loss并没有改变正负样本的比例，而是修改了easy/hard example的损失权重，当然$\alpha$取固定值当然不好，所以作者做了个自适应，完整的Focal Loss定义如下：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwro8t3gdzj206s00y3yb.jpg"></p>
+<p>其中$\gamma$作为调节参数，控制着缩放的比例，不同的$\gamma$对应的曲线，如上图figure 1所示。</p>
+<p>作者指出，Focal loss有两个好处：</p>
+<ul>
+<li>如果一个样本分类错误了，概率很小（$p_t$很小），这样相乘的系数（1-$p_t$）就接近于1，对样本原本的分类影响不大。</li>
+<li>$\gamma$起到了平滑的作用，作者的实验中，其等于2的效果最好。</li>
+</ul>
+<p>举个例子：<br>取 $\gamma$==2，假如分类的概率是$\gamma$=0.9，则原来的loss=-log(0.9) =0.046,<br>-(1-0.9)^2 * log(0.9) = 0.00046,缩小了约100倍，加入分类概率是$\gamma$=0.968，那么就会缩小约1000倍，如果概率小于0.5，比如0.4 ， -log(0.4) == 0.39, -(1-0.4)^2 * log(0.4) = 0.14,只是减少了不到3倍。</p>
+<p>另外，可以增加一个参数$\alpha$，来平衡一下倍数，如下：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwrp5egim9j207j01cdfn.jpg"></p>
+<h4 id="类别不均衡的模型初始化"><a href="#类别不均衡的模型初始化" class="headerlink" title="类别不均衡的模型初始化"></a>类别不均衡的模型初始化</h4><h4 id="类别不均衡，two-stage如何处理好的。"><a href="#类别不均衡，two-stage如何处理好的。" class="headerlink" title="类别不均衡，two-stage如何处理好的。"></a>类别不均衡，two-stage如何处理好的。</h4><ul>
+<li><p>其采用两个阶段的级联，这样rpn阶段就可以将候选区域数量控制在1-2k左右，相比于one-stage要减少很多。</p>
+</li>
+<li><p>mini-batch采样，采样并不是随便采样的，而是根究正样本的位置进行采样（比如将负样本的设定为与ground-truth的IOU在0.1-0.3之间的），这样可以干掉一大部分简单样本，另外在正负样本比例上的选择，比如1：3,同样在打破平衡性。</p>
+</li>
+</ul>
+<h3 id="RetinaNet-Detector"><a href="#RetinaNet-Detector" class="headerlink" title="RetinaNet Detector"></a>RetinaNet Detector</h3><p>先上一张网络结构图：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwscmleyk8j20qo0ajwh8.jpg"></p>
+<p>下面逐一介绍一下：</p>
+<ul>
+<li>backbone:FPN</li>
+</ul>
+<p>RetinaNet的backbone采用resnet-FPN结构，并在P3-P7上建立图像金子塔$P_l$代表其缩放比例是$2^l$倍。同时作者指出，FPN结构还是很有用的，最开始作者只使用resnet最后一层的feature,结构AP(准确率)并不高。</p>
+<ul>
+<li>anchors:</li>
+</ul>
+<p>作者在原来的基础上，新增了3个size,{$2^0$,$2^{1/3}$,$2^{2/3}$}</p>
+<p>IOU &gt; 0.5 为正样本。<br>IOU [0, 0.4) 为负样本。<br>IOU [0.4, 0.5] 不要了。</p>
+<p>检测部分，当然是正样本去检测就行了。</p>
+<ul>
+<li>分类分支：</li>
+</ul>
+<p>对于每一个FPN分支，都会有一个预测分支与之对应，了解SSD的小伙伴对这里应该不会陌生，<br>有一句话没有理解：parameters of this subnet are shared across all pyramid levels.</p>
+<p>分类分支包括4组3*3卷积+ReLU,最后接KA个3*3卷积。K代表类别，A代表anchor的数量。</p>
+<p>相比较于RPN网络，这里的网络更深了。</p>
+<ul>
+<li>box regression分支：</li>
+</ul>
+<p>首先，box regression与分类分支并没有共享网络，</p>
+<p>在网络inference中，为了提高速度，retinanet只使用前1000的prior去进行坐标回归，并且最后对所有的预测结果进行非极大值抑制，并设置阈值为0.5进行过滤，最终得到预测结果。</p>
+<p>Focal Loss使用在分类分支中。</p>
+<p>在训练的过程中，RetinaNet直接使用约100k左右的anchor进行训练，而不需要想SSD那样使用OHEM或者像RCNN系列那样提取候选区域，最终的loss是这100K的focal loss的和，并且作者表示，在$\gamma$=2,$\alpah$=0.25的时候，网络效果最佳。</p>
+<ul>
+<li>参数初始化</li>
+</ul>
+<p>FPN部分参考FPN的初始化方法，其他的新添层，w采用高斯分布,$\sigma$=0.01, b=0, 最后一个卷积层 b = $-log((1-pi)/pi)$， pi = 0.1</p>
+<p>下表是一些对比实验</p>
+<ul>
+<li>(a) 是对crossentropy loss使用不同的系数的结果，可见当$\alpha$=0.75的时候，表现最好。<br>*（b）是使用focal loss的对比结果，其中加粗的为最好的效果。<br>*（c）是使用不同比例、大小的anchor的结果对比。<br>*（d）是对OHEM的对比结果，作者分别对OHEM设置不同的比例，以及使用focal loss的结果，结果显示使用OHEM并没有特别大的变化，但是使用focal loss精度提升明显，这也说明了focal loss的作用。</li>
+<li>(e) 是对不同尺度图像的精度以及速度的对比。</li>
+</ul>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwtr5j84haj20wt0k40xy.jpg"></p>
+<p>为了分析focal loss的效果，作者选取了大量的正负样本，然后分别计算FL，然后对其进行normalize操作，使其和是1，其累计分布如下图所示：</p>
+<p>其横轴是样本的数量百分比，纵坐标是累计误差，可见，$\gamma$对于负样本的影响相对较大，特别是当$\gamma$取2的时候，负样本的loss大部分的损失都是很小的，只有一小部分的loss比较大，这也说明了focal loss起到了对简单负样本的抑制作用。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwts6cpkknj20vw0ajgn9.jpg"></p>
+<p>下面是网络的检测精度，以及速度，以及与state of the art网络的对比。</p>
+<p>观察下面两张图，可以发现AP不太一样，主要原因是，其采用了一些策略，比如尺度变换等。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwtsyanwa9j20vs0afdii.jpg"></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwtt08wi3pj20g40g176v.jpg"></p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/18/retinaNet/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/18/RCNN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/18/RCNN/" class="post-title-link" itemprop="url">R-CNN</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-18 09:37:03" itemprop="dateCreated datePublished" datetime="2019-11-18T09:37:03+08:00">2019-11-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 13:48:34" itemprop="dateModified" datetime="2020-01-16T13:48:34+08:00">2020-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/18/RCNN/" class="post-meta-item leancloud_visitors" data-flag-title="R-CNN" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/18/RCNN/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/18/RCNN/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><h5 id="知识点总结"><a href="#知识点总结" class="headerlink" title="知识点总结"></a>知识点总结</h5><ul>
+<li>首先利用Selective Search方法提取Region Proposal</li>
+<li>Region Proposal<strong>缩放</strong>后送入到CNN网络，为什么要缩放，因为fc层要求固定大小的输入。</li>
+<li>CNN提取特征后，送入到后面的SVM进行分类（这里还涉及到难例挖掘）</li>
+<li>回归部分，利用4个线性回归，对proposal的坐标计算。</li>
+<li>CNN使用预训练模型，然后在VOC上进行finetune</li>
+</ul>
+<hr>
+<h5 id="重要链接"><a href="#重要链接" class="headerlink" title="重要链接"></a>重要链接</h5><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1311.2524">论文链接：https://arxiv.org/abs/1311.2524</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/rbgirshick/rcnn">GitHub代码链接：https://github.com/rbgirshick/rcnn</a></p>
+<p><strong>如果出现图片或者公式显示不完整，可访问图像博客</strong></p>
+<p><a target="_blank" rel="noopener" href="http://blog.csdn.net/Chunfengyanyulove/article/details/79548472">CSDN博客：http://blog.csdn.net/Chunfengyanyulove/article/details/79548472</a></p>
+<hr>
+<h5 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h5><p>R-CNN是将深度学习用于目标检测的鼻祖之作，在目标检测精度几年不在提升之后，得到了约30%的精度提升，之后，开启了深度学习在目标检测领域的一统天下，包括后面提出的Fast R-CNN、Faster R-CNN等，不仅在精度上有了进一步的提升，在速度上也有较大的进步。</p>
+<p>那么，作者实如何引入深度学习，又是为什么会产生如此大的提升，作者又是怎么做的呢？下面做详细介绍：</p>
+<p>在深度学习之前，目标检测的方法多是使用人工提取的图像低层特征的组合（如：SIFT、HOG等），这样不仅图像提取的特征的维度非常大，而且由于其特征较为低级，很难突破瓶颈，导致在2010-2012年，图像目标检测的精度提升缓慢。</p>
+<p>在2012年，AlexNet横空出世，在图像分类领域一枝独秀，作者在AlexNet以及特征多级提取的思想作用下，作者设计了R-CNN，并通过多次试验，达到了30%的精度提升。</p>
+<p>那么R-CNN是怎么干的呢？如下图：</p>
+<p><img src="http://img-blog.csdn.net/20180313195405918?watermark/2/text/Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="R-CNN结构图"></p>
+<p>简单描述为：R-CNN首先利用Selective Search方法提取图像候选框，然后将候选框缩放到227*227，放入CNN网络（AlexNet）提取特征，CNN后，利用SVM进行类别分类。</p>
+<p>那么为什么要这么做？每一步的细节又是什么样的呢？</p>
+<h5 id="利用Selective-Search提取候选框"><a href="#利用Selective-Search提取候选框" class="headerlink" title="利用Selective Search提取候选框"></a>利用Selective Search提取候选框</h5><p>跟图像分类不同的是，目标检测需要对目标进行精确的定位，作者论文提到了如下一些方法：</p>
+<ol>
+<li>直接使用回归进行定位，但是作者说该方法效果较差。</li>
+<li>利用sliding-window，但是由于特征提取中我们的网络较深，所以最后提取的特征感受野较大，这使得sliding-window方法受限。</li>
+<li>recognition using regions<blockquote>
+<p>该方法通过类似Selective Search等方法，在图像中提取大量的候选框，然后对每一个候选框进行特征提取分析，找到做好的定位。与Selective Search相似的算法也比较多，作者选择Selective Search也是由于Selective Search可控性较强，而且速度还可以。</p>
+</blockquote>
+</li>
+</ol>
+<p>在提取候选框之后，便需要将图像输入到CNN中提取特征，作者又是如何做的呢？</p>
+<h5 id="输入图像处理方式"><a href="#输入图像处理方式" class="headerlink" title="输入图像处理方式"></a>输入图像处理方式</h5><p>由于Selective Search提取的候选框的大小不一，但是CNN要求输入的图像大小固定（227*227），所以需要对SS方法提取的图像进行变换，作者尝试了几种方法如下：</p>
+<p>1、直接截取较大的矩形区域，然后缩放到227*227。</p>
+<p>2、直接填充训练图像的均值，得到矩形区域，然后缩放到227*227。</p>
+<p>3、直接缩放到227*227。</p>
+<p>4、对上述方法，预留16个像素的边界。</p>
+<p>截取方法如下图所示，其中B、C、D分别对应1、2、3，每组的第一行为没有预留边界，第二行为预留了16个像素边界。</p>
+<p><img src="http://img-blog.csdn.net/20180313202105697?watermark/2/text/Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="截取方式图"></p>
+<p>作者通过实验发现，采用直接缩放，并且预留16个像素边界的实验效果最好。</p>
+<p>输入图像的问题解决了，那么该如何训练我们的网络呢？这里又遇到了第二个问题，训练数据集较小。</p>
+<h5 id="训练网络"><a href="#训练网络" class="headerlink" title="训练网络"></a>训练网络</h5><p>由于在目标检测中，我们的数据量有限，所以作者首先采用ImageNet数据集预训练网络模型，然后利用VOC数据集进行fine-tuning，由于VOC数据集只包含20类，所以作者调整CNN模型只输出21类（20类+背景），并且为了增大数据集，作者将与Ground Truth的IOU大于0.5的Region Proposal标记为正样本，其余的为负样本，在训练的时候batch size为128，其中32个正样本，96个负样本。</p>
+<h5 id="训练SVM分类器"><a href="#训练SVM分类器" class="headerlink" title="训练SVM分类器"></a>训练SVM分类器</h5><p>为了得到每个对象的类别，作者为每个类别训练了一个SVM分类器，作者将每个类别的Ground Truth作为正样本，对于IOU小于0.3的region proposal作为负样本。<br>并且由于训练的数据较大，需要占用较大内存，所以作者利用<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/46292829">standard hard negative mining</a>方法进行训练，实验证明该方法收敛迅速。</p>
+<blockquote>
+<p>0.3这个阈值是作者通过grid search试出来的，{0，0.1，0.2，0.3，0.4，0.5}逐一试。</p>
+</blockquote>
+<h5 id="为什么训练CNN与训练SVM采用不同的训练样本？"><a href="#为什么训练CNN与训练SVM采用不同的训练样本？" class="headerlink" title="为什么训练CNN与训练SVM采用不同的训练样本？"></a>为什么训练CNN与训练SVM采用不同的训练样本？</h5><p>这个参数的选择也是作者实验做出来的效果，采用该定义的时候，效果较好。<br>同样作者为了解释这个现象同样进行了对比实验，作者首先利用预训练的CNN提取的特征训练SVM，在训练过程中，作者发现，存在一些优化方法可以优化结果，这就包括本文式样的fine-tuning方法，然后作者使用训练SVM的样本定义方法进行fine-tuning，但是作者发现效果没有本文最后确定的方法好，作者解释如下：</p>
+<p>对于在训练CNN以及SVM的时候，正负样本的定义不同，主要在于训练数据集有限。作者采用IOU为0.5增加了将近30倍的训练数据，这可以有效的在fine-tuning的过程中<strong>防止过拟合</strong>，但是由于使用了这些数据，导致其在目标定位中的精度下降。<br>这就带来了另一个问题，我们为什么不直接在网络后面利用回归进行检测而是训练SVM分类器呢？作者实际上使用softmax进行了测试，但是作者发现，其精度降低了，导致精度降低的主要有几方面，如：进行fine-tuning时候的目标精度本身就存在偏差，不是ground truth，另外softmax的训练采用的是随机的负样本而不是采用的hard negatives样本。<br>另外，作者提出，不使用SVM应该也可以达到类似的精度，可以进行进一步的研究。</p>
+<h5 id="Bounding-box-Regression"><a href="#Bounding-box-Regression" class="headerlink" title="Bounding-box Regression"></a>Bounding-box Regression</h5><p>进一步的，作者设计了Bounding-box Regression用于对坐标进行微调，使得得到的目标更接近于ground truth</p>
+<p>对于region proposal 以及ground truth，本文分别用如下代替：</p>
+<p>$$P_i=(P_{x}^{i},P_{y}^{i},P_{w}^{i},P_{h}^{i})$$</p>
+<p>$$G_i=(G_{x}^{i},G_{y}^{i},G_{w}^{i},G_{h}^{i})$$</p>
+<p>其中x,y为中心点坐标，w和h分别为长和宽。<br>作者通过线性变换，计算P的偏移量，得到预测坐标如下：</p>
+<p>$$\hat{G}_{x} = P_wd_x(P)+P_x$$</p>
+<p>$$\hat{G}_{y} = P_hd_y(P)+P_y$$</p>
+<p>$$\hat{G}_{w} = P_wexp(d_w(P))$$</p>
+<p>$$\hat{G}_{h} = P_wexp(d_h(P))$$</p>
+<p>其中$d_*(P)$代表一种线性变换，对pool5特征进行计算,我们标记特征为$\phi_5(P)$，$d_*(P)=w_*^T\phi_5(P)$，作者设定优化函数为：</p>
+<p>$w_*=argmin_{w_*}\sum(t_*^i-w_*^T\phi_5(P^i))^2+\lambda||w_*||$</p>
+<p>$t_*$定义如下：</p>
+<p>$$t_x=(G_x-P_x)/P_w$$</p>
+<p>$$t_y=(G_y-P_y)/P_h$$</p>
+<p>$$t_w=log(G_w/P_w)$$</p>
+<p>$$t_h=log(G_h/P_h)$$</p>
+<blockquote>
+<p>这里分析一下，为什么作者在x,y分别除了w和h，原因在于其偏移量产生的loss与proposal的大小有关，比如同样是向左偏移10个像素，如果proposal是100*100和10*10产生的误差是不一样的，所以作者除了w和h。</p>
+</blockquote>
+<p>并且作者指出，必须选用有用的（P，G）组合才行，如果P离Ground Truth较远，那么进行转换便没有意义了，所以，这里作者只选用了距离ground truth较近的目标进行回归，作者设定的参数是IOU为0.6。</p>
+<h5 id="R-CNN精度对比"><a href="#R-CNN精度对比" class="headerlink" title="R-CNN精度对比"></a>R-CNN精度对比</h5><p>作者对比了R-CNN（是否包含bounding box方法），以及其他算法的精度，测试结果见下图，由下图可以发现，R-CNN BB的精度遥遥领先。</p>
+<p><img src="http://img-blog.csdn.net/20180314090358635?watermark/2/text/Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<h5 id="学习特征可视化"><a href="#学习特征可视化" class="headerlink" title="学习特征可视化"></a>学习特征可视化</h5><p>作者设计了一种无须参数的可视化方式，来判断每个unit学到的是什么，该方法首先选定一个特定的unit，然后在10万个region proposal中找到激活值最大的前几个，并利用非极大值抑制，最后显示出学到的区域，作者在CNN网络的pool5后进行实验，作者论文中展示了6组测试结果，如下：</p>
+<p><img src="/1.png" alt="这里写图片描述"></p>
+<h5 id="Ablation-studies"><a href="#Ablation-studies" class="headerlink" title="Ablation studies"></a>Ablation studies</h5><p>为了验证不同层在检测中的作用，作者进行了如下对比实验，实验结果如下图：</p>
+<ul>
+<li>针对pool5，fc6，fc7层的分类能力对比，作者发现，其实pool5的分类能力已经很强，fc6和fc7虽然占有大量的参数，但是并没有取得实质的提升。row1-3</li>
+<li>对pool5,fc6,fc7采用fune-tuning进行实验对比，作者发现，fune-tuning之后，模型的识别能力提升了近8%，fc6和fc7提升明显，但是pool5提升不明显，这样说明了pool5提取的特征具有一定的泛化性。row 4-7</li>
+<li>与其他方法进行对比，优势明显。row 8-10<br><img src="/2.png" alt="这里写图片描述"></li>
+</ul>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/18/RCNN/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/18/refinedet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/18/refinedet/" class="post-title-link" itemprop="url">RefineDet</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-18 03:40:20" itemprop="dateCreated datePublished" datetime="2019-11-18T03:40:20+08:00">2019-11-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 08:41:46" itemprop="dateModified" datetime="2020-02-16T08:41:46+08:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/18/refinedet/" class="post-meta-item leancloud_visitors" data-flag-title="RefineDet" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/18/refinedet/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/18/refinedet/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><p>论文链接： <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1711.06897">https://arxiv.org/abs/1711.06897</a></p>
+<p>作者代码链接 ： <a target="_blank" rel="noopener" href="https://github.com/sfzhang15/RefineDet">https://github.com/sfzhang15/RefineDet</a></p>
+<p><strong>如果出现图像显示不完整，或者公式显示不完整，可访问本人CSDN博客</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Chunfengyanyulove/article/details/84943544">CSDN博客地址：https://blog.csdn.net/Chunfengyanyulove/article/details/84943544</a></p>
+<hr>
+<p>下面进入正题</p>
+<p>在目标检测中，有两个主流的分支，分别是以Faster R-CNN为代表的two stage方法以及以SSD为代表的one stage方法,两者各有优势，总结起来就是：<strong>two stage方法的精度更高，one stage方法的速度更快</strong>。</p>
+<p>是什么造成了这两种方法的不同呢？简而言之，就是对anchor的处理方法。</p>
+<p>two stage方法提取anchor后，对anchor进行了<strong>微调</strong>，然后将处理过的anchor送入到分类与回归器中，而one stage 缺省了anchor处理这步，将提取的anchor直接送入到分类与回归器中，这可以有效的提高速度，但是带来了一定的问题：由于没有对提取的anchor进行处理(筛选)，<strong>导致出现了anchor类别不均衡问题</strong>，负样本的数量肯定是多的，即使SSD采用了比如：对分类loss进行排序，然后控制正负样本比例1:3，依然会存在这个问题，这也就是为什么one stage方法精度达不到two stage方法那么高的原因。</p>
+<p>相比较于one stage方法，two stage方法的优点如下：</p>
+<ul>
+<li>控制了样本不均衡问题。</li>
+<li>利用2个阶段的级联去进行box框坐标的回归。</li>
+<li>利用两个阶段的特征去进行目标的描述。（这里解释一下，是指首先利用RPN网络去判断是否是目标，然后利用后面的网络判断是什么目标以及位置在哪，他们是共享backbone的。）</li>
+</ul>
+<p>既然one stage与two stage精度存在差距的原因已经找到，那么我们是否可以想办法解决这个问题呢？</p>
+<p>当然可以，对于类别不均衡这个问题，很多网络也都给出了不同的方法，比如：<strong>RetinaNet提出使用focal loss去限制负样本的loss比例等</strong></p>
+<p>本文实现的RefineDet其实也是在解决这个问题，本文是如何解决的呢？</p>
+<p>总结起来其实很简单，既然two stage可以解决这个问题，那么我将one stage与two stage方法融合在一起不就可以即取得高精度又实现高效率了。</p>
+<p>下面我们一起看看RefineDet是如何实现的：</p>
+<p>首先我们来看RefineDet的网络结构，如下：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fy1pfm243ij20wk0jymze.jpg"></p>
+<p>上图是本文的关键，观察上图，我们一点点分析：<strong>首先，RefineDet由两个内部连接的模块组成，一个是ARM(anchor refinement module)，（上面部分）, 另一个是ODM(object detection module）,（下面部分）</strong>。<strong>ARM就类似于Faster R-CNN中的RPN网络，一方面用于修正anchor，去掉多余的负样本，减少搜索空间，另一方面，用于对anchor的位置以及尺寸进行修正，使得其更有利于坐标的回归，其实就是两方面的优化嘛，一个是分类，一个是回归。ODM就类似于SSD，只不过接受的是前面修改中过的anchor，并利用该anchor进行分类（multi-class）与回归</strong>。这样，就不再具有了two stage方法的局限性，如Faster R-CNN生成anchor后，再送入后面进行分类与回归比较耗时，同时又使得one stage方法如SSD的anchor进行了处理，使其同时具有one-stage以及two-stage的优点。<strong>另外作者设计了TCB结构，TCB一方面将ARM的feature映射到ODM，另一方面，是将高层的语义信息与低层的信息相融合（就类似于FPN）</strong>，TCB的结构如下图Figure2所示，<strong>这里使用的是Deconv进行特征图的放大，然后利用element-wise sum的方式相加，求和后，连接一个卷积提高特征图的分辨力。</strong></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fy1pvrmir0j20ey0dnq3b.jpg"></p>
+<p>所以，RefineDet总结起来就是如下三点：</p>
+<ul>
+<li>利用两个阶段的回归，提高物体检测的精度</li>
+<li>过滤掉过多的negative anchor，使得正负样本能够平衡一些。</li>
+<li>使用transfer connection block（TCB）将ARM与ODM连接到一起</li>
+</ul>
+<h4 id="细节介绍"><a href="#细节介绍" class="headerlink" title="细节介绍"></a>细节介绍</h4><ul>
+<li>two-step cascaded regression</li>
+</ul>
+<p>RefineDet 首先利用ARM网络第一次调整anchor的位置以及坐标，然后将ARM修正过的anchor传给ODM网络，使得ODM网络可以得到更好的初始化的anchor,进而得到更好的回归效果。<strong>这样说是不是太泛泛了，下面有更详细的</strong><br>首先在ARM网络上，采用类似于SSD的方法，在对应的feature map上面生成对应的anchor。对于feature map上的每个cell，预测4个offset以及是前景还是背景（softmax分类），这样对于每个cell就可以生成对应的refined anchor(修正anchor)，在得到refined anchor后，将refined anchor传给ODM网络，在ODM中再一次进行分类与回归得到最终目标的分类以及目标的位置。<br>另外，ARM与ODM的特征图具有相同的维度。每个anchor产生c+4个输出，分别对应c个类别以及4个坐标，这里跟SSD类似，不一样的是，SSD使用的是default box去预测结果，而refineDet使用的是ARM模块refined过后的anchor去预测结果。这使得refineDet具有更好的检测精度，特别是对小目标物体，（<strong>所以说，对小目标，FPN那一套还是很有用的</strong>）。</p>
+<ul>
+<li>Negative Anchor Filtering</li>
+</ul>
+<p>这个其实很简单，我们知道在one stage方法中，由于是每个cell固定产生anchor的，所以anchor的负样本的量实际上还是很大的，但是大部分其实是没有用的，所以就需要采用一些方法对没有用的anchor进行过滤，可以利用loss进行过滤，也可以利用分类分数进行过滤，在ARM中，是使用的分类的分数进行过滤的方法，就是在训练的过程中，如果ARM判断其negative的confidence（置信度）大于设定的阈值（默认是0.99），则我们在ODM中就自动忽略这个anchor，在inference阶段，如果refined anchor box的negative confidence的值大于阈值，同样也是被忽略的。</p>
+<h4 id="Training-and-Inference"><a href="#Training-and-Inference" class="headerlink" title="Training and Inference"></a>Training and Inference</h4><ul>
+<li><p>数据增强，这个当然是必不可少的，本文数据增强方法参照SSD数据增强方法。</p>
+</li>
+<li><p>backbone network：<strong>网络结构跟SSD基本保持一致。</strong>，作者使用了VGG16以及ResNet-101作为基础网络，当然其他网络也可以，这里只是比较常用。以VGG16为例，跟SSD一样，将fc6和fc7转换为卷积层conv_fc6以及conv_fc7,另外为了更好的利用高层信息，我们在vgg16网络的最后增加了2个额外的卷积层（conv6_1,conv6_2）,对resnet101增加了一个另外的residual block(res6),并且对conv4_3以及conv5_3添加了L2 normalization层，并分别设置scale为10和8，并在反向传播中学习scale。</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">L2Norm</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,n_channels, scale</span>):</span><br><span class="line">        <span class="built_in">super</span>(L2Norm,self).__init__()</span><br><span class="line">        self.n_channels = n_channels</span><br><span class="line">        self.gamma = scale <span class="keyword">or</span> <span class="literal">None</span></span><br><span class="line">        self.eps = <span class="number">1e-10</span></span><br><span class="line">        self.weight = nn.Parameter(torch.Tensor(self.n_channels))</span><br><span class="line">        self.reset_parameters()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reset_parameters</span>(<span class="params">self</span>):</span><br><span class="line">        init.constant(self.weight,self.gamma)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        norm = x.<span class="built_in">pow</span>(<span class="number">2</span>).<span class="built_in">sum</span>(dim=<span class="number">1</span>, keepdim=<span class="literal">True</span>).sqrt()+self.eps</span><br><span class="line">        <span class="comment">#x /= norm</span></span><br><span class="line">        x = torch.div(x,norm)</span><br><span class="line">        out = self.weight.unsqueeze(<span class="number">0</span>).unsqueeze(<span class="number">2</span>).unsqueeze(<span class="number">3</span>).expand_as(x) * x</span><br><span class="line">        <span class="keyword">return</span> out</span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li><p>Anchor Design and Matching：Anchor的设计跟SSD也是比较相似的，不同的是，这里只在4个feature layer上面提取Anchor，分别对应stride为（8，16，32，64）（注：SSD是在6个特征图上，以SSD300为例，分别对应特征图大小为38，19，10，5，3，1），并且不同的feature layer匹配不同大小及尺寸的anchor，scale是stride的4倍即对应的检测尺度为，以320为例子，对应的不同的layer检测的图像尺度为：[ 32， 64， 128， 256 ]，aspect ratio 有3个（0.5，1，2）,正样本同样是overlap最大以及IOU大于0.5，这都没啥特殊的，都是这样的。</p>
+</li>
+<li><p>Hard Negative Mining： 不管对于ARM还是ODM，依然使用类似于SSD的正负样本1：3的比例，手段跟SSD一样，利用分类loss从大到小排序，取前面的部分。</p>
+</li>
+<li><p>Loss Function, 如下：</p>
+</li>
+</ul>
+<p><a href="https://www.codecogs.com/eqnedit.php?latex=L({p_i},{x_i},{c_i},{t_i},)=\frac{1}{N_{arm}}(\sum_{i}L_b(p_i,[l_i^*\geqslant&amp;space;1]))+\sum_{i}[l_i^*\geq&amp;space;1]L_r(x_i,g_i^*)+\frac{1}{N_{odm}}(\sum_{i}L_m(c_i,l_i^*))+\sum_{i}[l_i^*\geq&amp;space;1]L_r(t_i,g_i^*)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?L({p_i},{x_i},{c_i},{t_i},)=\frac{1}{N_{arm}}(\sum_{i}L_b(p_i,[l_i^*\geqslant&amp;space;1]))+\sum_{i}[l_i^*\geq&amp;space;1]L_r(x_i,g_i^*)+\frac{1}{N_{odm}}(\sum_{i}L_m(c_i,l_i^*))+\sum_{i}[l_i^*\geq&amp;space;1]L_r(t_i,g_i^*)" title="L({p_i},{x_i},{c_i},{t_i},)=\frac{1}{N_{arm}}(\sum_{i}L_b(p_i,[l_i^*\geqslant 1]))+\sum_{i}[l_i^*\geq 1]L_r(x_i,g_i^*)+\frac{1}{N_{odm}}(\sum_{i}L_m(c_i,l_i^*))+\sum_{i}[l_i^*\geq 1]L_r(t_i,g_i^*)"></a> </p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fy1uh5implj20qj03b0t6.jpg"></p>
+<ul>
+<li><p>Optimization: VGG-16新添加的两层： 采用xavier初始化参数，  resnet101新添加的residual block： 采用均值为0，方差为0.01的高斯分布进行初始化。默认训练的 batchsize 是32 ，使用SGD方法进行fine-tune训练，momentum取0.9， weight decay为0.0005， learning rate取0.001，learning rate delay。</p>
+</li>
+<li><p>Inference: inference阶段，首先ARM首先利用分类得分阈值过滤掉一部分的负样本，然后计算这部分anchor的location，以及size，然后，将refined anchor传入ODM模块进行分类，每张图像取得分高的400个图像。最终，利用非极大值抑制，保证最终得到200个高分的检测结果作为最终的结果。</p>
+</li>
+<li><p><strong>速度方面：Titan X GPU  图像尺寸：320*320，40.2FPS， 图像尺寸：512*512， 24.1FPS。</strong></p>
+</li>
+</ul>
+<h4 id="实验部分"><a href="#实验部分" class="headerlink" title="实验部分"></a>实验部分</h4><ul>
+<li>VOC的对比实验</li>
+</ul>
+<p>下图显示的是在VOC上的测试结果，可见RefineDet320*320可以达到80%的精度，512<em>512可以达到81.8%的精度，最下面两组是采用multi-scale的测试策略【即将图片缩放到不同的尺度进行测试】，测试结果显示，512的精度可以达到83.8%。RefineDet也是第一个实时的精度超过80%的目标检测算法， SSD512有24564个anchor，而RefineDet512只有16320个anchor。*<em>多尺度也是一个比较有效的提高精度的方法</em></em></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fy1rxeygcwj210v0kngq8.jpg"></p>
+<ul>
+<li>溶解实验</li>
+</ul>
+<blockquote>
+<ul>
+<li>首先，是对负样本滤除效果的验证，作者设计实验，一个是使用所有refined anchor，另一个是正常的使用阈值（0.99）进行过滤，由table 3可以发现，负样本的滤除可以带来大约0.5%的精度提升。</li>
+<li>为验证2个阶段回归的重要性，作者使用不再refined的anchor进行实验，发现其精度有大约2%的下降(表格第2列以及第3列)</li>
+<li>验证TCB的效果，作者直接去掉了TCB连接，直接在ARM上进行分类以及回归，这其实就跟SSD一样了，发现其精度又有了大约1%的下降。分析原因，主要是采用TCB一方面可以从ARM中继承到特征差异，另一方面采用了类似于FPN的特征融合，使得精度得到提升。</li>
+</ul>
+</blockquote>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fy1rzbxrnij20if08hwfb.jpg"></p>
+<ul>
+<li>COCO:</li>
+</ul>
+<p>为了得到更好的效果，这里作者实验使用的basebone是resnet101，对比Table 7，其中带加号的是代表multi-scale test，可见，RefineDet的最好的效果可以达到了41.8%</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fy1s2t5j4rj20w40nb44z.jpg"></p>
+<p><strong>如何提高PASCAL VOC的检测精度？？</strong></p>
+<p><strong>因为PASCAL VOC是COCO的子集，所以我们也可以使用COCO的预训练模型来提高VOC的精度，实验结果如下，通过COCO的预训练模型，RefineDet320可以达到84%的精度，如果是512可以达到85.2%的精度（2007 test），如果使用multi-scale test，精度还可以进一步提高，如下表所示，最高可以达到86%左右</strong></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fy1s3blpyyj20fi0cz0ud.jpg"></p>
+<p>分析RefineDet对不同类别目标的检测效果，如下图，其中第一排是不同类别的比例分布，横轴是检测的数量，那条红色的实线是IOU阈值0.5对应的召回率，虚线是IOU阈值0.1对应的召回率，其中不同颜色分别代表如下：白色代表判断对的，蓝色代表由于位置不对导致的错误，深红表示相近类别的混淆，紫色代表背景，绿色代表其他，</p>
+<p>第二行代表判错的样本中不同类别分布的百分比。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fy1s3q9lf9j20w10oxqem.jpg"></p>
+<p>最后来一张检测结果图：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fy1se3fdb2j20w00hrnpd.jpg"></p>
+<p>以上是本人对RefineDet的理解，如有问题，还请指出~</p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/18/refinedet/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

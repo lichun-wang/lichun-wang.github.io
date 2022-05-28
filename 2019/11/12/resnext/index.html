@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="创新点：ResNeXt在ResNet的基础上，结合ResNet的block stack策略以及Inception结构分组卷积的思想，设计aggregrated transformations策略，在不增加模型复杂度的情况下，提高了模型识别的准确率，虽然没有提出特别新奇的网络结构，但是ResNeXt利用更简单的拓扑结构在不增加参数的情况下取得更好的效果，值得借鉴与思考。**其实resnext仅仅就">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ResNeXt：Aggregated Residual Transformations for Deep Neural Networks">
+<meta property="og:url" content="https://www.wanglichun.tech/2019/11/12/resnext/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="创新点：ResNeXt在ResNet的基础上，结合ResNet的block stack策略以及Inception结构分组卷积的思想，设计aggregrated transformations策略，在不增加模型复杂度的情况下，提高了模型识别的准确率，虽然没有提出特别新奇的网络结构，但是ResNeXt利用更简单的拓扑结构在不增加参数的情况下取得更好的效果，值得借鉴与思考。**其实resnext仅仅就">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wanglichun.tech/1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/4.png">
+<meta property="og:image" content="https://www.wanglichun.tech/5.png">
+<meta property="og:image" content="https://www.wanglichun.tech/6.png">
+<meta property="og:image" content="https://www.wanglichun.tech/7.png">
+<meta property="og:image" content="https://www.wanglichun.tech/8.png">
+<meta property="og:image" content="https://www.wanglichun.tech/9.png">
+<meta property="og:image" content="https://www.wanglichun.tech/11.png">
+<meta property="og:image" content="https://www.wanglichun.tech/12.png">
+<meta property="article:published_time" content="2019-11-12T01:15:25.000Z">
+<meta property="article:modified_time" content="2020-02-16T05:33:20.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="ResNeXt">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.wanglichun.tech/1.png">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2019/11/12/resnext/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>ResNeXt：Aggregated Residual Transformations for Deep Neural Networks | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/12/resnext/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ResNeXt：Aggregated Residual Transformations for Deep Neural Networks
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-12 09:15:25" itemprop="dateCreated datePublished" datetime="2019-11-12T09:15:25+08:00">2019-11-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 13:33:20" itemprop="dateModified" datetime="2020-02-16T13:33:20+08:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Classification/" itemprop="url" rel="index">
+                    <span itemprop="name">Classification</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/12/resnext/" class="post-meta-item leancloud_visitors" data-flag-title="ResNeXt：Aggregated Residual Transformations for Deep Neural Networks" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/12/resnext/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/12/resnext/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>创新点：ResNeXt在ResNet的基础上，结合ResNet的block stack策略以及Inception结构分组卷积的思想，设计aggregrated transformations策略，在不增加模型复杂度的情况下，提高了模型识别的准确率，虽然没有提出特别新奇的网络结构，但是ResNeXt利用更简单的拓扑结构在不增加参数的情况下取得更好的效果，值得借鉴与思考。**其实resnext仅仅就是利用了group convolution，降低了网络的参数量，但是同时，增加了channel，发挥channel的效果，使得resnext的效果得到了一定的提升.</p>
+</blockquote>
+<hr>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1611.05431">论文链接：https://arxiv.org/abs/1611.05431</a></p>
+<p><strong>如出现图像显示不完整，或者公式显示不完整，可访问如下博客</strong></p>
+<p><a target="_blank" rel="noopener" href="http://blog.csdn.net/chunfengyanyulove/article/details/79450450">CSDN博客地址：http://blog.csdn.net/chunfengyanyulove/article/details/79450450</a></p>
+<hr>
+<h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h3><p>ResNeXt是2017年CVPR的一篇文章，其模型在2016年ImageNet分类比赛中，取得了第二名的成绩。<br>论文中，作者首先提到，在进行网络结构设计时候，随着超参数的增加（width,filter size, strides, layers等）,难度越来越大。</p>
+<p>为解决这个问题，多种策略被提出:</p>
+<ul>
+<li>1.VGG-nets、ResNet等采用策略：stack building blocks of the same shape</li>
+<li>2.Inception策略: split-transform-merge:<br>首先利用1*1卷积降维，然后利用3*3卷积进行运算，最后利用concatenation进行融合。Inception虽然复杂度较低，效果较好，但是其filter的设计针对性较强，不利于模型的迁移。</li>
+</ul>
+<p>本文作者的做法是：将ResNet中高维特征图分组为多个相同的低维特征图，然后在卷积操作之后，然后将多组结构进行求和，得到ResNeXt模型，如图1所示。</p>
+<p><strong>细心的读者可以发现，左边是64维，右边32个4实际上是128维，作者在此处实际上是保证了相同的模型复杂度，后面的说明中也有提到</strong></p>
+<p><img src="/1.png" alt="1.png"></p>
+<center>图1：左边ResNet，右边ResNeXt</center>
+
+
+<p>同时，作者提出cardinality概念，即图一中分组的组数（上图为32）。并且作者指出，增加cardinality比增加模型的深度和宽度更有助于提高模型的精度（后面实验有证明）</p>
+<h3 id="2-模型详解"><a href="#2-模型详解" class="headerlink" title="2.模型详解"></a>2.模型详解</h3><p>作者说模型的blocks设计的两个原则：</p>
+<ul>
+<li>如果产生相同尺寸的特征图，则他们共享超参数（width，filter size等）</li>
+<li>如果特征图的大小减少一半，则block的数量增加一倍。</li>
+</ul>
+<p>如下图2为ResNet与ResNeXt的模型对比，其模型的复杂度基本相同。</p>
+<p><img src="/2.png" alt="2.png"></p>
+<center>图2：左图是ResNet,右图是ResNeXt，C=32</center>
+
+<p><img src="/3.png" alt="3.png"></p>
+<center>图3：3种等价结构</center>
+**备注： 采用group结构可以有效减少参数数量，如果无group参数数量为：128\*3\*3\*128，有group为：32\*4\*3\*3\*4**
+
+<p><strong>思考：通过计算分析，三种结构确实等价，b与c等价是显然的，c中的group convolution是将128个channel分成32组，然后每组进行3*3的卷积，最后concat在一起，然后利用一个256维的1*1卷积，将前面concat的128维，映射到256维；而在b中，首先将256维利用1*1卷积映射到4维，然后对4维进行3*3的卷积，这里跟c进行channel分组是一样的，最后接的concat以及映射到256维也是一样的。a与b等价的原因是：在a中，4维特征图通过1*1卷积变为256维，然后32个256维数据求和，而在b中，是先将4维数据concat成128维，在利用1*1卷积，实际上也就是求和过程，画图理解便很清晰了。</strong></p>
+<p>作者指出，图3的三种结构等价，由于第三种结构较为简单且具有较高的效率，所以作者在实验中选择第三种结构。</p>
+<p>同时，作者指出，当depth = 2的时候，如下图4所示，网络拓扑结构仅仅是变得更宽了，并没有实现分组的价值，所以depth应该大于2。</p>
+<p><img src="/4.png" alt="4.png"></p>
+<center>图4：depth=2时候的结构图</center>
+
+<p>图5表示了在参数量基本相同的情况下，cardinality与width的关系。</p>
+<p><strong>此处可以看出，参数量相同1*64 == 32*4</strong></p>
+<p><img src="/5.png" alt="5.png"></p>
+<center>图5：cardinality与width的关系</center>
+
+<p>ResNeXt模型block网络细节：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">class Bottleneck(nn.Module):</span><br><span class="line">    expansion = 4</span><br><span class="line"></span><br><span class="line">    def __init__(self, inplanes, planes, stride=1, downsample=None, num_group=32):</span><br><span class="line">        super(Bottleneck, self).__init__()</span><br><span class="line">        self.conv1 = nn.Conv2d(inplanes, planes*2, kernel_size=1, bias=False)</span><br><span class="line">        self.bn1 = nn.BatchNorm2d(planes*2)</span><br><span class="line">        self.conv2 = nn.Conv2d(planes*2, planes*2, kernel_size=3, stride=stride,</span><br><span class="line">                               padding=1, bias=False, groups=num_group)</span><br><span class="line">        self.bn2 = nn.BatchNorm2d(planes*2)</span><br><span class="line">        self.conv3 = nn.Conv2d(planes*2, planes * 4, kernel_size=1, bias=False)</span><br><span class="line">        self.bn3 = nn.BatchNorm2d(planes * 4)</span><br><span class="line">        self.relu = nn.ReLU(inplace=True)</span><br><span class="line">        self.downsample = downsample</span><br><span class="line">        self.stride = stride</span><br><span class="line"></span><br><span class="line">    def forward(self, x):</span><br><span class="line">        residual = x</span><br><span class="line"></span><br><span class="line">        out = self.conv1(x)</span><br><span class="line">        out = self.bn1(out)</span><br><span class="line">        out = self.relu(out)</span><br><span class="line"></span><br><span class="line">        out = self.conv2(out)</span><br><span class="line">        out = self.bn2(out)</span><br><span class="line">        out = self.relu(out)</span><br><span class="line"></span><br><span class="line">        out = self.conv3(out)</span><br><span class="line">        out = self.bn3(out)</span><br><span class="line"></span><br><span class="line">        if self.downsample is not None:</span><br><span class="line">            residual = self.downsample(x)</span><br><span class="line"></span><br><span class="line">        out += residual</span><br><span class="line">        out = self.relu(out)</span><br><span class="line"></span><br><span class="line">        return out</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="3-实验"><a href="#3-实验" class="headerlink" title="3.实验"></a>3.实验</h3><p>作者首先对比了Cardinality 与Width的关系，实验结果如下图6所示：<br>通过对实验结果分析可以发现，ResNeXt的error较ResNet有降低。并且随着分组数量的增加，error在下降。</p>
+<p><img src="/6.png" alt="6.png"></p>
+<p><img src="/7.png" alt="7.png"></p>
+<center>图6：ResNet与ResNeXt训练结果对不</center>
+
+<p>其次，作者比较了增加Cardinality以及增加deep/wider产生的效果。<br>结果显示，增加cardinality比增加deeper/wider更有效，并且ResNeXt只用了一半的复杂度便达到了ResNet200的精度，也可以看出其效果，对比结果如下图所示:</p>
+<p><img src="/8.png" alt="8.png"></p>
+<p><strong>与state-of-the-art对比结果如下图：</strong></p>
+<p><img src="/9.png" alt="9.png"></p>
+<p><strong>在CIFAR数据集上实验，同样说明了增加cardinary相比增加width的效果更好</strong></p>
+<p><img src="/11.png" alt="11.png"></p>
+<p><strong>另外，作者利用Faster-RCNN模型，测试了ResNeXt结果在COCO数据集的效果，利用1K训练集预训练的模型，对Faster-RCNN产生了较小的改进，作者认为，如果选择更大的训练集，应该会取得较大的效果，COCO检测结果如下：</strong></p>
+<p><img src="/12.png" alt="12.png"></p>
+<h5 id="备注："><a href="#备注：" class="headerlink" title="备注："></a>备注：</h5><p>ResNeXt,PyTorch详细代码参考链接如下：<br><a target="_blank" rel="noopener" href="https://github.com/miraclewkf/ResNeXt-PyTorch">https://github.com/miraclewkf/ResNeXt-PyTorch</a></p>
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ResNeXt/" rel="tag"># ResNeXt</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/07/sort/" rel="next" title="Sort,排序算法总结">
+                  <i class="fa fa-chevron-left"></i> Sort,排序算法总结
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/11/12/densenet/" rel="prev" title="DenseNet">
+                  DenseNet <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">1.简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">2.模型详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%AE%9E%E9%AA%8C"><span class="nav-number">3.</span> <span class="nav-text">3.实验</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%87%E6%B3%A8%EF%BC%9A"><span class="nav-number">3.0.1.</span> <span class="nav-text">备注：</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

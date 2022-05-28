@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1612.03144  FPN 创新点 低层特征信息与高层语义信息的特征融合 有利于小目标的检测  写在前面的话FPN的全称是**Feature Pyramid Networks[特征金字塔网络]**， 图像金子塔是什么？图像金字塔其实在很早便被提出，像比如SIFT,SURF,HOG等传统的特征提取方法均使用了图像金字塔，想了解传统特征提取方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FPN">
+<meta property="og:url" content="https://www.wanglichun.tech/2019/11/18/fpn/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1612.03144  FPN 创新点 低层特征信息与高层语义信息的特征融合 有利于小目标的检测  写在前面的话FPN的全称是**Feature Pyramid Networks[特征金字塔网络]**， 图像金子塔是什么？图像金字塔其实在很早便被提出，像比如SIFT,SURF,HOG等传统的特征提取方法均使用了图像金字塔，想了解传统特征提取方法">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbgy1ftwl7zqn33j20fs0gfq63.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1ftvlmzxfp0j20fn09v3z4.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1ftwi4cr9wjj20vx08o0up.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbgy1ftwhb81e9zj20930190sk.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1ftwjyjrrbmj20w907tjtd.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbgy1ftwkbatyndj20wi09nmzp.jpg">
+<meta property="article:published_time" content="2019-11-18T01:47:44.000Z">
+<meta property="article:modified_time" content="2020-02-16T06:58:14.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="FPN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/87675bbbgy1ftwl7zqn33j20fs0gfq63.jpg">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2019/11/18/fpn/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>FPN | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/18/fpn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          FPN
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-18 09:47:44" itemprop="dateCreated datePublished" datetime="2019-11-18T09:47:44+08:00">2019-11-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 14:58:14" itemprop="dateModified" datetime="2020-02-16T14:58:14+08:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/18/fpn/" class="post-meta-item leancloud_visitors" data-flag-title="FPN" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/18/fpn/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/18/fpn/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1612.03144">论文链接：https://arxiv.org/abs/1612.03144</a></p>
+<hr>
+<h4 id="FPN-创新点"><a href="#FPN-创新点" class="headerlink" title="FPN 创新点"></a>FPN 创新点</h4><ul>
+<li>低层特征信息与高层语义信息的特征融合</li>
+<li>有利于小目标的检测</li>
+</ul>
+<h4 id="写在前面的话"><a href="#写在前面的话" class="headerlink" title="写在前面的话"></a>写在前面的话</h4><p>FPN的全称是**Feature Pyramid Networks[特征金字塔网络]**， 图像金子塔是什么？图像金字塔其实在很早便被提出，像比如SIFT,SURF,HOG等传统的特征提取方法均使用了图像金字塔，想了解传统特征提取方法的参考博文<a target="_blank" rel="noopener" href="http://wanglichun.tech/algorithm/Sift.html">http://wanglichun.tech/algorithm/Sift.html</a>,但是在深度学习中，一直没有被使用，其实主要原因在于深度学习中图像的计算量较大，采用金字塔，多一个scale就相当于多了一倍的计算量，这个时候内存很有可能扛不住了，可是为了达到多尺度的检测该怎么办呢？</p>
+<p>那既然图像金字塔行不通，那我们是否可以在特征图上想想办法呢？毕竟特征图的感受野不一样~~~~</p>
+<p>看下面这张图，图(a)代表的是图像特征金子塔（注意，背景是有图片的），图(b)是在一个特征图上进行预测，典型代表就是Faster R-CNN,图(c)是同时在多个特征图上进行预测，但是特征图间没有特征融合，代表作品就是SSD,图(d)就是本文的主角了。<strong>不仅仅在每个特征图进行预测，而且存在一条自顶到下的特征融合，将高层的语义信息与低层的高分辨率进行融合，提高特征的表达能力，更好的实现物体检测。</strong></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1ftwl7zqn33j20fs0gfq63.jpg"></p>
+<p><strong>下面来详细介绍一下 Feature Pyramid Networks</strong></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1ftvlmzxfp0j20fn09v3z4.jpg"></p>
+<p>先放一张图，其实FPN主要就包含两部分，一个是bottom-up pathway，另一个是top-down pathway</p>
+<h4 id="Bottom-up-pathway"><a href="#Bottom-up-pathway" class="headerlink" title="Bottom-up pathway"></a>Bottom-up pathway</h4><p>Bottom-Up pathway代表的是网络的前向传播过程，这个与正常的网络没有差别，论文中作者展示的是resnet网络，对于每一个stage（就是resnet中，特征图大小相同的一组层），作者定义了一个pyramid level（<strong>这里注意这个level在后面会频繁的使用，就是代表每个stage提取的不同大小的特征</strong>）,并且使用每个stage的最后一层输出特征图作为predict的feature map，特别对于resnet，使用每一个residual block的output作为输出，这里用符号表示对应的卷积输出就是**{C2,C3,C4,C5}<strong>对应stride就是{4，8，16，32}（</strong>注，这里没有使用conv1，作者说是由于它较大的内存消耗**）</p>
+<h4 id="Top-down-pathway-论文最大的创新点就在于此"><a href="#Top-down-pathway-论文最大的创新点就在于此" class="headerlink" title="Top-down pathway  论文最大的创新点就在于此"></a>Top-down pathway  论文最大的创新点就在于此</h4><p>该过程就是上图中右边部分的过程，作者通过对高层的feature map进行上采样，然后与低层feature map进行特征融合来进行predict，为什么要这样做呢？<strong>因为低层的特征虽然语义信息较少，但是其由于下采样的次数较少，所以其保留了更好的位置信息。</strong>（<strong>另外这里作者说明了，上采样采用最近邻方法进行</strong>）</p>
+<p><strong>那具体是怎么做的呢？</strong></p>
+<p><strong>首先，对于C5(上面提到的，就是backbone网络的最后输出的特征图)，利用1*1卷积操作，产生最初的feature map,然后对产生的feature map进行上采样，与相同大小的bottom-up map进行融合(bottom-up man就是前向传播时候的特征图)，这里bottom-up采用1*1的卷积进行channel降维，然后与top-down map采用element-wise-add操作，最后在每个merge feature map上面利用3*3卷积来得到最终的feature map并进行预测，为什么用3*3呢？这里作者解释到，3*3可以减少上采样带来的失真效应，最终得到的feature map这里暂时表示为{P2,P3,P4,P5}</strong></p>
+<p>对于Top-down的特征图，论文中固定feature map的channel数为256.所以上面的channel降维都降到256就可以了</p>
+<h4 id="Applications"><a href="#Applications" class="headerlink" title="Applications"></a>Applications</h4><p>这里作者主要是在RPN以及faster rcnn为例进行了应用</p>
+<p><strong>首先对于RPN部分：</strong></p>
+<p>传统的RPN通过一个3*3的卷积产生256维的特征图，然后分别利用1*1的卷积分为两路，一路是进行是否是物体的判断，另一路是判断其坐标框的回归，是否为物体的定义以及bounding box的回归目标是对应的anchor。</p>
+<p><strong>FPN做了哪些改进呢？</strong></p>
+<p>作者主要是利用FPN替换了原始RPN只在单一的特征层进行操作，作者在每个level上进行RPN原始的操作（包括3*3以及后面的1*1进行分类和回归），因为这里是在所有的level上进行操作，所以就不需要在每个level进行多尺度的anchor了，这里就类似于SSD，分别在不同的level检测不同大小的物体，作者设置的是{P2,P3,P4,P5,P6}分别对应{<code>$32^2,64^2,128^2,256^2,512^2$</code>},anchor的比例就是{1：2，1：1，2：1}，所以一共是15个anchor<br>（<strong>注，这里作者一共设置了5个size，分别在5个层，这里作者解释到，P6是在P5层的基础上进行下采样得到的，用于检测512*515大小的目标，对应于resnet faster-rcnn中roi-pooling后面的那个卷积</strong>）</p>
+<p>对于anchor的label与原始的anchor一致，都是IOU最大以及0.5以上为正，0.3以下为负</p>
+<p>实验对比结果见下图：</p>
+<p>从图中（c）可以看出，FPN的效果还是很赞的，AR代表平均召回率。<br>另外作者做了一些其他的对比实验，验证FPN网络中横向连接以及纵向融合的效果，其中d是只有横向连接，e是只有纵向融合，f是只在P2层进行特征提取，可见，d-&gt;e-&gt;f的效果在增加，均要比base-line的效果要好，但是比本文方法较差。可见对于横向连接，纵向融合还是有一定的效果的。这里anchor的数量为什么会差距那么大，主要原因是由于在不同的分辨率上，图像大小不一样，所以采样出来的额anchor数量也就不一样。并且从下面巨大数量的anchor也说明了anchor取得特别多，其实对于效果不一定就会有很大提升。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1ftwi4cr9wjj20vx08o0up.jpg"></p>
+<p><strong>Fast R-CNN部分：</strong></p>
+<p>原始的Fast R-CNN部分，在最后的卷积层提取proposal，通过roi-pooling送入到后面的分类网络以及回归网络，在Fast R-CNN中，改变的方法自然是不仅仅在最后的卷积层，而是根据图像的尺寸选择不同的level进行特征提取，然后进行roi-pooling，那level应该如何选择呢？用下面的公式：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1ftwhb81e9zj20930190sk.jpg"></p>
+<p>举个例子，首先对于k0的定义，如果采用resnet作为基础网络，由于其利用C4作为最后的特征提取层，所以设k0 == 4 ， 这样对于输入为112*112的roi计算出来的k=3。</p>
+<p>然后针对每一个level提取的roi，经过roi-pooling（7*7），后面接2个1024维的fc层，最后接分类和回归网络，这里就与fast-rcnn保持一致了。<br>这里需要注意的是，fast rcnn中，其实是在conv4后面接的roi-pooling，然后接conv5,然后接fc，而fpn中是在conv5后面接roi-pooling然后直接接fc层的。</p>
+<p>下图是作者对fast rcnn部分的测试结果：可以看出FPN的效果还是挺明显的，另外跟RPN一样，作者同样做了一些横向的对比，对比结果可想而知，这里就不多说了。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1ftwjyjrrbmj20w907tjtd.jpg"></p>
+<p>下图是论文与其他算法的精度对比：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1ftwkbatyndj20wi09nmzp.jpg"></p>
+<p><strong>到这里，基本上对FPN网络的介绍就差不多了，FPN仍然采用two stage的方法，精度较faster r-cnn有所提高，但是速度相比较于ssd还是有很大的瓶颈，不过FPN的思想值得借鉴，这在之后的论文中也多次提到</strong></p>
+<h4 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h4><ul>
+<li>问：横向连接的作用是什么？</li>
+</ul>
+<blockquote>
+<p>答：如果不进行特征的融合（也就是说去掉所有的1x1侧连接），虽然理论上分辨率没变，语义也增强了，但是AR下降了10%左右！作者认为这些特征上下采样太多次了，导致它们不适于定位。</p>
+</blockquote>
+<ul>
+<li>问：为什么 FPN 相比去掉深层特征 upsample(bottom-up pyramid)对于小物体检测提升明显？（RPN 步骤 AR 从 30.5 到 44.9，Fast RCNN 步骤 AP 从 24.9 到 33.9）</li>
+</ul>
+<blockquote>
+<p>答：对于小物体，一方面它提高了小目标的分辨率信息；<br>另一方面，如图中的挎包一样，从上到下传递过来的更全局的情景信息可以更准确判断挎包的存在及位置。</p>
+</blockquote>
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/FPN/" rel="tag"># FPN</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/18/maskrcnn/" rel="next" title="Mask RCNN">
+                  <i class="fa fa-chevron-left"></i> Mask RCNN
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/11/18/faster-rcnn/" rel="prev" title="Faster-RCNN">
+                  Faster-RCNN <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#FPN-%E5%88%9B%E6%96%B0%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">FPN 创新点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2%E7%9A%84%E8%AF%9D"><span class="nav-number">2.</span> <span class="nav-text">写在前面的话</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Bottom-up-pathway"><span class="nav-number">3.</span> <span class="nav-text">Bottom-up pathway</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Top-down-pathway-%E8%AE%BA%E6%96%87%E6%9C%80%E5%A4%A7%E7%9A%84%E5%88%9B%E6%96%B0%E7%82%B9%E5%B0%B1%E5%9C%A8%E4%BA%8E%E6%AD%A4"><span class="nav-number">4.</span> <span class="nav-text">Top-down pathway  论文最大的创新点就在于此</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Applications"><span class="nav-number">5.</span> <span class="nav-text">Applications</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%A5%E5%85%85"><span class="nav-number">6.</span> <span class="nav-text">补充</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

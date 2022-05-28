@@ -1,0 +1,2208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Spring&#39;s Idea">
+<meta property="og:url" content="https://www.wanglichun.tech/page/2/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="Spring Wang">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.wanglichun.tech/page/2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: true,
+    isPost: false,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/11/28/pruingfromscratch/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/28/pruingfromscratch/" class="post-title-link" itemprop="url">Pruning From Scratch</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-11-28 08:22:26 / 修改时间：13:28:44" itemprop="dateCreated datePublished" datetime="2020-11-28T08:22:26+08:00">2020-11-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Model-Compression/" itemprop="url" rel="index">
+                    <span itemprop="name">Model Compression</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/11/28/pruingfromscratch/" class="post-meta-item leancloud_visitors" data-flag-title="Pruning From Scratch" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/11/28/pruingfromscratch/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/28/pruingfromscratch/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>本文的提出，主要借鉴于Network slimming以及rethinking the value of pruning network这两篇文章，文章的观点在于，我是不是有必要在预训练模型上面剪枝，是否可以在随机初始化的模型上面直接剪枝，本文经过证明，得出的结论是可以的，并且剪枝后的模型效果并不比在预训练模型上面剪枝的效果差。</p>
+</blockquote>
+<hr>
+<p>论文名称：Pruning From Scratch</p>
+<p>作者： Yulong Wang  等</p>
+<p>论文链接： <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1909.12579">https://arxiv.org/abs/1909.12579</a></p>
+<p>github ：<a target="_blank" rel="noopener" href="https://github.com/zheng-ningxin/Pruning-from-scratch">https://github.com/zheng-ningxin/Pruning-from-scratch</a> (没找到官方的，找了个非官方的)</p>
+<hr>
+<p><img src="/0.png" alt="0.png"></p>
+<p>传统的剪枝套路如上图（a）,一般是在预训练模型上面剪枝，然后剪完之后利用finetune将精度训练上去。上图（b）所示的方法是rethinking the value of pruning network的方法，即剪完之后不一定非得利用原来的参数进行finetune，可以重头开始训练，也会得到相近甚至更好的结果。图(c)就是本文证明的方法了，在剪枝之前，也可以不使用训练好的模型，而是在随机初始化的模型上面直接进行剪枝。</p>
+<p>作者为什么会有这个出发点呢？原因在于作者发现，从预训练的模型进行剪枝的模型，剪枝结果趋于同质化，比较难发现更好的结构，这其实限制了剪枝的效果。基于此，作者尝试在没有训练过的模型进行剪枝。</p>
+<h4 id="预训练的参数对剪枝结果的影响"><a href="#预训练的参数对剪枝结果的影响" class="headerlink" title="预训练的参数对剪枝结果的影响"></a>预训练的参数对剪枝结果的影响</h4><p>为了验证预训练的参数对剪枝结果的影响，作者进行了实验，下面这张图是作者分别进行的随机初始化以及预训练模型的剪枝结果的相关系数，可以发现，采用预训练模型后，剪枝的模型很相似，没有明显差别，而随机初始化的模型，显然不同的随机，结果差别大一些。</p>
+<p><img src="/1.png" alt="1.png"></p>
+<p><strong>于是作者得出结论</strong>：</p>
+<p>（1）随机初始化的剪枝结果，跟不随机初始化的剪枝结果的差别还是很大的。</p>
+<p>（2）随机初始化的剪枝结果，回存在更大的差异化。</p>
+<p>（3）训练10个epoch之后的模型，剪枝结果就具备一定的相似性了。</p>
+<p><strong>所以，预训练之后，实际上是在减少剪枝空间，限制了剪枝的潜在表现。换言之，随机初始化，其实更有利于发现更多更大的剪枝空间。</strong></p>
+<h4 id="随机初始化对于剪枝结果的影响？"><a href="#随机初始化对于剪枝结果的影响？" class="headerlink" title="随机初始化对于剪枝结果的影响？"></a>随机初始化对于剪枝结果的影响？</h4><p>下面实验可以发现，rand的效果跟pre-trained的效果差不多：</p>
+<p><img src="/2.png" alt="2.png"></p>
+<p>所以，剪枝完全可以从random开始嘛。</p>
+<h4 id="剪枝细节"><a href="#剪枝细节" class="headerlink" title="剪枝细节"></a>剪枝细节</h4><p>剪枝的关键在于如何找到重要性较弱的节点，network slimming是一个比较著名的方法，作者本篇也参考这个方法，通过lamda来控制channel的稀疏性，将不重要的channel干掉。<br>训练的时候，在学习channel重要性的时候，网络的weights不需要更新。</p>
+<p><img src="/3.png" alt="3.png"></p>
+<p>作者采用类似与network slimming的方法，但是没有采用原始的L1正则，因为其稀疏化不受控制，效果不是特别的好。<br>作者修改成了如下：</p>
+<p><img src="/4.png" alt="4.png"></p>
+<p>r 是目标稀疏系数， Cj是每个layer的channel数量。</p>
+<p>接下来的问题是，在训练好的稀疏矩阵之后，剪枝阈值怎么定？这里作者采用了个二分法来定阈值，找到需求的目标裁剪比例</p>
+<p><img src="/5.png" alt="5.png"></p>
+<p><strong>可以做channel expansion，增加channel数量，这样就可以增大搜索空间，没准就得到了更好的结果</strong></p>
+<p>训练的时候：</p>
+<ul>
+<li>adam</li>
+<li>其他都比较常规</li>
+</ul>
+<p>下表说明，还是挺有优势的。</p>
+<p><img src="/6.png" alt="6.png"></p>
+<p>下表说明，比大乐透理论的结果要好。</p>
+<p><img src="/7.png" alt="7.png"></p>
+<h4 id="分解实验："><a href="#分解实验：" class="headerlink" title="分解实验："></a>分解实验：</h4><p>1、channel的扩增的影响</p>
+<p><img src="/8.png" alt="8.png"></p>
+<p>实验说明也不是扩张的越大越好，太大了反而效果变差了。但是缩小channel也不一定会得到不好的结果，可能也不错。</p>
+<p>2、剪枝比例的影响：</p>
+<p><img src="/9.png" alt="9.png"></p>
+<p>3、sparsity ratio的影响， 影响不大，不是特别的敏感。</p>
+<p><img src="/10.png" alt="10.png"></p>
+<h3 id="关键代码"><a href="#关键代码" class="headerlink" title="关键代码"></a>关键代码</h3><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">regularzation_update</span>(<span class="params">model, args</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> args.sum_channel:</span><br><span class="line">        args.sum_channel = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> model.modules():</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">isinstance</span>(layer, nn.BatchNorm2d):</span><br><span class="line">                args.sum_channel += layer.weight.size()[<span class="number">0</span>]</span><br><span class="line">    sumc = args.sum_channel</span><br><span class="line">    <span class="keyword">for</span> layer <span class="keyword">in</span> model.modules():</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(layer, nn.BatchNorm2d):</span><br><span class="line">            layer.weight.grad.data.add(args.balance * <span class="number">2.0</span> * torch.sign(layer.weight.data)*(layer.weight.data/sumc-args.ratio))</span><br></pre></td></tr></tbody></table></figure>
+
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/11/28/pruingfromscratch/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/06/24/network-slimming/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/24/network-slimming/" class="post-title-link" itemprop="url">Network Slimming</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-24 09:55:45" itemprop="dateCreated datePublished" datetime="2020-06-24T09:55:45+08:00">2020-06-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-28 13:27:16" itemprop="dateModified" datetime="2020-11-28T13:27:16+08:00">2020-11-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Model-Compression/" itemprop="url" rel="index">
+                    <span itemprop="name">Model Compression</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/06/24/network-slimming/" class="post-meta-item leancloud_visitors" data-flag-title="Network Slimming" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/06/24/network-slimming/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/06/24/network-slimming/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>由于深度学习模型大小以及计算资源的限制，导致将深度学习模型部署到如移动端的时候会受到一定的限制，为了解决这个问题，就形成了一个新的领域：模型压缩，即减少模型的参数以及计算量，并且依然保证模型的精度。常见的方法比如：量化、剪枝、蒸馏等，本文便是“剪枝”当中一篇非常经典的文章，也是比较有效果的一篇文章。本文方法其实比较简单：首先，使用L1 regularization对BN层的scaling factor进行稀疏化训练，然后将scaling factor较小的参数相连接的filter减掉，达到减少模型size的目标。最后再重新finetune剪枝后的网络，以达到更好的效果。</p>
+</blockquote>
+<hr>
+<p>论文名称：Learning Efficient Convolutional Networks through Network Slimming</p>
+<p>作者： Zhuang Liu &amp; Jianguo Li 等</p>
+<p>论文链接： <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1708.06519">https://arxiv.org/abs/1708.06519</a></p>
+<p>github：<a target="_blank" rel="noopener" href="https://github.com/liuzhuang13/slimming">https://github.com/liuzhuang13/slimming</a></p>
+<hr>
+<h3 id="模型压缩加速方法介绍"><a href="#模型压缩加速方法介绍" class="headerlink" title="模型压缩加速方法介绍"></a>模型压缩加速方法介绍</h3><ul>
+<li>Low-rank Decomposition</li>
+</ul>
+<p>采用奇异值分解等方法对权重矩阵进行分解，以达到减少矩阵大小的作用，这种方法适用于全连接层，大概可以减少3倍的模型大小，但是对于卷积层，作用不大。</p>
+<ul>
+<li>Weight Quantization</li>
+</ul>
+<p>参数量化，比如将参数量化的int8,或者量化到-1,0,1,可以较大的提升模型的速度，但是这种方法往往较难保证精度，精度一般都会下降。</p>
+<ul>
+<li>Weight Pruning / Sparsifying</li>
+</ul>
+<p>参数剪枝与稀疏化，将不重要的较小的权重置为0。这就需要矩阵较为稀疏才能起作用。</p>
+<ul>
+<li>Structured Pruning / Sparsifying</li>
+</ul>
+<p>结构化剪枝就是不单单是对每个参数，而是对网络结构进行剪枝，比如：channel，neurons,layers等</p>
+<h3 id="本文方法：Network-Slimming"><a href="#本文方法：Network-Slimming" class="headerlink" title="本文方法：Network Slimming"></a>本文方法：Network Slimming</h3><h4 id="Advantage-of-Channel-level-Sparsity"><a href="#Advantage-of-Channel-level-Sparsity" class="headerlink" title="Advantage of Channel-level Sparsity"></a>Advantage of Channel-level Sparsity</h4><p>首先需要指出的是，稀疏化可以应用在各个level： weight-level, kernel-level, channel-level, layer-level. 其中weight-level的稀疏化程度最高，也可以达到最大的压缩率，但是在weight-level进行加速，往往需要特殊的软硬件加速器，来对稀疏的模型进行加速。</p>
+<p>与其相反的layer-level,相对比较简单，不需要特殊的硬件，但是对layer比较多的时候才具有一定的效果，比如50个layer以上，想想可以理解，把50个layer减到40个layer可能还能保留一定的精度。但是10个layer减少到5个layer,差别就比较大了。</p>
+<p>相比之下，channel-level就是一种很好的平衡，即不需要特殊的硬件同时还保留了一定的复杂度。</p>
+<p>但是channel-level依然具有一定得挑战，由于channel-level的剪枝会影响到输入和输出，这就使得直接在预训练模型上面将权重减掉是不行的，因为一般不会存在输入和输出都接近0的情况。据统计，一般情况，也就减掉约10%是对精度影响不大的。</p>
+<p>如何解决这个问题呢？</p>
+<p>本文的方法是引入scale参数$\gamma$,将其作用于每一个channel,与输出weight相乘，然后在训练的时候，一起训练这个$\gamma$参数，并对其增加 正则，使其稀疏化，稀疏化后，将$\gamma$参数较小的值减掉就可以了。</p>
+<p>Loss公式表示就是如下：</p>
+<p>$$L = \sum_{x,y}l(f(x,W),y)+\lambda\sum (g(\gamma))$$</p>
+<p>为了达到稀疏化的效果，这里g()采用的是L1范数。</p>
+<p>整个过程如下图所示：</p>
+<p><img src="/0.png" alt="0.png"></p>
+<p>引入的scale参数放在哪里呢？</p>
+<p>我们知道BN层在深度网络中起到了很大的作用，使得网络可以快速的收敛，而且BN层往往是被插入到conv层的后面的，并且BN也是在channel-level进行计算的，基于此，我们可以直接利用BN层的$\gamma$来当做我们上面设计的参数，对channel进行筛选。</p>
+<p>由于对$\gamma$参数加入了L1 正则化，所以训练过后，该参数会较为稀疏，所以在训练后，可以根据阈值，对网络进行裁剪，将$\gamma$小于阈值的对应channel减掉，就得到了新的网络。但是这样得到的网络大小减少了，自然精度会稍有下降，所以我们需要再对其进行fine-tune操作，恢复期精度，整个流程可以迭代进行如下图所示：</p>
+<p><img src="/1.png" alt="1.png"></p>
+<p>对BN层增加L1 正则化参数的方法也很简单，如下代码可以实现，就是在网络反向传播后，对BN层的参数加上其值的sign()就可以了，为什么可以这样做呢？其实按照正常公式推理，需要将增加的BN的loss对参数求导，而由于loss是L1正则，也就是绝对值，所以求导后也就变成了1，-1, 0三个值，所以也就是如下代码的解释了。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def updateBN(model):</span><br><span class="line">    for n, m in model.named_modules():</span><br><span class="line">        if isinstance(m, nn.BatchNorm2d):</span><br><span class="line">            m.weight.grad.data.add_(args.s*torch.sign(m.weight.data))  </span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p>show几张图吧</p>
+<p><img src="/3.png" alt="3.png"></p>
+<p><img src="/2.png" alt="2.png"></p>
+<p><img src="/4.png" alt="4.png"></p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>如下图是剪枝比例与精度的关系，可以发现，当减值比例超过40%的时候，精度下降非常明显。但是经过finetune，基本还是可以恢复的，但是到70%以上，恢复的就比较难了。</p>
+<p><img src="/5.png" alt="5.png"></p>
+<p>对于正则化的效果，作者也进行了一定的分析，作者分别对正则化系数进行了分析，分别实验了0,10e-4,10e-5的结果，结果如下图所示，可见，随着系数的增加，BN层的scale参数也越来越接近0，说明稀疏化的作用还是比较明显的。</p>
+<p><img src="/6.png" alt="6.png"></p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/06/24/network-slimming/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/05/16/yolov4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/16/yolov4/" class="post-title-link" itemprop="url">YOLO-V4</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-05-16 11:04:42 / 修改时间：15:16:00" itemprop="dateCreated datePublished" datetime="2020-05-16T11:04:42+08:00">2020-05-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/05/16/yolov4/" class="post-meta-item leancloud_visitors" data-flag-title="YOLO-V4" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/05/16/yolov4/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/16/yolov4/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>这篇文章读下来，感觉就是一个tricks的集大成，作者实验做的可是真的很详细，好多trick我都没有听过，我看网上有人评论说，可以当做目标检测的入门手册了，哈哈，确实，能做如此多的实验，足见作者的功底。总体来说，文章的创新点不是特别多，大多是在试各种tricks，然后找到效果最好的，文章值得好好的读一读。</p>
+</blockquote>
+<hr>
+<p>论文名称：YOLOv4: Optimal Speed and Accuracy of Object Detection</p>
+<p>作者：Alexey Bochkovskiy &amp; Chien-Yao Wang  等</p>
+<p>论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1903.00621">https://arxiv.org/abs/1903.00621</a></p>
+<hr>
+<h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p><strong>本文主要创新点在于干了下面几件事</strong></p>
+<p>1、YOLOv4，训练方便，1个1080或者2080就可以训起来了。<br>2、对比了很多tricks,验证了一些trick的影响,并选取了较好的tricks的组合。<br>3、优化了一些现存的方法，使其可以高效的训练在单个GPU上。</p>
+<h4 id="目标检测的网络结构"><a href="#目标检测的网络结构" class="headerlink" title="目标检测的网络结构"></a>目标检测的网络结构</h4><p>下图很清晰的描述了目标检测网络的结构，包括backbone,neck,head等。</p>
+<p><img src="/1.png" alt="1.png"></p>
+<h4 id="bag-of-freebies"><a href="#bag-of-freebies" class="headerlink" title="bag of freebies"></a>bag of freebies</h4><p>什么是bag of freebies呢？就是那些会提高模型效果，但是又不会增加模型部署后latency的方法。</p>
+<ol>
+<li>data augmentation</li>
+</ol>
+<ul>
+<li>random erase、cutout: 随机选取一个矩形，置为0</li>
+<li>hide-and-seek、grid mask: 选取多个举行区域，并置为0</li>
+<li>DropOut、DropConnect、dropBlock<blockquote>
+<p>dropblock很简单，就是随机的drop一块信息,因为采用dropout，虽然随机关闭了部分的神经元，但是其旁边的神经元依然可以传递信息，所以dropblock关闭一块区域，阻断信息的传播。</p>
+</blockquote>
+</li>
+<li>MixUP</li>
+<li>CutMix</li>
+<li>style transfer GAN<blockquote>
+<p>下图示例了一部分augment方法</p>
+</blockquote>
+</li>
+</ul>
+<p><img src="/10.png" alt="10.png"></p>
+<ol start="2">
+<li>problem of semantic distribution bias,  data imbalance between different classes</li>
+</ol>
+<ul>
+<li>hard example mining</li>
+<li>focal loss</li>
+<li>label smoothing</li>
+</ul>
+<ol start="3">
+<li>bbox regression</li>
+</ol>
+<ul>
+<li>IOU loss</li>
+<li>GIOU loss<blockquote>
+<p>$GIOU = IOU -\frac {A_c - U} {A_c}$<code> </code>$L_{GIOU}=1-GIOU$</p>
+</blockquote>
+</li>
+<li>DIOU loss<blockquote>
+<p><img src="/14.png" alt="14.png"></p>
+</blockquote>
+</li>
+<li>CIOU loss</li>
+</ul>
+<h4 id="bag-of-specials"><a href="#bag-of-specials" class="headerlink" title="bag of specials"></a>bag of specials</h4><ol>
+<li>增加感受野</li>
+</ol>
+<ul>
+<li>SPP, </li>
+<li>ASPP, </li>
+<li>RFB</li>
+</ul>
+<ol start="2">
+<li>attention</li>
+</ol>
+<ul>
+<li>channel-wise atention (SENet)</li>
+</ul>
+<p><img src="/3.png" alt="3.png"></p>
+<ul>
+<li>point-wise attention ：SAM(Spatial Attention Module)<blockquote>
+<p>SAM介绍:作者表示不仅在channel层面在spatial层面上也需要网络能明白feature map中哪些部分应该有更高的响应。具体怎么做的呢？如下图，首先，还是使用average pooling和max pooling对输入feature map进行压缩操作，只不过这里的压缩变成了通道层面上的压缩，对输入特征分别在通道维度上做了mean和max操作。最后得到了两个二维的feature，将其按通道维度拼接在一起得到一个通道数为2的feature map，之后使用一个包含单个卷积核的隐藏层对其进行卷积操作，要保证最后得到的feature在spatial维度上与输入的feature map一致，最后通过sigmoid对原来的特征图进行加权。</p>
+</blockquote>
+</li>
+</ul>
+<p><img src="/2.png" alt="2.png"></p>
+<ol start="3">
+<li>activation function</li>
+</ol>
+<ul>
+<li>ReLU</li>
+<li>LReLU</li>
+<li>PReLU</li>
+<li>ReLU6  : quantization network</li>
+<li>Swish</li>
+</ul>
+<blockquote>
+<p>$x*sigmoid(x)$</p>
+</blockquote>
+<blockquote>
+<p><img src="/16.png" alt="16.png"></p>
+</blockquote>
+<ul>
+<li>hard-Swish : quantization network</li>
+<li>Mish</li>
+</ul>
+<blockquote>
+<p>$mish=x*tanh(ln(1+e^x))$</p>
+</blockquote>
+<blockquote>
+<p><img src="/15.png" alt="15.png"><br>4. nms</p>
+</blockquote>
+<ul>
+<li>soft nms</li>
+<li>DIoU NMS</li>
+</ul>
+<h4 id="方法分析"><a href="#方法分析" class="headerlink" title="方法分析"></a>方法分析</h4><p>相比较分类，检测模型应该需要哪些：</p>
+<p>1、更大的输入尺寸，充分保证小尺寸图像的检测能力。</p>
+<p>2、更大的感受野more layers</p>
+<p>3、更多的参数</p>
+<p><strong>最优化的分类模型，不一定适用于检测模型中。</strong></p>
+<h4 id="YOLO-v4"><a href="#YOLO-v4" class="headerlink" title="YOLO v4"></a>YOLO v4</h4><ul>
+<li>backbone : CSPDarknet53</li>
+<li>neck ： PANet path-aggregation neck</li>
+<li>head : anchor based head , as YOLOv3</li>
+<li>no cross-gpu batch normalization</li>
+<li>DropBlock</li>
+<li>Mosaic</li>
+<li>Self-Adversarial Training(SAT)</li>
+<li>modified SAM, PAN and Cross mini-Batch Normalization(CmBN)</li>
+</ul>
+<p><strong>backbone如下</strong></p>
+<p><img src="/4.png" alt="4.png"></p>
+<p><strong>Mosaic</strong></p>
+<p>就是拼图，好处就是减小了目标的尺寸，同时变相增大了batchsize</p>
+<p><img src="/5.png" alt="5.png"></p>
+<ul>
+<li>Self-Adversarial Training(SAT)</li>
+</ul>
+<p>这个有点意思，简单的说就是对一张图像，首先利用网络的参数给原图像增加噪声，类似与攻击，增加其识别难度，然后在对其进行识别，以提高网络的识别能力，有意思。</p>
+<ul>
+<li>Cross mini-Batch Normalization</li>
+</ul>
+<p><img src="/6.png" alt="6.png"></p>
+<p>原始的BN层是在每个mini-batch中计算BN</p>
+<p>CBN的提出是因为当模型较大的时候，单张卡的batch较小，影响模型效果，所以CBN不仅仅利用当前的mini-batch，还利用上几个iter的mini-batch，使得batch变得大一些。</p>
+<p>CmBN类似于BN的升级版，只在mini-batch内部累加BN</p>
+<ul>
+<li>SAM的修改</li>
+</ul>
+<p><img src="/7.png" alt="7.png"></p>
+<p>如图所示，将pooling 修改成了卷积,修改后就变成了point-wise的attention。</p>
+<ul>
+<li>PAN的修改</li>
+</ul>
+<p><img src="C:/Users/wanglichun/Desktop/blog-img/yolov4/8.png" alt="C:\Users\wanglichun\Desktop\blog-img\yolov4\8
+.png"></p>
+<p>PANet原始结构: 自顶向下  自下上顶</p>
+<p><img src="/0.png" alt="0.png"></p>
+<h3 id="实验部分"><a href="#实验部分" class="headerlink" title="实验部分"></a>实验部分</h3><p>作者的实验做的是真的很全，对比的很充分，感兴趣的同学可以自行阅读一下，这里不介绍了，总之就是各种trick的对比。</p>
+<p>最后放一下，不同网络的对比结果。</p>
+<p><img src="/11.png" alt="11.png"><br><img src="/12.png" alt="12.png"><br><img src="/13.png" alt="13.png"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>下面是网上网友总结的YOLO-V4的tricks,很全，大家可以按图查询，查缺补漏。</p>
+<p><img src="/conclusion.jpg" alt="conclusion.jpg"></p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/05/16/yolov4/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/05/16/resnest/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/16/resnest/" class="post-title-link" itemprop="url">ResNeSt</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-05-16 11:04:33 / 修改时间：15:21:52" itemprop="dateCreated datePublished" datetime="2020-05-16T11:04:33+08:00">2020-05-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Classification/" itemprop="url" rel="index">
+                    <span itemprop="name">Classification</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/05/16/resnest/" class="post-meta-item leancloud_visitors" data-flag-title="ResNeSt" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/05/16/resnest/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/16/resnest/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>本篇论文是亚马逊MXNet团队的又一力作，目前预训练模型已经在MXNet官网上面公布，从效果上看，网络的精确度提升还是很明显的，实现了较好的speed与accuracy的trade-off。精度提升的点主要在于两方面，一方面resnest使用了前面MXNet团队总结的训练模型的tricks，另一方面设计了split-attention block结构，在并没有改变resnet原始结构的情况下，提高了网络的识别能力。并且ResNeSt可以轻易的移植到其他的使用resnet作为backbone的任务中，比如目标检测、分割、姿态估计等,非常方便。</p>
+</blockquote>
+<hr>
+<p>作者：亚马逊MXNet那帮人</p>
+<p>论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2004.08955">https://arxiv.org/abs/2004.08955</a></p>
+<p>开源代码：<a target="_blank" rel="noopener" href="https://github.com/zhanghang1989/ResNeSt">https://github.com/zhanghang1989/ResNeSt</a></p>
+<hr>
+<h3 id="ResNeSt介绍"><a href="#ResNeSt介绍" class="headerlink" title="ResNeSt介绍"></a>ResNeSt介绍</h3><p>ResNeSt可以说是亚马逊在上一篇训练方法总结论文的又一升级版，没有看过那篇文章的小伙伴可以<a href="https://www.wanglichun.tech/2020/02/16/tricks-of-train/">点击链接查看</a>，这篇论文总结了一些训练模型时候提点的trick，还是很实用的。在ResNeSt这篇文章中，作者不仅采用了哪些tricks,而且提出了Split-Attention block方法，可以实现feature-map groups间的attention，提高识别能力的同时还保留了resnet的结构，使得其可以轻易替换任何的以resnet为backbone的模型，而且模型的效率也跟resnet差不多，这就非常的人性化了。</p>
+<p>ResNeSt的表现也是out performance的，ResNeSt-50在ImageNet上可以达到81.13%的准确率。将Faster-RCNN的backbone由resnet50替换成resnest50，模型在MS-COCO的map可以从39.3%提升到42.3%，提升3个点，效果明显的，可以一试。</p>
+<p>ResNeSt在accuracy与latency的表现可以看下图的分析结果。并且在检测以及分割上都有不错的表现。</p>
+<p><img src="/0.png" alt="0.png"></p>
+<h3 id="ResNeSt创新点"><a href="#ResNeSt创新点" class="headerlink" title="ResNeSt创新点"></a>ResNeSt创新点</h3><h4 id="Split-Attention-Block"><a href="#Split-Attention-Block" class="headerlink" title="Split-Attention Block"></a>Split-Attention Block</h4><p>首先介绍一下Split-Attention Block，在介绍Split-Attention Block之前，首先介绍一下Feature-map Group的概念，什么是Feature-map Group呢？这个概念是在ResNeXt中提出的，简单来说就是分组卷积中的那个‘组’的概念，在ResNeXt中，‘组’被称cardinality参数所划分。在ResNeSt中，作者同样引入了cardinality，不仅如此，作者在每个组内，进一步引入了radix参数，在组内实现了二次划分，相当于做了<strong>两级</strong>分组卷积,所以，在ResNeSt中的最终分组数为Group=Cardinality * Radix,简单记为G=C*R.</p>
+<p>在每个Group内，特征图依次通过1x1和3x3的网络。</p>
+<p>如下图所示，可以看到ResNeSt中的Cardinality以及Radix参数。看图可以发现在分组之后，Cardinality组内是通过Split Attention进行特征融合的，那么这个Split-Attention是怎么做的呢？</p>
+<p><img src="/1.png" alt="1.png"></p>
+<p>接下来介绍一下本篇文章的重点：</p>
+<ul>
+<li>Split-Attention。</li>
+</ul>
+<ol>
+<li>cardinality组内的attention</li>
+</ol>
+<p><img src="/2.png" alt="2.png"></p>
+<p>这个可以参考上面的流程图，首先对每组的输出进行element-wise summation,用以融合不同特征图的特征。然后通过Global pooling得到全局统计信息，进而通过一层全连接层+bn+relu，然后再通过一层全连接层得到加softmax，计算出各个组的attention值，然后对原来的输入进行加权，得到输出结果后进一步求和得到最终的输出结果。</p>
+<blockquote>
+<p>总体来看，跟senet有点像，只不过多了一些分组求和的操作，如果将radix=1，那么就跟senet基本一致了。另外senet是使用sigmoid计算激活值，而resnest使用的是softmax来计算激活值，更增加了channel之间的联系,这里会有不同。</p>
+</blockquote>
+<p>看代码就很清晰了。</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">    x = self.conv(x)</span><br><span class="line">    <span class="keyword">if</span> self.use_bn:</span><br><span class="line">        x = self.bn0(x)</span><br><span class="line">    <span class="keyword">if</span> self.dropblock_prob &gt; <span class="number">0.0</span>:</span><br><span class="line">        x = self.dropblock(x)</span><br><span class="line">    x = self.relu(x)</span><br><span class="line"></span><br><span class="line">    batch, rchannel = x.shape[:<span class="number">2</span>]</span><br><span class="line">    <span class="keyword">if</span> self.radix &gt; <span class="number">1</span>:</span><br><span class="line">        splited = torch.split(x, rchannel//self.radix, dim=<span class="number">1</span>)</span><br><span class="line">        gap = <span class="built_in">sum</span>(splited) </span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        gap = x</span><br><span class="line">    gap = F.adaptive_avg_pool2d(gap, <span class="number">1</span>)</span><br><span class="line">    gap = self.fc1(gap)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> self.use_bn:</span><br><span class="line">        gap = self.bn1(gap)</span><br><span class="line">    gap = self.relu(gap)</span><br><span class="line"></span><br><span class="line">    atten = self.fc2(gap)</span><br><span class="line">    atten = self.rsoftmax(atten).view(batch, -<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> self.radix &gt; <span class="number">1</span>:</span><br><span class="line">        attens = torch.split(atten, rchannel//self.radix, dim=<span class="number">1</span>)</span><br><span class="line">        out = <span class="built_in">sum</span>([att*split <span class="keyword">for</span> (att, split) <span class="keyword">in</span> <span class="built_in">zip</span>(attens, splited)])</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        out = atten * x</span><br><span class="line">    <span class="keyword">return</span> out.contiguous()</span><br></pre></td></tr></tbody></table></figure>
+<ol start="2">
+<li>cardinality组间的concat</li>
+</ol>
+<p>在每个Cardinality组内做好attention之后，通过concat将特征图进行合并。</p>
+<p>同样的的，跟resnet一样，每个block会有一个identity map。</p>
+<p><strong>另外，虽然看起来分组进行attention好像挺复杂的，但是其实，它完全可以通过分组卷积，以及分组全连接以及softmax来实现，计算效率不会因为分支多而受到影响。</strong></p>
+<h3 id="其他tricks"><a href="#其他tricks" class="headerlink" title="其他tricks"></a>其他tricks</h3><p>其他的一些tricks设计，可以参考开头提到的那篇亚马逊mxnet团队的训练技巧的总结文章，都应用到了resnest上面，包括label smoothing, mixup，v1d结构等。<br>另外还有一个auto augmentation，就是通过自动搜索的方法，去检索最合适的24个augment，然后训练的时候随机的选择augment</p>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p>首先跟其他的resnet网络变种相比，resnest的精度还是很具有竞争力的。</p>
+<p><img src="/3.png" alt="3.png"></p>
+<p>跟目前stage of art网络对比结果如下：可见resnest在速度精度也都表现的很出色。</p>
+<p><img src="/4.png" alt="4.png"></p>
+<p><strong>其中的resnest-fast网络就是将计算attention中的下采样放到3x3之前，减少计算量，gluoncv中提供的预训练模型都是放在之前的</strong></p>
+<ul>
+<li>radix与cardinality的对比</li>
+</ul>
+<p>对比结果如下：其中s代表radix,x代表cardinality,d代表网络的width， 0s代表的就是标准的residual block,经过对比2s1x64d，是一个比较好的速度与精度平衡的选择。</p>
+<p><img src="/5.png" alt="5.png"></p>
+<ul>
+<li>在检测网络的表现</li>
+</ul>
+<p><img src="/6.png" alt="6.png"></p>
+<h4 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h4><p>实际上在实现的过程中，是采用下图所示的网络结构实现的，更有利于使用模块化的处理方式以及GPU加速。为啥这种方法更有利于模块化呢？看图可以看出来，其实它只进行了一次split-attention,而cardinality-major方法（论文中介绍的）进行了多次的split-attention，自然并行化要差一些。</p>
+<p><img src="/7.png" alt="7.png"></p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/05/16/resnest/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/03/08/ghostnet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/08/ghostnet/" class="post-title-link" itemprop="url">GhostNet(CVPR2020)</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-03-08 08:28:08 / 修改时间：12:42:40" itemprop="dateCreated datePublished" datetime="2020-03-08T08:28:08+08:00">2020-03-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Classification/" itemprop="url" rel="index">
+                    <span itemprop="name">Classification</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/03/08/ghostnet/" class="post-meta-item leancloud_visitors" data-flag-title="GhostNet(CVPR2020)" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/03/08/ghostnet/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/03/08/ghostnet/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>本篇论文是发表于CVPR2020的一篇轻量级网络的论文，作者是华为诺亚方舟实验室，文章的总体思路比较清晰，为了减少网络计算量，作者将传统的卷积分成两步进行，首先利用较少的计算量通过传统的卷积生成channel较小的特征图，然后在此特征图的基础上，通过cheap operation(depthwise conv)再进一步利用较少的计算量，生成新的特征图，最后将两组特征图拼接到一起，得到最终的output，最终实验效果还不错，相同计算量的情况下比MobileNet- V3的效果还要更好一些。</p>
+</blockquote>
+<hr>
+<p>作者：华为诺亚方舟实验室</p>
+<p>论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1911.11907">https://arxiv.org/abs/1911.11907</a></p>
+<p>作者解读：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/109325275">https://zhuanlan.zhihu.com/p/109325275</a></p>
+<p>开源代码tensorflow：<a target="_blank" rel="noopener" href="https://github.com/huawei-noah/ghostnet">https://github.com/huawei-noah/ghostnet</a></p>
+<p>开源代码：pytorch : <a target="_blank" rel="noopener" href="https://github.com/iamhankai/ghostnet.pytorch/blob/master/ghost_net.py">https://github.com/iamhankai/ghostnet.pytorch/blob/master/ghost_net.py</a></p>
+<hr>
+<p>虽然说mobileNet或者是shuffleNet提出了使用depthwise或者是shuffle等操作，但是引入的1x1卷积依然会产生一定的计算量。</p>
+<p>为什么1x1依然会产生较大的计算量?看卷积计算量的计算公式$n*h*w*c*k*k$,可以发现，由于c和n都是比较大的，所以会导致这个计算量也是比较大的，但是作者在分析输出的特征图的时候发现，其实有些特征图是比较相似的，如下所示，作者认为可以通过简单的变换得到。</p>
+<p><img src="/2.png" alt="2.png"></p>
+<p>基于此，作者得到启发，是不是每张图都需要用这么大的计算量去得到？是否可以通过cheap transformation得到这些相似的特征图？</p>
+<p>于是乎，就诞生了GhostNet。Ghost就是说相似的特征图，犹如另一个的幽灵，可以通过简单的线性变换得到。</p>
+<p><img src="/0.png" alt="0.png"></p>
+<center>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">Ghost module结构图</div>
+</center>
+
+<p>上图完美的解释了Ghost究竟做了什么。</p>
+<h4 id="Ghost-module介绍"><a href="#Ghost-module介绍" class="headerlink" title="Ghost module介绍"></a>Ghost module介绍</h4><p>相比于传统的卷积，GhostNet分两步走，首先GhostNet采用正常的卷积计算，得到channel较少的特征图，然后利用cheap operation得到更多的特征图，然后将不同的特征图concat到一起，组合成新的output.</p>
+<p>那么这么处理，到底节省了多少计算量呢？下面我们分析一下。</p>
+<p>首先，假设我们输入特征图的尺寸是h*w*c,输出特征图的尺寸是h’*w’*n,卷积核大小为k*k。</p>
+<p>在cheap operation变换中，我们假设特征图的channel是m，变换的数量是s，最终得到的新的特征图的数量是n,那么我们可以得到等式：</p>
+<p>$$n = m * s$$</p>
+<p>由于Ghost的变换过程中最后存在一个恒等变换（Identity），所以实际有效的变换数量是s-1,所以上式可以得到如下公式：</p>
+<p>$$m * (s-1) = n/s * (s-1)$$</p>
+<p>所以我们便可以计算得到如下结果：</p>
+<p><img src="/1.png" alt="1.png"></p>
+<p>当然这里还有一个条件：m &lt;&lt; n</p>
+<p><strong>通过这么分析，可以体会到，其实GhostNet的方法也很简单，无外乎就是将原本的乘法变成了两个乘法相加，然后在代码实现中，其实第二个变换是用depthwise conv实现的。作者在文中也提到，前面的卷积使用pointwise效率比较高，所以网络嫣然类似一个mobilenet的反过来的版本，只不过GhostNet采用了拼接的方式，进一步减少了计算量</strong></p>
+<p>Ghost module的pytorch代码如下：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">GhostModule</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, inp, oup, kernel_size=<span class="number">1</span>, ratio=<span class="number">2</span>, dw_size=<span class="number">3</span>, stride=<span class="number">1</span>, relu=<span class="literal">True</span></span>):</span><br><span class="line">        <span class="built_in">super</span>(GhostModule, self).__init__()</span><br><span class="line">        self.oup = oup</span><br><span class="line">        init_channels = math.ceil(oup / ratio)</span><br><span class="line">        new_channels = init_channels*(ratio-<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        self.primary_conv = nn.Sequential(</span><br><span class="line">            nn.Conv2d(inp, init_channels, kernel_size, stride, kernel_size//<span class="number">2</span>, bias=<span class="literal">False</span>),</span><br><span class="line">            nn.BatchNorm2d(init_channels),</span><br><span class="line">            nn.ReLU(inplace=<span class="literal">True</span>) <span class="keyword">if</span> relu <span class="keyword">else</span> nn.Sequential(),</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        self.cheap_operation = nn.Sequential(</span><br><span class="line">            nn.Conv2d(init_channels, new_channels, dw_size, <span class="number">1</span>, dw_size//<span class="number">2</span>, groups=init_channels, bias=<span class="literal">False</span>),</span><br><span class="line">            nn.BatchNorm2d(new_channels),</span><br><span class="line">            nn.ReLU(inplace=<span class="literal">True</span>) <span class="keyword">if</span> relu <span class="keyword">else</span> nn.Sequential(),</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x1 = self.primary_conv(x)</span><br><span class="line">        x2 = self.cheap_operation(x1)</span><br><span class="line">        out = torch.cat([x1,x2], dim=<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> out[:,:self.oup,:,:]</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="Difference-from-existing-methods"><a href="#Difference-from-existing-methods" class="headerlink" title="Difference from existing methods"></a>Difference from existing methods</h4><ul>
+<li>在MobileNet等网络中，基本都会使用1x1的卷积，而在GhostNet中，可以使用任何尺寸的卷积。</li>
+<li>在MobileNet中，使用了pointwise+depthwise,但是在GhostNet中，可以使用正常的卷积。</li>
+<li>Ghost使用了更多的线性变换。</li>
+</ul>
+<h4 id="GhostNet结构"><a href="#GhostNet结构" class="headerlink" title="GhostNet结构"></a>GhostNet结构</h4><p>下图是Ghost bottleneck结构图，很类似resnet结构，不同的是channel是先升维再降维。</p>
+<p><img src="/3.png" alt="3.png"></p>
+<center>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">Ghost bottleneck</div>
+</center>
+
+
+<p>下面是GhostNet的网络结构图，可以看到channel控制的比较小，并且引入了SE结构。</p>
+<p><img src="/4.png" alt="4.png"></p>
+<center>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">GhostNet 细节</div>
+</center>
+
+<h4 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h4><p>作者首先采用控制变量法，测试不同的s以及d的效果。经过测试发现在s=2,d=3的情况下模型表现较好。</p>
+<p><img src="/5.png" alt="5.png"></p>
+<p>下表为在resnet50实验的不同网络的压缩比例以及精度对比</p>
+<p><img src="/11.png" alt="11.png"></p>
+<p>ImageNet效果对比</p>
+<p><img src="/8.png" alt="8.png"></p>
+<p><img src="/9.png" alt="9.png"></p>
+<p>目标检测的效果</p>
+<p><img src="/10.png" alt="10.png"></p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/08/ghostnet/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/03/03/s3fd/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/03/s3fd/" class="post-title-link" itemprop="url">S3FD</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-03-03 07:17:52 / 修改时间：12:33:02" itemprop="dateCreated datePublished" datetime="2020-03-03T07:17:52+08:00">2020-03-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Face-Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Face Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/03/03/s3fd/" class="post-meta-item leancloud_visitors" data-flag-title="S3FD" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/03/03/s3fd/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/03/03/s3fd/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>这篇文章是ECCV2017一篇比较经典的人脸检测的文章，是一篇很实用的针对小脸优化的文章。读下来，文章并没有提出特别牛逼的理论或者网络，而是在SSD的基础上，进行了针对小脸的一系列优化，最终实现了对小脸检测效果的提升，相比于提出高大上理论的论文，本篇论文中提出的方法更容易实用到实际项目中，产生收益，特别是针对小目标，文章中的方法值得借鉴，我喜欢这种文章。</p>
+</blockquote>
+<hr>
+<p><strong>论文名称:S3FD: Single Shot Scale-invariant Face Detector</strong></p>
+<p><strong>作者：张士峰等</strong></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1708.05237"><strong>论文链接</strong>：https://arxiv.org/abs/1708.05237</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/sfzhang15/SFD"><strong>代码链接</strong>：https://github.com/sfzhang15/SFD</a></p>
+<hr>
+<h3 id="创新点"><a href="#创新点" class="headerlink" title="创新点"></a>创新点</h3><p>文章的重心就是针对小脸效果的提升，首先文章分析了为什么像SSD、Faster R-CNN等网络对小脸的效果不是那么好，作者总结如下几点：</p>
+<ol>
+<li><p>像SSD或者Faster R-CNN,检测的最浅的特征层的stride太大了，导致小脸到这层的特征特别小，甚至已经没有了，这就很难检测了。</p>
+</li>
+<li><p>anchor尺寸比较大，而脸很小，导致跟小脸不匹配，回归效果不好。</p>
+</li>
+<li><p>anchor的匹配策略导致部分脸匹配的anchor数量不足，由于提取的anchor的尺寸是离散的（16,32,128…），但是脸的大小是连续的，这就导致会存在部分脸由于与anchor的尺寸相差较大，导致没有足够的anchor和它进行匹配，进而导致检测效果不好。</p>
+</li>
+</ol>
+<p>基于此作者提出了几点改进：</p>
+<ul>
+<li>既然stride比较大，那么重新设计网络，调整检测层的stride.</li>
+<li>既然anchor的匹配策略不好，那么调整anchor的匹配策略。</li>
+<li>由于小脸在浅层检测，负样本较多会引入误检，所以这里作者设计了max-out background.</li>
+</ul>
+<p><strong>网络的速度在titan x上测试可以达到36fps</strong></p>
+<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>正文部分详细介绍一下上面提到的作者的几点改进。</p>
+<h4 id="网络结构修改"><a href="#网络结构修改" class="headerlink" title="网络结构修改"></a>网络结构修改</h4><p><img src="/1.png" alt="1.png"></p>
+<center>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">S3FD网络结构图</div>
+</center>
+
+<p><img src="/2.png" alt="2.png"></p>
+<center>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">SSD网络结构图</div>
+</center>
+
+<p>网络结构基本与SSD没有什么差异。只是最后面比SSD少了两层卷积，SSD最后特征图大小是1x1的，但是同样的，跟SSD相同，S3FD也是在6个feature上面进行预测，只不过选择的特征层不一样了,对比上面两个结构图可以看出差异部分。</p>
+<h4 id="anchor的设计"><a href="#anchor的设计" class="headerlink" title="anchor的设计"></a>anchor的设计</h4><p>下面介绍一下anchor的设置，由于人脸基本是方形的，所以anchor的默认设置就是1:1的。这里作者另外提出了一个equal-proportion interval principle,等间距采样原则。</p>
+<ul>
+<li><strong>equal-proportion interval principle,等间距采样原则</strong></li>
+</ul>
+<p>意思就是说，anchor的大小和anchor的stride是成比例的，这里作者采用的是4，这就保证了采样的密度是一样的，所以不同的脸可以匹配的anchor的数量也就一致了。为什么一致呢？因为匹配是计算IOU嘛，所以密度都一样，数量也就一样了，这里作者还给了一张示意图。</p>
+<p><img src="/4.png" alt="4.png"></p>
+<center>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">等间距采样原则</div>
+</center>
+
+<h4 id="匹配策略的设计"><a href="#匹配策略的设计" class="headerlink" title="匹配策略的设计"></a>匹配策略的设计</h4><p>接下来就到了那个问题，anchor的尺度是离散的，但是人脸的尺度是连续的，这样偏离anchor较远的人脸的匹配数量就会较少，如下图花圈所示，影响召回效果，这怎么办呢？</p>
+<p><img src="/5.png" alt="5.png"></p>
+<p>作者采用了如下策略解决：</p>
+<ul>
+<li>将IOU的阈值降低，IOU阈值大于0.35的anchor都算作正样本。</li>
+<li>对于仍然没有足够匹配anchor的人脸怎么办呢？首先选取那些IOU大于0.1的anchor，然后排序，选取top-N的anchor作为匹配，而N的选取可以参考上一条的平均值。</li>
+</ul>
+<h4 id="max-out-background"><a href="#max-out-background" class="headerlink" title="max-out background"></a>max-out background</h4><p>由于在较浅层检测小尺寸目标，带来的最直接问题就是，在浅层会产生较多的负样本，下表分析了不同层产生的anchor的数量，可见conv3_3产生的anchor数量占到了全部的75%以上，也就带来了非常多的负样本。</p>
+<p><img src="/6.png" alt="6.png"></p>
+<p>那么怎么去平衡正负样本呢？</p>
+<p>最简单的方法当然是采用类似SSD的方法hard  negative，对loss进行排序，选取loss较大的anchor</p>
+<p>但是对于小脸来讲这样做是不够的，因为conv3_3的负样本的数量比较大，如果只采用har negative ,显然这层依然会存在较多的负样本，依然较容易会产生较多的误检，所以为了在一定程度减少这层的负样本数量，并且还能提取较好的负样本，这里作者采用了max-out background方法。</p>
+<p>分析为什么不干掉过多的负样本会产生较多的误检，究其原因，或许是将较多的负样本都预测成背景这一个类别，太简单粗暴了，所以这里作者采用的方法是对每个anchor预测多个背景类别，然后选取其中最大的那个值作为背景的概率，这就相当于将原本的二分类（脸，背景）变成了多分类（脸，背景1，背景2…背景n），对背景进行了一定的划分，这样其实就起到了一定的类别均衡的作用，这样背景被正确分类的概率也就提高了，也就可以减少一定的误检了，如下图所示。</p>
+<p><img src="/7.png" alt="7.png"></p>
+<p>这步处理conv3_3，后面使用hard negative就好了。</p>
+<h3 id="实验部分"><a href="#实验部分" class="headerlink" title="实验部分"></a>实验部分</h3><p>实验部分，作者主要跟SSD-face ,RPN-face做对比，下表中F代表使用本文结构，S代表使用本文的anchor匹配策略，M代表使用max-out background label.其实每个操作都带来了一定的提升。修改了结构之后，对于hard-face提升尤其明显，提升了差不多9个点，可见stride太大对于小脸的影响确实是显著的。</p>
+<p><img src="/8.png" alt="8.png"></p>
+<p>其他实验不详述了，读者可以自行阅读论文。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>总的来看，这是一篇实用性很强的文章，不论是人脸还是其他领域，都很值得借鉴。</p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/03/s3fd/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/02/25/linux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/02/25/linux/" class="post-title-link" itemprop="url">Linux常用操作总结</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-02-25 08:08:13 / 修改时间：13:19:24" itemprop="dateCreated datePublished" datetime="2020-02-25T08:08:13+08:00">2020-02-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Technology/" itemprop="url" rel="index">
+                    <span itemprop="name">Technology</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/02/25/linux/" class="post-meta-item leancloud_visitors" data-flag-title="Linux常用操作总结" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/02/25/linux/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/02/25/linux/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>在使用linux过程中，一些常用的操作总结一下，方便查找、记忆。<br>Linux基本操作<br>Nvidia操作<br>shell操作<br>tmux操作</p>
+</blockquote>
+<p>下面详细介绍</p>
+<hr>
+<h3 id="Linux基本操作"><a href="#Linux基本操作" class="headerlink" title="Linux基本操作"></a>Linux基本操作</h3><h4 id="文件移动"><a href="#文件移动" class="headerlink" title="文件移动"></a>文件移动</h4><p><a target="_blank" rel="noopener" href="https://linux.cn/article-2688-1.html">mv命令参考链接：https://linux.cn/article-2688-1.html</a></p>
+<ul>
+<li>打印移动信息</li>
+</ul>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv -v a /home/wlc/</span><br></pre></td></tr></tbody></table></figure>
+<ul>
+<li>将/a目录移动到/b目录下，并重命名为c：</li>
+</ul>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv  /a  /b/c</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="查看文件夹下有多少文件："><a href="#查看文件夹下有多少文件：" class="headerlink" title="查看文件夹下有多少文件："></a>查看文件夹下有多少文件：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -lR|grep "^-"|wc -l</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="查看linux的磁盘空间大小以及剩余命令："><a href="#查看linux的磁盘空间大小以及剩余命令：" class="headerlink" title="查看linux的磁盘空间大小以及剩余命令："></a>查看linux的磁盘空间大小以及剩余命令：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">df -hl</span><br><span class="line"></span><br><span class="line">du -h --max-depth=1 | sort -rh</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="根据内存查看进程的使用情况："><a href="#根据内存查看进程的使用情况：" class="headerlink" title="根据内存查看进程的使用情况："></a>根据内存查看进程的使用情况：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ps aux</span><br><span class="line"></span><br><span class="line">ps -aux --sort -pcpu</span><br><span class="line"></span><br><span class="line">ps -aux --sort -pmem</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="查找进程方法："><a href="#查找进程方法：" class="headerlink" title="查找进程方法："></a>查找进程方法：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep 进程</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="根据用户名查看进程："><a href="#根据用户名查看进程：" class="headerlink" title="根据用户名查看进程："></a>根据用户名查看进程：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htop</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="scp命令"><a href="#scp命令" class="headerlink" title="scp命令"></a>scp命令</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -P 4588 remote@www.runoob.com:/usr/local/sin.sh /home/administrator</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="linux下使用命令帮助："><a href="#linux下使用命令帮助：" class="headerlink" title="linux下使用命令帮助："></a>linux下使用命令帮助：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">man df </span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="删除文件夹下存在的-空的文件（size-x3D-0-）"><a href="#删除文件夹下存在的-空的文件（size-x3D-0-）" class="headerlink" title="删除文件夹下存在的 空的文件（size=0 ）"></a>删除文件夹下存在的 空的文件（size=0 ）</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name 'file*' -size 0 -print0 | xargs -0 rm</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="压缩文件"><a href="#压缩文件" class="headerlink" title="压缩文件"></a>压缩文件</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zip -r xxx.zip  xxx</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Nvidia基本操作"><a href="#Nvidia基本操作" class="headerlink" title="Nvidia基本操作"></a>Nvidia基本操作</h3><h4 id="查看cuda版本"><a href="#查看cuda版本" class="headerlink" title="查看cuda版本"></a>查看cuda版本</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /usr/local/cuda/version.txt    </span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="查看cudnn版本"><a href="#查看cudnn版本" class="headerlink" title="查看cudnn版本"></a>查看cudnn版本</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -A 2</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="nvidia查看进程占用情况"><a href="#nvidia查看进程占用情况" class="headerlink" title="nvidia查看进程占用情况"></a>nvidia查看进程占用情况</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo fuser -v /dev/nvidia*</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><h4 id="使用软连接进行文件夹的链接，可以节省一定的空间："><a href="#使用软连接进行文件夹的链接，可以节省一定的空间：" class="headerlink" title="使用软连接进行文件夹的链接，可以节省一定的空间："></a>使用软连接进行文件夹的链接，可以节省一定的空间：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s  /path/to/VOCdevkit  /path/to/this_example/data/VOCdevkit</span><br></pre></td></tr></tbody></table></figure>
+
+
+<h4 id="pycharm-卡死了怎么办？"><a href="#pycharm-卡死了怎么办？" class="headerlink" title="pycharm 卡死了怎么办？"></a>pycharm 卡死了怎么办？</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ps -ef </span><br><span class="line">kill-9 [进程号]</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="pycharm激活："><a href="#pycharm激活：" class="headerlink" title="pycharm激活："></a>pycharm激活：</h4><p><a target="_blank" rel="noopener" href="http://idea.lanyus.com/">激活码http://idea.lanyus.com/</a></p>
+<h4 id="apt-get-找不到包"><a href="#apt-get-找不到包" class="headerlink" title="apt-get 找不到包"></a>apt-get 找不到包</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt update &amp;&amp; apt upgrade</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="dos下输入import"><a href="#dos下输入import" class="headerlink" title="dos下输入import"></a>dos下输入import</h4><p>如果在linux的dos窗口下面输入了import，则系统的光标会变成十字，进而无法进行鼠标操作，这个时候，只要将进程kill掉就可以了。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ps  a   查看所有进程</span><br><span class="line">kill -9  pid  杀死进程</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="Linux远程桌面进去之后没有菜单栏："><a href="#Linux远程桌面进去之后没有菜单栏：" class="headerlink" title="Linux远程桌面进去之后没有菜单栏："></a>Linux远程桌面进去之后没有菜单栏：</h4><p>右键面板-&gt;面板首选项-&gt;backup and restore -&gt; apply configuration图标</p>
+<h4 id="查看docker日志"><a href="#查看docker日志" class="headerlink" title="查看docker日志"></a>查看docker日志</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker logs -f -t --since="2017-05-31" --tail=10 【容器名称】</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="清空回收站du-hl"><a href="#清空回收站du-hl" class="headerlink" title="清空回收站du -hl"></a>清空回收站du -hl</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo su</span><br><span class="line">rm -rf /home/wanglichun/.Trash</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="shell操作命令"><a href="#shell操作命令" class="headerlink" title="shell操作命令"></a>shell操作命令</h3><h4 id="传递参数"><a href="#传递参数" class="headerlink" title="传递参数"></a>传递参数</h4><p>shell可以通过${1},${2}这种方式访问对应的参数</p>
+<h4 id="shell特殊参数解释"><a href="#shell特殊参数解释" class="headerlink" title="shell特殊参数解释"></a>shell特殊参数解释</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">echo $0    # 当前脚本的文件名（间接运行时还包括绝对路径）。</span><br><span class="line">echo $n    # 传递给脚本或函数的参数。n 是一个数字，表示第几个参数。例如，第一个参数是 $1 。</span><br><span class="line">echo $#    # 传递给脚本或函数的参数个数。</span><br><span class="line">echo $*    # 传递给脚本或函数的所有参数。</span><br><span class="line">echo $@    # 传递给脚本或函数的所有参数。被双引号 (" ") 包含时，与 $* 不同，下面将会讲到。</span><br><span class="line">echo $?    # 上个命令的退出状态，或函数的返回值。</span><br><span class="line">echo $$    # 当前 Shell 进程 ID。对于 Shell 脚本，就是这些脚本所在的进程 ID。</span><br><span class="line">echo $_    # 上一个命令的最后一个参数</span><br><span class="line">echo $!    # 后台运行的最后一个进程的 ID 号</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="shell循环"><a href="#shell循环" class="headerlink" title="shell循环"></a>shell循环</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">for var in $(seq ${1} ${2})</span><br><span class="line">do</span><br><span class="line">    xxxxxx</span><br><span class="line">done</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="tmux操作大全"><a href="#tmux操作大全" class="headerlink" title="tmux操作大全"></a>tmux操作大全</h3><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/congbo/archive/2012/08/30/2649420.html">参考链接：https://www.cnblogs.com/congbo/archive/2012/08/30/2649420.html</a></p>
+<h4 id="启动新会话："><a href="#启动新会话：" class="headerlink" title="启动新会话："></a>启动新会话：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tmux [new -s 会话名 -n 窗口名]</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="恢复会话："><a href="#恢复会话：" class="headerlink" title="恢复会话："></a>恢复会话：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tmux at [-t 会话名]</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="列出所有会话："><a href="#列出所有会话：" class="headerlink" title="列出所有会话："></a>列出所有会话：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tmux ls</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="关闭会话："><a href="#关闭会话：" class="headerlink" title="关闭会话："></a>关闭会话：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tmux kill-session -t 会话名</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="关闭所有会话："><a href="#关闭所有会话：" class="headerlink" title="关闭所有会话："></a>关闭所有会话：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tmux ls | grep : | cut -d. -f1 | awk '{print substr($1, 0, length($1)-1)}' | xargs kill</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="查看历史信息"><a href="#查看历史信息" class="headerlink" title="查看历史信息"></a>查看历史信息</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ctrl + b   +  【pageup】or【pagedown】</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="分屏"><a href="#分屏" class="headerlink" title="分屏"></a>分屏</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">分为左右 ctrl + b + %</span><br><span class="line">分为上下 ctrl + b + "</span><br><span class="line">调整大小 ctrl + b + (ctrl + 方向键)</span><br><span class="line">新建窗口 ctrl + b + c</span><br><span class="line">切换窗口 ctrl + b + n</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+
+
+
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/25/linux/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/02/16/FASF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/02/16/FASF/" class="post-title-link" itemprop="url">FASF</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-02-16 08:21:19 / 修改时间：08:10:08" itemprop="dateCreated datePublished" datetime="2020-02-16T08:21:19+08:00">2020-02-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/02/16/FASF/" class="post-meta-item leancloud_visitors" data-flag-title="FASF" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/02/16/FASF/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/02/16/FASF/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>本篇文章是CVPR2019的一篇Anchor-Free的文章，是一篇很好的Anchor Free的目标检测的文章，目前基于anchor的目标检测方法，大多采用不同的level预测不同尺度的instance，而分配规则往往是人为设计的，这导致anchor的匹配策略可能不是最优的。那有没有更优的匹配方法？文章从level选取的点进行切入，利用FASF实现不同的instance在不同level的动态分配，实现了level的动态选择，并且anchor free方法取得了较好的mAP，另外作者设计了anchor free跟anchor-based相结合的方法，进一步提升模型效果，取得了可观的结果。</p>
+</blockquote>
+<hr>
+<p>论文名称：Feature Selective Anchor-Free Module for Single-Shot Object Detection</p>
+<p>作者：Chenchen Zhu &amp; Yihui He  &amp; Marios Savvides</p>
+<p>论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1903.00621">https://arxiv.org/abs/1903.00621</a></p>
+<hr>
+<h3 id="Back-Ground"><a href="#Back-Ground" class="headerlink" title="Back Ground"></a>Back Ground</h3><p>目标检测的一个挑战在于尺度的变化，目前解决问题的方法包括：特征金字塔、multi-level、anchor boxes等。特征金字塔以及anchor-based已经取得了不错的效果。但是存在一定的限制：</p>
+<ol>
+<li>启发式的特征选择。</li>
+<li>重叠的anchor的选择。</li>
+</ol>
+<p>目前基于anchor的目标检测方法，大多采用不同的level预测不同尺度的instance，而分配规则往往是人为设计的，这导致anchor的匹配策略可能不是最优的。本文提出了feature selective anchor-free module来解决这个限制。并且FASF可以与anchor-based 分支协同并行工作，提高模型效果。在COCO上，可以达到44.6%的mAP</p>
+<h3 id="Feature-Selective-Anchor-Free"><a href="#Feature-Selective-Anchor-Free" class="headerlink" title="Feature Selective Anchor Free"></a>Feature Selective Anchor Free</h3><h4 id="Network-Architecture"><a href="#Network-Architecture" class="headerlink" title="Network Architecture"></a>Network Architecture</h4><p>FSAF的结构展示如下图，作者的实验是以RetinaNet为基础，所以下图的主干部分代表的是RetinaNet的FPN结构，同样的从P3-P7引出subnets进行分类与预测，如下图所示，P3-P7对应的分辨率<code>$1/2^l$</code>。</p>
+<p><img src="/1.png" alt="1.png"></p>
+<p>FSAF重点是下图中引出来的Anchor-Free branch,分类的分支，通过一个3x3的卷积以及sigmoid得到WxHxK的特征图，用于预测K个类别，至于回归分支，通过一个3x3的卷积以及ReLU得到WxHx4的特征图，用于预测每个实例的坐标框。</p>
+<h4 id="Ground-Truth-and-Loss"><a href="#Ground-Truth-and-Loss" class="headerlink" title="Ground Truth and Loss"></a>Ground Truth and Loss</h4><p>首先，如何定义正负样本呢？如下图所示，Groud Truth是汽车的蓝框，正样本便是中间图中白色的部分，当然除了正样本也不全是负样本，在正负样本之间还有一部分忽略样本，论文中正样本占比为宽度的0.2，忽略部分界限占比为宽度的0.5，所以每个level在宽度比例0.2-0.5的一圈是不加入训练，另外，不同level的界限间的像素也同样不加入训练，用公式表示是：<code>$(b^{i}_{e}-b^{l}_{e});(b_{i}^{l-1},b_{i}^{l+1})$</code>(其实不加入训练这里，论文描述的挺复杂，其实计算后发现，就是每层的Ground Truth往外扩一圈)，其余的就为负样本。并且如果两个实例在同一个level重合了，以小的那个为主。</p>
+<p><strong>训练的时候分类采用的是Focal loss，box回归的是边界的上下左右，这里使用的是IOU Loss</strong></p>
+<p><img src="/2.png" alt="2.png"></p>
+<h4 id="Online-Feature-Selection"><a href="#Online-Feature-Selection" class="headerlink" title="Online Feature Selection"></a>Online Feature Selection</h4><p>这部分是本篇文章的精髓所在，如果自动去给不同的instance分配合适的level进行预测呢？<br>其实答案也很简单，就如下图所示，作者分别对不同的level的分支结果求loss，然后选择loss最小的那个作为该实例的分支。</p>
+<p><img src="/3.png" alt="3.png"></p>
+<h4 id="Joint-Inference-and-Training"><a href="#Joint-Inference-and-Training" class="headerlink" title="Joint Inference and Training"></a>Joint Inference and Training</h4><p>这部分将介绍，如何将anchor-based与anchor-free方法结合起来，如上面图Figure 4所示。</p>
+<p>首先，在训练的时候，保持anchor-based的分支参数不变。在inference的时候，将anchor based得到的box以及anchor free得到的box一起用非极大值一致的方法，得到最终的结果。</p>
+<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><h4 id="FASF-模块的效果以及online-feature-selection的重要性。"><a href="#FASF-模块的效果以及online-feature-selection的重要性。" class="headerlink" title="FASF 模块的效果以及online feature selection的重要性。"></a>FASF 模块的效果以及online feature selection的重要性。</h4><p>下图是在RetinaNet上使用FASF模块的效果，可以看出，其实只使用FASF的效果已经要好于RetinaNet了，并且在实验中可以看出，如果不使用online feature selection 效果也不错的，但是没有使用online feature selection效果好，相差了大约10个点。</p>
+<p><img src="/4.png" alt="4.png"></p>
+<h4 id="FASF选择的level到底怎么样？"><a href="#FASF选择的level到底怎么样？" class="headerlink" title="FASF选择的level到底怎么样？"></a>FASF选择的level到底怎么样？</h4><p>实验表明，大部分的检测框还是遵循原来的设计的，前面的level检测小目标，后面的level检测大目标，但是也有特例，就是下图中红色框框住的那些就是，level发生了变化。</p>
+<p><img src="/5.png" alt="5.png"></p>
+<h4 id="FASF与SOTA相比较"><a href="#FASF与SOTA相比较" class="headerlink" title="FASF与SOTA相比较"></a>FASF与SOTA相比较</h4><p><img src="/6.png" alt="6.png"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这篇文章同样是一篇很好的Anchor Free的目标检测的文章，文章从level选取的点进行切入，利用Anchor实现不同的instance在不同level的动态分配，设计了FASF方法进行level的动态选择，并且设计了anchor free跟anchor-based相结合，提升模型效果，取得了可观的结果。</p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/16/FASF/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/01/16/YOLO-v2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/16/YOLO-v2/" class="post-title-link" itemprop="url">YOLO V2(YOLO 9000)</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-16 08:31:19" itemprop="dateCreated datePublished" datetime="2020-01-16T08:31:19+08:00">2020-01-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 13:49:04" itemprop="dateModified" datetime="2020-02-16T13:49:04+08:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/01/16/YOLO-v2/" class="post-meta-item leancloud_visitors" data-flag-title="YOLO V2(YOLO 9000)" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/01/16/YOLO-v2/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/01/16/YOLO-v2/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><p>YOLO9000是继YOLO之后的又一力作，本篇论文，其实作者在YOLO v2上并没有特别多的创新的方法，更多的是将现有的多种方法使用在自己的YOLO中以提高识别效果，不过YOLO9000倒是很有创新点，利用ImageNet与COCO数据，使得网络可以检测9000类数据，下面简要介绍一下这两个网络：</p>
+<p>首先介绍YOLO v2都使用了哪些方法：</p>
+<h4 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h4><p>这个不多说了，确实是有效果的。，提高了2%。</p>
+<h4 id="High-Resolution-Classifier"><a href="#High-Resolution-Classifier" class="headerlink" title="High Resolution Classifier"></a>High Resolution Classifier</h4><p>作者先在224大小上训练，然后在448上进一步fine-tune得到更好的效果。</p>
+<h4 id="加anchor"><a href="#加anchor" class="headerlink" title="加anchor"></a>加anchor</h4><p>加入anchor并没有提高map，但是提高了recall,作者在paper中表示，没加anchor前，map为69.5,recall为81%，加入anchor后，map为69.2,recall为88%。</p>
+<p>这里引入一张引入anchor之后与yolo v1算法的不同:</p>
+<p>一目了然，以前是每个点预测30，现在是每个anchor预测25</p>
+<p><img src="http://i.imgur.com/gqYMaEH.png" alt="http://i.imgur.com/gqYMaEH.png"></p>
+<h4 id="利用k-means代替手动设计anchor"><a href="#利用k-means代替手动设计anchor" class="headerlink" title="利用k-means代替手动设计anchor"></a>利用k-means代替手动设计anchor</h4><p>距离设计中，作者并没有使用均方误差，而是使用IOU作为距离，公式如下：<br>d（box,centroid）= 1- IOU(box,centroid)</p>
+<h4 id="bounding-box-loss"><a href="#bounding-box-loss" class="headerlink" title="bounding box loss"></a>bounding box loss</h4><p>paper并没有使用类似于faster rcnn以及ssd的边框预测方法，，在faster rcnn中的计算方式如下图，其中$x_a,y_a,w_a,h_a$分别代表anchor的坐标，$x,y,w,h$代表预测值，带星的为bounding box的坐标，所以faster rcnn实际计算的是与anchor的偏移值。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fsouayxihnj209n03l0su.jpg"></p>
+<p>yolo v2并没有计算与anchor的偏移值,<strong>作者解释说计算偏移的方法由于偏移范围比较大，计算的时候不稳定</strong>，所以yolo v2采用了计算anchor与图像左上角的位置偏移以及anchor长宽的缩放的方法，如下公式所示，$c_x,c_y$分别为anchor相对于左上角点的坐标。作者使用sigmoid函数，将ground truth变换到0-1的范围，以增加算法的稳定性。</p>
+<p>$b_x = \sigma(t_x)+ c_x$</p>
+<p>$b_y = \sigma(t_y)+ c_y$</p>
+<p>$b_w = p_we^{t_w}$</p>
+<p>$b_h = p_he^{t_h}$</p>
+<p>$Pr(object) * IOU(b, object) = \sigma(t_o)$</p>
+<p>上面的描述可能不清楚，我们看下面的图像，yolo网络将416*416大小的输入，经过卷积缩小32倍，得到13*13的输出,如下图中Cx,Cy便代表cell相对于图像左上角的偏移，<strong>注意这里每个cell的宽度为1</strong>，sigmoid（tx）与sigmoid（ty）在0-1之间，这样就保证了中心点的偏移仍然在当前cell内，bw与bh是相对于pw于ph的缩放，pw与ph代表anchor的长宽，<strong>至于为什么在e上进行计算，这里我暂时觉得与faster rcnn中的log作用类似</strong>。</p>
+<p><img src="/1.png" alt="1.png"></p>
+<h4 id="Fine-Grained-Features"><a href="#Fine-Grained-Features" class="headerlink" title="Fine-Grained Features"></a>Fine-Grained Features</h4><p>作者考虑到，模型最终输出是13*13,对于小物体的预测可能精度不够高，所以同样采用了类似于SSD的多个特征图的特征，但是作者不是像SSD那样直接对每个特征图进行分类与预测边界框，而是搞了一个passthrough layer，这个是怎么搞的呢？举例说明，作者对上一分辨率的输出（大小为：26*26*512），通过passthrough变换为13*13*2048大小，如何变换的如下图所示：作者利用pooling操作，将4*4的区域变换成4个channel，利用这样的方法，将特征图边长缩小一倍，但是channel数增大4倍，然后将2048维的13*13与原本的1024维的13*13进行concat,得到3072维度的特征图。（另，备注，这里可以采用1*1进行512维度的降维，比如降到64，这样passthrough之后就只有64*4=256维了，而不是2048那么大了）<br>作者说这种方法，将精度提高了1%。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-c94c787a81c1216d8963f7c173c6f086_hd.jpg" alt="https://pic2.zhimg.com/80/v2-c94c787a81c1216d8963f7c173c6f086_hd.jpg"></p>
+<h4 id="Multi-Scale-Training"><a href="#Multi-Scale-Training" class="headerlink" title="Multi-Scale Training"></a>Multi-Scale Training</h4><p>为了使yolo v2适应多种不同的尺度，作者采用了多尺度对yolo v2进行训练，作者每10个batches自动选择缩放的尺度，从[320:608:32]进行选择，最小的是320*320，最大的是608*608，为什么选择32呢？因为yolo v2的缩放是32倍，这样可以成倍的减少。</p>
+<p>在测试阶段，不同的输入size可以产生不同的速度，作者的测试的mAP以及速度的结果如下：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fsq0couag9j20ff0cygm2.jpg"></p>
+<p>YOLO V2使用技巧的提升效果如下图所示：<br><img src="https://upload-images.jianshu.io/upload_images/4998541-c9351cd377d82589.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt="https://upload-images.jianshu.io/upload_images/4998541-c9351cd377d82589.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700"></p>
+<h5 id="darkNet-19"><a href="#darkNet-19" class="headerlink" title="darkNet-19"></a>darkNet-19</h5><p>为了提高模型的速度，作者没有采用yolo v1的inception结构或者vgg结构作者base net，而是设计了darkNet-19作为基础网络，darkNet-19采用与vgg相似的3*3卷积，并且没有采用全连接层，借鉴了NIN网络的思想，利用global average pooling替代了全连接层，使得参数进一步的减少，并且使用了bn等，使得梯度更加的稳定，dark-net在imagenet上的表现可以达到top1：72.9%， top5: 91.2%, darkNet-19的网络结构图，如下所示：</p>
+<p><img src="https://pic1.zhimg.com/v2-b23fdd08f65266f7af640c1d3d00c05f_r.jpg" alt="https://pic1.zhimg.com/v2-b23fdd08f65266f7af640c1d3d00c05f_r.jpg"></p>
+<p>具体参数为：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fsq0r6ybmuj20b60fwwfi.jpg"></p>
+<h5 id="训练过程"><a href="#训练过程" class="headerlink" title="训练过程"></a>训练过程</h5><p>1.分类的训练</p>
+<blockquote>
+<p>对于分类的训练，作者并没有什么特殊的方式，首先利用ImageNet训练160个epoch,采用梯度下降方法，采用多项式方法衰减学习率，weight decay 0.0005, momentum 0.9, 使用随机裁剪，旋转，亮度变换等方式进行数据增强。为了达到更好的效果，作者在448*448分辨率上进一步fine-tune网络10，做10个epoch,初始学习率为0.001。</p>
+</blockquote>
+<p>2.检测的训练</p>
+<blockquote>
+<p>对于检测网络，作者去掉最后一个卷积层，接3个1024*3*3的卷积层，然后接1*1的卷积层，输出维度为（num_anchor*(class + 5)）,用于预测每个anchor的类别以及4个坐标加上置信度。同样检测迭代160个epoch，初始学习率为0.001，在60，90调整学习率为原来的0.1，weight decay为0.0005，momentum为0.9</p>
+</blockquote>
+<h4 id="Loss-Function"><a href="#Loss-Function" class="headerlink" title="Loss Function"></a>Loss Function</h4><p><img src="https://pic2.zhimg.com/80/v2-58f1eec5594de9e887f22ac590b33062_hd.jpg" alt="https://pic2.zhimg.com/80/v2-58f1eec5594de9e887f22ac590b33062_hd.jpg"></p>
+<p>首先说明一下，YOLO中一个ground truth只会与一个先验框进行匹配，匹配原则是IOU最大这里不同于SSD以及RPN，其每个ground-truth会与多个IOU进行匹配</p>
+<p> 下面说一下这个损失函数，第一项loss是计算backgroud的置信度偏差，第二项是计算anchor与预测框的误差，第三项是计算ground truth与预测框的偏差以及置信度偏差和分类偏差。，比较复杂可以参考下面的链接，写的比较详细。<br><a target="_blank" rel="noopener" href="https://towardsdatascience.com/training-object-detection-yolov2-from-scratch-using-cyclic-learning-rates-b3364f7e4755">参考链接：https://towardsdatascience.com/training-object-detection-yolov2-from-scratch-using-cyclic-learning-rates-b3364f7e4755</a></p>
+<h4 id="YOLO9000"><a href="#YOLO9000" class="headerlink" title="YOLO9000"></a>YOLO9000</h4><p><strong>其实这是这篇文章最大的创新点，算是一个开创性的方法</strong></p>
+<p>YOLO9000的最大创新点在于不仅使用检测数据，同时使用了ImageNet分类数据，检测数据，使用带bounding box的损失函数，分类数据使用不带bounding box的损失函数，<strong>但是这样做遇到一个问题：imagenet数据有1000类，而voc只有20类，比如一个狗，imagenet中分为好多种，这样便存在包含关系，便无法使用softmax进行分类了，该如何解决呢？</strong>作者采用了一种层次分类的方法，如下图所示：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-bda21cf48f8127c48fede60d81c4d97e_hd.jpg" alt="https://pic3.zhimg.com/80/v2-bda21cf48f8127c48fede60d81c4d97e_hd.jpg"></p>
+<p>在计算某个节点的类别概率时，遍历path，然后计算path上各个节点的概率之积。</p>
+<p>作者在论文中提到为构建这颗树，将1000类增加中间节点到1369类，比如Norfold terrier即会label成dog同时会label成mammal</p>
+<h6 id="融合分类与检测同步进行训练"><a href="#融合分类与检测同步进行训练" class="headerlink" title="融合分类与检测同步进行训练"></a>融合分类与检测同步进行训练</h6><p>作者使用full ImageNet(top 9000 classes)以及COCO数据集进行训练，首先构建WordTree,<strong>共包含9418个类节点，每个节点都是一个softmax</strong>，由于ImageNet过大，这样分类和检测的数据严重不平衡，所以作者采用对COCO过采样的方式进行数据集扩增，扩增到ImageNet的1/4.</p>
+<p>另外作者，使用3个anchor替代原来的5个，以减少网络的输出（<strong>由于这里类别数太多，而对于每个anchor，网络都会预测所属类别，所以减少2个anchor可以减少很多的网络输出，现在每个位置是3*（4+1+9418），原来是5*（4+1+9418）</strong>）如果是待检测就用正常的yolo v2的损失，对于分类部分，只返回相应level的loss为什么呢？因为如果预测是狗，检测数据集并没有标注这是什么狗，你怎么返回具体是什么狗的loss呢~如果是遇到了一张分类的图像，首先返回分类的loss，就利用前面predict tree的计算方法（概率乘积），</p>
+<p><strong>这里有一块没懂：We also<br>assume that the predicted box overlaps what would be the<br>ground truth label by at least 0.3IOU and we backpropagate objectness loss based on this assumption.</strong></p>
+<p>总之作者总结到，这种方法就是：</p>
+<p><strong>Using this joint training, YOLO9000 learns to find objects<br>in images using the detection data in COCO and it<br>learns to classify a wide variety of these objects using data<br>from ImageNet.</strong></p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/01/16/YOLO-v2/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/" class="post-title-link" itemprop="url">CenterNet(Keypoint Triplts for Object Detection)</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-01-16 08:22:01 / 修改时间：13:32:04" itemprop="dateCreated datePublished" datetime="2020-01-16T08:22:01+08:00">2020-01-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/" class="post-meta-item leancloud_visitors" data-flag-title="CenterNet(Keypoint Triplts for Object Detection)" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>本篇文章是一篇anchor free的目标检测方法，主要是在CornerNet(该篇文章很经典，还没总结，后面补上)的基础上发展而来。文章的主要思想在于：<strong>CornerNet中只检测目标的左上角点和右下角点，bounding box错检率会比较高（即检测出目标框但是与目标重合比较少，这也是keypoint检测的常见问题），作者分析错检的主要原因在于——-在进行Corner检测的时候，没有关注bounding box内部的内容信息，所以作者提出了CenterNet，在利用CornerNet检测出bounding box，同时，在bounding box内部检测center keypoint来帮助过滤掉错检框，也就是文章标题所示的Keypoint Triplts，检测三个点，同时，作者提出了center pooling以及cascade corner pooling方法，center pooling用于检测center keypoint,cascade corner pooling用于加强原本corner point的检测，使得corner的检测的时候可以get更多的bounding box内部的内容信息。结果是该网络也取得了精度和召回的双重提升，在COCO上测试，mAP可以达到47%，52-layer hourglass 耗时大约在270ms.</strong></p>
+</blockquote>
+<hr>
+<p><strong>论文名称:CenterNet: Keypoint Triplts for Object Detection</strong></p>
+<p><strong>作者：Kaiwen Duan &amp; Song Bai等</strong></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1904.08189"><strong>论文链接</strong>：https://arxiv.org/abs/1904.08189</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Duankaiwen/CenterNet"><strong>代码链接</strong>：https://github.com/Duankaiwen/CenterNet</a></p>
+<hr>
+<h4 id="本文重点"><a href="#本文重点" class="headerlink" title="本文重点"></a>本文重点</h4><p>基于anchor的目标检测方法，利用anchor去拟合目标区域取得了很大的成绩，但其也存在一定的缺点：</p>
+<ul>
+<li>需要大量的anchor来保证跟ground truth的重合率，</li>
+<li>anchor一般都是手动设计的，</li>
+<li>手动设计的anchor往往与真实的物体框还是有一定的差距的，</li>
+<li>大量的anchor导致正负样本不均匀问题。</li>
+</ul>
+<p>为了尽可能避免使用anchor这些问题，anchor free方法被提出，比较典型的代表就是CornerNet，该网络的灵感来源于关键点检测，通过直接检测目标的左上角点和右下角点的方法来检测目标区域，并且取得了不错的效果。但是其也存在一定的问题，那就是只检测两个点，缺少对中心内容的感知，这样就容易产生检测点的误匹配。如下图Figure 1第一行所示，红框便是错误的框。Table 1展示的是作者统计COCO数据集中CornerNet的错检率（false discovery rates）。可见整体还是比较高的，其中32.7%的检测框与groud truth的IOU重合率小于0.05%，43.8%的小于50%，在小样本中，占比更高，达到了60.3%.</p>
+<p><img src="/1.png" alt="1.png"></p>
+<p>为了解决这个问题，作者提出了centerNet，如下图第二行所示，通过中心keypoint对中心内容进行感知，正常情况，中心keypoint的类别应该跟坐标框的类别相同，利用这种方法来过滤掉错误的匹配框。</p>
+<p><img src="/2.png" alt="2.png"></p>
+<h4 id="本文方法"><a href="#本文方法" class="headerlink" title="本文方法"></a>本文方法</h4><p>在介绍CenterNet之前，先简单介绍一下CornerNet是怎么做的，下图（Fig. 4）是CornerNet的结构图，backbone采用的是Hourglass结构(这是关键点检测常用的网络)，然后会接两个分支，分别用于检测左上角点以及右下角点，每个分支又会输出三个向量，分别对应Heatmaps，Embeddings，Offsets，heatmaps代表的是不同类别的keypoints的位置，以及对应的score，embeddings代表的是哪些keypoints是属于一个bounding box的，offsets是特征图到原图的映射，对keypoints进行微调的。</p>
+<p><img src="/3.png" alt="3.png"></p>
+<p>那既然，已经猜想出问题出在在进行关键点检测的时候，没有get到bounding box内部的信息，除了本文提出的，又有哪些方法可以解决呢？文章中也提到了，可以采用two-stage方法，后面再接一个ROI-pooling，去识别内部信息，但是耗时会增加比较多。</p>
+<p>好了，下面进入正题，今天的主角CenterNet.</p>
+<p>下图Figure 2 所示为CenterNet结构图，对比CornerNet，本文方法多增加了一个分支用于检测目标中心，同时，将目标中心的类别与Corner检测结果相合并。</p>
+<p><img src="/4.png" alt="4.png"></p>
+<p>具体是这么做的呢？<br>假设我们已经通过上面的网络得到了corners keypoints以及center keypoints的输出，那么后面的逻辑如何融合呢？具体的操作流程如下：</p>
+<ol>
+<li>选取top-k的bounding box。</li>
+<li>选取top-k的center keypoints。</li>
+<li>将center keypoints映射回原图坐标。</li>
+<li>计算bounding box的中心区域（如下面图Figure 3中阴影区域所示，如何定义中心区域，下面会有详述），并在其中搜索是否含有center keypoint.</li>
+<li>如果中心区域存在center keypoint并且keypoint的类别与corner的类别相同，则保留这个bounding box 并且得分修改为三个点的平均分。反之，删除对应的bounding box.</li>
+</ol>
+<p><strong>中心区域的定义</strong></p>
+<p>如果中心区域定义的太大，那么对大物体的精度会下降；如果定义的中心区域太小，那么对小物体的召回又会下降。所以本文有提出了一种动态的中心区域选取方法，公式如下，公式看起来挺复杂，但是结果很好理解，就是下图Figure 3，如果n=3，其实就是对bounding box进行三等分，然后去中间的区域，n=5就是对其进行5等分，然后取中间区域。</p>
+<p><img src="/5.png" alt="5.png"></p>
+<p><img src="/6.png" alt="6.png"></p>
+<p><strong>下面介绍一下本文另外两个创新点，center pooling 以及cascade corner pooling</strong></p>
+<p>在介绍center pooling以及cascade corner pooling之前，先来回忆一下CornerNet中提到的left pooling以及right pooling。，如下图所示，分别是left pooling以及top pooling，看图应该就一目了然了。</p>
+<p><img src="/7.png" alt="7.png"></p>
+<p><strong>center pooling</strong></p>
+<p>center pooling的目的是找到图像中的center keypoint（即行列都比较大的点）<br>center pooling的做法也很简单，即通过在水平垂直的方向检测特征图的最大值，如图Figure 4a所示为Center pooling示意图。center pooling的具体做法就是如下图，上面代表：left pooling -&gt; right pooling，下面代表 down pooling -&gt; top pooling，然后将结果进行element-add操作。这就找到了中心最大点。</p>
+<p><img src="/8.png" alt="8.png"></p>
+<p>举个例子：<br>第一行依次是left pooling, right pooling，第二行依次是top pooling down pooling ,最终add到一起，根据值的大小就可以依次选出行和列的的极致情况，显然图中14是最大的，对应到原图7也是最大的。</p>
+<p><img src="/9.png" alt="9.png"></p>
+<p><strong>cascade corner pooling</strong><br>cascade corner pooling在corner pooling的基础上，增加了更多的内部的内容信息。Figure 4:(c)所示即为cascade corner pooling,主要思想就是不仅仅找到边缘的最大值，同时，将corner内部的内容也加到corner keypoints上面，提高corner keypoints对内容的感知能力，实际的做法就是如下图（b）所示为Top Corner Pooling，首先做一个left pooling，然后与原图求和，后面再过一个top pooling，这样就图中1和2都加到了left-topcorner上，同样的再做left corner pooling, down corner pooling right corner pooling就OK啦。</p>
+<p><img src="/10.png" alt="10.png"></p>
+<p><img src="/11.png" alt="11.png"></p>
+<h4 id="实验分析"><a href="#实验分析" class="headerlink" title="实验分析"></a>实验分析</h4><p>不同网络的精度对比结果如下：</p>
+<p><img src="/12.png" alt="12.png"></p>
+<p>另外，作者做了溶解实验，来对比本文主要的三个关键点的效果提升，其中CRE代表central region exploration ,CTP代表center pooling, CCP代表cascade corner pooling，可见CRE效果提升是最明显的，也侧面说明了增加对中心内容的感知的重要性。</p>
+<p><img src="/13.png" alt="13.png"></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>本文是在CornerNet基础上发展来的，主要提到的就是3个重点，一个是中间区域信息的引入思想，另外两个分别是Center Pooling以及Cascade Corner Pooling，思想还是比较好的，值得学习。</p>
+<p><strong>最后附上center pooling的代码，其他代码可以自行查看开头连接</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">center_pool</span>(<span class="title class_ inherited__">pool_cross</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, dim</span>):</span><br><span class="line">        <span class="built_in">super</span>(center_pool, self).__init__(dim, TopPool, LeftPool, BottomPool, RightPool) <span class="comment">## 调用pool_cross</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">pool_cross</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, dim, pool1, pool2, pool3, pool4</span>):</span><br><span class="line">        <span class="built_in">super</span>(pool_cross, self).__init__()</span><br><span class="line">        self.p1_conv1 = convolution(<span class="number">3</span>, dim, <span class="number">128</span>)</span><br><span class="line">        self.p2_conv1 = convolution(<span class="number">3</span>, dim, <span class="number">128</span>)</span><br><span class="line"></span><br><span class="line">        self.p_conv1 = nn.Conv2d(<span class="number">128</span>, dim, (<span class="number">3</span>, <span class="number">3</span>), padding=(<span class="number">1</span>, <span class="number">1</span>), bias=<span class="literal">False</span>)</span><br><span class="line">        self.p_bn1   = nn.BatchNorm2d(dim)</span><br><span class="line"></span><br><span class="line">        self.conv1 = nn.Conv2d(dim, dim, (<span class="number">1</span>, <span class="number">1</span>), bias=<span class="literal">False</span>)</span><br><span class="line">        self.bn1   = nn.BatchNorm2d(dim)</span><br><span class="line">        self.relu1 = nn.ReLU(inplace=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">        self.conv2 = convolution(<span class="number">3</span>, dim, dim)</span><br><span class="line"></span><br><span class="line">        self.pool1 = pool1()</span><br><span class="line">        self.pool2 = pool2()</span><br><span class="line">        self.pool3 = pool3()</span><br><span class="line">        self.pool4 = pool4()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        <span class="comment"># pool 1</span></span><br><span class="line">        p1_conv1 = self.p1_conv1(x)</span><br><span class="line">        pool1    = self.pool1(p1_conv1) <span class="comment">## 这里先来个top pooling</span></span><br><span class="line">        pool1    = self.pool3(pool1)    <span class="comment">## 接着来个 down pooling</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># pool 2</span></span><br><span class="line">        p2_conv1 = self.p2_conv1(x)</span><br><span class="line">        pool2    = self.pool2(p2_conv1)   <span class="comment">## left pooling</span></span><br><span class="line">        pool2    = self.pool4(pool2)      <span class="comment">## right pooling</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># pool 1 + pool 2</span></span><br><span class="line">        p_conv1 = self.p_conv1(pool1 + pool2)  <span class="comment">## add </span></span><br><span class="line">        p_bn1   = self.p_bn1(p_conv1)</span><br><span class="line"></span><br><span class="line">        conv1 = self.conv1(x)</span><br><span class="line">        bn1   = self.bn1(conv1)</span><br><span class="line">        relu1 = self.relu1(p_bn1 + bn1)</span><br><span class="line"></span><br><span class="line">        conv2 = self.conv2(relu1)</span><br><span class="line">        <span class="keyword">return</span> conv2</span><br></pre></td></tr></tbody></table></figure>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="FoveaBox是CVPR2019的一篇anchor free的目标检测文章，其思想跟FCOS很相似，都是在RetinaNet的基础上，在不同stage输出的特征图上，直接得到目标类别并回归出目标的位置，相比FCOS,FoveaBox要更简单一些，FoveaBox在COCO的精度可以达到42.1。   作者：Tao Kong   Fuchuan Sun 等 论文链接：https:&#x2F;&#x2F;arxiv.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FoveaBox">
+<meta property="og:url" content="https://www.wanglichun.tech/2020/01/01/foveabox/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="FoveaBox是CVPR2019的一篇anchor free的目标检测文章，其思想跟FCOS很相似，都是在RetinaNet的基础上，在不同stage输出的特征图上，直接得到目标类别并回归出目标的位置，相比FCOS,FoveaBox要更简单一些，FoveaBox在COCO的精度可以达到42.1。   作者：Tao Kong   Fuchuan Sun 等 论文链接：https:&#x2F;&#x2F;arxiv.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wanglichun.tech/1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/4.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/5.png">
+<meta property="og:image" content="https://www.wanglichun.tech/6.png">
+<meta property="og:image" content="https://www.wanglichun.tech/7.png">
+<meta property="og:image" content="https://www.wanglichun.tech/8.png">
+<meta property="og:image" content="https://www.wanglichun.tech/9.png">
+<meta property="og:image" content="https://www.wanglichun.tech/10.png">
+<meta property="og:image" content="https://www.wanglichun.tech/11.png">
+<meta property="og:image" content="https://www.wanglichun.tech/12.png">
+<meta property="article:published_time" content="2020-01-01T00:16:43.000Z">
+<meta property="article:modified_time" content="2020-01-01T05:24:22.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="FoveaBox">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.wanglichun.tech/1.png">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2020/01/01/foveabox/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>FoveaBox | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/01/01/foveabox/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          FoveaBox
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-01-01 08:16:43 / 修改时间：13:24:22" itemprop="dateCreated datePublished" datetime="2020-01-01T08:16:43+08:00">2020-01-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Detection</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/01/01/foveabox/" class="post-meta-item leancloud_visitors" data-flag-title="FoveaBox" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/01/01/foveabox/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/01/01/foveabox/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>FoveaBox是CVPR2019的一篇anchor free的目标检测文章，其思想跟FCOS很相似，都是在RetinaNet的基础上，在不同stage输出的特征图上，直接得到目标类别并回归出目标的位置，相比FCOS,FoveaBox要更简单一些，FoveaBox在COCO的精度可以达到42.1。</p>
+</blockquote>
+<hr>
+<p>作者：Tao Kong   Fuchuan Sun 等</p>
+<p>论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1904.03797">https://arxiv.org/abs/1904.03797</a></p>
+<p>代码链接：<a target="_blank" rel="noopener" href="https://github.com/taokong/FoveaBox">https://github.com/taokong/FoveaBox</a></p>
+<hr>
+<h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><ul>
+<li>使用anchor的缺点</li>
+</ul>
+<ol>
+<li>超参数的引入</li>
+<li>泛化性不够，对不同的任务需要设计不同的anchor</li>
+<li>正负样本不均匀</li>
+</ol>
+<ul>
+<li>灵感来源</li>
+</ul>
+<ol>
+<li>MetaAnchor</li>
+<li>Guided-Anchoring</li>
+</ol>
+<h3 id="FoveaBox"><a href="#FoveaBox" class="headerlink" title="FoveaBox"></a>FoveaBox</h3><p>在介绍FoveaBox之前，首先展示一张FoveaBox的结构图，如下。FoveaBox的整体结构跟RetinaNet基本一致，同样采用FPN结构，同样是不同的level分出两个subnet，一个用于预测类别，一个用于预测坐标框。不一样的地方在于，class subnet最后的输出这里是W*H*K,而RetinaNet是W*H*A*K,没有了anchor的参数A,box subnet的输出也是同理。</p>
+<p><img src="/1.png" alt="1.png"></p>
+<p>在FoveaBox中，共有5个level分出subnet，分别是$P_{l},l=3,4,…,7$,每个level输出的特征图的大小为$\frac{1}{2^{l}}$</p>
+<h4 id="Scale-Assignment"><a href="#Scale-Assignment" class="headerlink" title="Scale Assignment"></a>Scale Assignment</h4><p>由于目标尺寸变换范围较大，FoveaBox跟SSD方法一致，同样采用了不同的level预测不同尺寸的目标的方法，<strong>另外在FCOS中（一个跟FoveaBox很相似的anchor free目标检测方法），解释到，使用多level预测的目的是为了解决anchor free的时候，目标重叠的问题，因为重叠就没有办法分配正负样本了，这样可以有效减少目标重合。</strong></p>
+<p>这里作者将7个level的尺寸设置成$32^{2}$-$512^{2}$,用公式表示就是$S_{l}=4^{l}S_{0}$其中$S_{0}=16,l=3,4,…,7$,并且，为了控制不同level之间的重合度，作者增加了$\eta$参数，进一步调节不同level的尺度范围,$[\frac{S_{l}}{\eta_{2}},S_{l}\eta^{2}]$，通过调节参数，一个目标可能会在多个level中进行检测。</p>
+<h4 id="Object-Fovea"><a href="#Object-Fovea" class="headerlink" title="Object Fovea"></a>Object Fovea</h4><p>接下来我们来看一下，Fovea在训练中如何定义正负样本。</p>
+<p>Fovea是anchor free的，所以在计算正负样本的时候，不需要想anchor那样计算IOU，fovea直接将ground-truth映射到对应level的特征图上，公式如下：</p>
+<p><img src="/3.png" alt="3.png"></p>
+<p>另外，在Fovea中，并不是ground-truth对应的区域均是正样本，如下图所示，狗虽然很大，但是真正的正样本，是中间红色区域部分，这也是fovea的精华，这里作者引入了个$\sigma$参数，可以根据参数，动态设置正样本范围。</p>
+<p><img src="/4.png" alt="4.png"></p>
+<p><img src="/2.png" alt="2.png"></p>
+<p>至于负样本，作者在上面公式中，设置$\sigma_{2}$,在$\sigma_{2}$之外的数据均为负样本，在作者的实验中$\sigma_{1}=0.3$，$\sigma_{2}=0.4$，位于0.3-0.4之间的区域就不参与训练了。<strong>由于仍然存在正负样本不均的情况，所以作者在训练分类的时候仍然采用了Focal Loss。</strong></p>
+<h4 id="Box-Prediction"><a href="#Box-Prediction" class="headerlink" title="Box Prediction"></a>Box Prediction</h4><p>在坐标预测上，FoveaBox中，在坐标预测方面，主要是通过学习了transformation函数来进行坐标的变换，如下，其中$z=\sqrt{S_{l}}$,x1等是Ground Truth,t代表网络输出，这里作者使用的是Smooth L1 loss作为计算坐标的loss函数。</p>
+<p><img src="/5.png" alt="5.png"></p>
+<h4 id="Inference"><a href="#Inference" class="headerlink" title="Inference"></a>Inference</h4><p>在inference的时候，首先使用阈值0.05，直接过滤掉不靠谱的点，然后在剩下的点中，选取得分排名前1000的点作为候选点，再然后，使用非极大值抑制，对这1000个点再次进行过滤，最后留下的top100个点作为最终的结果。</p>
+<h3 id="实验部分"><a href="#实验部分" class="headerlink" title="实验部分"></a>实验部分</h3><h4 id="Various-anchor-densities-and-FoveaBox"><a href="#Various-anchor-densities-and-FoveaBox" class="headerlink" title="Various anchor densities and FoveaBox"></a>Various anchor densities and FoveaBox</h4><p>首先，anchor-based网络，一般跟anchor的选取有很大关系，那么fovea是不是比anchor-based方法更好呢？作者进行了实验，结果如下。可以发现，foveaBox比RetinaNet高的不是一点点。</p>
+<p><img src="/6.png" alt="6.png"></p>
+<h4 id="Analysis-of-Scale-Assignment"><a href="#Analysis-of-Scale-Assignment" class="headerlink" title="Analysis of Scale Assignment"></a>Analysis of Scale Assignment</h4><p>$\eta$控制着金字塔网络不同level的scale，到底选多少最为合适呢？下面的实验说明选择2是最为合适的。</p>
+<p><img src="/7.png" alt="7.png"></p>
+<h4 id="Fovea对于box是不是更鲁棒一些呢？"><a href="#Fovea对于box是不是更鲁棒一些呢？" class="headerlink" title="Fovea对于box是不是更鲁棒一些呢？"></a>Fovea对于box是不是更鲁棒一些呢？</h4><p>为此作者进行了实验，通过修改验证集的长宽比等。</p>
+<p><img src="/8.png" alt="8.png"></p>
+<h4 id="每个类别的差异"><a href="#每个类别的差异" class="headerlink" title="每个类别的差异"></a>每个类别的差异</h4><p>可见，大部分类别的效果都提升了。</p>
+<p><img src="/9.png" alt="9.png"></p>
+<h4 id="Fovea当做RPN效果"><a href="#Fovea当做RPN效果" class="headerlink" title="Fovea当做RPN效果"></a>Fovea当做RPN效果</h4><p>如果采用FoveaBox方式提取RPN效果如何呢？实验证明，效果要好于基于anchor的方法。</p>
+<p><img src="/10.png" alt="10.png"></p>
+<h4 id="不同尺度与深度的Fovea效果对比"><a href="#不同尺度与深度的Fovea效果对比" class="headerlink" title="不同尺度与深度的Fovea效果对比"></a>不同尺度与深度的Fovea效果对比</h4><p>foveaBox效果还是不错的。</p>
+<p><img src="/11.png" alt="11.png"></p>
+<p><img src="/12.png" alt="12.png"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>文章整体来看，跟FCOS很像，思路基本一样，都是基于RetinaNet,同样是每一个location预测一个类别和四个坐标相关的数，只是FCOS预测到四个边界的距离，Fovea预测一个坐标转换。再有一个就是FCOS以gt boxes中的全部像素作为正例，而Fovea是采样了一个portion。其他关于FPN尺度分配的问题都是大差不差。</p>
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/FoveaBox/" rel="tag"># FoveaBox</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/12/28/rfbnet/" rel="next" title="RFBNet">
+                  <i class="fa fa-chevron-left"></i> RFBNet
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/01/15/ACNet/" rel="prev" title="ACNet">
+                  ACNet <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FoveaBox"><span class="nav-number">2.</span> <span class="nav-text">FoveaBox</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Scale-Assignment"><span class="nav-number">2.1.</span> <span class="nav-text">Scale Assignment</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Object-Fovea"><span class="nav-number">2.2.</span> <span class="nav-text">Object Fovea</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Box-Prediction"><span class="nav-number">2.3.</span> <span class="nav-text">Box Prediction</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Inference"><span class="nav-number">2.4.</span> <span class="nav-text">Inference</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E9%83%A8%E5%88%86"><span class="nav-number">3.</span> <span class="nav-text">实验部分</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Various-anchor-densities-and-FoveaBox"><span class="nav-number">3.1.</span> <span class="nav-text">Various anchor densities and FoveaBox</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Analysis-of-Scale-Assignment"><span class="nav-number">3.2.</span> <span class="nav-text">Analysis of Scale Assignment</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Fovea%E5%AF%B9%E4%BA%8Ebox%E6%98%AF%E4%B8%8D%E6%98%AF%E6%9B%B4%E9%B2%81%E6%A3%92%E4%B8%80%E4%BA%9B%E5%91%A2%EF%BC%9F"><span class="nav-number">3.3.</span> <span class="nav-text">Fovea对于box是不是更鲁棒一些呢？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AF%8F%E4%B8%AA%E7%B1%BB%E5%88%AB%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-number">3.4.</span> <span class="nav-text">每个类别的差异</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Fovea%E5%BD%93%E5%81%9ARPN%E6%95%88%E6%9E%9C"><span class="nav-number">3.5.</span> <span class="nav-text">Fovea当做RPN效果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E5%B0%BA%E5%BA%A6%E4%B8%8E%E6%B7%B1%E5%BA%A6%E7%9A%84Fovea%E6%95%88%E6%9E%9C%E5%AF%B9%E6%AF%94"><span class="nav-number">3.6.</span> <span class="nav-text">不同尺度与深度的Fovea效果对比</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

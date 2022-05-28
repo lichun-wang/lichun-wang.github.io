@@ -1,0 +1,2313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Spring&#39;s Idea">
+<meta property="og:url" content="https://www.wanglichun.tech/page/5/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="Spring Wang">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.wanglichun.tech/page/5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: true,
+    isPost: false,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/15/tvm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/15/tvm/" class="post-title-link" itemprop="url">初识 TVM</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-15 08:44:39" itemprop="dateCreated datePublished" datetime="2019-11-15T08:44:39+08:00">2019-11-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-25 13:21:44" itemprop="dateModified" datetime="2020-02-25T13:21:44+08:00">2020-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Technology/" itemprop="url" rel="index">
+                    <span itemprop="name">Technology</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/15/tvm/" class="post-meta-item leancloud_visitors" data-flag-title="初识 TVM" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/15/tvm/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/15/tvm/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>笔者也是最近偶然的机会才开始接触TVM，使用过后发现，经过auto-tuning后的TVM模型在速度是竟然超过了TensorRT,并且笔者使用的是MXNet模型，TVM对MXNet绝对的友好，对于Pytorch等模型，可以使用ONNX，操作一样简单，使用起来基本类似一键操作，本篇文章是笔者对TVM的简单整理，也算是对TVM的入门。</p>
+<p>当然如何想详细了解TVM，还请阅读TVM的主页以及论文，文章最后有链接。</p>
+<h4 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h4><p>随着深度学习的发展，深度学习的能力可以说是越来越强大，识别率节节攀升，甚至超过人类。于此同时，深度学习框架也变得越来越多，目前比较主流的深度学习框架包括：Pytorch、TensorFlow、Mxnet、Caffe、Keras等。</p>
+<p>一般进行深度学习任务包括两部分，一是训练出精度比较高的模型，然后将其部署到对应的目标机器上。</p>
+<p>针对第一部分，自然我们可以使用各种深度学习框架，通过修改网络调参等，训练出精度比较满意的模型，一般情况，在训练深度学习模型的时候，都会使用到GPU。</p>
+<p>针对部署，这里的目标机包括服务器、手机、其他硬件设备等等。部署的模型自然是希望越快越好，所以硬件厂商一般会针对自己的硬件设备进行一定的优化，以使模型达到更高的效率，比如Nvidia的TensorRT。但是框架这么多，硬件平台这么多，并不是所有的硬件平台都像Nvidia提供了硬件加速库，而即使做了加速，要适应所有的深度学习训练框架，也是一件比较难的事情。</p>
+<p>其实介绍了这么多总结起来就是两个问题：</p>
+<ol>
+<li>在进行模型部署的时候，我们是否可以对不同框架训练的模型均生成统一的模型，解决硬件平台需要适配所有框架的问题？</li>
+<li>在进行模型部署的时候，我们是否可以自动化的针对不同的硬件进行优化，进而得到高效的模型？</li>
+</ol>
+<p><strong>TVM实际上就是在解决这两个问题，并且解决的还不错。</strong></p>
+<p><strong>那么TVM是什么？</strong></p>
+<blockquote>
+<p>TVM is an open deep learning compiler stack for CPUs, GPUs, and specialized accelerators. It aims to close the gap between the productivity-focused deep learning frameworks, and the performance- or efficiency-oriented hardware backends.</p>
+</blockquote>
+<blockquote>
+<p>TVM是一个开源的可面向多种硬件设备的深度学习编译器，它的作用在于打通模型框架、模型表现以及硬件设备的鸿沟，进而得到表现最好的可部署的深度学习模型，实现端到端的深度学习模型部署。</p>
+</blockquote>
+<p><strong>TVM做了哪些工作</strong></p>
+<p>针对第一个问题：</p>
+<p>TVM将不同前端（深度学习框架）训练的模型，转换为统一的中间语言表示，如果想详细理解这里，可以了解一下<strong>NNVM</strong>，<strong>NNVM</strong>是陈天奇团队开发的可以针对不同框架进行深度学习编译的框架，在TVM中，陈天奇团队进一步优化，实现了<strong>NNVM</strong>的第二代<strong>Relay</strong>。Relay是TVM中实现的一种高级IR，可以简单理解为另一种计算图表示。其在TVM所处的位置如下图所示，并且该部分实现了比如<strong>运算融合</strong>等操作，可以提升一部分模型效率。</p>
+<p><img src="/2.png" alt="2.png"></p>
+<center>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">Relay在优化中的位置</div>
+</center>
+
+
+<p>针对第二个问题：</p>
+<p>TVM设计了对不同的硬件后端，自动优化tensor操作，以达到加速的目的。该部分的实现，TVM使用机器学习的方法进行计算空间的最优化搜索，通过在目标硬件上跑大量trial，来获得该硬件上相关运算（例如卷积）的最优实现。详细介绍可以参考TVM主页以及论文。</p>
+<p><img src="/1.png" alt="1.png"></p>
+<center>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">TVM tuning可以对不同硬件进行tensor优化</div>
+</center>
+
+
+<h4 id="TVM-安装"><a href="#TVM-安装" class="headerlink" title="TVM 安装"></a>TVM 安装</h4><p>不同环境的安装方法可以参考tvm的官网：<a target="_blank" rel="noopener" href="https://docs.tvm.ai/install/index.html">https://docs.tvm.ai/install/index.html</a></p>
+<p>对于安装环境，我还是强烈推荐docker的,会少很多坑。</p>
+<ul>
+<li>直接pull陈天奇上传到dockerhub上的镜像，就可以tvm的各种操作了</li>
+</ul>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull tvmai/demo-gpu:latest</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这个镜像是cuda8.0版本，如果需要在2080ti上实验，是跑不起来的，会报错。</p>
+<ul>
+<li>2080ti上重新build镜像</li>
+</ul>
+<p>（1）首先，把github的tvm项目拉到2080ti机器上。</p>
+<p>（2）进入dockers文件夹，找到Dockerfile.demo_gpu，其内容默认是下面这样的</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># Minimum docker image for demo purposes</span><br><span class="line"># CI docker GPU env</span><br><span class="line"># tag: v0.54</span><br><span class="line">FROM tvmai/ci-gpu:v0.54</span><br><span class="line"></span><br><span class="line"># Jupyter notebook.</span><br><span class="line">RUN pip3 install matplotlib Image "Pillow&lt;7" jupyter[notebook]</span><br><span class="line"></span><br><span class="line"># Build TVM</span><br><span class="line">COPY install/install_tvm_gpu.sh /install/install_tvm_gpu.sh</span><br><span class="line">RUN bash /install/install_tvm_gpu.sh</span><br><span class="line"></span><br><span class="line"># Environment variables</span><br><span class="line">ENV PYTHONPATH=/usr/tvm/python:/usr/tvm/topi/python:/usr/tvm/vta/python:${PYTHONPATH}</span><br><span class="line">ENV PATH=/usr/local/nvidia/bin:${PATH}</span><br><span class="line">ENV PATH=/usr/local/cuda/bin:${PATH}</span><br><span class="line">ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}</span><br></pre></td></tr></tbody></table></figure>
+<p>（3）将FROM tvmai/ci-gpu:v0.54修改为FROM tvmai/ci-gpu:latest</p>
+<p>（4）重新build这个Dockerfile就可以了。</p>
+<h4 id="TVM-使用"><a href="#TVM-使用" class="headerlink" title="TVM 使用"></a>TVM 使用</h4><p>TVM的使用可以阅读一下tvm提供的tutorials：<a target="_blank" rel="noopener" href="https://docs.tvm.ai/tutorials/">https://docs.tvm.ai/tutorials/</a></p>
+<p>主要推荐两部分：</p>
+<ul>
+<li>compile deep learning models</li>
+<li>auto tuning</li>
+</ul>
+<p>其实简单的使用主要就是这两块内容，如果不想细研究其代码，可以将其当成一个工具使用，通过compile deep learning models,无论你使用什么样的框架，都可以生成统一的模型，一般会生成3个东西如下：</p>
+<p><img src="/6.png" alt="6.png"></p>
+<p>这里一般会做一些层的融合等操作，速度会有一定的提升的，但是不是特别大。这时如果你需要进一步提速可以试试<strong>auto tuning</strong>,这部分可以参考tutorials以及下面的例子代码，auto-tune的时间一般比较长，但是效果还是比较显著的，本地测试，resnet在nvidia 1080ti上可以提高3倍左右。</p>
+<h4 id="Demo代码"><a href="#Demo代码" class="headerlink" title="Demo代码"></a>Demo代码</h4><p>TVM的原理很复杂但是使用起来还是比较方便的，下面是使用MXNet进行TVM转换的demo。</p>
+<p>代码一：生成TVM模型。</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> tvm</span><br><span class="line"><span class="keyword">from</span> tvm <span class="keyword">import</span> relay</span><br><span class="line"><span class="keyword">from</span> tvm.relay <span class="keyword">import</span> testing</span><br><span class="line"><span class="keyword">from</span> tvm.contrib <span class="keyword">import</span> graph_runtime</span><br><span class="line"><span class="keyword">import</span> mxnet <span class="keyword">as</span> mx</span><br><span class="line"><span class="keyword">from</span> tvm.contrib.download <span class="keyword">import</span> download_testdata</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="comment">## load mxnet model</span></span><br><span class="line">prefix = <span class="string">'/Models/resnetv1d-101'</span></span><br><span class="line">epoch = <span class="number">13</span></span><br><span class="line">mx_sym, arg_params, aux_params = mx.model.load_checkpoint(prefix, epoch)</span><br><span class="line">shape_dict = {<span class="string">'data'</span>: (<span class="number">1</span>, <span class="number">3</span>, <span class="number">224</span>, <span class="number">224</span>)}</span><br><span class="line"></span><br><span class="line">relay_func, relay_params = relay.frontend.from_mxnet(mx_sym, shape_dict,</span><br><span class="line">        arg_params=arg_params, aux_params=aux_params)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">target = <span class="string">'cuda'</span></span><br><span class="line"><span class="keyword">with</span> relay.build_config(opt_level=<span class="number">3</span>):</span><br><span class="line">    graph, lib, params = relay.build(relay_func, target, params=relay_params)</span><br><span class="line"><span class="comment"># run forward</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line">image = Image.<span class="built_in">open</span>(<span class="string">'test.jpg'</span>).resize((<span class="number">224</span>, <span class="number">224</span>))</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">transform_image</span>(<span class="params">im</span>):</span><br><span class="line">    im = np.array(im).astype(np.float32)</span><br><span class="line">    im = np.transpose(im, [<span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">    im = im[np.newaxis, :]</span><br><span class="line">    <span class="keyword">return</span> im</span><br><span class="line">x = transform_image(image)</span><br><span class="line"><span class="comment"># let's go</span></span><br><span class="line">ctx = tvm.gpu(<span class="number">0</span>)</span><br><span class="line">dtype = <span class="string">'float32'</span></span><br><span class="line"></span><br><span class="line">m = graph_runtime.create(graph, lib, ctx)</span><br><span class="line"><span class="comment">## set input data</span></span><br><span class="line">m.set_input(<span class="string">'data'</span>, tvm.nd.array(x.astype(dtype)))</span><br><span class="line"><span class="comment">## set input params</span></span><br><span class="line">m.set_input(**params)</span><br><span class="line">t1 = time.time()</span><br><span class="line">m.run()</span><br><span class="line">t2 = time.time()</span><br><span class="line"><span class="comment"># get output</span></span><br><span class="line">outputs = m.get_output(<span class="number">0</span>)</span><br><span class="line">top1 = np.argmax(outputs.asnumpy()[<span class="number">0</span>])</span><br><span class="line"><span class="built_in">print</span>(outputs, <span class="built_in">str</span>(t2-t1))</span><br><span class="line"></span><br><span class="line"><span class="comment">### evaluate inference time</span></span><br><span class="line"></span><br><span class="line">ftimer = m.module.time_evaluator(<span class="string">'run'</span>, ctx, number=<span class="number">1</span>, repeat=<span class="number">100</span>)</span><br><span class="line">prof_res = np.array(ftimer().results) * <span class="number">1000</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'time cost : mean:{}'</span>.<span class="built_in">format</span>(np.mean(prof_res)))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># save model</span></span><br><span class="line"></span><br><span class="line">path_lib = <span class="string">'/Outputs/tvm/deploy_resnet101_v1d_lib.tar'</span></span><br><span class="line">lib.export_library(path_lib)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">'/Outputs/tvm/deploy_resnet101_v1d_graph.json'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(graph)</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">'/Outputs/tvm/deploy_params'</span>, <span class="string">'wb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(relay.save_param_dict(params))</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="comment"># load model back</span></span><br><span class="line"></span><br><span class="line">loaded_json = <span class="built_in">open</span>(<span class="string">'/Outputs/tvm/deploy_resnet101_v1d_graph.json'</span>).read()</span><br><span class="line">loaded_lib = tvm.module.load(path_lib)</span><br><span class="line">loaded_params = <span class="built_in">bytearray</span>(<span class="built_in">open</span>(<span class="string">'/Outputs/tvm/deploy_params'</span>, <span class="string">'rb'</span>).read())</span><br><span class="line">module = graph_runtime.create(loaded_json, loaded_lib, ctx)</span><br><span class="line">module.load_params(loaded_params)</span><br><span class="line"></span><br><span class="line">tvm_data = tvm.nd.array(x.astype(dtype))</span><br><span class="line">module.run(data=tvm_data)</span><br><span class="line">outputs = module.get_output(<span class="number">0</span>)</span><br><span class="line"><span class="built_in">print</span>(outputs)</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<p>代码二：auto-tuning，这部分还是比较慢的，一个resnet101模型，在1080ti上面可能要tune1到2天的时间。</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> mxnet <span class="keyword">as</span> mx</span><br><span class="line"><span class="keyword">import</span> tvm</span><br><span class="line"><span class="keyword">from</span> tvm <span class="keyword">import</span> autotvm</span><br><span class="line"><span class="keyword">from</span> tvm <span class="keyword">import</span> relay</span><br><span class="line"><span class="keyword">import</span> tvm.relay.testing</span><br><span class="line"><span class="keyword">from</span> tvm.autotvm.tuner <span class="keyword">import</span> XGBTuner, GATuner, RandomTuner, GridSearchTuner</span><br><span class="line"><span class="keyword">from</span> tvm.contrib.util <span class="keyword">import</span> tempdir</span><br><span class="line"><span class="keyword">import</span> tvm.contrib.graph_runtime <span class="keyword">as</span> runtime</span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_network</span>(<span class="params">dtype, args</span>):</span><br><span class="line">    <span class="string">"""Get the symbol definition and random weight of a network"""</span></span><br><span class="line">    input_shape = (args.batch_size, <span class="number">3</span>, <span class="number">224</span>, <span class="number">224</span>)</span><br><span class="line"></span><br><span class="line">    prefix = <span class="string">'/Models/{}/{}'</span>.<span class="built_in">format</span>(args.version, args.model_name)</span><br><span class="line">    epoch = args.model_index</span><br><span class="line">    mx_sym, arg_params, aux_params = mx.model.load_checkpoint(prefix, epoch)</span><br><span class="line"></span><br><span class="line">    mod, params = relay.frontend.from_mxnet(mx_sym, shape={<span class="string">'data'</span>: input_shape}, dtype=dtype, arg_params=arg_params,</span><br><span class="line">                                            aux_params=aux_params)</span><br><span class="line">    net = mod[<span class="string">"main"</span>]</span><br><span class="line">    net = relay.Function(net.params, relay.nn.softmax(net.body), <span class="literal">None</span>, net.type_params, net.attrs)</span><br><span class="line">    mod = relay.Module.from_expr(net)</span><br><span class="line">    <span class="keyword">return</span> mod, params, input_shape</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># You can skip the implementation of this function for this tutorial.</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">tune_tasks</span>(<span class="params">tasks,</span></span><br><span class="line"><span class="params">               measure_option,</span></span><br><span class="line"><span class="params">               tuner=<span class="string">'xgb'</span>,</span></span><br><span class="line"><span class="params">               n_trial=<span class="number">1000</span>,</span></span><br><span class="line"><span class="params">               early_stopping=<span class="literal">None</span>,</span></span><br><span class="line"><span class="params">               log_filename=<span class="string">'tuning.log'</span>,</span></span><br><span class="line"><span class="params">               use_transfer_learning=<span class="literal">True</span>,</span></span><br><span class="line"><span class="params">               try_winograd=<span class="literal">True</span></span>):</span><br><span class="line">    <span class="keyword">if</span> try_winograd:</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(tasks)):</span><br><span class="line">            <span class="keyword">try</span>:  <span class="comment"># try winograd template</span></span><br><span class="line">                tsk = autotvm.task.create(tasks[i].name, tasks[i].args,</span><br><span class="line">                                          tasks[i].target, tasks[i].target_host, <span class="string">'winograd'</span>)</span><br><span class="line">                input_channel = tsk.workload[<span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line">                <span class="keyword">if</span> input_channel &gt;= <span class="number">64</span>:</span><br><span class="line">                    tasks[i] = tsk</span><br><span class="line">            <span class="keyword">except</span> Exception:</span><br><span class="line">                <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># create tmp log file</span></span><br><span class="line">    tmp_log_file = log_filename + <span class="string">".tmp"</span></span><br><span class="line">    <span class="keyword">if</span> os.path.exists(tmp_log_file):</span><br><span class="line">        os.remove(tmp_log_file)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i, tsk <span class="keyword">in</span> <span class="built_in">enumerate</span>(<span class="built_in">reversed</span>(tasks)):</span><br><span class="line">        prefix = <span class="string">"[Task %2d/%2d] "</span> %(i+<span class="number">1</span>, <span class="built_in">len</span>(tasks))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># create tuner</span></span><br><span class="line">        <span class="keyword">if</span> tuner == <span class="string">'xgb'</span> <span class="keyword">or</span> tuner == <span class="string">'xgb-rank'</span>:</span><br><span class="line">            tuner_obj = XGBTuner(tsk, loss_type=<span class="string">'rank'</span>)</span><br><span class="line">        <span class="keyword">elif</span> tuner == <span class="string">'ga'</span>:</span><br><span class="line">            tuner_obj = GATuner(tsk, pop_size=<span class="number">100</span>)</span><br><span class="line">        <span class="keyword">elif</span> tuner == <span class="string">'random'</span>:</span><br><span class="line">            tuner_obj = RandomTuner(tsk)</span><br><span class="line">        <span class="keyword">elif</span> tuner == <span class="string">'gridsearch'</span>:</span><br><span class="line">            tuner_obj = GridSearchTuner(tsk)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">"Invalid tuner: "</span> + tuner)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> use_transfer_learning:</span><br><span class="line">            <span class="keyword">if</span> os.path.isfile(tmp_log_file):</span><br><span class="line">                tuner_obj.load_history(autotvm.record.load_from_file(tmp_log_file))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># do tuning</span></span><br><span class="line">        n_trial = <span class="built_in">min</span>(n_trial, <span class="built_in">len</span>(tsk.config_space))</span><br><span class="line">        tuner_obj.tune(n_trial=n_trial,</span><br><span class="line">                       early_stopping=early_stopping,</span><br><span class="line">                       measure_option=measure_option,</span><br><span class="line">                       callbacks=[</span><br><span class="line">                           autotvm.callback.progress_bar(n_trial, prefix=prefix),</span><br><span class="line">                           autotvm.callback.log_to_file(tmp_log_file)])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># pick best records to a cache file</span></span><br><span class="line">    autotvm.record.pick_best(tmp_log_file, log_filename)</span><br><span class="line">    os.remove(tmp_log_file)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">tune_and_evaluate</span>(<span class="params">tuning_opt, target, log_file, dtype, args</span>):</span><br><span class="line">    <span class="comment"># extract workloads from relay program</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Extract tasks..."</span>)</span><br><span class="line">    mod, params, input_shape = get_network(dtype, args)</span><br><span class="line">    tasks = autotvm.task.extract_from_program(mod[<span class="string">"main"</span>], target=target,</span><br><span class="line">                                              params=params, ops=(relay.op.nn.conv2d,))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># run tuning tasks</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Tuning..."</span>)</span><br><span class="line">    tune_tasks(tasks, **tuning_opt)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># compile kernels with history best records</span></span><br><span class="line">    <span class="keyword">with</span> autotvm.apply_history_best(log_file):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Compile..."</span>)</span><br><span class="line">        <span class="keyword">with</span> relay.build_config(opt_level=<span class="number">3</span>):</span><br><span class="line">            graph, lib, params = relay.build_module.build(</span><br><span class="line">                mod, target=target, params=params)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># export library</span></span><br><span class="line">        tmp = tempdir()</span><br><span class="line">        filename = <span class="string">"/Outputs/tvm_autotuning/{}/{}_auto_tune_deploy_batch_{}_lib.tar"</span>.<span class="built_in">format</span>(args.version,args.model_name, args.batch_size)</span><br><span class="line">        lib.export_library(tmp.relpath(filename))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">'/Outputs/tvm_autotuning/{}/{}_auto_tune_deploy_batch_{}_graph.json'</span>.<span class="built_in">format</span>(args.version,args.model_name,args.batch_size) , <span class="string">'w'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            f.write(graph)</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">'/Outputs/tvm_autotuning/{}/{}_auto_tune_deploy_batch_{}_params.params'</span>.<span class="built_in">format</span>(args.version,args.model_name,args.batch_size) , <span class="string">'wb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            f.write(relay.save_param_dict(params))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># load parameters</span></span><br><span class="line">        ctx = tvm.context(<span class="built_in">str</span>(target), <span class="number">0</span>)</span><br><span class="line">        module = runtime.create(graph, lib, ctx)</span><br><span class="line">        data_tvm = tvm.nd.array((np.random.uniform(size=input_shape)).astype(dtype))</span><br><span class="line">        module.set_input(<span class="string">'data'</span>, data_tvm)</span><br><span class="line">        module.set_input(**params)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># evaluate</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Evaluate inference time cost..."</span>)</span><br><span class="line">        ftimer = module.module.time_evaluator(<span class="string">"run"</span>, ctx, number=<span class="number">1</span>, repeat=<span class="number">600</span>)</span><br><span class="line">        prof_res = np.array(ftimer().results) * <span class="number">1000</span>  <span class="comment"># convert to millisecond</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Mean inference time (std dev): %.2f ms (%.2f ms)"</span> %</span><br><span class="line">              (np.mean(prof_res), np.std(prof_res)))</span><br><span class="line"></span><br><span class="line"><span class="comment"># We do not run the tuning in our webpage server since it takes too long.</span></span><br><span class="line"><span class="comment"># Uncomment the following line to run it by yourself.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">'score a model on a dataset'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--version'</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, default=<span class="string">'porno'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--model-name'</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, default=<span class="string">'resnetv1d-101-320x320'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--model-index'</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=<span class="number">16</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--batch-size'</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=<span class="number">1</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--tag'</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, default=<span class="string">''</span>)</span><br><span class="line"></span><br><span class="line">    args = parser.parse_args()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(os.path.join(<span class="string">'/Outputs/tvm_autotuning/{}'</span>.<span class="built_in">format</span>(args.version))):</span><br><span class="line">        os.mkdir(os.path.join(<span class="string">'/Outputs/tvm_autotuning/{}'</span>.<span class="built_in">format</span>(args.version)))</span><br><span class="line"></span><br><span class="line">    <span class="comment">#### DEVICE CONFIG ####</span></span><br><span class="line">    target = tvm.target.cuda()</span><br><span class="line"></span><br><span class="line">    <span class="comment">#### TUNING OPTION ####</span></span><br><span class="line">    log_file = <span class="string">'/Outputs/tvm_autotuning/{}/{}_batch_{}.log'</span>.<span class="built_in">format</span>(args.version, args.model_name, args.batch_size)</span><br><span class="line">    dtype = <span class="string">'float32'</span></span><br><span class="line"></span><br><span class="line">    tuning_option = {</span><br><span class="line">        <span class="string">'log_filename'</span>: log_file,</span><br><span class="line"></span><br><span class="line">        <span class="string">'tuner'</span>: <span class="string">'xgb'</span>,</span><br><span class="line">        <span class="string">'n_trial'</span>: <span class="number">2000</span>,</span><br><span class="line">        <span class="string">'early_stopping'</span>: <span class="number">600</span>,</span><br><span class="line"></span><br><span class="line">        <span class="string">'measure_option'</span>: autotvm.measure_option(</span><br><span class="line">            builder=autotvm.LocalBuilder(timeout=<span class="number">10</span>),</span><br><span class="line">            runner=autotvm.LocalRunner(number=<span class="number">20</span>, repeat=<span class="number">3</span>, timeout=<span class="number">4</span>, min_repeat_ms=<span class="number">150</span>),</span><br><span class="line">            <span class="comment"># runner=autotvm.RPCRunner(</span></span><br><span class="line">            <span class="comment">#     '1080ti',  # change the device key to your key</span></span><br><span class="line">            <span class="comment">#     '0.0.0.0', 9190,</span></span><br><span class="line">            <span class="comment">#     number=20, repeat=3, timeout=4, min_repeat_ms=150)</span></span><br><span class="line">        ),</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">tune_and_evaluate(tuning_option, target, log_file, dtype, args)</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h4><ul>
+<li>本地Nvidia 1080ti 测试</li>
+</ul>
+<p>首先在，两卡机上测试性能，分别测试了resnet50v1d，resnet101v1d以及输入尺度320的resnet101v1d，测试结果如下表：</p>
+<p>可以发现，相比较mxnet模型  tensorRT大约加速比70%-80%，TVM提速可以达到50%-60%</p>
+<p><img src="/7.png" alt="7.png"></p>
+<center>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">Nvidia 1080 测试结果</div>
+</center>
+
+<ul>
+<li>Nvidia 2080ti 测试</li>
+</ul>
+<p>如下分别测试了tvm加速在2080上的效果，可以发现：</p>
+<ul>
+<li>在2080机器上，mxnet的提速还是比较明显的，加速比大概 70%</li>
+<li>在2080机器上，tensorRT float32速度，跟在1080上基本一致，没有提速。</li>
+<li>在2080机器上，TVM速度与在1080上相比，反而有一丢丢的减速。</li>
+</ul>
+<p>在2080机器上重新auto-tune了TVM模型，可以发现：</p>
+<ul>
+<li>重新在2080机器上tune后，相比不tune，效果的提升还是比较明显的。</li>
+<li>重新在2080机器上tune后，跟在1080上的速度相差不大。</li>
+</ul>
+<p><img src="/8.png" alt="8.png"></p>
+<center>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">Nvidia 2080 测试结果</div>
+</center>
+
+<p>下面测试了内存的消耗。总体来看TVM比较省内存和显存。</p>
+<p><img src="/9.png" alt="9.png"></p>
+<center>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">内存显存消耗</div>
+</center>
+
+
+
+<h4 id="补充：TensorRT"><a href="#补充：TensorRT" class="headerlink" title="补充：TensorRT"></a>补充：TensorRT</h4><p>TensorRT是Nvidia出品的用于将不同框架训练的模型部署到GPU的加速引擎，可以自动将不同框架的模型转换为TensorRT模型，并进行模型加速。</p>
+<p>TensorRT进行模型加速主要有两点：</p>
+<ul>
+<li>TensorRT支持int8以及FP16计算</li>
+<li>TensorRT对网络进行重构以及优化:</li>
+</ul>
+<blockquote>
+<p>去掉网络中的无用层</p>
+</blockquote>
+<blockquote>
+<p>网络结构的垂直整合</p>
+</blockquote>
+<blockquote>
+<p>网络结构的水平融合</p>
+</blockquote>
+<p><img src="/3.png" alt="3.png"></p>
+<center>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">原始网络</div>
+</center>
+
+
+<p><img src="/4.png" alt="4.png"></p>
+<center>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">纵向融合</div>
+</center>
+
+
+<p><img src="/5.png" alt="5.png"></p>
+<center>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">横向融合</div>
+</center>
+
+
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><p><a target="_blank" rel="noopener" href="https://tvm.ai/">TVM官网： https://tvm.ai/</a></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1802.04799">TVM论文：arxiv: https://arxiv.org/abs/1802.04799</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/xh_hit/article/details/79769599">tensorRT加速参考文献：https://blog.csdn.net/xh_hit/article/details/79769599</a></p>
+<p><a target="_blank" rel="noopener" href="https://devblogs.nvidia.com/production-deep-learning-nvidia-gpu-inference-engine/">Nvidia参考文献：https://devblogs.nvidia.com/production-deep-learning-nvidia-gpu-inference-engine/</a></p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/15/tvm/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/12/dpn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/12/dpn/" class="post-title-link" itemprop="url">DPN</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-12 09:22:30" itemprop="dateCreated datePublished" datetime="2019-11-12T09:22:30+08:00">2019-11-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 07:59:22" itemprop="dateModified" datetime="2020-02-16T07:59:22+08:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Classification/" itemprop="url" rel="index">
+                    <span itemprop="name">Classification</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/12/dpn/" class="post-meta-item leancloud_visitors" data-flag-title="DPN" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/12/dpn/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/12/dpn/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>DPN是在resneXt,denseNet之后，对resnet系列的进一步创新，作者巧妙的将resnet与denseNet相结合，提出了dual path architectures，构造了DPN网络结构。</p>
+</blockquote>
+<p>那么DPN的创新点有哪些呢？如下：</p>
+<p>DPN具有<strong>更小的模型以及更少的计算量，具有更好的训练速度</strong>。作者在论文中的描述为：[<br>In particular，on the ImageNet-1k dataset, a shallow DPN surpasses the best ResNeXt-101 with 26% smaller model size, 25% less computational cost and 8% lower memory consumption.]</p>
+<hr>
+<p>那么DPN是如何做到这点的呢？</p>
+<p>论文第二章、第三章详细介绍了DPN的理论基础，包含有较多的公式，简单而言就是借鉴了：</p>
+<ul>
+<li>resnet特征重用（因为前面特征被sum到了后面层上面）</li>
+<li>denseNet容易发现新特征（将前面特征均进行了concat组合）</li>
+</ul>
+<p>的特点，并且受到HORNNs的启发，HORNNs我还没有仔细的研究，这里就不解释了。<br>该部分包含有较多的公式可供理解，感兴趣的读者可以在论文中查看。</p>
+<hr>
+<p>下面我主要介绍DPN的网络结构，以及DPN在resnet以及densenet上面的改进。<br>下面这两张图我觉得画的让我眼前一亮，很好的描述了resnet与denseNet的特点。<br>下图中（a）是resnet示意图，其中“+”代表element-wise addition，即对应值相加。<br>（b）是densenet示意图，由于densenet采用的是concat方式进行特征图叠加，所以在网络中特征图的宽度会逐渐增加。<br>图中的1*1卷积主要是为了改变特征图的维度，起到了降维的作用。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1frsc2afruaj20c10c1wf1.jpg"></p>
+<p>那么，DPN是什么样子的呢？灯灯灯灯~来啦，如下图：</p>
+<p>DPN跟resnet与densenet具有相似的结构均为： 1*1 + 3*3 + 1*1,但是DPN的最后一层被分成两部分，一部分交给resnet进行element-wisely add另一部分进行densenet的concat，并且DPN采用的resneXt的group（分组卷积）结构，以提高DPN的分类能力。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1frscocdqr9j20e60czq3s.jpg"></p>
+<p>下面是DPN网络的可视化结构（鉴于篇幅限制，这里只能截图一个block中的一部分啦），可以看出，网络经过3个卷积后进行分支，分成两部分，一部分执行resnet的elewise另一部分执行densenet的concat</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1frsfmigv9aj20fi0kd74t.jpg" alt="DPN的block结构"></p>
+<p>DPN的参数结构如下图所示：</p>
+<p>通过该结构图，我们同样可以看出DPN同resneXt也很像，都是几个block，并且以DPN92为例子，我们可以看出，dpn网络的参数量相比较于resneXt101（32*4d）要少很多。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1frsfjyvpwxj20xn0dkwgy.jpg" alt="DPN的参数结构"></p>
+<p>如果要详细了解其结构，可以参考作者给出的代码 <a target="_blank" rel="noopener" href="https://github.com/cypw/DPNs/tree/master/settings">DPN的mxnet实现：https://github.com/cypw/DPNs/tree/master/settings</a></p>
+<p>另外需要补充说明的是：</p>
+<p>DPN没有类似densenet结构中的pooling进行图像尺寸的缩小，而是通过conv中设置stride为2进行图像尺度的缩小。并且在不同的block之间</p>
+<hr>
+<p>作者的实验部分介绍的也算很详细，实验结果就是DPN网络可以使用更少的参数量，达到更好的实验效果。如下图。</p>
+<p>通过下图可以看出，DPN98在精度上和速度上以及内存利用率上均已经超过了ResNeXt101。<br><img src="http://ww1.sinaimg.cn/large/87675bbbgy1frtcni0wu0j20v1070wfb.jpg"></p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/12/dpn/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/12/densenet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/12/densenet/" class="post-title-link" itemprop="url">DenseNet</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-12 09:22:23" itemprop="dateCreated datePublished" datetime="2019-11-12T09:22:23+08:00">2019-11-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 13:44:48" itemprop="dateModified" datetime="2020-01-16T13:44:48+08:00">2020-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Classification/" itemprop="url" rel="index">
+                    <span itemprop="name">Classification</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/12/densenet/" class="post-meta-item leancloud_visitors" data-flag-title="DenseNet" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/12/densenet/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/12/densenet/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1608.06993">原文链接：https://arxiv.org/abs/1608.06993</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/liuzhuang13/DenseNet">DenseNet原版代码：https://github.com/liuzhuang13/DenseNet</a></p>
+<p><strong>如果出现图像或者公式显示不完整，可以访问如下博客：</strong></p>
+<p><a target="_blank" rel="noopener" href="http://blog.csdn.net/Chunfengyanyulove/article/details/79476475">CSDN博客：http://blog.csdn.net/Chunfengyanyulove/article/details/79476475</a></p>
+<p><strong>创新点：DenseNet作为2017CVPR最佳论文，其在ResNet基础上，提出了更优秀的shortcut方式，Dense Connection 不仅能使得feature更加强健，还能带来更快的收敛速度。并且DenseNet具有比ResNet更少的参数，在测试时具有更快的速度</strong></p>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>在传统的ResNet中，layer与layer之间具有L个connection，DenseNet在ResNet的shorter connection的基础上，在每个Layer之间均加入shorter connection，共包含</p>
+<p>$$\frac{L(L+1)}{2}$$</p>
+<p>个连接。如下图1所示。<br>不同于ResNet，DenseNet采用concatenation的方式进行特征图的叠加，而ResNet采用相加的方式进行叠加。<br>DenseNet 特征重用，使得denseNet更容易去训练，具有更高的效率。<br><img src="http://img.blog.csdn.net/20180306185904712?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<center>图1，5layers dense block</center>
+
+<p>DenseNet需要更少的参数，<br>作者指出，最近对ResNet的研究表明，ResNet的很多层在训练的过程中贡献较小，甚至可以随机的丢弃一些层，并且ResNet的参数量较大，说明ResNet其实寻找一定的冗余性，基于此，作者提出设计DenseNet，DenseNet网络中的每一层都直接与其前面层相连，实现特征的重复利用；同时把网络的每一层设计得特别窄，即只学习非常少的特征图，达到降低冗余性的目的。</p>
+<ul>
+<li>DenseNet改善了图像信息以及梯度在网络中的传递，使得训练更加容易。</li>
+<li>Dense Connection具有正则化效果，可以降低小训练集上的过拟合。</li>
+</ul>
+<h3 id="DenseNet"><a href="#DenseNet" class="headerlink" title="DenseNet"></a>DenseNet</h3><p><strong>Dense Connectivity</strong></p>
+<p>Resnet:</p>
+<p>$$x_l=H_l(x_{l-1})+x_{l-1}$$</p>
+<p>DenseNet:</p>
+<p>$$x_l=H_l([x_0,x_1,…,x_{l-1}])$$</p>
+<p><strong>composite function</strong></p>
+<p>BN-ReLU-Conv(3*3)</p>
+<p><strong>pooling layers</strong></p>
+<p>当特征图大小发生变化时候，便无法进行特征图的concatenation操作，因此DenseNet采用block结构，block结构之间设计为BN-Conv(1*1)-Average Pooling(2*2)，可利用Conv(1*1)进行模型压缩。<br>结构如下图所示：</p>
+<p><img src="http://img.blog.csdn.net/20180306200052989?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p><strong>Growth rate</strong><br>由于DenseNet采用的是concatenation的连接方式，如果每层产生k个feature maps，则将会产生</p>
+<p>$$k*(l-1)+k_0$$</p>
+<p>个特征图，为了防止网络变得很宽，k需要被限制为一个较小的数，作者将k称作growth rate。</p>
+<p><strong>bottleneck layers</strong><br>同样为了降低网络的宽度，DenseNet同样利用1*1卷积进行降维，Dense Block被设计为：<br>DenseNet-B结构：BN-ReLU-Conv(1*1)-BN-ReLU-Conv(3*3)<br>其中1*1的filter-num为growth rate 的 4倍<br>3*3的filter-num为growth rate</p>
+<p><strong>Compression</strong><br>在block之间，可以利用卷积进行模型维度压缩，在本文实验中，作者设置压缩比例为0.5。</p>
+<p>block之间的channels变换：<br>n_channels += units[i]*growth_rate</p>
+<p>compression进行模型压缩的channel变化：<br>n_channels =int(math.floor(n_channels*reduction))</p>
+<p><strong>模型详细描述如下：</strong><br><img src="http://img.blog.csdn.net/20180306210121233?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><p>作者首先在CIFAR SVHN ImageNet进行分类实验。</p>
+<p><strong>CIFAR 与 SVHN</strong><br>实验结果如下图所示：</p>
+<ul>
+<li>实验表明，在Accuracy中，DenseNet表现非常好，DenseNet-BC(L=190 and k=40)在多个数据集中均具有最好的表现，并且通过实验可以发现，随着DenseNet模型容量的增加，模型的精度有提升。</li>
+<li>通过实验可以看出，DenseNet的参数数量较少，说明DenseNet模型参数具有更高的有效性。</li>
+<li>DenseNet不容易过拟合</li>
+</ul>
+<p><img src="http://img.blog.csdn.net/20180307193557492?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p><strong>ImageNet</strong></p>
+<p>如下图为ResNet与DenseNet在ImageNet上的实验对比图，作者采用近乎相同的参数配置进行实验，从实验结果如下，左图是在不同的parameters下的实验结果，右图为不同flops下实验的结果。对比可见，DenseNet的优越性。</p>
+<p><img src="http://img.blog.csdn.net/20180307200059691?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p>还有一个自然而然的问题就是，这么多的密集连接，是不是全部都是必要的，有没有可能去掉一些也不会影响网络的性能？论文里面有一个热力图（heatmap），直观上刻画了各个连接的强度。从图中可以观察到网络中比较靠后的层确实也会用到非常浅层的特征。</p>
+<p><img src="http://img.blog.csdn.net/20180307202444623?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<hr>
+<h3 id="20180601补充"><a href="#20180601补充" class="headerlink" title="20180601补充"></a>20180601补充</h3><p>densenet 网络结构图：</p>
+<p>从该图可以发现，其实densenet的单个结构，类似于将resnet的element-wise sum 变换成为了concat操作，这样带来的一个问题自然是网络特征图的厚度增加会比较明显，所以，作者采用了较小的特征图的维度进行增加，所以densenet初始的number-out就比较小，</p>
+<p>如果采用bottle-neck操作，每个block中1*1的卷积和的数量是growth_rate的4倍，估计可能是提高维度会取得较好效果吧，一般bottle-neck在网络层数较深的时候使用。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1frvio3hy1wj208t0muq3c.jpg"></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/bruinxiong/densenet.mxnet/blob/master/symbol_densenet.py">mxnet,实现代码链接</a></p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/12/densenet/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/12/resnext/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/12/resnext/" class="post-title-link" itemprop="url">ResNeXt：Aggregated Residual Transformations for Deep Neural Networks</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-12 09:15:25" itemprop="dateCreated datePublished" datetime="2019-11-12T09:15:25+08:00">2019-11-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 13:33:20" itemprop="dateModified" datetime="2020-02-16T13:33:20+08:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Classification/" itemprop="url" rel="index">
+                    <span itemprop="name">Classification</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/12/resnext/" class="post-meta-item leancloud_visitors" data-flag-title="ResNeXt：Aggregated Residual Transformations for Deep Neural Networks" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/12/resnext/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/12/resnext/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>创新点：ResNeXt在ResNet的基础上，结合ResNet的block stack策略以及Inception结构分组卷积的思想，设计aggregrated transformations策略，在不增加模型复杂度的情况下，提高了模型识别的准确率，虽然没有提出特别新奇的网络结构，但是ResNeXt利用更简单的拓扑结构在不增加参数的情况下取得更好的效果，值得借鉴与思考。**其实resnext仅仅就是利用了group convolution，降低了网络的参数量，但是同时，增加了channel，发挥channel的效果，使得resnext的效果得到了一定的提升.</p>
+</blockquote>
+<hr>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1611.05431">论文链接：https://arxiv.org/abs/1611.05431</a></p>
+<p><strong>如出现图像显示不完整，或者公式显示不完整，可访问如下博客</strong></p>
+<p><a target="_blank" rel="noopener" href="http://blog.csdn.net/chunfengyanyulove/article/details/79450450">CSDN博客地址：http://blog.csdn.net/chunfengyanyulove/article/details/79450450</a></p>
+<hr>
+<h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h3><p>ResNeXt是2017年CVPR的一篇文章，其模型在2016年ImageNet分类比赛中，取得了第二名的成绩。<br>论文中，作者首先提到，在进行网络结构设计时候，随着超参数的增加（width,filter size, strides, layers等）,难度越来越大。</p>
+<p>为解决这个问题，多种策略被提出:</p>
+<ul>
+<li>1.VGG-nets、ResNet等采用策略：stack building blocks of the same shape</li>
+<li>2.Inception策略: split-transform-merge:<br>首先利用1*1卷积降维，然后利用3*3卷积进行运算，最后利用concatenation进行融合。Inception虽然复杂度较低，效果较好，但是其filter的设计针对性较强，不利于模型的迁移。</li>
+</ul>
+<p>本文作者的做法是：将ResNet中高维特征图分组为多个相同的低维特征图，然后在卷积操作之后，然后将多组结构进行求和，得到ResNeXt模型，如图1所示。</p>
+<p><strong>细心的读者可以发现，左边是64维，右边32个4实际上是128维，作者在此处实际上是保证了相同的模型复杂度，后面的说明中也有提到</strong></p>
+<p><img src="/1.png" alt="1.png"></p>
+<center>图1：左边ResNet，右边ResNeXt</center>
+
+
+<p>同时，作者提出cardinality概念，即图一中分组的组数（上图为32）。并且作者指出，增加cardinality比增加模型的深度和宽度更有助于提高模型的精度（后面实验有证明）</p>
+<h3 id="2-模型详解"><a href="#2-模型详解" class="headerlink" title="2.模型详解"></a>2.模型详解</h3><p>作者说模型的blocks设计的两个原则：</p>
+<ul>
+<li>如果产生相同尺寸的特征图，则他们共享超参数（width，filter size等）</li>
+<li>如果特征图的大小减少一半，则block的数量增加一倍。</li>
+</ul>
+<p>如下图2为ResNet与ResNeXt的模型对比，其模型的复杂度基本相同。</p>
+<p><img src="/2.png" alt="2.png"></p>
+<center>图2：左图是ResNet,右图是ResNeXt，C=32</center>
+
+<p><img src="/3.png" alt="3.png"></p>
+<center>图3：3种等价结构</center>
+**备注： 采用group结构可以有效减少参数数量，如果无group参数数量为：128\*3\*3\*128，有group为：32\*4\*3\*3\*4**
+
+<p><strong>思考：通过计算分析，三种结构确实等价，b与c等价是显然的，c中的group convolution是将128个channel分成32组，然后每组进行3*3的卷积，最后concat在一起，然后利用一个256维的1*1卷积，将前面concat的128维，映射到256维；而在b中，首先将256维利用1*1卷积映射到4维，然后对4维进行3*3的卷积，这里跟c进行channel分组是一样的，最后接的concat以及映射到256维也是一样的。a与b等价的原因是：在a中，4维特征图通过1*1卷积变为256维，然后32个256维数据求和，而在b中，是先将4维数据concat成128维，在利用1*1卷积，实际上也就是求和过程，画图理解便很清晰了。</strong></p>
+<p>作者指出，图3的三种结构等价，由于第三种结构较为简单且具有较高的效率，所以作者在实验中选择第三种结构。</p>
+<p>同时，作者指出，当depth = 2的时候，如下图4所示，网络拓扑结构仅仅是变得更宽了，并没有实现分组的价值，所以depth应该大于2。</p>
+<p><img src="/4.png" alt="4.png"></p>
+<center>图4：depth=2时候的结构图</center>
+
+<p>图5表示了在参数量基本相同的情况下，cardinality与width的关系。</p>
+<p><strong>此处可以看出，参数量相同1*64 == 32*4</strong></p>
+<p><img src="/5.png" alt="5.png"></p>
+<center>图5：cardinality与width的关系</center>
+
+<p>ResNeXt模型block网络细节：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">class Bottleneck(nn.Module):</span><br><span class="line">    expansion = 4</span><br><span class="line"></span><br><span class="line">    def __init__(self, inplanes, planes, stride=1, downsample=None, num_group=32):</span><br><span class="line">        super(Bottleneck, self).__init__()</span><br><span class="line">        self.conv1 = nn.Conv2d(inplanes, planes*2, kernel_size=1, bias=False)</span><br><span class="line">        self.bn1 = nn.BatchNorm2d(planes*2)</span><br><span class="line">        self.conv2 = nn.Conv2d(planes*2, planes*2, kernel_size=3, stride=stride,</span><br><span class="line">                               padding=1, bias=False, groups=num_group)</span><br><span class="line">        self.bn2 = nn.BatchNorm2d(planes*2)</span><br><span class="line">        self.conv3 = nn.Conv2d(planes*2, planes * 4, kernel_size=1, bias=False)</span><br><span class="line">        self.bn3 = nn.BatchNorm2d(planes * 4)</span><br><span class="line">        self.relu = nn.ReLU(inplace=True)</span><br><span class="line">        self.downsample = downsample</span><br><span class="line">        self.stride = stride</span><br><span class="line"></span><br><span class="line">    def forward(self, x):</span><br><span class="line">        residual = x</span><br><span class="line"></span><br><span class="line">        out = self.conv1(x)</span><br><span class="line">        out = self.bn1(out)</span><br><span class="line">        out = self.relu(out)</span><br><span class="line"></span><br><span class="line">        out = self.conv2(out)</span><br><span class="line">        out = self.bn2(out)</span><br><span class="line">        out = self.relu(out)</span><br><span class="line"></span><br><span class="line">        out = self.conv3(out)</span><br><span class="line">        out = self.bn3(out)</span><br><span class="line"></span><br><span class="line">        if self.downsample is not None:</span><br><span class="line">            residual = self.downsample(x)</span><br><span class="line"></span><br><span class="line">        out += residual</span><br><span class="line">        out = self.relu(out)</span><br><span class="line"></span><br><span class="line">        return out</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="3-实验"><a href="#3-实验" class="headerlink" title="3.实验"></a>3.实验</h3><p>作者首先对比了Cardinality 与Width的关系，实验结果如下图6所示：<br>通过对实验结果分析可以发现，ResNeXt的error较ResNet有降低。并且随着分组数量的增加，error在下降。</p>
+<p><img src="/6.png" alt="6.png"></p>
+<p><img src="/7.png" alt="7.png"></p>
+<center>图6：ResNet与ResNeXt训练结果对不</center>
+
+<p>其次，作者比较了增加Cardinality以及增加deep/wider产生的效果。<br>结果显示，增加cardinality比增加deeper/wider更有效，并且ResNeXt只用了一半的复杂度便达到了ResNet200的精度，也可以看出其效果，对比结果如下图所示:</p>
+<p><img src="/8.png" alt="8.png"></p>
+<p><strong>与state-of-the-art对比结果如下图：</strong></p>
+<p><img src="/9.png" alt="9.png"></p>
+<p><strong>在CIFAR数据集上实验，同样说明了增加cardinary相比增加width的效果更好</strong></p>
+<p><img src="/11.png" alt="11.png"></p>
+<p><strong>另外，作者利用Faster-RCNN模型，测试了ResNeXt结果在COCO数据集的效果，利用1K训练集预训练的模型，对Faster-RCNN产生了较小的改进，作者认为，如果选择更大的训练集，应该会取得较大的效果，COCO检测结果如下：</strong></p>
+<p><img src="/12.png" alt="12.png"></p>
+<h5 id="备注："><a href="#备注：" class="headerlink" title="备注："></a>备注：</h5><p>ResNeXt,PyTorch详细代码参考链接如下：<br><a target="_blank" rel="noopener" href="https://github.com/miraclewkf/ResNeXt-PyTorch">https://github.com/miraclewkf/ResNeXt-PyTorch</a></p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/12/resnext/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/07/sort/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/07/sort/" class="post-title-link" itemprop="url">Sort,排序算法总结</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-07 09:03:40" itemprop="dateCreated datePublished" datetime="2019-11-07T09:03:40+08:00">2019-11-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 13:50:58" itemprop="dateModified" datetime="2020-01-16T13:50:58+08:00">2020-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index">
+                    <span itemprop="name">Algorithm</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/07/sort/" class="post-meta-item leancloud_visitors" data-flag-title="Sort,排序算法总结" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/07/sort/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/07/sort/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><h3 id="排序算法总结"><a href="#排序算法总结" class="headerlink" title="排序算法总结"></a>排序算法总结</h3><p><a target="_blank" rel="noopener" href="http://blog.csdn.net/han_xiaoyang/article/details/12163251">详细参考链接,寒小阳CSDN</a> </p>
+<h4 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h4><p>介绍：主要就是partition过程。  </p>
+<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">quickSort</span>(<span class="type">int</span> arr[], <span class="type">int</span> left,<span class="type">int</span> right)  </span><br><span class="line">{</span><br><span class="line">   <span class="keyword">if</span>(left &lt; right)</span><br><span class="line">   { </span><br><span class="line">      <span class="type">int</span> mid = <span class="built_in">partition</span>(arr,left,right);</span><br><span class="line">      <span class="built_in">quickSort</span>(arr,left,mid<span class="number">-1</span>);</span><br><span class="line">      <span class="built_in">quickSort</span>(arr,mid+<span class="number">1</span>,right);</span><br><span class="line">   }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">partition</span><span class="params">(<span class="type">int</span> arr[],<span class="type">int</span> left, <span class="type">int</span> right)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">     <span class="keyword">if</span>(right &lt;= left)</span><br><span class="line">        <span class="keyword">return</span> left;</span><br><span class="line">     <span class="type">int</span> key = arr[left];</span><br><span class="line">     <span class="keyword">while</span>(left &lt; right)</span><br><span class="line">     {</span><br><span class="line">          <span class="keyword">while</span>(arr[right] &gt; key) right--;</span><br><span class="line">            arr[right] = arr[left];</span><br><span class="line">          <span class="keyword">while</span>(arr[left] &lt; key) left++</span><br><span class="line">            arr[left] = arr[right];</span><br><span class="line">     }</span><br><span class="line">     arr[left] = key;</span><br><span class="line">     <span class="keyword">return</span> left;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h4><p>介绍：利用二分法，插入排序。  </p>
+<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">MSort</span><span class="params">(arr[], arr_res[],<span class="type">int</span> left,<span class="type">int</span> right)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="keyword">if</span>(left == right)</span><br><span class="line">	   arr_res[left] = arr[left];</span><br><span class="line">	<span class="type">int</span> mid = (left + right) / <span class="number">2</span>;</span><br><span class="line">	<span class="built_in">MSort</span>(arr,arr_res,left,mid);</span><br><span class="line">	<span class="built_in">MSort</span>(arr,arr_res,mid+<span class="number">1</span>,right);</span><br><span class="line">	<span class="built_in">Merge</span>(arr,arr_res,left,mid,right);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Merge</span><span class="params">(<span class="type">int</span> arr[],<span class="type">int</span> arr_res[],<span class="type">int</span> left,<span class="type">int</span> mid,<span class="type">int</span> right)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = left,k = left,j = mid+<span class="number">1</span>; i &lt;=mid &amp;&amp; j&lt;= right;k++)</span><br><span class="line">	{</span><br><span class="line">	   <span class="keyword">if</span>(arr[i] &lt; arr[j])</span><br><span class="line">	      arr_res[k] = arr[i++];</span><br><span class="line">	   <span class="keyword">else</span></span><br><span class="line">	      arr_res[k] = arr[j++];</span><br><span class="line">	}</span><br><span class="line">	<span class="keyword">if</span>(i &lt; left)</span><br><span class="line">	    arr_res[k...] = arr[i...];</span><br><span class="line">    <span class="keyword">if</span>(j &lt; right)</span><br><span class="line">	    arr_res[k...] = arr[j...];</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+<h4 id="简单选择排序"><a href="#简单选择排序" class="headerlink" title="简单选择排序"></a>简单选择排序</h4><figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">selectSort</span><span class="params">(<span class="type">int</span> arr[],<span class="type">int</span> length)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt; length - <span class="number">1</span> ;i++)</span><br><span class="line">    {</span><br><span class="line">        <span class="type">int</span> minIndex = i;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = i+<span class="number">1</span>;j&lt; length;j++)</span><br><span class="line">        {</span><br><span class="line">            <span class="keyword">if</span>(arr[j] &lt; arr[minIndex])</span><br><span class="line">               j = minIndex;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span>(minIndex != i)</span><br><span class="line">        {</span><br><span class="line">             <span class="type">int</span> temp = arr[i];</span><br><span class="line">             arr[i] = arr[minIndex];</span><br><span class="line">             arr[minIndex] = temp;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h4><figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">bubbleSort</span><span class="params">(<span class="type">int</span> arr[],<span class="type">int</span> length)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt; length<span class="number">-1</span>;i++)</span><br><span class="line">    {</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>;j &lt; length - i;j++)</span><br><span class="line">        {</span><br><span class="line">           <span class="keyword">if</span>(arr[j] &gt; arr[j<span class="number">-1</span>])</span><br><span class="line">           {</span><br><span class="line">               <span class="type">int</span> temp = arr[j<span class="number">-1</span>];</span><br><span class="line">               arr[j<span class="number">-1</span>] = arr[j];</span><br><span class="line">               arr[j] = temp;</span><br><span class="line">           }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<p><img src="/1.png" alt="排序算法时间空间复杂度总结"></p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/07/sort/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/07/edgeDetection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/07/edgeDetection/" class="post-title-link" itemprop="url">边缘检测总结</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-07 08:47:40" itemprop="dateCreated datePublished" datetime="2019-11-07T08:47:40+08:00">2019-11-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 13:45:40" itemprop="dateModified" datetime="2020-01-16T13:45:40+08:00">2020-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Image-Processing/" itemprop="url" rel="index">
+                    <span itemprop="name">Image Processing</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/07/edgeDetection/" class="post-meta-item leancloud_visitors" data-flag-title="边缘检测总结" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/07/edgeDetection/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/07/edgeDetection/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><h3 id="Canny边缘检测"><a href="#Canny边缘检测" class="headerlink" title="Canny边缘检测"></a>Canny边缘检测</h3><h4 id="原理摘要"><a href="#原理摘要" class="headerlink" title="原理摘要"></a>原理摘要</h4><p>1、进行高斯滤波，去除椒盐噪声<br>2、利用sobel边缘算子进行边缘检测并计算梯度以及方向（0,45,90,135度）<br>3、局部梯度抑制，在梯度方向上，比较相邻是否为极大值<br>4、双阈值分割，最大边缘少，最小连接在最大上面。</p>
+<h4 id="OpenCV函数"><a href="#OpenCV函数" class="headerlink" title="OpenCV函数"></a>OpenCV函数</h4><h5 id="函数原型"><a href="#函数原型" class="headerlink" title="函数原型"></a>函数原型</h5><p>Canny( InputArray _src, OutputArray _dst,  double low_thresh, double high_thresh,int aperture_size, bool L2gradient )<br>函数输入：灰度图像，或者彩色图像<br>函数输出：二值边缘图像<br>函数功能：采用Canny方法对图像进行边缘检测</p>
+<h5 id="函数说明："><a href="#函数说明：" class="headerlink" title="函数说明："></a>函数说明：</h5><p>1、第一个参数表示输入图像，必须为单通道灰度图。<br>2、第二个参数表示输出的边缘图像，为单通道黑白图。<br>3、第三个参数和第四个参数表示阈值，这二个阈值中当中的小阈值用来控制边缘连接，大的阈值用4、来控制强边缘的初始分割即如果一个像素的梯度大与上限值，则被认为是边缘像素，如果小于下限阈值，则被抛弃。如果该点的梯度在两者之间则当这个点与高于上限值的像素点连接时我们才保留，否则删除。<br>5、第五个参数表示Sobel 算子大小，默认为3即表示一个3*3的矩阵。Sobel 算子与高斯拉普拉斯算子都是常用的边缘算子，详细的数学原理可以查阅专业书籍。</p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/07/edgeDetection/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/07/image-feature/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/07/image-feature/" class="post-title-link" itemprop="url">图像特征点检测方法总结</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-07 08:47:29" itemprop="dateCreated datePublished" datetime="2019-11-07T08:47:29+08:00">2019-11-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 13:47:00" itemprop="dateModified" datetime="2020-01-16T13:47:00+08:00">2020-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Image-Processing/" itemprop="url" rel="index">
+                    <span itemprop="name">Image Processing</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/07/image-feature/" class="post-meta-item leancloud_visitors" data-flag-title="图像特征点检测方法总结" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/07/image-feature/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/07/image-feature/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><h3 id="SIFT原理："><a href="#SIFT原理：" class="headerlink" title="SIFT原理："></a>SIFT原理：</h3><p>参考链接：<a target="_blank" rel="noopener" href="http://blog.csdn.net/zddblog/article/details/7521424">http://blog.csdn.net/zddblog/article/details/7521424</a></p>
+<h4 id="关键点理解"><a href="#关键点理解" class="headerlink" title="关键点理解"></a>关键点理解</h4><ul>
+<li><strong>二维高斯模糊</strong>：SIFT算法是在不同的尺度空间上查找关键点，而尺度空间的获取需要使用高斯模糊来实现，Lindeberg等人已证明高斯卷积核是实现尺度变换的唯一变换核，并且是唯一的线性核。</li>
+<li><strong>尺度空间在实现时使用高斯金字塔表示</strong><ol>
+<li>对图像做不同尺度的高斯模糊；</li>
+<li>对图像做降采样(隔点采样)。</li>
+</ol>
+</li>
+<li><strong>高斯差分近似实现高斯拉普拉斯变换</strong>：多尺度相减等效拉普拉斯</li>
+<li><strong>利用相邻差分图像，求取极值点</strong></li>
+<li><strong>DOG金字塔存在-1层</strong> :防止丢掉最高层采样率,即图像本身</li>
+<li><strong>关键点定位</strong>：<ol>
+<li>关键点检测</li>
+<li>消除边缘相应：利用Hessian矩阵（<strong>Hessian矩阵可用来求极值点，正定为极小值，负定为极大值，有正有负为鞍点</strong>）</li>
+</ol>
+</li>
+<li><strong>特征描述子生成</strong><ol>
+<li>根据每个特征点所在的高斯尺度（sigma）,确定梯度方向计算半径。</li>
+<li>在半径内找到4<em>4</em>8个特征描述子。</li>
+<li>特征描述子就是梯度方向以及大小。</li>
+</ol>
+</li>
+</ul>
+<h3 id="Surf原理："><a href="#Surf原理：" class="headerlink" title="Surf原理："></a>Surf原理：</h3><p>参考链接：<a target="_blank" rel="noopener" href="http://blog.csdn.net/tostq/article/details/49472709">http://blog.csdn.net/tostq/article/details/49472709</a></p>
+<h3 id="Harris角点检测："><a href="#Harris角点检测：" class="headerlink" title="Harris角点检测："></a>Harris角点检测：</h3><p>参考链接：<a target="_blank" rel="noopener" href="http://www.360doc.com/content/15/1212/23/20007814_519967668.shtml">http://www.360doc.com/content/15/1212/23/20007814_519967668.shtml</a> </p>
+<h4 id="关键点理解-1"><a href="#关键点理解-1" class="headerlink" title="关键点理解"></a>关键点理解</h4><ul>
+<li>滑动窗口，向不同方向滑动，灰度变化较大，则证明是角点。</li>
+<li>利用泰勒展开式，详情公示看参考链接</li>
+<li>转化二次函数，<strong>矩阵M的特征值为椭圆长轴短轴长度</strong>:<blockquote>
+<ul>
+<li>如果α，β都很小，说明高斯windows中的图像接近平坦。  </li>
+<li>如果一个大一个小，则表示检测到边。 </li>
+<li>如果α，β都很大，那么表示检测到了角点。</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<h3 id="颜色特征："><a href="#颜色特征：" class="headerlink" title="颜色特征："></a>颜色特征：</h3><p>参考链接:<a target="_blank" rel="noopener" href="http://blog.csdn.net/tiandijun/article/details/45562163">http://blog.csdn.net/tiandijun/article/details/45562163</a></p>
+<h4 id="颜色直方图"><a href="#颜色直方图" class="headerlink" title="颜色直方图"></a>颜色直方图</h4><ul>
+<li>用颜色空间三个分量的剥离得到颜色直方图，之后通过观察实验数据发现将图像进行旋转变换、缩放变换、模糊变换后图像的颜色直方图改变不大，即图像直方图对图像的物理变换是不敏感的。因此常提取颜色特征并用颜色直方图应用于衡量和比较两幅图像的全局差。另外，如果图像可以分为多个区域，并且前景与背景颜色分布具有明显差异，则颜色直方图呈现双峰形。</li>
+<li>颜色直方图也有其缺点：由于颜色直方图是全局颜色统计的结果，因此丢失了像素点间的位置特征。可能有几幅图像具有相同或相近的颜色直方图，但其图像像素位置分布完全不同。因此，图像与颜色直方图得多对一关系使得颜色直方图在识别前景物体上不能获得很好的效果。</li>
+</ul>
+<h4 id="颜色矩"><a href="#颜色矩" class="headerlink" title="颜色矩"></a>颜色矩</h4><ul>
+<li>颜色矩是一种有效的颜色特征，由Stricker和Orengo提出[41]，该方法利用线性代数中矩的概念，将图像中的颜色分布用其矩表示。利用颜色一阶矩（平均值Average）、颜色二阶矩（方差Variance）和颜色三阶矩（偏斜度Skewness）来描述颜色分布。与颜色直方图不同，利用颜色矩进行图像描述无需量化图像特征。由于每个像素具有颜色空间的三个颜色通道，因此图像的颜色矩有9个分量来描述。由于颜色矩的维度较少，因此常将颜色矩与其他图像特征综合使用。</li>
+</ul>
+<h3 id="纹理特征（LBP特征）"><a href="#纹理特征（LBP特征）" class="headerlink" title="纹理特征（LBP特征）"></a>纹理特征（LBP特征）</h3><p>参考链接：<a target="_blank" rel="noopener" href="http://blog.csdn.net/tiandijun/article/details/45561981">http://blog.csdn.net/tiandijun/article/details/45561981</a>     </p>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>原始的LBP算子定义为在3*3的窗口内，以窗口中心像素为阈值，将相邻的8个像素的灰度值与其进行比较，若周围像素值大于中心像素值，则该像素点的位置被标记为1，否则为0。这样，3*3邻域内的8个点经比较可产生8位二进制数（<strong>通常转换为十进制数即LBP码，共256种</strong>），即得到该窗口中心像素点的LBP值，并用这个值来反映该区域的纹理信息。如下图所示：<br><img src="http://img.blog.csdn.net/20150507154003000?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdGlhbmRpanVu/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="LBP">  </p>
+<h4 id="LBP算法步骤"><a href="#LBP算法步骤" class="headerlink" title="LBP算法步骤"></a>LBP算法步骤</h4><ul>
+<li>1.用3*3的模板对图像每个像素进行处理，比较当前像素和周围像素的大小，将大于当前像素的置1，小于的置0。</li>
+<li>2.对这周围八个像素进行编码，这八个0和1正好是可以组成一个byte数，然后按一定的规则组成这个无符号数。</li>
+<li>3.把这个数赋值给当前像素。</li>
+<li>4.通常对处理后的图像进行区域划分，比如分成4*4 、10*10或16*16的区域，对每个区域求得直方图，得到16、100或256个直方图。（划分都不是固定的）</li>
+<li>5.这些直方图就是特征了，可以根据需要任意使用了。</li>
+</ul>
+<h3 id="HOG特征"><a href="#HOG特征" class="headerlink" title="HOG特征"></a>HOG特征</h3><p>参考链接：<a target="_blank" rel="noopener" href="http://blog.csdn.net/hujingshuang/article/details/47337707/">http://blog.csdn.net/hujingshuang/article/details/47337707/</a></p>
+<h4 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h4><p>是一种用于表征图像局部梯度方向和梯度强度分布特性的描述符。其主要思想是：在边缘具体位置未知的情况下，边缘方向的分布也可以很好的表示行人目标的外形轮廓。Dalal等提出的HOG+SVM算法，在进行行人检测取得了极大地成功后，更多新算法不断涌现，不过大都是以HOG+SVM的思路为主线。</p>
+<h4 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h4><h5 id="颜色空间归一化"><a href="#颜色空间归一化" class="headerlink" title="颜色空间归一化"></a>颜色空间归一化</h5><ul>
+<li>灰度化</li>
+<li>Gamma校正：采用方法为平方根或者对数法，计算后采用归一化操作到0-255。</li>
+</ul>
+<h5 id="梯度计算"><a href="#梯度计算" class="headerlink" title="梯度计算"></a>梯度计算</h5><ul>
+<li>利用差分，分别计算x方向以及y方向的梯度</li>
+<li>sqrt(x*x+y*y)得到梯度，arctan(y/x)求角度</li>
+</ul>
+<h5 id="梯度方向直方图"><a href="#梯度方向直方图" class="headerlink" title="梯度方向直方图"></a>梯度方向直方图</h5><ul>
+<li>统计9个角度，每20度为一组</li>
+</ul>
+<h5 id="重叠块直方图归一化"><a href="#重叠块直方图归一化" class="headerlink" title="重叠块直方图归一化"></a>重叠块直方图归一化</h5><p>由于图像中光照情况和背景的变化多样，梯度值的变化范围会比较大，因而良好的特征标准化对于检测率的提高相当重要。标准化的方法多种多样，大多数的都是将cell放在block中，然后标准化每个block。以上述图像为例，共得到27x38个cell，也就是将图像划分成了27x38个单元；将上下左右相邻的2x2个cells当做一个block整体，如下所示（为方便观察，每个颜色框故意错开了一点），黑色的8x8像素为一个cell，红、蓝、黄、粉红、绿框都是一个block，即每个框内2x2的cell组成一个block。故27x38个cell可划分成26x37个block，每个block为16x16像素。相邻block之间是有重叠的，这样有效的利用了相邻像素信息，对检测结果有很大的帮助。<br><img src="http://img.blog.csdn.net/20150807151120252" alt="图像"></p>
+<h5 id="HOG特征-1"><a href="#HOG特征-1" class="headerlink" title="HOG特征"></a>HOG特征</h5><p>实际上，在运用的时候，我们通常是选取一幅图像中的一个窗口来进行特征提取，依然以上述220X310大小图像为例，经过缩放处理后为216x304，但并不直接提取整个图像的HOG特征，而是用一个固定大小的窗口在图像上滑动，滑动的间隔为8个像素，OpenCV中默认的窗口大小为128x64（高128，宽64），即有(128÷8)x(64÷8)=16x8个cell，也即有15x7个block，这样一来一幅图像就可以取到(27-16)x(38-8)=11x30=330个窗口。现在提取每个窗口的HOG特征，则可得到105x36=3780维HOG特征向量。</p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/07/image-feature/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/07/shuffleNet-v2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/07/shuffleNet-v2/" class="post-title-link" itemprop="url">ShuffleNet V2</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-07 08:33:29" itemprop="dateCreated datePublished" datetime="2019-11-07T08:33:29+08:00">2019-11-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-06 19:01:38" itemprop="dateModified" datetime="2021-11-06T19:01:38+08:00">2021-11-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Classification/" itemprop="url" rel="index">
+                    <span itemprop="name">Classification</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/07/shuffleNet-v2/" class="post-meta-item leancloud_visitors" data-flag-title="ShuffleNet V2" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/07/shuffleNet-v2/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/07/shuffleNet-v2/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>目前，CNN网络在图像识别领域大放异彩，从最初的AlexNet到后面的GoogLeNet,ResNet,识别精度越来越高，但是除了精度之外，模型的计算复杂度也越来越引起大家的思考，如何降低网络的复杂度，以使网络可以高效的运行在诸如手机登移动端设备，也得到了众多研究者的研究。本文便主要在这方面发力，提出了提高网络速度设计的4个准则，并基于此设计了shuffleNet v2,在速度、精度均超过了目前的主流轻量级网络（shuffleNet v1, mobileNet v2等）,本文是Face++提出，发表于ECCV2018.</p>
+</blockquote>
+<hr>
+<p><strong>论文名称：ShuffleNet V2: Practical Guidelines for Efficient CNN Architecture Design</strong></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1807.11164">论文地址：https://arxiv.org/abs/1807.11164</a></p>
+<hr>
+<p>下面详细介绍一下这篇文章</p>
+<p>作者在开篇首先指出，目前评价一个网络的复杂度的指标往往是FLOPs(<strong>FLOPs简单解释就是网络执行了多少的multiply-adds操作</strong>)，但是这种评价指标往往是不正确的，因为FLOPs可能不能反映出网络模型的执行速度或者时延，如下图所示：</p>
+<p>通过观察可以发现图中(c,d)可以发现，具有相似的FLOPs的网络，执行的速度却不一样。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fuafjti05hj20u40mcwh8.jpg"></p>
+<p>那么，为什么会出现这个矛盾呢？作者解释有两个原因：</p>
+<ul>
+<li>一些严重影响速度的因素没有考虑在FLOPs中。比如<strong>MAC</strong>（memory access cost内存访问成本）。比如分组卷积（group convolution）就会消耗较大的MAC。<strong>并行度</strong>，如果网络的并行度较高，那么速度就会有显著的提升。</li>
+<li>计算平台的不同，比如tensor运行的使用会提高计算速度，（但是最近发现，即使通过分解（decomposition）可以减少75%的FLOPs，但是计算速度却便慢了，究其原因是因为最近吃的cudnn加强了对3*3conv计算的优化，3*3卷积并不是1*1卷积计算速度的9倍这么简单）</li>
+</ul>
+<p>基于以上的分析，作者提出了2个需要考虑的网络执行效率对比的设计准则：</p>
+<ul>
+<li>使用正确的速度度量方式去掉FLOPs</li>
+<li>并且要在目标计算平台上计算，不然结果不具有代表性。</li>
+</ul>
+<p>如下这张图是作者分别在GPU(1080ti， cudnn7.0)以及ARM（高通骁龙810）环境下的网络运行时间展示，可以发现，除了卷积部分，还有很大部分时间在做其他的事情，这也说明，仅仅使用FLOPs是不够的。并且从该图可可以看出ARM相比较于GPU确实慢了一些，假设读取数据时间一致，GPU中卷积操作只占到将近一半，而ARM中已经占到了约90%。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fuagiwaovjj20ub0cgq8i.jpg"></p>
+<p>基于此，作者做了如下的分析？</p>
+<p><strong>G1:输入输出具有相同channel的时候，内存消耗是最小的</strong></p>
+<p>为什么这么说：</p>
+<p>由于目前主流网络均使用的depthwise separable convolutions，其中pointwise convolution占据了很大一块的运算量，这个在shuffleNet V1中有说明<a target="_blank" rel="noopener" href="https://blog.csdn.net/Chunfengyanyulove/article/details/81664890">详细参见博客：shuffleNet V1</a>，作者以1*1网络为例，假设feature map的大小为h*w输入输出channel分别为c1和c2,那么：</p>
+<p>FLOPs:</p>
+<p>$$B=hw(c_1*1*1*c_2)=hwc_1c_2$$</p>
+<p>MAC:</p>
+<p>$$MAC=hw(c_1+c_2)+c_1*c_2$$</p>
+<p>(这里解释一下这个是怎么计算的：因为特征图大小为hw，在计算1*1卷积过程中我们需要将将所有的输入特征图和卷积核载入cache一次，这样需要$hwc_1+c_1c_2$次访存；然后需要将计算结果返回到内存，需要$hwc_2$次访存。)</p>
+<p>利用均值不等式（$c_1+c_2 &gt;= 2\sqrt{c_1c_2}$）化简可以得到：</p>
+<p>$$MAC&gt;=2\sqrt{hwB}+\frac{B} {hw}$$</p>
+<p>根据这个结果可以发现，当$c_1,c_2$相等的时候，可以取到最小值。</p>
+<p><strong>得证</strong></p>
+<p>下图的结果是作者的实验，实验结果同样支持<strong>G1</strong>结论。</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fuaim5hxnyj20tq09dgnc.jpg"></p>
+<p><strong>G2: Excessive group convolution increases Map</strong></p>
+<p>group convolution最大的作用在于改变了所有channel间的dense convolution变为sparse卷积，（解释一下：如果没有group，每个output feature的每个cell是上层所有channel的feature map对应的cell的卷积结果，而分组之后，只需要计算组内的cell卷积结果，计算量就自然少了很多）</p>
+<p><strong>在固定的FLOPs条件下，采用group convolution可以使用更多的channel，这也是为什么采用group convolution提高精度的主要手段，但是增加了channel的同时，也增加了更多的MAC</strong></p>
+<p>采用分组卷积的MAC计算如下：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MAC=hw(c_1+c_2)+\frac{c_1c_2}{g}</span><br><span class="line"></span><br><span class="line">MAC=hwc_1+\frac{Bg}{c_1}+\frac{B}{hw}</span><br><span class="line"></span><br><span class="line">B = \frac{hwc_1c_2}{g}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>由上面公式可以很清楚的看出来，MAC会随着g的增加而增加，同样的，作者进行了实验，验证这个结论，如下：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fuajvk9d6hj20u30a4mym.jpg"></p>
+<p>可见，随着group的增大，速度在明显减慢。</p>
+<p><strong>G3: Network fragmentation reduces degree of parallelism</strong></p>
+<p>比如googLeNet等网络，每个单元有很多的分支（multi-path），包括横向的和竖向的，如下图所示：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fubhxt9qduj20pj085dgj.jpg"></p>
+<p><strong>虽然这种分支结构对于提升精度有一定效果，但是却影响了模型的效率，主要原因在于影响了模型计算的并行度</strong></p>
+<p>为了证明这种multi-path对于网络执行速度的影响，作者分别设计了不同的multi-path并进行实验，实验结果如下：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fubi8w9rsdj20tt0am0uk.jpg"></p>
+<p>观察实验结果可以发现，在GPU上多个fragment的网络的时间消耗增加明显，在CPU上增加不明显但是同样在增加。</p>
+<p><strong>G4: Element-wise operations are non-negligible</strong></p>
+<p>element-wise operation包括比如：ReLU，addtensor,addbias等，根据Fig2，我们可以发现，element操作的耗时也是挺大的，这波操作不容忽视。</p>
+<p><strong>注：另外作者在这提到，depthwise convolution（group数等于通道数，每个卷积核只卷积一个channel）也认为是一种element-wise操作</strong></p>
+<p>为了证明这个观点，作者利用resnet的一个block进行实验，将ReLU以及short-cut作为elemet-wise进行实验对比，实验结果如下图所示：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fubiux5vr1j20tu09ewg2.jpg"></p>
+<p>根据实验结果可以发现，ReLU以及short-cut操作如果都是no，速度为2842 batches/s，加入后为2427 batches/s，速度下降的还是挺明显的，CPU中，也是一样的趋势。</p>
+<p>所以，一个高效的网络应该具备这些因素：</p>
+<ul>
+<li>use balance convolution，input channel == output channel</li>
+<li>consider of group convolution</li>
+<li>reduce the degree of fragmentation</li>
+<li>reduce element-wise operation</li>
+</ul>
+<p>基于此，作者在shuffleNet的基础上，设计了<strong>shuffleNet V2:一个轻量级的速度高精度也高的网络结构。</strong></p>
+<p>下面介绍一下shuffleNet V2</p>
+<p>在了解shuffleNet V2之前，可以先了解一下<a target="_blank" rel="noopener" href="https://blog.csdn.net/Chunfengyanyulove/article/details/81664890">shuffleNet V1</a></p>
+<p>先show一张shuffleNet V2 与shuffleNet的对比图</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fubjrmf2k6j20u60ih768.jpg"></p>
+<p>其中图（a,b）是shuffleNet的结构，图（c,d）是shuffleNet的改进结构，比较（a）与（c），可以发现，读了一个split操作，这也是shuffleNet V2的创新点，全称是channel split，其做法就是，首先将channel分成两个分支，c-c’和c’,为了满足G3,减少多分支计算，一个分支直接传下来，另一个分支包含了3个卷积，并且都是input-channel== output-channel的（符合G1），并且两个point-wise convolution不再使用group操作（满足G2）,最终，两个分支进行concat操作（满足G4）,后面的shuffle操作用来进行两个分支的信息交流。</p>
+<p>对于需要down sampling的模块，如图（d）所示，将split操作去除，然后stride=2进行操作，这样输出的维度便增加了一倍。</p>
+<p>最终，通过该block的堆叠，得到shuffleNet V2,结构如下图所示：其中repeat对应不同block的个数。本文中c’ = c/2</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fubnnptljtj20tx0hq0v0.jpg"></p>
+<p>整体结构与shuffleNet V1基本一致,shuffleNet V1结构如下图所示：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fu890fyzz8j20w80f4tax.jpg"></p>
+<p>唯一不同的是在global pooling的前面增加了Conv5（1*1的卷积层），来进行特征的融合。</p>
+<p>shuffleNet V2不仅仅efficient同时具有很高的精度，这主要有如下两个原因：</p>
+<ul>
+<li>第一个原因是：由于高效，可以增加更多的channel，增加网络的容量。</li>
+<li>另外采用split使得一部分特征直接与下面block相连，这可以被看做是一种<strong>特征复用</strong></li>
+</ul>
+<p>下图是作者在多个模型的测试对比结果（包括mobileNet,CondenseNet,IGCV2,IGCV3等）：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fuctjwfljdj20jf0odgq9.jpg"></p>
+<p>根据该图可以发现，MobileNet v1在GPU上面的速度是最快的，甚至超过了shuffleNet V2,mobileNet V1主要使用了depthwise conv以及pointwise conv，其fragment较少，符合<strong>G3</strong>的标准，另外IGCV2与IGCV3的速度较慢主要是因为使用了较多的group</p>
+<p>另外，作者提到，利用SE-Net操作，分类精度会提升大约0.5%左右。将shuffleNet-V2堆叠50层，与shuffleNet v1以及resnet-50相比，精度有一定的提升，如下图：<br><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fucu2vj7gbj20eu04xdgb.jpg"></p>
+<p>另外，作者在COCO数据集上进行检测的测试，采用Light-Head框架，检测结果如下图所示：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fucu8q1wauj20iv07umyj.jpg"></p>
+<p>可见，shuffleNet V2在相同FLOPs下，其精度最高，同时作者也指出：<strong>对于分类精度：ShuffleNet v2 &gt; MobileNet V2 &gt; ShuffleNet v1 &gt; Xception, 但是对于检测的结果是：ShuffleNet v2 &gt; Xception &gt; ShuffleNet v1 &gt; MobileNet v2</strong>,为什么会出现这种情况呢？作者解释到，可能是由于Xception较大的感受野，基于此为了增大感受野，作者在每个block的第一个pointwise convolution前面加入了一个3*3的depthwise convolution ，为shuffleNet v2*,可见上图的v2*确实在精度上有所提升。</p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/07/shuffleNet-v2/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/07/shuffleNet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/07/shuffleNet/" class="post-title-link" itemprop="url">ShuffleNet</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-07 08:33:19" itemprop="dateCreated datePublished" datetime="2019-11-07T08:33:19+08:00">2019-11-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 08:02:08" itemprop="dateModified" datetime="2020-02-16T08:02:08+08:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Classification/" itemprop="url" rel="index">
+                    <span itemprop="name">Classification</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/07/shuffleNet/" class="post-meta-item leancloud_visitors" data-flag-title="ShuffleNet" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/07/shuffleNet/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/07/shuffleNet/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>shuffleNet是face++在2017年提出，目的是提高深度模型的执行效率，可在移动端执行。</p>
+</blockquote>
+<hr>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1707.01083">论文链接：https://arxiv.org/abs/1707.01083</a></p>
+<hr>
+<h5 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h5><p>我们知道深度学习网络在包括图像识别等多个领域发展迅速，但是随着模型的深度越来越深，模型的参数量越来越大，现如今模型一般都跑的GPU上面，那么如何能在嵌入式或者移动端使用深度学习也是目前研究比较多的领域，shufflenet便是其中一个成果。<strong>shuffleNet主要有两个创新点：（1）pointwise group convolution，（2）channel shuffle。</strong></p>
+<p><strong>在模型效果方面，作者通过实验证明，在ImageNet classfication任务中，shuffleNet相比较于mobileNet，top-1的错误率降低了7.8个百分点。另外在移动端，在相同的精度下，shuffleNet的速度是alexNet的13倍。</strong></p>
+<p><strong>与shuffleNet相关的两个网络，一个是Xception，一个是MobileNet，有兴趣的读者可以看一下这两个网络</strong></p>
+<h5 id="shuffleNet策略之一：分组卷积"><a href="#shuffleNet策略之一：分组卷积" class="headerlink" title="shuffleNet策略之一：分组卷积"></a>shuffleNet策略之一：分组卷积</h5><p>为了提高网络的效率，除了<strong>剪枝、量化</strong>等手段，另一个主要的手段便是在网络设计阶段在保证精度的情况下减少一定的网络参数量，分组卷积便是这样的一个手段，<strong>这里解释一下什么是分组卷积，举个例子，比如你的特征图有64个channel，分成2个组，每个组的32个特征图分别处理，得到结果之后再进行合并，这就是分组卷积了，另外补充一个，depthwise separable convolution是分组卷积的一个特例，其就是特征图有几个channel，我就分为几个组，保证每个组只有一个特征图进行处理，这是在mobileNet中提出的，shuffleNet用到了分组卷积以及depthwise separable convolution</strong>。其实分组卷积在alexnet中便被使用，当时受限于GPU的显存，alex将网络分别在两个GPU上同时训练，另一个比较火的分组卷积网络便是resneXt，resneXt通过分组卷积，比resnet精度提高了一些，但是resneXt的分组卷积也有一个缺点：**dense 1*1卷积耗费了大量的计算，占到了总计算量的93.3%**，怎么计算出来的呢？下面说明一下：</p>
+<p>首先明确一下resnext一个unit的网络结构：如下图：</p>
+<p>下面我们假设输入的特征图大小为d*d，来计算一下该网络结构的计算量：首先对于最上面的降维:$256*1*d*d*4$,中间的计算量为：$4*3*3*d*d*4$,最后的输出的计算量为：$4*1*1*d*d*256$,则最终pointwise所占的计算量为：$\frac{256*1*1*d*d*4*2}{256*1*1*d*d*4*2+4*3*3*d*d*4}$ = $\frac{14}{15}$ =93.3%,由此可见，如果1*1降维太多的话（channel数减少太多），1*1卷积网络的参数量就占bottleneck主导地位了。</p>
+<p><strong>注：分组卷积，比如原来是128维，3*3后变仍为128维，通过分组卷积分为32组，那就是输入4维，输出仍为4维，并不是输入为4维输出为128维，如果是128维，那跟没分组也没啥区别了，笔者在这就搞晕了，算了半天也不对</strong></p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fu81twbwsqj208z065ac3.jpg" alt="resneXt unit结构"></p>
+<h5 id="shuffleNet是怎么操作的呢？"><a href="#shuffleNet是怎么操作的呢？" class="headerlink" title="shuffleNet是怎么操作的呢？"></a>shuffleNet是怎么操作的呢？</h5><p>首先，为了解决1*1卷积在分组unit中计算量占比较大，作者提出在1*1卷积中同样使用分组卷积，但是这样会带来一个问题，就是组内的channel之间的相关性很弱，那怎么解决这个问题呢？作者提出了使用shuffle操作，来帮助信息在不同的channel间进行流动。如下图（a）就是单纯的对1*1卷积（pointwise conv）进行分组操作，根据不同的颜色可以发现，其实不同组之间没有交集，图（b，c）显示利用shuffle操作，增加不同channel之间的关联性。<strong>具体怎么操作呢？假设，我们将卷积层分为g组每组n个channel，则共有g*n个channel，（b,g*n,h,w）,首先reshape成（b,g，n,h,w）然后transpose为（b,n,g,h,w）,shuffle后在reshape成（b,n*g,h,w）</strong>，<strong>channel是可微的，可以嵌入到end-to-end网络中</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">channel_shuffle</span>(<span class="params">data, groups</span>):</span><br><span class="line">	data = mx.sym.reshape(data, shape=(<span class="number">0</span>, -<span class="number">4</span>, groups, -<span class="number">1</span>, -<span class="number">2</span>))</span><br><span class="line">	data = mx.sym.swapaxes(data, <span class="number">1</span>, <span class="number">2</span>) <span class="comment"># </span></span><br><span class="line">	data = mx.sym.reshape(data, shape=(<span class="number">0</span>, -<span class="number">3</span>, -<span class="number">2</span>))</span><br><span class="line">	<span class="keyword">return</span> data</span><br></pre></td></tr></tbody></table></figure>
+
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fu86xldurnj20wd0f0jt2.jpg"></p>
+<p>基于此，作者设计网络如下：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fu882ajbdnj20w10f60tz.jpg"></p>
+<p>作者首先设计了bottleneck unit如下图（a）,作者使用3*3的depthwise convolution，然后，利用group conv替换了pointwise group convolution，在其后增加了channel shuffle operation操作，如下图（b）所示</p>
+<p><strong>shuffleNet实际上就是对resnext的1*1的pointwise-conv进行分组卷积，进一步降低参数量，然后采用Depth-wise-conv进行卷积（同样有效减少参数量），最后再使用分组卷积进行1*1的的计算，并且在最终的输出上采用concat进行叠加</strong></p>
+<p><strong>特别说明，作者使用了BN层，但是在最后的BN后面没有使用relu，这点也是Xception以及mobileNet v2所介绍的</strong></p>
+<p>另外为了增加stride操作，作者这里做了2个改变（i）增加了3*3的average pooling在shortcut上面，（ii）shortcut的相加变为了相乘，使得channel增加。</p>
+<p>下面是shuffleNet每个unit的计算量的对比：(其中c代表输入channel,m代表输出channel，g代表分组卷积组数)</p>
+<p>resnet: $h*w*c*1*1*m*2 + h*w*m*3*3*m$</p>
+<p>resneXt: $h*w*c*1*1*m/g*g*2 + h*w*m/g*3*3*m/g*g$</p>
+<p>shuffleNet: $h*w*c/g*1*1*m/g*g*2 + h*w*m/g*3*3*1*g$</p>
+<p>化简的结果,可见shuffleNet的计算量小了很多：</p>
+<p>resnet: $hw(2cm+9m^{2})$</p>
+<p>resneXt: $hw(2cm+9m^2/g)$</p>
+<p>shuffleNet: $hw(2cm/g+9m)$</p>
+<p>shuffleNet网络详细结构图如下：</p>
+<p>在每个Stage中的一个block设置stride=2,来减少特征图的大小，其他的保持特征图大小不变，bottleneck中channel输出为输入的1/4,下图table中显示了不同的group的结果，<br><img src="http://ww1.sinaimg.cn/large/87675bbbly1fu890fyzz8j20w80f4tax.jpg"></p>
+<h5 id="对比实验"><a href="#对比实验" class="headerlink" title="对比实验"></a>对比实验</h5><p>1.首先针对Pointwise Group</p>
+<p>Convolutions的效果如下图所示：【其中0.5*代表channel数为原来的0.5倍】</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fu91rok7ldj20jm04wmxq.jpg"></p>
+<p>可见group的增加对模型的效果有一定的提升，并且实验证明，channel的增加有利于模型精度。</p>
+<p>2.针对channel shuffle的作用：</p>
+<p>根据下表可以观察到，shuffle效果还是比较明显的</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fu9254im8oj20jj06ggmg.jpg"></p>
+<p>3.与其他unit的对比：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fu928v6kghj20qw059t9g.jpg"></p>
+<ol start="4">
+<li>与mobileNet的对比</li>
+</ol>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fu92ah1scoj20ku08qwfq.jpg"></p>
+<p>最后作者在mobile中进行上实验，发现group取3是精度与效率的trade-off，与不同的网络对于结果如下：</p>
+<p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fu94b13jf3j20qn06ct9z.jpg"></p>
+<p>可见shuffleNet的效率还是杠杠滴</p>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/07/shuffleNet/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/11/07/cplusplus/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/07/cplusplus/" class="post-title-link" itemprop="url">C++面试-知识点总结</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-11-07 08:19:24 / 修改时间：13:30:00" itemprop="dateCreated datePublished" datetime="2019-11-07T08:19:24+08:00">2019-11-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Program/" itemprop="url" rel="index">
+                    <span itemprop="name">Program</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/07/cplusplus/" class="post-meta-item leancloud_visitors" data-flag-title="C++面试-知识点总结" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/07/cplusplus/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/07/cplusplus/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <html><head></head><body></body></html><html><head></head><body><h3 id="虚函数与纯虚函数的比较"><a href="#虚函数与纯虚函数的比较" class="headerlink" title="虚函数与纯虚函数的比较"></a>虚函数与纯虚函数的比较</h3><ul>
+<li>虚函数为了重载和多态的需要，在基类中是有定义的，即便定义是空，所以子类中可以重写也可以不写基类中的此函数。</li>
+<li>纯虚函数在基类中是没有定义的，必须在子类中加以实现。</li>
+<li>虚拟函数就是为了对“如果你以一个基础类指针指向一个衍生类对象，那么通过该指针，你只能访问基础类定义的成员函数”这条规则反其道而行之的设计。</li>
+<li>多态的真正体现就是基类指针访问子类对象。</li>
+<li>虚函数动态联编，虚函数表。<br>在函数编译过程中，父类子类中的成员函数的名字是不一样的，可以区分，然后函数如果调用成员变量，函数会默认传进去一个该类的指针，进行调用。</li>
+</ul>
+<h3 id="重载、覆盖（重写）、隐藏区别"><a href="#重载、覆盖（重写）、隐藏区别" class="headerlink" title="重载、覆盖（重写）、隐藏区别"></a>重载、覆盖（重写）、隐藏区别</h3><ul>
+<li><p>重载， 参数不同的同名函数，不关心返回值。并不是两个函数的名字相同就能构成重载。全局函数和类的成员函数同名不算重载，因为函数的作用域不同。<strong>对于函数重载，out(float a)和out( int a) 当调用 out(1)时，是正确的， 当调用out(0.5)时，编译错误，因为编译器无法确定应该如何进行类型转换。</strong></p>
+</li>
+<li><p>隐藏， 是指派生类的函数屏蔽了与其同名的基类函数，注意只要同名函数，不管参数列表是否相同，基类函数都会被隐藏。  </p>
+</li>
+<li><p>覆盖， 重写的基类中被重写的函数必须有virtual修饰。    </p>
+</li>
+<li><p>函数重载只是动态的多态性，在编译阶段，给不同的函数不同的函数名，而虚函数实现运行时多态。</p>
+<h4 id="重载、覆盖、隐藏补充"><a href="#重载、覆盖、隐藏补充" class="headerlink" title="重载、覆盖、隐藏补充"></a>重载、覆盖、隐藏补充</h4></li>
+<li><p>重载</p>
+<blockquote>
+<p>成员函数被重载的特征：<br>（1）相同的范围（在同一个类中）；<br> （2）函数名字相同；<br> （3）参数不同；<br> （4）virtual关键字可有可无。  </p>
+</blockquote>
+</li>
+<li><p>覆盖</p>
+<blockquote>
+<p>覆盖是指派生类函数覆盖基类函数，特征是：<br> （1）不同的范围（分别位于派生类与基类）；<br> （2）函数名字相同；<br> （3）参数相同；<br> （4）基类函数必须有virtual关键字。  </p>
+</blockquote>
+</li>
+<li><p>令人迷惑的隐藏规则</p>
+<blockquote>
+<p>本来仅仅区别重载与覆盖并不算困难，但是C++的隐藏规则使问题复杂性陡然增加。这里“隐藏”是指派生类的函数屏蔽了与其同名的基类函数，规则如下：<br> （1）如果派生类的函数与基类的函数同名，但是参数不同。此时，不论有无virtual关键字，基类的函数将被隐藏（注意别与重载混淆）。<br> （2）如果派生类的函数与基类的函数同名，并且参数也相同，但是基类函数没有virtual关键字。此时，基类的函数被隐藏（注意别与覆盖混淆）。</p>
+</blockquote>
+</li>
+</ul>
+<p>总结起来就是，如果同一个类中，是重载，父类和子类，函数名字相同参数相同，有virtual是覆盖，没有就是隐藏。</p>
+<h3 id="内联函数"><a href="#内联函数" class="headerlink" title="内联函数"></a>内联函数</h3><ul>
+<li>在函数前面加上inline进行声明。</li>
+<li>内联函数在函数调用位置处直接展开。</li>
+<li>内联函数可以避免函数调用时的开销，保存寄存器恢复寄存器之类的。适合于规模较小的函数。</li>
+<li>关键字inline必须与函数定义体放在一起才能使函数成为内联，仅将inline放在函数声明前面不起任何作用。inline是一种“用于实现的关键字”，而不是一种“用于声明的关键字”。</li>
+</ul>
+<h4 id="内联函数相比较于-define定义函数-aa-有什么优点？"><a href="#内联函数相比较于-define定义函数-aa-有什么优点？" class="headerlink" title="内联函数相比较于 #define定义函数 aa() 有什么优点？"></a>内联函数相比较于 #define定义函数 aa() 有什么优点？</h4><ul>
+<li>代码放到符号表中，用到的时候直接进行替换。</li>
+<li>编译器可以对它进行参数检查。</li>
+<li>inline可以是类的成员函数，对类内成员进行访问。</li>
+</ul>
+<h3 id="函数指针（c-primer第五版，p221）"><a href="#函数指针（c-primer第五版，p221）" class="headerlink" title="函数指针（c++ primer第五版，p221）"></a>函数指针（c++ primer第五版，p221）</h3><h3 id="const-成员函数"><a href="#const-成员函数" class="headerlink" title="const 成员函数"></a>const 成员函数</h3><ul>
+<li>const 放在函数的后面，只能用在类中，代表该函数不可修改类中变量。  </li>
+<li>const aa(类) 只能调用const函数。</li>
+</ul>
+<h3 id="父类指针指向子类对象问题"><a href="#父类指针指向子类对象问题" class="headerlink" title="父类指针指向子类对象问题"></a>父类指针指向子类对象问题</h3><ul>
+<li>到底调用那个函数要根据指针的原型来确定，而不是根据指针实际指向的对象类型确定，即指针是什么类型，就调用什么类型的函数。</li>
+<li>虚函数除外，虚函数调用最根源的函数，对象是什么类型，就调用相应的函数。</li>
+</ul>
+<h3 id="c-各个存储区"><a href="#c-各个存储区" class="headerlink" title="c++各个存储区"></a>c++各个存储区</h3><p>在C++中，内存分成5个区，他们分别是堆、栈、自由存储区、全局/静态存储区和常量存储区。<br>链接：<a target="_blank" rel="noopener" href="http://www.cnblogs.com/hanyonglu/archive/2011/04/12/2014212.html">http://www.cnblogs.com/hanyonglu/archive/2011/04/12/2014212.html</a></p>
+<h3 id="接7，对static的讨论"><a href="#接7，对static的讨论" class="headerlink" title="接7，对static的讨论"></a>接7，对static的讨论</h3><ul>
+<li>static 放在静态存储区，并不随着退出函数释放空间。  </li>
+<li>规定作用域。<br>如下，输出 10 12 13  <figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">fun</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">      <span class="type">static</span> <span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">      cout &lt;&lt; <span class="string">"fun "</span> &lt;&lt; a &lt;&lt; endl;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">fun2</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">      <span class="type">static</span> <span class="type">int</span> b = <span class="number">12</span>;</span><br><span class="line">      cout &lt;&lt; <span class="string">"fun2 "</span> &lt;&lt; b++ &lt;&lt; endl;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">      <span class="built_in">fun</span>();</span><br><span class="line">      <span class="built_in">fun2</span>();</span><br><span class="line">      <span class="built_in">fun2</span>();</span><br><span class="line">      <span class="built_in">getchar</span>();</span><br><span class="line">      <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+<li>char st[10] = “abcde”,在内存中存在两份拷贝，一份在常量存储区上，一份在栈上，函数退出之后，栈上内存释放，如果想让栈上的存储区不释放，可以将其声明为static 放在静态存储区上。</li>
+</ul>
+<h3 id="如何去掉const变量的const特性。"><a href="#如何去掉const变量的const特性。" class="headerlink" title="如何去掉const变量的const特性。"></a>如何去掉const变量的const特性。</h3><p>利用const_cast去除掉const的特性。  </p>
+<h3 id="static-cast是强制类型转换的关键字，类似于c语言中的（int）a，static-cast-a-等价于-（int）a"><a href="#static-cast是强制类型转换的关键字，类似于c语言中的（int）a，static-cast-a-等价于-（int）a" class="headerlink" title="static_cast是强制类型转换的关键字，类似于c语言中的（int）a，static_cast a  等价于  （int）a"></a>static_cast是强制类型转换的关键字，类似于c语言中的（int）a，static_cast<int> a  等价于  （int）a</int></h3><h3 id="程序错误处理"><a href="#程序错误处理" class="headerlink" title="程序错误处理"></a>程序错误处理</h3><p>对输入输出，用断言，用异常处理机制。</p>
+<h3 id="c-构造函数，拷贝构造函数"><a href="#c-构造函数，拷贝构造函数" class="headerlink" title="c++ 构造函数，拷贝构造函数"></a>c++ 构造函数，拷贝构造函数</h3><h4 id="问题引入"><a href="#问题引入" class="headerlink" title="问题引入:"></a>问题引入:</h4><figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>; </span><br><span class="line">A a; </span><br><span class="line">A b = a 与 A b; b = a  有什么区别?</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="解答："><a href="#解答：" class="headerlink" title="解答："></a>解答：</h4><p>A b =  a  与  A  b(a) 代表着相同的意义，这里调用拷贝构造函数，拷贝构造函数如果没有重载的话，默认为浅拷贝。<br>构造函数调用的次序，先父类，子类，析构函数的顺序，先子类后父类。</p>
+<h3 id="c-中-private-protected-public"><a href="#c-中-private-protected-public" class="headerlink" title="c++中 private protected public"></a>c++中 private protected public</h3><ul>
+<li>private成员只能被本类成员（类内）和友元访问，不能被派生类访问。</li>
+<li>protected成员可以被派生类访问。</li>
+<li>public继承：基类public成员，protected成员，private成员的访问属性在派生类中分别变成：public, protected, private</li>
+<li>protected继承：基类public成员，protected成员，private成员的访问属性在派生类中分别变成：protected, protected, private</li>
+<li>private继承：基类public成员，protected成员，private成员的访问属性在派生类中分别变成：private, private, private</li>
+</ul>
+<h3 id="当数组作为函数参数输入时，数组自动转化为指针，sizeof-x3D-4-。"><a href="#当数组作为函数参数输入时，数组自动转化为指针，sizeof-x3D-4-。" class="headerlink" title="当数组作为函数参数输入时，数组自动转化为指针，sizeof = 4 。"></a>当数组作为函数参数输入时，数组自动转化为指针，sizeof = 4 。</h3><h3 id="const-char-p1等-容易混淆的概念"><a href="#const-char-p1等-容易混淆的概念" class="headerlink" title="const char * p1等 容易混淆的概念"></a>const char * p1等 容易混淆的概念</h3><ul>
+<li>const char * p1 = “hello”;</li>
+<li>char *const p2 = “hello”;</li>
+<li>*翻译成point to ，从右往左读，便可以知道这个是什么。</li>
+<li>指针常量，是指向常量的指针。</li>
+<li>常量指针，是指针就是个常量。</li>
+</ul>
+<h3 id="哪些运算符不能被重载"><a href="#哪些运算符不能被重载" class="headerlink" title="哪些运算符不能被重载"></a>哪些运算符不能被重载</h3><ul>
+<li>::</li>
+<li>.* </li>
+<li>.   </li>
+<li>?  :</li>
+</ul>
+<h3 id="类方法，指的是类的静态方法，即static关键字修饰的方法。"><a href="#类方法，指的是类的静态方法，即static关键字修饰的方法。" class="headerlink" title="类方法，指的是类的静态方法，即static关键字修饰的方法。"></a>类方法，指的是类的静态方法，即static关键字修饰的方法。</h3><p>静态方法只能使用该静态方法所在类的静态数据成员和静态方法。这是因为使用静态方法时，该静态方法所在类可能还没有对象。静态方法中没有this指针。<br>总结：</p>
+<ul>
+<li>出现在类体外的函数不能指定关键字static；</li>
+<li>静态成员之间可以互相访问，包括静态成员函数访问静态数据成员和访问静态成员函数；</li>
+<li>非静态成员函数可以任意地访问静态成员函数和静态数据成员；</li>
+<li>静态成员函数不能访问非静态成员函数和非静态数据成员；</li>
+<li>由于没有this指针的额外开销，因此静态成员函数与类的全局函数相比，速度上会有少许的增长；静态成员函数里面不允许使用this指针。</li>
+<li>调用静态成员函数，可以用成员访问操作符(.)和(-&gt;)为一个类的对象或指向类对象的指调用静态成员函数。</li>
+<li>静态成员函数，如果是private，在类外面是不允许调用的。</li>
+</ul>
+<h3 id="hash桶"><a href="#hash桶" class="headerlink" title="hash桶"></a>hash桶</h3><ul>
+<li>hash表关键点2个： 1 hash函数，2冲突处理。</li>
+<li>hash函数可以有很多，取余数等。</li>
+<li>hash冲突处理，1次探测，2次探测，链表（hash桶）法。</li>
+</ul>
+<h3 id="reinterpret-cast-expression"><a href="#reinterpret-cast-expression" class="headerlink" title="reinterpret_cast  (expression)"></a>reinterpret_cast <new_type> (expression)</new_type></h3><p>reinterpret_cast运算符是用来处理无关类型之间的转换；它会产生一个新的值，这个值会有与原始参数（expressoin）有完全相同的比特位。</p>
+<h3 id="运算符重载"><a href="#运算符重载" class="headerlink" title="运算符重载"></a>运算符重载</h3><ul>
+<li>c++重载运算符的时候，返回的是引用还是值，这个取决于返回运算符本身，如果需要返回运算符本身的值就是引用（即左值）【比如，=系列，+=，-=，*=，/= 】,如果不能返回值本身就需要返回值（如：= - * /等）。  </li>
+<li>在类外部时候，重载运算符如下，声明为友元函数。这个如果不声明为友元，放在类内，codeblocks会报错，类内只接受一个参数或者0个参数<br>如：类外  friend classType operator+(classType&amp; left, classType&amp; right);<br>类内  classType operator+(classType&amp; right );<br><img src="/1.png"></li>
+</ul>
+<h3 id="递归栈问题，可以采用尾递归解决"><a href="#递归栈问题，可以采用尾递归解决" class="headerlink" title="递归栈问题，可以采用尾递归解决"></a>递归栈问题，可以采用尾递归解决</h3><h3 id="new一个内存然后free会产生什么问题"><a href="#new一个内存然后free会产生什么问题" class="headerlink" title="new一个内存然后free会产生什么问题"></a>new一个内存然后free会产生什么问题</h3><ul>
+<li>delete会调用析构函数，free不会调用，会出现内存溢出问题。  </li>
+<li>如果用free释放“new创建的动态对象”，那么该对象因无法执行析构函数而可能导致程序出错。如果用delete释放“malloc申请的动态内存”，理论上讲程序不会出错，但是该程序的可读性很差。所以new/delete必须配对使用，malloc/free也一样。</li>
+</ul>
+<h3 id="new，malloc最大分配多大空间。"><a href="#new，malloc最大分配多大空间。" class="headerlink" title="new，malloc最大分配多大空间。"></a>new，malloc最大分配多大空间。</h3><p>理论上是内存的大小，如果32位，最大就是4G，但是实际中，会小一些，因为运行时的限制。</p>
+<h3 id="运行时，栈空间多大？"><a href="#运行时，栈空间多大？" class="headerlink" title="运行时，栈空间多大？"></a>运行时，栈空间多大？</h3><p>跟os有关。比如windows，在链接时确定栈的大小（可以由连接器的选项指定，如果未指定则用默认值1MB） VS2013开辟的默认栈空间是1M。</p>
+<h3 id="static全局变量与普通全局变量的一个区别"><a href="#static全局变量与普通全局变量的一个区别" class="headerlink" title="static全局变量与普通全局变量的一个区别"></a>static全局变量与普通全局变量的一个区别</h3><p>这两者的区别在于非静态全局变量的作用域是整个源程序，当一个源程序由多个源文件组成时，非静态的全局变量在各个源文件中都是有效的。而静态全局变量则限制了其作用域， 即只在定义该变量的源文件内有效， 在同一源程序的其它源文件中不能使用它。</p>
+<h3 id="全局变量，静态全局变量，默认初值为0-或者-null"><a href="#全局变量，静态全局变量，默认初值为0-或者-null" class="headerlink" title="全局变量，静态全局变量，默认初值为0 或者 null"></a>全局变量，静态全局变量，默认初值为0 或者 null</h3><p>全局变量和static变量就是这种方式分配内存的。内存在程序编译的时候就已经分配好，这块内存在程序的整个运行期间都存在。</p>
+<h3 id="编译原理理解记录"><a href="#编译原理理解记录" class="headerlink" title="编译原理理解记录"></a>编译原理理解记录</h3><ul>
+<li>程序编写到运行需要经历 预编译，编译，链接，生成exe等阶段。.cpp与.h的的作用在于.h中进行声明，cpp在编译的时候，遇到声明会做一个标记，然后在链接的时候会找到相应的函数。<br>每个cpp是单独编译的。不然编译顺序不同，结果不同了。</li>
+<li>.h中不要包含变量的定义，因为定义后，如果多个cpp引用这个变量，在链接阶段会出现重复定义<br>一个工程中，是不会出现一模一样的函数定义的。那样在链接的时候会报错。</li>
+</ul>
+<h3 id="string-find（）返回类型"><a href="#string-find（）返回类型" class="headerlink" title="string find（）返回类型"></a>string find（）返回类型</h3><ul>
+<li>string::size_type 为find返回的类型，如果只是使用int，容易出错，对于跨机器效果不好。</li>
+<li>size_type为string和vector的find的返回类型，需要注意。</li>
+<li>npos为find的失败的返回值。</li>
+</ul>
+<h3 id="const修饰类中变量问题"><a href="#const修饰类中变量问题" class="headerlink" title="const修饰类中变量问题"></a>const修饰类中变量问题</h3><p>非常重要的一点，也是常犯的错误，有时我们希望某些常量只在类中有效，所以想当然地觉得应该用const修饰数据成员来实现。但是const数据成员只在某个对象生存期内是常量，而对于整个类而言却是可变的，因为类可以创建多个对象，不同的对象const 数据成员的值可以不同。<br>所以：不能在类声明中初始化const数据成员。因为类的对象未被创建时，编译器不知道SIZE的值是什么。const数据成员的初始化只能在类构造函数的初始化表中进行。<br>如果想建立在整个类中都恒定的常量。const数据成员是完成不了滴，应该用类中的枚举常量来实现。</p>
+<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">{…</span><br><span class="line">  <span class="keyword">enum</span> { SIZE1 = <span class="number">100</span>, SIZE2 = <span class="number">200</span>}; <span class="comment">//  枚举常量</span></span><br><span class="line">  <span class="type">int</span> array1[SIZE1];</span><br><span class="line">  <span class="type">int</span> array2[SIZE2];</span><br><span class="line">};</span><br></pre></td></tr></tbody></table></figure>
+
+<p>枚举常量不会占用对象的存储空间，它们在编译时被全部求值。枚举常量的缺点是：它的隐含数据类型是整数，其最大值有限，且不能表示浮点数（如PI=3.14159）。<br><strong>如果想定义非int型变量怎么办呢？可以使用静态常量：static const int size.</strong></p>
+<h3 id="关于引用有一些非常重要的规则"><a href="#关于引用有一些非常重要的规则" class="headerlink" title="关于引用有一些非常重要的规则"></a>关于引用有一些非常重要的规则</h3><ul>
+<li>引用被创建的同时必须被初始化（指针则可以在任何时候被初始化）。</li>
+<li>不能有NULL引用，引用必须与合法的存储单元关联（指针则可以是NULL）。 </li>
+<li>一旦引用被初始化，就不能改变引用的关系（指针则可以随时改变所指的对象）。</li>
+<li>引用没有const。</li>
+<li>引用是受限了的指针，只允许取内容，不能改变所指向。</li>
+</ul>
+<h3 id="编程规范"><a href="#编程规范" class="headerlink" title="编程规范"></a>编程规范</h3><p>编程时候要注意，分配内存的时候检查是否分配成功，并且初始化，释放的时候，要对其指向null,避免产生野指针。</p>
+<h3 id="常量存储区的数据不能更改"><a href="#常量存储区的数据不能更改" class="headerlink" title="常量存储区的数据不能更改"></a>常量存储区的数据不能更改</h3><h3 id="数组名是指针常量，不能更改指向"><a href="#数组名是指针常量，不能更改指向" class="headerlink" title="数组名是指针常量，不能更改指向"></a>数组名是指针常量，不能更改指向</h3><h3 id="指针与内存"><a href="#指针与内存" class="headerlink" title="指针与内存"></a>指针与内存</h3><ul>
+<li>指针消亡了，并不表示它所指的内存会被自动释放。</li>
+<li>内存被释放了，并不表示指针会消亡或者成了NULL指针。</li>
+</ul>
+<h3 id="new-A-与-new-A-区别"><a href="#new-A-与-new-A-区别" class="headerlink" title="new A 与 new A()区别"></a>new A 与 new A()区别</h3><p>new A 与 new A() 都是调用默认构造函数，但是当类型只有 int 等pod类型时候，初始化不同版本可能会不同。</p>
+<h3 id="multable修饰变量一直可变，-用在类中被const修饰的函数中。"><a href="#multable修饰变量一直可变，-用在类中被const修饰的函数中。" class="headerlink" title="multable修饰变量一直可变， 用在类中被const修饰的函数中。"></a>multable修饰变量一直可变， 用在类中被const修饰的函数中。</h3><h3 id="函数的参数缺省值只能出现在函数的声明中，而不能出现在定义体中。"><a href="#函数的参数缺省值只能出现在函数的声明中，而不能出现在定义体中。" class="headerlink" title="函数的参数缺省值只能出现在函数的声明中，而不能出现在定义体中。"></a>函数的参数缺省值只能出现在函数的声明中，而不能出现在定义体中。</h3><h3 id="define和内联函数容易产生的错误"><a href="#define和内联函数容易产生的错误" class="headerlink" title="define和内联函数容易产生的错误"></a>define和内联函数容易产生的错误</h3><figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> MAX(a, b) (a) &gt; (b) ? (a) : (b)  </span></span><br><span class="line">result = (i) &gt; (j) ? (i) : (j) + <span class="number">2</span> ; </span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><ul>
+<li>如果类存在继承关系，派生类必须在其初始化表里调用基类的构造函数。</li>
+<li>初始化表中调用构造函数，如下例：<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">B::<span class="built_in">B</span>(<span class="type">int</span> x, <span class="type">int</span> y): <span class="built_in">A</span>(x) <span class="comment">// 在初始化表里调用A的构造函数  </span></span><br><span class="line">{</span><br><span class="line">…</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+<li>成员对象初始化的次序完全不受它们在初始化表中次序的影响，只由成员对象在类中声明的次序决定。这是因为类的声明是唯一的，而类的构造函数可以有多个，因此会有多个不同次序的初始化表。如果成员对象按照初始化表的次序进行构造，这将导致析构函数无法得到唯一的逆序。</li>
+</ul>
+<h3 id="拷贝构造函数与赋值函数"><a href="#拷贝构造函数与赋值函数" class="headerlink" title="拷贝构造函数与赋值函数"></a>拷贝构造函数与赋值函数</h3><figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">String <span class="title">a</span><span class="params">(“hello”)</span></span>;  </span><br><span class="line"><span class="function">String <span class="title">b</span><span class="params">(“world”)</span></span>;  </span><br><span class="line">String c = a; <span class="comment">//调用了拷贝构造函数，最好写成c(a);   </span></span><br><span class="line">c = b; <span class="comment">// 调用了赋值函数  </span></span><br></pre></td></tr></tbody></table></figure>
+<h3 id="以string类为例，拷贝构造函数与赋值函数的步骤，-string类要掌握"><a href="#以string类为例，拷贝构造函数与赋值函数的步骤，-string类要掌握" class="headerlink" title="以string类为例，拷贝构造函数与赋值函数的步骤， string类要掌握"></a>以string类为例，拷贝构造函数与赋值函数的步骤， string类要掌握</h3><figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">String::<span class="built_in">String</span>(<span class="type">const</span> <span class="type">char</span> *str)   <span class="comment">// String的普通构造函数 </span></span><br><span class="line">{   </span><br><span class="line"><span class="keyword">if</span>(str==<span class="literal">NULL</span>)   </span><br><span class="line">{   </span><br><span class="line">m_data = <span class="keyword">new</span> <span class="type">char</span>[<span class="number">1</span>];   </span><br><span class="line">*m_data = ‘\<span class="number">0</span>’;   </span><br><span class="line">}   </span><br><span class="line"><span class="keyword">else</span>   </span><br><span class="line">{   </span><br><span class="line"><span class="type">int</span> length = <span class="built_in">strlen</span>(str);   </span><br><span class="line">m_data = <span class="keyword">new</span> <span class="type">char</span>[length+<span class="number">1</span>];   </span><br><span class="line"><span class="built_in">strcpy</span>(m_data, str);   </span><br><span class="line">}   </span><br><span class="line">}   </span><br><span class="line">String::~<span class="built_in">String</span>(<span class="type">void</span>)   <span class="comment">// String的析构函数  </span></span><br><span class="line">{   </span><br><span class="line"><span class="keyword">delete</span> [] m_data;   </span><br><span class="line"><span class="comment">// 由于m_data是内部数据类型，也可以写成delete m_data;   </span></span><br><span class="line">}  </span><br><span class="line"><span class="comment">// 拷贝构造函数  </span></span><br><span class="line">String::<span class="built_in">String</span>(<span class="type">const</span> String &amp;other)   </span><br><span class="line">{   </span><br><span class="line"><span class="comment">// 允许操作other的私有成员m_data   </span></span><br><span class="line"><span class="type">int</span> length = <span class="built_in">strlen</span>(other.m_data);   </span><br><span class="line">m_data = <span class="keyword">new</span> <span class="type">char</span>[length+<span class="number">1</span>];   </span><br><span class="line"><span class="built_in">strcpy</span>(m_data, other.m_data);   </span><br><span class="line">}   </span><br><span class="line"><span class="comment">// 赋值函数  </span></span><br><span class="line">String &amp; String::operate =(<span class="type">const</span> String &amp;other)   </span><br><span class="line">{   </span><br><span class="line"><span class="comment">// (1) 检查自赋值  </span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">this</span> == &amp;other)   </span><br><span class="line"><span class="keyword">return</span> *<span class="keyword">this</span>;   </span><br><span class="line"><span class="comment">// (2) 释放原有的内存资源  </span></span><br><span class="line"><span class="keyword">delete</span> [] m_data;   </span><br><span class="line"><span class="comment">// （3）分配新的内存资源，并复制内容  </span></span><br><span class="line"><span class="type">int</span> length = <span class="built_in">strlen</span>(other.m_data);   </span><br><span class="line">m_data = <span class="keyword">new</span> <span class="type">char</span>[length+<span class="number">1</span>];   </span><br><span class="line"><span class="built_in">strcpy</span>(m_data, other.m_data);   </span><br><span class="line"><span class="comment">// （4）返回本对象的引用  </span></span><br><span class="line"><span class="keyword">return</span> *<span class="keyword">this</span>;   </span><br><span class="line">} </span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="基类与派生类构造函数"><a href="#基类与派生类构造函数" class="headerlink" title="基类与派生类构造函数"></a>基类与派生类构造函数</h3><ul>
+<li>基类的构造函数、析构函数、赋值函数都不能被派生类继承。如果类之间存在继承关系，在编写上述基本函数时应注意以下事项：</li>
+<li>派生类的构造函数应在其初始化表里调用基类的构造函数。 </li>
+<li>基类与派生类的析构函数应该为虚（即加virtual关键字）。</li>
+</ul>
+<h3 id="说说拷贝构造函数和赋值运算符"><a href="#说说拷贝构造函数和赋值运算符" class="headerlink" title="说说拷贝构造函数和赋值运算符"></a>说说拷贝构造函数和赋值运算符</h3><h4 id="拷贝构造函数和赋值运算符有以下两个不同之处："><a href="#拷贝构造函数和赋值运算符有以下两个不同之处：" class="headerlink" title="拷贝构造函数和赋值运算符有以下两个不同之处："></a>拷贝构造函数和赋值运算符有以下两个不同之处：</h4><ul>
+<li>拷贝构造函数生成新的类对象，而赋值运算符不能。 </li>
+<li>由于拷贝构造函数是直接构造一个新的类对象，所以在初始化这个对象之前不用检验源对象是否和新建对象相同。而赋值运算符则需要这个操作，另外赋值运算中如果原来的对象中有内存分配要先把内存释放掉。</li>
+</ul>
+<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">8</span>、递归与非递归将链表反转</span><br><span class="line"><span class="comment">/********************************************************* </span></span><br><span class="line"><span class="comment">非递归的翻转实际上就是使用循环，依次后移指针， </span></span><br><span class="line"><span class="comment">并将遇到的链表指针反转 </span></span><br><span class="line"><span class="comment">*********************************************************/</span>  </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ReserveList</span><span class="params">(List * plist)</span>        <span class="comment">//非递归实现，  </span></span></span><br><span class="line"><span class="function"></span>{  </span><br><span class="line">ListNode * phead;   <span class="comment">//新链表的头 开始的第一个节点  </span></span><br><span class="line">ListNode * pt;   <span class="comment">//旧链表的头 开始的第二个节点  </span></span><br><span class="line">ListNode * pn;   <span class="comment">//旧链表头的下一个  </span></span><br><span class="line">phead = plist-&gt;head;  </span><br><span class="line"><span class="keyword">if</span>(phead &amp;&amp; phead-&gt;next&amp;&amp; phead-&gt;next-&gt;next)    <span class="comment">//首先确定  </span></span><br><span class="line">{  </span><br><span class="line">phead = plist-&gt;head-&gt;next;    <span class="comment">//新链表就是以第一个节点开始，依次在表头添加节点，添加的节点是旧链表的第一个节点  </span></span><br><span class="line">pt = phead-&gt;next;     <span class="comment">//旧链表，旧链表被取走头结点之后放入新链表的表头，  </span></span><br><span class="line">pn = pt-&gt;next;  </span><br><span class="line">phead-&gt;next = <span class="number">0</span>;  </span><br><span class="line"><span class="keyword">while</span>(pt)  </span><br><span class="line">{  </span><br><span class="line">pn = pt-&gt;next;    <span class="comment">//pn是旧链表的第二个节点  </span></span><br><span class="line">pt -&gt;next = phead;   <span class="comment">//取旧链表的第一个节点插入新链表  </span></span><br><span class="line">phead = pt;  </span><br><span class="line">pt = pn;     <span class="comment">//旧链表往后移动  </span></span><br><span class="line">}  </span><br><span class="line">}  </span><br><span class="line">plist-&gt;head-&gt;next = phead;     <span class="comment">//新链表重新赋值到整个链表  </span></span><br><span class="line">}  </span><br><span class="line"><span class="comment">/********************************************************* </span></span><br><span class="line"><span class="comment">递归思想，原理也是从就链表上依次取元素放入到新链表 </span></span><br><span class="line"><span class="comment">直到原始链表被取完，得到新链表 </span></span><br><span class="line"><span class="comment">*********************************************************/</span>  </span><br><span class="line"><span class="function">ListNode * <span class="title">ReserveListRe</span><span class="params">(ListNode * oldlist,ListNode * newlist)</span>  </span></span><br><span class="line"><span class="function"></span>{  </span><br><span class="line">ListNode * pt;  </span><br><span class="line">pt = oldlist-&gt;next;   <span class="comment">//取旧链表的表头，pt是现在的旧链表  </span></span><br><span class="line">oldlist-&gt;next = newlist; <span class="comment">//就旧链表插入到新链表  </span></span><br><span class="line">newlist = oldlist;   <span class="comment">//如果旧链表是空，表示旧链表被取完了，新链表就是翻转之后的链表  </span></span><br><span class="line"><span class="keyword">return</span> (pt == <span class="literal">NULL</span>) ? newlist : <span class="built_in">ReserveListRe</span>(pt,newlist);  </span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="数组名和指针的区别"><a href="#数组名和指针的区别" class="headerlink" title="数组名和指针的区别"></a>数组名和指针的区别</h3><p>指针是一个变量，有自己对应的存储空间，而数组名仅仅是一个符号，不是变量，因而没有自己对应的存储空间。</p>
+<h3 id="构造函数能否为虚函数，为什么？"><a href="#构造函数能否为虚函数，为什么？" class="headerlink" title="构造函数能否为虚函数，为什么？"></a>构造函数能否为虚函数，为什么？</h3><ul>
+<li>构造函数不能是虚函数。而且不能在构造函数中调用虚函数，因为那样实际执行的是父类的对应函数，因为自己还没有构造好。析构函数可以是虚函数，而且，在一个复杂类结构中，这往往是必须的。析构函数也可以是纯虚函数，但纯虚析构函数必须有定义体，因为析构函数的调用是在子类中隐含的。</li>
+<li>虚函数的动态绑定特性是实现重载的关键技术，动态绑定根据实际的调用情况查询相应类的虚函数表，调用相应的虚函数。</li>
+<li>析构函数如果不定义成虚函数，在用父类指针操作子类对象的时候，在析构的时候容易忘记调用析构函数。</li>
+</ul>
+<h3 id="成员函数通过什么来区分不同对象的成员数据？为什么它能够区分？"><a href="#成员函数通过什么来区分不同对象的成员数据？为什么它能够区分？" class="headerlink" title="成员函数通过什么来区分不同对象的成员数据？为什么它能够区分？"></a>成员函数通过什么来区分不同对象的成员数据？为什么它能够区分？</h3><p>通过this指针来区分的， 因为它指向的是对象的首地址。</p>
+<h3 id="拷贝构造函数在哪几种情况下会被调用？"><a href="#拷贝构造函数在哪几种情况下会被调用？" class="headerlink" title="拷贝构造函数在哪几种情况下会被调用？"></a>拷贝构造函数在哪几种情况下会被调用？</h3><ul>
+<li>当类的一个对象去初始化该类的另一个对象时；</li>
+<li>如果函数的形参是类的对象，调用函数进行形参和实参结合时；</li>
+<li>如果函数的返回值是类对象，函数调用完成返回时。</li>
+</ul>
+<h3 id="流运算符为什么不能通过类的成员函数重载？一般怎么解决？"><a href="#流运算符为什么不能通过类的成员函数重载？一般怎么解决？" class="headerlink" title="流运算符为什么不能通过类的成员函数重载？一般怎么解决？"></a>流运算符为什么不能通过类的成员函数重载？一般怎么解决？</h3><p>因为通过类的成员函数重载必须是运算符的第一个是自己，而对流运算的重载要求第一个参数是流对象。一般通过友元来解决。</p>
+<h3 id="虚拟函数与普通成员函数的区别？内联函数和构造函数能否为虚拟函数？"><a href="#虚拟函数与普通成员函数的区别？内联函数和构造函数能否为虚拟函数？" class="headerlink" title="虚拟函数与普通成员函数的区别？内联函数和构造函数能否为虚拟函数？"></a>虚拟函数与普通成员函数的区别？内联函数和构造函数能否为虚拟函数？</h3><h4 id="区别："><a href="#区别：" class="headerlink" title="区别："></a>区别：</h4><ul>
+<li>虚拟函数有virtual关键字，有虚拟指针和虚函数表，虚拟指针就是虚拟函数的接口，而普通成员函数没有。</li>
+<li>内联函数和构造函数不能为虚拟函数。</li>
+</ul>
+<h3 id="全局变量可不可以定义在可被多个-C文件包含的头文件中？为什么？"><a href="#全局变量可不可以定义在可被多个-C文件包含的头文件中？为什么？" class="headerlink" title="全局变量可不可以定义在可被多个.C文件包含的头文件中？为什么？"></a>全局变量可不可以定义在可被多个.C文件包含的头文件中？为什么？</h3><p>答：可以，在不同的C文件中以static形式来声明同名全局变量。       　　<br>可以在不同的C文件中声明同名的全局变量，前提是其中只能有一个C文件中对此变量赋初值，此时连接不会出错.</p>
+<h3 id="局部变量能否和全局变量重名？"><a href="#局部变量能否和全局变量重名？" class="headerlink" title="局部变量能否和全局变量重名？"></a>局部变量能否和全局变量重名？</h3><p>答：能，局部会屏蔽全局。要用全局变量，需要使用”::” ;局部变量可以与全局变量同名，在函数内引用这个变量时，会用到同名的局部变量，而不会用到全局变量。对于有些编译器而言，在同一个函数内可以定义多个同名的局部变量，比如在两个循环体内都定义一个同名的局部变量，而那个局部变量的作用域就在那个循环体内。</p>
+<h3 id="海量处理（海量数据查找可以用hash表进行）"><a href="#海量处理（海量数据查找可以用hash表进行）" class="headerlink" title="海量处理（海量数据查找可以用hash表进行）"></a>海量处理（海量数据查找可以用hash表进行）</h3><p>44.1：给定a、b两个文件，各存放50亿个url，每个url各占64字节，内存限制是4G，让你找出a、b文件共同的url？<br>答：可以估计每个文件安的大小为5G×64=320G，远远大于内存限制的4G。所以不可能将其完全加载到内存中处理。考虑采取分而治之的方法。</p>
+<h4 id="分而治之-x2F-hash映射："><a href="#分而治之-x2F-hash映射：" class="headerlink" title="分而治之/hash映射："></a>分而治之/hash映射：</h4><p>遍历文件a，对每个url求取映射，然后根据所取得的值将url分别存储到1000个小文件（a1）中。这样每个小文件的大约为300M。遍历文件b，采取和a相同的方式将url分别存储到1000小文件（b1）中。这样处理后，所有可能相同的url都在对应的小文件中，不对应的小文件不可能有相同的url。然后我们只要求出1000对小文件中相同的url即可。  </p>
+<h4 id="hash-set统计："><a href="#hash-set统计：" class="headerlink" title="hash_set统计："></a>hash_set统计：</h4><p>求每对小文件中相同的url时，可以把其中一个小文件的url存储到hash_set中。然后遍历另一个小文件的每个url，看其是否在刚才构建的hash_set中，如果是，那么就是共同的url，存到文件里面就可以了。   </p>
+<h3 id="卡特兰数问http-blog-csdn-net-han-xiaoyang-article-details-11938973"><a href="#卡特兰数问http-blog-csdn-net-han-xiaoyang-article-details-11938973" class="headerlink" title="卡特兰数问http://blog.csdn.net/han_xiaoyang/article/details/11938973"></a>卡特兰数问<a target="_blank" rel="noopener" href="http://blog.csdn.net/han_xiaoyang/article/details/11938973">http://blog.csdn.net/han_xiaoyang/article/details/11938973</a></h3><h3 id="统计出现次数最多的数据"><a href="#统计出现次数最多的数据" class="headerlink" title="统计出现次数最多的数据"></a>统计出现次数最多的数据</h3><p>首先用hashmap统计出现的次数，然后用堆排序找出前n个高频对于大数统计，可以采用并发的方式进行。</p>
+<h3 id="10亿个整数，1G的内存，统计只出现一次的数"><a href="#10亿个整数，1G的内存，统计只出现一次的数" class="headerlink" title="10亿个整数，1G的内存，统计只出现一次的数"></a>10亿个整数，1G的内存，统计只出现一次的数</h3><p>hash桶，先进1000个桶，然后再每个桶内判断。</p>
+<h3 id="海量数据排序，"><a href="#海量数据排序，" class="headerlink" title="海量数据排序，"></a>海量数据排序，</h3><p>利用位操作</p>
+<h3 id="电梯调度算法"><a href="#电梯调度算法" class="headerlink" title="电梯调度算法"></a>电梯调度算法</h3><h4 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h4><p>电梯大家对于大家已经是很熟悉了，现在存在这样的问题，那就是在繁忙的上下班时间，在每层楼电梯都要停。这显然让很多办公室在高层的同志有点受不了。现在要求是这样：由于这个电梯楼层并不高，所以电梯只在一个楼层停，这样做电梯的每个人都在这个楼层走到自己想去的楼层。那么怎么知道电梯每次在哪个楼层停下来呢？在一楼的时候每个乘客选择自己的目的层，电梯可以快速的自动计算出应停的楼层。这个应停的楼层应该保证这次乘坐电梯的所有乘客的爬楼梯层数之和最少（包括上下楼）。</p>
+<h4 id="解法："><a href="#解法：" class="headerlink" title="解法："></a>解法：</h4><p>现在我们来更仔细的分析一下这个问题，看看怎么样优化一下。假设电梯停在第 i 层楼，我们计算出所有乘客总共爬楼梯的层数是Y。如果有N1个乘客想去的楼层在第 i 层之下，有N2个乘客正好想去的楼层是第 i 层，有N3个乘客想去的楼层在第 i 层之上。这个时候，重点来了：如果电梯改停在i-1层，所有目的地在第i - 1层以下的乘客可以少爬1层，总共少爬N1层，所有在i层及以上的乘客要多爬一层，总共多爬N2+N3层，这时总共需要爬Y-N1+N2+N3。</p>
+<p>反之，如果电梯在i+1层停所有目的地在第 i 层以上的乘客可以少爬1层，总共少爬N3层，所有在 i 层及以下的乘客要多爬一层，总共多爬N1+N2层，这时总共需要爬Y+N1+N2-N3层。</p>
+<p>可见，当N1 &gt; N2+N3 时，电梯在第i-1层楼停更好；当N1+N2 &lt;  N3 时，电梯在i+1层停更好。其他情况在第i层更好。<br>如此一来，问题的解法就出来了，从第一层开始考察，计算各位乘客走的楼层的数目，然后根据N1，N2，N3之间的关系进行调整，知道找到最佳楼层，这样算法时间复杂度优化到了O（N）。</p>
+<h3 id="一个父类子类虚函数问题"><a href="#一个父类子类虚函数问题" class="headerlink" title="一个父类子类虚函数问题"></a>一个父类子类虚函数问题</h3><figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">{</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">char</span> <span class="title">f</span><span class="params">()</span></span>{ <span class="keyword">return</span> <span class="string">'f'</span>; }</span><br><span class="line">	<span class="function"><span class="type">char</span> <span class="title">g</span><span class="params">(<span class="type">int</span> n)</span></span>{ <span class="keyword">return</span> <span class="string">'g'</span>; }</span><br><span class="line">};</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> :<span class="keyword">public</span> A</span><br><span class="line">{</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="type">char</span> <span class="title">f</span><span class="params">()</span></span>{ <span class="keyword">return</span> <span class="string">'F'</span>; }</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">char</span> <span class="title">g</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> n)</span></span>{ <span class="keyword">return</span> (<span class="type">char</span>)(<span class="string">'g'</span> + n); }</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">	 A * pA = <span class="keyword">new</span> B;</span><br><span class="line">	 A&amp; rA = *(B*)pA;</span><br><span class="line">	 A oA = *(B*)pA;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"%c,%c,%c,%c,%c,%c\n"</span>, pA-&gt;<span class="built_in">f</span>(), pA-&gt;<span class="built_in">g</span>(<span class="number">1u</span>), rA.<span class="built_in">f</span>(),rA.<span class="built_in">g</span>(<span class="number">1</span>), oA.<span class="built_in">f</span>(), oA.<span class="built_in">g</span>(<span class="number">1</span>));</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<p>输出结果：F g F g f g</p>
+<ul>
+<li>(1)没啥说的，正常.</li>
+<li>(2)没啥说的，跟（1）一样，</li>
+<li>(3)类似于用B去初始化A,所有类型已经发生了变换，初始化结束之后，oA的类型就是A，也就不会调用B的虚函数了。</li>
+</ul>
+</body></html>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/07/cplusplus/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

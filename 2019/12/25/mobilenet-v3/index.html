@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="mobilenet-v3是Google继mobilenet-v2之后的又一力作，作为mobilenet系列的新成员，自然效果会提升，mobilenet-v3提供了两个版本，分别为mobilenet-v3 large 以及mobilenet-v3 small，分别适用于对资源不同要求的情况，论文中提到，mobilenet-v3 small在imagenet分类任务上，较mobilenet-v2，精">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MobileNet-V3">
+<meta property="og:url" content="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="mobilenet-v3是Google继mobilenet-v2之后的又一力作，作为mobilenet系列的新成员，自然效果会提升，mobilenet-v3提供了两个版本，分别为mobilenet-v3 large 以及mobilenet-v3 small，分别适用于对资源不同要求的情况，论文中提到，mobilenet-v3 small在imagenet分类任务上，较mobilenet-v2，精">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wanglichun.tech/1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/4.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190613144714722.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190613144629645.png">
+<meta property="og:image" content="https://www.wanglichun.tech/5.png">
+<meta property="og:image" content="https://www.wanglichun.tech/6.png">
+<meta property="og:image" content="https://www.wanglichun.tech/7.png">
+<meta property="og:image" content="https://www.wanglichun.tech/8.png">
+<meta property="og:image" content="https://www.wanglichun.tech/9.png">
+<meta property="og:image" content="https://www.wanglichun.tech/10.png">
+<meta property="og:image" content="https://www.wanglichun.tech/11.png">
+<meta property="og:image" content="https://www.wanglichun.tech/12.png">
+<meta property="article:published_time" content="2019-12-25T00:50:21.000Z">
+<meta property="article:modified_time" content="2020-01-16T05:48:02.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="MobileNet">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.wanglichun.tech/1.png">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>MobileNet-V3 | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MobileNet-V3
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-25 08:50:21" itemprop="dateCreated datePublished" datetime="2019-12-25T08:50:21+08:00">2019-12-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 13:48:02" itemprop="dateModified" datetime="2020-01-16T13:48:02+08:00">2020-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Classification/" itemprop="url" rel="index">
+                    <span itemprop="name">Classification</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/12/25/mobilenet-v3/" class="post-meta-item leancloud_visitors" data-flag-title="MobileNet-V3" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/12/25/mobilenet-v3/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/12/25/mobilenet-v3/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>mobilenet-v3是Google继mobilenet-v2之后的又一力作，作为mobilenet系列的新成员，自然效果会提升，mobilenet-v3提供了两个版本，分别为mobilenet-v3 large 以及mobilenet-v3 small，分别适用于对资源不同要求的情况，论文中提到，<strong>mobilenet-v3 small在imagenet分类任务上，较mobilenet-v2，精度提高了大约3.2%，时间却减少了15%，mobilenet-v3 large在imagenet分类任务上，较mobilenet-v2，精度提高了大约4.6%，时间减少了5%，mobilenet-v3 large 与v2相比，在COCO上达到相同的精度，速度快了25%<strong>，同时在分割算法上也有一定的提高。本文还有一个亮点在于，</strong>网络的设计利用了NAS（network architecture search）算法以及NetAdapt algorithm算法</strong>。并且，本文还介绍了一些提升网络效果的trick，这些trick也提升了不少的精度以及速度。</p>
+</blockquote>
+<hr>
+<p><strong>论文名称:Searching for MobileNetV3</strong></p>
+<p><strong>作者：Googler</strong></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1905.02244"><strong>论文链接</strong>：https://arxiv.org/abs/1905.02244</a></p>
+<hr>
+<h4 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h4><p>近年来，随着智能应用的不断增加，轻量化网络成为近年来的一个研究热点，毕竟不是所有设备都有GPU来计算的，轻量化 网络顾名思义，就是网络的参数量比较少，速度较快，下面总结了目前常用的一些减少网络计算量的方法：</p>
+<ul>
+<li>基于轻量化网络设计：比如mobilenet系列，shufflenet系列， Xception等，使用Group卷积、1x1卷积等技术减少网络计算量的同时，尽可能的保证网络的精度。</li>
+<li>模型剪枝： 大网络往往存在一定的冗余，通过剪去冗余部分，减少网络计算量。</li>
+<li>量化：利用TensorRT量化，一般在GPU上可以提速几倍。</li>
+<li>知识蒸馏：利用大模型（teacher model）来帮助小模型（student model）学习，提高student model的精度。</li>
+</ul>
+<p>mobilenet系列当然是典型的第一种方法。在介绍mobilenet v3前，先来回顾一下mobilenet v1和v2的创新点：</p>
+<p><strong>mobilenet v1</strong></p>
+<ul>
+<li>利用分组卷积降低网络的计算量，并且mobilenet将分组卷积应用到极致，即网络的分组数与网络的channel数量相等，使网络的计算量减到最低，但是这样channel之间的交互就没有了，所以作者又使用的point-wise conv,即使用1x1的卷积进行channel之间的融合。</li>
+<li>直筒结构。</li>
+</ul>
+<p><strong>mobilenet v2:</strong></p>
+<ul>
+<li>引入了bottleneck结构。</li>
+<li>将bottleneck结构变成了纺锤型，即resnet是先缩小为原来的1/4，再放大，他是放大到原来的6倍，再缩小。</li>
+<li>并且去掉了Residual Block最后的ReLU。</li>
+</ul>
+<p><strong>那么mobilenet v3又引入了哪些黑科技呢？：</strong></p>
+<p><strong>话不多说，直接上重点</strong></p>
+<ul>
+<li>1.引入SE结构<br>在bottlenet结构中加入了SE结构，并且放在了depthwise filter之后，如下图。<strong>因为SE结构会消耗一定的时间，所以作者在含有SE的结构中，将expansion layer的channel变为原来的1/4,这样作者发现，即提高了精度，同时还没有增加时间消耗。并且SE结构放在了depthwise之后。</strong></li>
+</ul>
+<p><img src="/1.png" alt="在这里插入图片描述"></p>
+<ul>
+<li>2.修改尾部结构：<br>在mobilenetv2中，在avg pooling之前，存在一个1x1的卷积层，目的是提高特征图的维度，更有利于结构的预测，但是这其实带来了一定的计算量了，所以这里作者修改了，将其放在avg pooling的后面，首先利用avg pooling将特征图大小由7x7降到了1x1，降到1x1后，然后再利用1x1提高维度，这样就减少了7x7=49倍的计算量。并且为了进一步的降低计算量，作者直接去掉了前面纺锤型卷积的3x3以及1x1卷积，进一步减少了计算量，就变成了如下图第二行所示的结构，作者将其中的3x3以及1x1去掉后，精度并没有得到损失。这里降低了大约15ms的速度。</li>
+</ul>
+<p><img src="/2.png" alt="在这里插入图片描述"></p>
+<ul>
+<li>3.修改channel数量<br>修改头部卷积核channel数量，mobilenet v2中使用的是32 x 3 x 3，作者发现，其实32可以再降低一点，所以这里作者改成了16，在保证了精度的前提下，降低了3ms的速度。，这里给出了mobilenet v2以及mobilenet v3的结构对比：</li>
+</ul>
+<p><img src="/3.png" alt="3.png"><br><img src="/4.png" alt="在这里插入图片描述"></p>
+<ul>
+<li>4.非线性变换的改变<br>使用h-swish替换swish，swish是谷歌自家的研究成果，颇有点自卖自夸的意思，这次在其基础上，为速度进行了优化。swish与h-swish公式如下所示，由于sigmoid的计算耗时较长，特别是在移动端，这些耗时就会比较明显，所以作者使用ReLU6(x+3)/6来近似替代sigmoid，观察下图可以发现，其实相差不大的。<strong>利用ReLU有几点好处，1.可以在任何软硬件平台进行计算，2.量化的时候，它消除了潜在的精度损失，使用h-swish替换swith，在量化模式下回提高大约15%的效率，另外，h-swish在深层网络中更加明显。</strong></li>
+</ul>
+<p>$$swish(x)=x*\sigma(x)$$</p>
+<p>$$h-swish[x]=x*frac{ReLU6(x+3)}{6}$$<br><img src="https://img-blog.csdnimg.cn/20190613144714722.png" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20190613144629645.png" alt="在这里插入图片描述"><br><img src="/5.png" alt="在这里插入图片描述"><br>如下两张图展示的是使用h-swish对于时间以及精度的影响，可以发现，使用h-swish@16可以提高大约0.2%的精度，但是持剑延长了大约20%。<br><img src="/6.png" alt="在这里插入图片描述"></p>
+<p><strong>虽然mobilenet v3结构你已经知道了，但是，本文的重点，如何设计出的这个网络，即如何进行网络结构的搜索，还是有必要提一下的，这里我也没有细细研究，想深入了解的同学可以自行对应阅读论文</strong></p>
+<p><strong>总体过程很简单，先通用NAS算法，优化每一个block，得到大体的网络结构，然后使用NetAdapt 算法来确定每个filter的channel的数量</strong></p>
+<p><strong>这里由于small model的精度以及耗时影响相对较大，mobilenet v3 large和mobilenet v3 small是分别使用NAS设计的。</strong></p>
+<p><strong>NAS之后，可以使用NetAdapt算法设计每个layer，过程如下：</strong></p>
+<ul>
+<li><p>先用NAS找到一个可用的结构A。</p>
+</li>
+<li><ol>
+<li>在A的基础上生成一系类的候选结构，并且这些候选结构消耗在一点点减少，其实就是穷举子结构。</li>
+<li>对于每个候选结构，使用前一个模型进行初始化，（前一个模型没有的参数随机初始化就行），finetune T个epoch，得到一个大致的精度。</li>
+<li>在这些候选结构中，找到最好的。</li>
+</ol>
+</li>
+<li><p>反复迭代，知道目标时间到达，找到最合适的结果。</p>
+</li>
+</ul>
+<p><strong>候选是怎么选取的呢?</strong></p>
+<ul>
+<li>降低expansion layer的size.</li>
+<li>减少botleneck</li>
+</ul>
+<h4 id="实验部分："><a href="#实验部分：" class="headerlink" title="实验部分："></a>实验部分：</h4><p>首先是分类部分的实验，向来比较豪的谷歌这次也不例外，作者使用16块TPU，batchsize为4096进行训练。然后作者选择在Google的Pixel Phone进行测试。</p>
+<p>下图为作者ImageNet网络的测试结果，结果可以看出V3 large相比较与V2 1.0 精度上提高了大约3个点，但是速度却从78ms下降到66ms(Pixel-1手机)，V3 small 相比较与V2 0.35,精度从60%提高到了67%，速度稍有增加，从19ms增加到21ms(Pixel-1手机).<br><img src="/7.png" alt="在这里插入图片描述"></p>
+<p>下图对比了不同的google phone上面，模型量化后（<strong>float量化，非int8量化</strong>）的耗时，其中P-1,P-2,P-3分别代表的是不同性能的手机。我这里主要分析一下V3-Large网络吧，可见量化后，TOP-1精度从上面图的75.2%下降到了73.8%，降低了大约1.5个点，符合正常情况，在P1-P3的加速效果来看P1加速了9ms(66ms)，P2加速了20ms(77ms)，P3加速了15ms(52.6ms)。与V2网络相比，其实速度相差不大，（<strong>为啥原本速度相差还挺大，量化之后相差不大了呢？这是个值得考虑的问题</strong>）<br><img src="/8.png" alt="在这里插入图片描述"></p>
+<p>下图是作者实验了使用不同的分辨率以及不同的模型深度的精度对比，分辨率分别选择的是[96,128,160,192,224,256],深度分别选为原来的[0.35,0.5,0.75,1.0,1.25]。可见，其实resolution对于精度以及速度的平衡效果更好，可以达到更快的速度，同时精度没有改变模型深度精度低，反而更高。（但是很多时候，其实分辨率的大小是根据场景决定的，比如检测和分割就需要较大尺度的图像）。<br><img src="/9.png" alt="在这里插入图片描述"></p>
+<p>下图展示了从MnasNet经过一系列的修改，到mobileNet v3的精度与速度变化的过程。<br><img src="/10.png" alt="在这里插入图片描述"><br>下图是将mobilenet v3应用于SSD-Lite在COCO测试集的精度结果。观察可以发现，在V3-Large上面，mAP没有特别大的提升但是速度确实降低了一些的。<br><img src="/11.png" alt="在这里插入图片描述"><br>下图是分割的结构图，这里就不详细介绍了，感兴趣的读者可以自行看论文。<br><img src="/12.png" alt="在这里插入图片描述"></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>总结来看，mobilenet V3其实并没有惊艳的结构提出，最主要的还是应用了诸如SE、H-Swish等tricks，然后利用Google前面提出的NAS以及NetAdapt算法进行结构的自动搜索，提升了一定的精度，降低了一定的速度。可能本篇论文的重点更在于进一步展示一下网络自动结构搜索的有效性，这样对应了文中的标题：Searching for，毕竟这也是发展的一个势头。</p>
+<p><strong>文中有不足或错误的地方，欢迎广大小伙伴批评指正。</strong></p>
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MobileNet/" rel="tag"># MobileNet</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/12/25/git/" rel="next" title="Git操作总结">
+                  <i class="fa fa-chevron-left"></i> Git操作总结
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/12/25/mxnet/" rel="prev" title="MXNet">
+                  MXNet <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A3%E6%96%87"><span class="nav-number">1.</span> <span class="nav-text">正文</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E9%83%A8%E5%88%86%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">实验部分：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

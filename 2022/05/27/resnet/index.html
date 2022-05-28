@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Resnet是2015年ImageNet比赛的冠军，不仅在分类上标线优秀，在目标检测中同样取得好成绩，Resnet将网络层数进一步加深，甚至达到1000+层。ResNet的表现以至于后面的网络都是在其基础上进行修改得到的，可以说ResNet是一个划时代的网络，被广泛应用于工业界。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ResNet(Deep Residual Learning for Image Recognition)">
+<meta property="og:url" content="https://www.wanglichun.tech/2022/05/27/resnet/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="Resnet是2015年ImageNet比赛的冠军，不仅在分类上标线优秀，在目标检测中同样取得好成绩，Resnet将网络层数进一步加深，甚至达到1000+层。ResNet的表现以至于后面的网络都是在其基础上进行修改得到的，可以说ResNet是一个划时代的网络，被广泛应用于工业界。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wanglichun.tech/1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/4.png">
+<meta property="og:image" content="https://www.wanglichun.tech/5.png">
+<meta property="og:image" content="https://www.wanglichun.tech/6.png">
+<meta property="og:image" content="https://www.wanglichun.tech/7.png">
+<meta property="og:image" content="https://www.wanglichun.tech/8.png">
+<meta property="article:published_time" content="2022-05-27T05:14:50.000Z">
+<meta property="article:modified_time" content="2022-05-27T15:12:28.050Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="ResNet">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.wanglichun.tech/1.png">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2022/05/27/resnet/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>ResNet(Deep Residual Learning for Image Recognition) | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2022/05/27/resnet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ResNet(Deep Residual Learning for Image Recognition)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-27 13:14:50 / 修改时间：23:12:28" itemprop="dateCreated datePublished" datetime="2022-05-27T13:14:50+08:00">2022-05-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Classification/" itemprop="url" rel="index">
+                    <span itemprop="name">Classification</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/05/27/resnet/" class="post-meta-item leancloud_visitors" data-flag-title="ResNet(Deep Residual Learning for Image Recognition)" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/05/27/resnet/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/05/27/resnet/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>Resnet是2015年ImageNet比赛的冠军，不仅在分类上标线优秀，在目标检测中同样取得好成绩，Resnet将网络层数进一步加深，甚至达到1000+层。ResNet的表现以至于后面的网络都是在其基础上进行修改得到的，可以说ResNet是一个划时代的网络，被广泛应用于工业界。</p>
+</blockquote>
+<span id="more"></span>
+
+<p>下面简单介绍一下这个网络。</p>
+<h3 id="Degradation"><a href="#Degradation" class="headerlink" title="Degradation"></a>Degradation</h3><ul>
+<li><p>根据经验，如果没有发生梯度消失、弥散现象，网络层数越深效果会越好，但是作者实验发现，虽然网络层数增加，但是训练会出现饱和现象，精度反而没有浅层网络精度高了，作者将这种现象称为Degradation问题，如下图所示。<br><img src="/1.png" alt="1.png"></p>
+</li>
+<li><p>如果仅仅在浅层网络后面增加几层，在不出现过拟合的情况下，效果应该会比浅层网络效果好，但是实验结果却不一定好，这也表明，不是所有的网络都容易优化到最好。</p>
+</li>
+<li><p>为解决这个问题：本文引入一个深度残差学习框架。此框架不需要每一层能直接吻合一个映射，而是让这些层去吻合残差映射。比如：用H(X)来表示最优解映射，但本文去拟合另一个映射F(X) &#x3D; H(X) - X , 此时原最优解映射H(X)就可以改写成F(X)+X。这里残差映射跟原映射相比更容易被优化。极端情况下，如果一个映射是可优化的，那也会很容易将残差推至0，把残差推至0和把此映射逼近另一个非线性层相比要容易的多。</p>
+</li>
+<li><p>残差网络通过如下结构实现。</p>
+</li>
+</ul>
+<p><img src="/2.png" alt="2.png"></p>
+<h3 id="Deep-Residual-Learning"><a href="#Deep-Residual-Learning" class="headerlink" title="Deep Residual Learning"></a>Deep Residual Learning</h3><h4 id="Identity-Mapping-by-Shortcuts"><a href="#Identity-Mapping-by-Shortcuts" class="headerlink" title="Identity Mapping by Shortcuts"></a>Identity Mapping by Shortcuts</h4><p>如上图是一个building block,公式定义如下：</p>
+<p>$$y&#x3D;F(x,W_{i})+x$$</p>
+<ul>
+<li>在上图例子中，由于block中包含2层，所以</li>
+</ul>
+<p>$$F&#x3D;\omega_2\sigma(\omega_1x)$$</p>
+<p>其中，σ表示RELU，这里省略了偏置项。</p>
+<ul>
+<li>当F()与x的维度不同时，可以通过线性映射进行调整，公式如下：</li>
+</ul>
+<p>$$y&#x3D;F(x,W_{i}) + \omega_s x$$</p>
+<h4 id="Network-Architectures"><a href="#Network-Architectures" class="headerlink" title="Network Architectures"></a>Network Architectures</h4><p>Plain Network主要是受 VGG 网络启发，主要采用3*3滤波器，但是本网络与VGG相比，滤波器要少，复杂度要小，网络特征如下： </p>
+<ul>
+<li>对于相同输出特征图尺寸，卷积层有相同个数的滤波器。</li>
+<li>如果特征图尺寸缩小一半，滤波器个数加倍以保持每个层的计算复杂度。通过步长为2的卷积来进行降采样。一共34个权重层。</li>
+</ul>
+<p>ResNet在Plain Network的基础上，我们插入了快捷连接，将网络转化为其对应的残差版本。</p>
+<p>对于shortcut的方式，作者提出了三个选项：</p>
+<blockquote>
+<ol>
+<li>使用恒等映射，如果residual block的输入输出维度不一致，对增加的维度用0来填充；</li>
+<li>在block输入输出维度一致时使用恒等映射，不一致时使用线性投影以保证维度一致；</li>
+<li>对于所有的block均使用线性投影。</li>
+</ol>
+</blockquote>
+<p><img src="/3.png" alt="3.png"></p>
+<h4 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h4><ul>
+<li>图片resize：短边长random.randint(256,480)，裁剪到224＊224，随机采样，含水平翻转，减均值。</li>
+<li>conv和activation间加batch normalization</li>
+<li>minibatch-size:256</li>
+<li>learning-rate: 初始0.1, error平了lr就除以10</li>
+<li>weight decay：0.0001</li>
+<li>momentum：0.9</li>
+<li>没用dropout</li>
+</ul>
+<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><p><img src="/4.png" alt="4.png"></p>
+<p>作者通过实验证明：</p>
+<p>1、34层与18层网络比较：</p>
+<blockquote>
+<ul>
+<li>训练过程中， 34层plain net 比18层plain net的error大 。</li>
+<li>34层residual net 比18层residual net的error小，更比34层plain net小了3.5%</li>
+<li>18层residual net比18层plain net收敛快</li>
+</ul>
+</blockquote>
+<p>2、Residual function的设置比较： </p>
+<blockquote>
+<p>A、在H(x)与x维度不同时， 用0充填补足<br>B、在H(x)与x维度不同时， 带WT<br>C、任何shortcut都带WT<br> loss效果： A&gt;B&gt;C </p>
+</blockquote>
+<p>3、将两层网络变为三层网络：</p>
+<blockquote>
+<p>三层分别是1×1、3×3，和1×1的卷积层，其中1×1层负责先减少后增加（恢复）尺寸的，使3×3层具有较小的输入&#x2F;输出尺寸瓶颈，如下图所示：<br><img src="/5.png" alt="5.png"><br>识别精度如下图所示：<br><img src="/6.png" alt="6.png"><br><img src="/7.png" alt="7.png"></p>
+</blockquote>
+<p>进一步的，作者在CIFAR-10数据集进行分析。同时，作者又搭建了更加变态的1202层的网络，对于这么深的网络，优化依然并不困难，但是出现了过拟合的问题，这是很正常的，作者也说了以后会对这个1202层的模型进行进一步的改进。</p>
+<p>分析结果如下图：<br><img src="/8.png" alt="8.png"></p>
+<h4 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h4><p><a target="_blank" rel="noopener" href="https://github.com/KaimingHe/deep-residual-networks">resnet caffe 实现：https://github.com/KaimingHe/deep-residual-networks</a></p>
+<hr>
+<p>补充resnet代码实现MxNet版</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">residual_unit</span>(<span class="params">data, num_filter, stride, dim_match, name, bottle_neck=<span class="literal">True</span>, bn_mom=<span class="number">0.9</span>, workspace=<span class="number">256</span>, memonger=<span class="literal">False</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Return ResNet Unit symbol for building ResNet</span></span><br><span class="line"><span class="string">    Parameters</span></span><br><span class="line"><span class="string">    ----------</span></span><br><span class="line"><span class="string">    data : str</span></span><br><span class="line"><span class="string">        Input data</span></span><br><span class="line"><span class="string">    num_filter : int</span></span><br><span class="line"><span class="string">        Number of output channels</span></span><br><span class="line"><span class="string">    bnf : int</span></span><br><span class="line"><span class="string">        Bottle neck channels factor with regard to num_filter</span></span><br><span class="line"><span class="string">    stride : tuple</span></span><br><span class="line"><span class="string">        Stride used in convolution</span></span><br><span class="line"><span class="string">    dim_match : Boolean</span></span><br><span class="line"><span class="string">        True means channel number between input and output is the same, otherwise means differ</span></span><br><span class="line"><span class="string">    name : str</span></span><br><span class="line"><span class="string">        Base name of the operators</span></span><br><span class="line"><span class="string">    workspace : int</span></span><br><span class="line"><span class="string">        Workspace used in convolution operator</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">### resnet50之后，采用bottle_neck结构</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> bottle_neck:</span><br><span class="line">        <span class="comment"># the same as https://github.com/facebook/fb.resnet.torch#notes, a bit difference with origin paper</span></span><br><span class="line">        bn1 = mx.sym.BatchNorm(data=data, fix_gamma=<span class="literal">False</span>, eps=<span class="number">2e-5</span>, momentum=bn_mom, name=name + <span class="string">&#x27;_bn1&#x27;</span>)</span><br><span class="line">        act1 = mx.sym.Activation(data=bn1, act_type=<span class="string">&#x27;relu&#x27;</span>, name=name + <span class="string">&#x27;_relu1&#x27;</span>)</span><br><span class="line">        conv1 = mx.sym.Convolution(data=act1, num_filter=<span class="built_in">int</span>(num_filter*<span class="number">0.25</span>), kernel=(<span class="number">1</span>,<span class="number">1</span>), stride=(<span class="number">1</span>,<span class="number">1</span>), pad=(<span class="number">0</span>,<span class="number">0</span>),</span><br><span class="line">                                   no_bias=<span class="literal">True</span>, workspace=workspace, name=name + <span class="string">&#x27;_conv1&#x27;</span>)</span><br><span class="line">        bn2 = mx.sym.BatchNorm(data=conv1, fix_gamma=<span class="literal">False</span>, eps=<span class="number">2e-5</span>, momentum=bn_mom, name=name + <span class="string">&#x27;_bn2&#x27;</span>)</span><br><span class="line">        act2 = mx.sym.Activation(data=bn2, act_type=<span class="string">&#x27;relu&#x27;</span>, name=name + <span class="string">&#x27;_relu2&#x27;</span>)</span><br><span class="line">        conv2 = mx.sym.Convolution(data=act2, num_filter=<span class="built_in">int</span>(num_filter*<span class="number">0.25</span>), kernel=(<span class="number">3</span>,<span class="number">3</span>), stride=stride, pad=(<span class="number">1</span>,<span class="number">1</span>),</span><br><span class="line">                                   no_bias=<span class="literal">True</span>, workspace=workspace, name=name + <span class="string">&#x27;_conv2&#x27;</span>)</span><br><span class="line">        bn3 = mx.sym.BatchNorm(data=conv2, fix_gamma=<span class="literal">False</span>, eps=<span class="number">2e-5</span>, momentum=bn_mom, name=name + <span class="string">&#x27;_bn3&#x27;</span>)</span><br><span class="line">        act3 = mx.sym.Activation(data=bn3, act_type=<span class="string">&#x27;relu&#x27;</span>, name=name + <span class="string">&#x27;_relu3&#x27;</span>)</span><br><span class="line">        conv3 = mx.sym.Convolution(data=act3, num_filter=num_filter, kernel=(<span class="number">1</span>,<span class="number">1</span>), stride=(<span class="number">1</span>,<span class="number">1</span>), pad=(<span class="number">0</span>,<span class="number">0</span>), no_bias=<span class="literal">True</span>,</span><br><span class="line">                                   workspace=workspace, name=name + <span class="string">&#x27;_conv3&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> dim_match:</span><br><span class="line">            shortcut = data</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            shortcut = mx.sym.Convolution(data=act1, num_filter=num_filter, kernel=(<span class="number">1</span>,<span class="number">1</span>), stride=stride, no_bias=<span class="literal">True</span>,</span><br><span class="line">                                            workspace=workspace, name=name+<span class="string">&#x27;_sc&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> memonger:</span><br><span class="line">            shortcut._set_attr(mirror_stage=<span class="string">&#x27;True&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> conv3 + shortcut</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        bn1 = mx.sym.BatchNorm(data=data, fix_gamma=<span class="literal">False</span>, momentum=bn_mom, eps=<span class="number">2e-5</span>, name=name + <span class="string">&#x27;_bn1&#x27;</span>)</span><br><span class="line">        act1 = mx.sym.Activation(data=bn1, act_type=<span class="string">&#x27;relu&#x27;</span>, name=name + <span class="string">&#x27;_relu1&#x27;</span>)</span><br><span class="line">        conv1 = mx.sym.Convolution(data=act1, num_filter=num_filter, kernel=(<span class="number">3</span>,<span class="number">3</span>), stride=stride, pad=(<span class="number">1</span>,<span class="number">1</span>),</span><br><span class="line">                                      no_bias=<span class="literal">True</span>, workspace=workspace, name=name + <span class="string">&#x27;_conv1&#x27;</span>)</span><br><span class="line">        bn2 = mx.sym.BatchNorm(data=conv1, fix_gamma=<span class="literal">False</span>, momentum=bn_mom, eps=<span class="number">2e-5</span>, name=name + <span class="string">&#x27;_bn2&#x27;</span>)</span><br><span class="line">        act2 = mx.sym.Activation(data=bn2, act_type=<span class="string">&#x27;relu&#x27;</span>, name=name + <span class="string">&#x27;_relu2&#x27;</span>)</span><br><span class="line">        conv2 = mx.sym.Convolution(data=act2, num_filter=num_filter, kernel=(<span class="number">3</span>,<span class="number">3</span>), stride=(<span class="number">1</span>,<span class="number">1</span>), pad=(<span class="number">1</span>,<span class="number">1</span>),</span><br><span class="line">                                      no_bias=<span class="literal">True</span>, workspace=workspace, name=name + <span class="string">&#x27;_conv2&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> dim_match:</span><br><span class="line">            shortcut = data</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            shortcut = mx.sym.Convolution(data=act1, num_filter=num_filter, kernel=(<span class="number">1</span>,<span class="number">1</span>), stride=stride, no_bias=<span class="literal">True</span>,</span><br><span class="line">                                            workspace=workspace, name=name+<span class="string">&#x27;_sc&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> memonger:</span><br><span class="line">            shortcut._set_attr(mirror_stage=<span class="string">&#x27;True&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> conv2 + shortcut</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">resnet</span>(<span class="params">units, num_stages, filter_list, num_classes, image_shape, bottle_neck=<span class="literal">True</span>, bn_mom=<span class="number">0.9</span>, workspace=<span class="number">256</span>, dtype=<span class="string">&#x27;float32&#x27;</span>, memonger=<span class="literal">False</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Return ResNet symbol of</span></span><br><span class="line"><span class="string">    Parameters</span></span><br><span class="line"><span class="string">    ----------</span></span><br><span class="line"><span class="string">    units : list</span></span><br><span class="line"><span class="string">        Number of units in each stage</span></span><br><span class="line"><span class="string">    num_stages : int</span></span><br><span class="line"><span class="string">        Number of stage</span></span><br><span class="line"><span class="string">    filter_list : list</span></span><br><span class="line"><span class="string">        Channel size of each stage</span></span><br><span class="line"><span class="string">    num_classes : int</span></span><br><span class="line"><span class="string">        Ouput size of symbol</span></span><br><span class="line"><span class="string">    dataset : str</span></span><br><span class="line"><span class="string">        Dataset type, only cifar10 and imagenet supports</span></span><br><span class="line"><span class="string">    workspace : int</span></span><br><span class="line"><span class="string">        Workspace used in convolution operator</span></span><br><span class="line"><span class="string">    dtype : str</span></span><br><span class="line"><span class="string">        Precision (float32 or float16)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    num_unit = <span class="built_in">len</span>(units)</span><br><span class="line">    <span class="keyword">assert</span>(num_unit == num_stages)</span><br><span class="line">    data = mx.sym.Variable(name=<span class="string">&#x27;data&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> dtype == <span class="string">&#x27;float32&#x27;</span>:</span><br><span class="line">        data = mx.sym.identity(data=data, name=<span class="string">&#x27;id&#x27;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">if</span> dtype == <span class="string">&#x27;float16&#x27;</span>:</span><br><span class="line">            data = mx.sym.Cast(data=data, dtype=np.float16)</span><br><span class="line">    data = mx.sym.BatchNorm(data=data, fix_gamma=<span class="literal">True</span>, eps=<span class="number">2e-5</span>, momentum=bn_mom, name=<span class="string">&#x27;bn_data&#x27;</span>)</span><br><span class="line">    (nchannel, height, width) = image_shape</span><br><span class="line">    <span class="keyword">if</span> height &lt;= <span class="number">32</span>:            <span class="comment"># such as cifar10</span></span><br><span class="line">        body = mx.sym.Convolution(data=data, num_filter=filter_list[<span class="number">0</span>], kernel=(<span class="number">3</span>, <span class="number">3</span>), stride=(<span class="number">1</span>,<span class="number">1</span>), pad=(<span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">                                  no_bias=<span class="literal">True</span>, name=<span class="string">&quot;conv0&quot;</span>, workspace=workspace)</span><br><span class="line">    <span class="keyword">else</span>:                       <span class="comment"># often expected to be 224 such as imagenet</span></span><br><span class="line">        body = mx.sym.Convolution(data=data, num_filter=filter_list[<span class="number">0</span>], kernel=(<span class="number">7</span>, <span class="number">7</span>), stride=(<span class="number">2</span>,<span class="number">2</span>), pad=(<span class="number">3</span>, <span class="number">3</span>),</span><br><span class="line">                                  no_bias=<span class="literal">True</span>, name=<span class="string">&quot;conv0&quot;</span>, workspace=workspace)</span><br><span class="line">        body = mx.sym.BatchNorm(data=body, fix_gamma=<span class="literal">False</span>, eps=<span class="number">2e-5</span>, momentum=bn_mom, name=<span class="string">&#x27;bn0&#x27;</span>)</span><br><span class="line">        body = mx.sym.Activation(data=body, act_type=<span class="string">&#x27;relu&#x27;</span>, name=<span class="string">&#x27;relu0&#x27;</span>)</span><br><span class="line">        body = mx.sym.Pooling(data=body, kernel=(<span class="number">3</span>, <span class="number">3</span>), stride=(<span class="number">2</span>,<span class="number">2</span>), pad=(<span class="number">1</span>,<span class="number">1</span>), pool_type=<span class="string">&#x27;max&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">###此处，filter_list参数，由于第一个block中第一个是特征图大小是56*56，不需要改变特征图大小，所以这里用 *1 if i==0 else 2*</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_stages):</span><br><span class="line">        body = residual_unit(body, filter_list[i+<span class="number">1</span>], (<span class="number">1</span> <span class="keyword">if</span> i==<span class="number">0</span> <span class="keyword">else</span> <span class="number">2</span>, <span class="number">1</span> <span class="keyword">if</span> i==<span class="number">0</span> <span class="keyword">else</span> <span class="number">2</span>), <span class="literal">False</span>,</span><br><span class="line">                             name=<span class="string">&#x27;stage%d_unit%d&#x27;</span> % (i + <span class="number">1</span>, <span class="number">1</span>), bottle_neck=bottle_neck, workspace=workspace,</span><br><span class="line">                             memonger=memonger)</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(units[i]-<span class="number">1</span>):</span><br><span class="line">            body = residual_unit(body, filter_list[i+<span class="number">1</span>], (<span class="number">1</span>,<span class="number">1</span>), <span class="literal">True</span>, name=<span class="string">&#x27;stage%d_unit%d&#x27;</span> % (i + <span class="number">1</span>, j + <span class="number">2</span>),</span><br><span class="line">                                 bottle_neck=bottle_neck, workspace=workspace, memonger=memonger)</span><br><span class="line">    bn1 = mx.sym.BatchNorm(data=body, fix_gamma=<span class="literal">False</span>, eps=<span class="number">2e-5</span>, momentum=bn_mom, name=<span class="string">&#x27;bn1&#x27;</span>)</span><br><span class="line">    relu1 = mx.sym.Activation(data=bn1, act_type=<span class="string">&#x27;relu&#x27;</span>, name=<span class="string">&#x27;relu1&#x27;</span>)</span><br><span class="line">    <span class="comment"># Although kernel is not used here when global_pool=True, we should put one</span></span><br><span class="line">    pool1 = mx.sym.Pooling(data=relu1, global_pool=<span class="literal">True</span>, kernel=(<span class="number">7</span>, <span class="number">7</span>), pool_type=<span class="string">&#x27;avg&#x27;</span>, name=<span class="string">&#x27;pool1&#x27;</span>)</span><br><span class="line">    flat = mx.sym.Flatten(data=pool1)</span><br><span class="line">    fc1 = mx.sym.FullyConnected(data=flat, num_hidden=num_classes, name=<span class="string">&#x27;fc1&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> dtype == <span class="string">&#x27;float16&#x27;</span>:</span><br><span class="line">        fc1 = mx.sym.Cast(data=fc1, dtype=np.float32)</span><br><span class="line">    <span class="keyword">return</span> mx.sym.SoftmaxOutput(data=fc1, name=<span class="string">&#x27;softmax&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_symbol</span>(<span class="params">num_classes, num_layers, image_shape, conv_workspace=<span class="number">256</span>, dtype=<span class="string">&#x27;float32&#x27;</span>, **kwargs</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Adapted from https://github.com/tornadomeet/ResNet/blob/master/train_resnet.py</span></span><br><span class="line"><span class="string">    Original author Wei Wu</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    image_shape = [<span class="built_in">int</span>(l) <span class="keyword">for</span> l <span class="keyword">in</span> image_shape.split(<span class="string">&#x27;,&#x27;</span>)]</span><br><span class="line">    (nchannel, height, width) = image_shape</span><br><span class="line">    <span class="keyword">if</span> height &lt;= <span class="number">28</span>:</span><br><span class="line">        num_stages = <span class="number">3</span></span><br><span class="line">        <span class="keyword">if</span> (num_layers-<span class="number">2</span>) % <span class="number">9</span> == <span class="number">0</span> <span class="keyword">and</span> num_layers &gt;= <span class="number">164</span>:</span><br><span class="line">            per_unit = [(num_layers-<span class="number">2</span>)//<span class="number">9</span>]</span><br><span class="line">            filter_list = [<span class="number">16</span>, <span class="number">64</span>, <span class="number">128</span>, <span class="number">256</span>]</span><br><span class="line">            bottle_neck = <span class="literal">True</span></span><br><span class="line">        <span class="keyword">elif</span> (num_layers-<span class="number">2</span>) % <span class="number">6</span> == <span class="number">0</span> <span class="keyword">and</span> num_layers &lt; <span class="number">164</span>:</span><br><span class="line">            per_unit = [(num_layers-<span class="number">2</span>)//<span class="number">6</span>]</span><br><span class="line">            filter_list = [<span class="number">16</span>, <span class="number">16</span>, <span class="number">32</span>, <span class="number">64</span>]</span><br><span class="line">            bottle_neck = <span class="literal">False</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">&quot;no experiments done on num_layers &#123;&#125;, you can do it yourself&quot;</span>.<span class="built_in">format</span>(num_layers))</span><br><span class="line">        units = per_unit * num_stages</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">if</span> num_layers &gt;= <span class="number">50</span>:</span><br><span class="line">            filter_list = [<span class="number">64</span>, <span class="number">256</span>, <span class="number">512</span>, <span class="number">1024</span>, <span class="number">2048</span>]</span><br><span class="line">            bottle_neck = <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            filter_list = [<span class="number">64</span>, <span class="number">64</span>, <span class="number">128</span>, <span class="number">256</span>, <span class="number">512</span>]</span><br><span class="line">            bottle_neck = <span class="literal">False</span></span><br><span class="line">        num_stages = <span class="number">4</span></span><br><span class="line">        <span class="keyword">if</span> num_layers == <span class="number">18</span>:</span><br><span class="line">            units = [<span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>]</span><br><span class="line">        <span class="keyword">elif</span> num_layers == <span class="number">34</span>:</span><br><span class="line">            units = [<span class="number">3</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">3</span>]</span><br><span class="line">        <span class="keyword">elif</span> num_layers == <span class="number">50</span>:</span><br><span class="line">            units = [<span class="number">3</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">3</span>]</span><br><span class="line">        <span class="keyword">elif</span> num_layers == <span class="number">101</span>:</span><br><span class="line">            units = [<span class="number">3</span>, <span class="number">4</span>, <span class="number">23</span>, <span class="number">3</span>]</span><br><span class="line">        <span class="keyword">elif</span> num_layers == <span class="number">152</span>:</span><br><span class="line">            units = [<span class="number">3</span>, <span class="number">8</span>, <span class="number">36</span>, <span class="number">3</span>]</span><br><span class="line">        <span class="keyword">elif</span> num_layers == <span class="number">200</span>:</span><br><span class="line">            units = [<span class="number">3</span>, <span class="number">24</span>, <span class="number">36</span>, <span class="number">3</span>]</span><br><span class="line">        <span class="keyword">elif</span> num_layers == <span class="number">269</span>:</span><br><span class="line">            units = [<span class="number">3</span>, <span class="number">30</span>, <span class="number">48</span>, <span class="number">8</span>]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">&quot;no experiments done on num_layers &#123;&#125;, you can do it yourself&quot;</span>.<span class="built_in">format</span>(num_layers))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> resnet(units       = units,</span><br><span class="line">                  num_stages  = num_stages,</span><br><span class="line">                  filter_list = filter_list,</span><br><span class="line">                  num_classes = num_classes,</span><br><span class="line">                  image_shape = image_shape,</span><br><span class="line">                  bottle_neck = bottle_neck,</span><br><span class="line">                  workspace   = conv_workspace,</span><br><span class="line">                  dtype       = dtype)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ResNet/" rel="tag"># ResNet</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2022/05/27/tricks-of-train/" rel="next" title="Bag of Tricks for Image Classification with Convolutional Neural Networks">
+                  <i class="fa fa-chevron-left"></i> Bag of Tricks for Image Classification with Convolutional Neural Networks
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2022/05/27/hello-world/" rel="prev" title="Hello World">
+                  Hello World <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Degradation"><span class="nav-number">1.</span> <span class="nav-text">Degradation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deep-Residual-Learning"><span class="nav-number">2.</span> <span class="nav-text">Deep Residual Learning</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Identity-Mapping-by-Shortcuts"><span class="nav-number">2.1.</span> <span class="nav-text">Identity Mapping by Shortcuts</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Network-Architectures"><span class="nav-number">2.2.</span> <span class="nav-text">Network Architectures</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Implementation"><span class="nav-number">2.3.</span> <span class="nav-text">Implementation</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C"><span class="nav-number">3.</span> <span class="nav-text">实验</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%99%84%E5%BD%95"><span class="nav-number">3.1.</span> <span class="nav-text">附录</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

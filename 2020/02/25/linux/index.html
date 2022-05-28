@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="在使用linux过程中，一些常用的操作总结一下，方便查找、记忆。Linux基本操作Nvidia操作shell操作tmux操作  下面详细介绍  Linux基本操作文件移动mv命令参考链接：https:&#x2F;&#x2F;linux.cn&#x2F;article-2688-1.html  打印移动信息  1mv -v a &#x2F;home&#x2F;wlc&#x2F;  将&#x2F;a目录移动到&#x2F;b目录下，并重命名为c：  1mv  &#x2F;a  &#x2F;b&#x2F;c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux常用操作总结">
+<meta property="og:url" content="https://www.wanglichun.tech/2020/02/25/linux/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="在使用linux过程中，一些常用的操作总结一下，方便查找、记忆。Linux基本操作Nvidia操作shell操作tmux操作  下面详细介绍  Linux基本操作文件移动mv命令参考链接：https:&#x2F;&#x2F;linux.cn&#x2F;article-2688-1.html  打印移动信息  1mv -v a &#x2F;home&#x2F;wlc&#x2F;  将&#x2F;a目录移动到&#x2F;b目录下，并重命名为c：  1mv  &#x2F;a  &#x2F;b&#x2F;c">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-02-25T00:08:13.000Z">
+<meta property="article:modified_time" content="2020-02-25T05:19:24.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="工具类">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2020/02/25/linux/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Linux常用操作总结 | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/02/25/linux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux常用操作总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-02-25 08:08:13 / 修改时间：13:19:24" itemprop="dateCreated datePublished" datetime="2020-02-25T08:08:13+08:00">2020-02-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Technology/" itemprop="url" rel="index">
+                    <span itemprop="name">Technology</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/02/25/linux/" class="post-meta-item leancloud_visitors" data-flag-title="Linux常用操作总结" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/02/25/linux/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/02/25/linux/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>在使用linux过程中，一些常用的操作总结一下，方便查找、记忆。<br>Linux基本操作<br>Nvidia操作<br>shell操作<br>tmux操作</p>
+</blockquote>
+<p>下面详细介绍</p>
+<hr>
+<h3 id="Linux基本操作"><a href="#Linux基本操作" class="headerlink" title="Linux基本操作"></a>Linux基本操作</h3><h4 id="文件移动"><a href="#文件移动" class="headerlink" title="文件移动"></a>文件移动</h4><p><a target="_blank" rel="noopener" href="https://linux.cn/article-2688-1.html">mv命令参考链接：https://linux.cn/article-2688-1.html</a></p>
+<ul>
+<li>打印移动信息</li>
+</ul>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv -v a /home/wlc/</span><br></pre></td></tr></tbody></table></figure>
+<ul>
+<li>将/a目录移动到/b目录下，并重命名为c：</li>
+</ul>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv  /a  /b/c</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="查看文件夹下有多少文件："><a href="#查看文件夹下有多少文件：" class="headerlink" title="查看文件夹下有多少文件："></a>查看文件夹下有多少文件：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -lR|grep "^-"|wc -l</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="查看linux的磁盘空间大小以及剩余命令："><a href="#查看linux的磁盘空间大小以及剩余命令：" class="headerlink" title="查看linux的磁盘空间大小以及剩余命令："></a>查看linux的磁盘空间大小以及剩余命令：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">df -hl</span><br><span class="line"></span><br><span class="line">du -h --max-depth=1 | sort -rh</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="根据内存查看进程的使用情况："><a href="#根据内存查看进程的使用情况：" class="headerlink" title="根据内存查看进程的使用情况："></a>根据内存查看进程的使用情况：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ps aux</span><br><span class="line"></span><br><span class="line">ps -aux --sort -pcpu</span><br><span class="line"></span><br><span class="line">ps -aux --sort -pmem</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="查找进程方法："><a href="#查找进程方法：" class="headerlink" title="查找进程方法："></a>查找进程方法：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep 进程</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="根据用户名查看进程："><a href="#根据用户名查看进程：" class="headerlink" title="根据用户名查看进程："></a>根据用户名查看进程：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htop</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="scp命令"><a href="#scp命令" class="headerlink" title="scp命令"></a>scp命令</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -P 4588 remote@www.runoob.com:/usr/local/sin.sh /home/administrator</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="linux下使用命令帮助："><a href="#linux下使用命令帮助：" class="headerlink" title="linux下使用命令帮助："></a>linux下使用命令帮助：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">man df </span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="删除文件夹下存在的-空的文件（size-x3D-0-）"><a href="#删除文件夹下存在的-空的文件（size-x3D-0-）" class="headerlink" title="删除文件夹下存在的 空的文件（size=0 ）"></a>删除文件夹下存在的 空的文件（size=0 ）</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name 'file*' -size 0 -print0 | xargs -0 rm</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="压缩文件"><a href="#压缩文件" class="headerlink" title="压缩文件"></a>压缩文件</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zip -r xxx.zip  xxx</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Nvidia基本操作"><a href="#Nvidia基本操作" class="headerlink" title="Nvidia基本操作"></a>Nvidia基本操作</h3><h4 id="查看cuda版本"><a href="#查看cuda版本" class="headerlink" title="查看cuda版本"></a>查看cuda版本</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /usr/local/cuda/version.txt    </span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="查看cudnn版本"><a href="#查看cudnn版本" class="headerlink" title="查看cudnn版本"></a>查看cudnn版本</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -A 2</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="nvidia查看进程占用情况"><a href="#nvidia查看进程占用情况" class="headerlink" title="nvidia查看进程占用情况"></a>nvidia查看进程占用情况</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo fuser -v /dev/nvidia*</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><h4 id="使用软连接进行文件夹的链接，可以节省一定的空间："><a href="#使用软连接进行文件夹的链接，可以节省一定的空间：" class="headerlink" title="使用软连接进行文件夹的链接，可以节省一定的空间："></a>使用软连接进行文件夹的链接，可以节省一定的空间：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s  /path/to/VOCdevkit  /path/to/this_example/data/VOCdevkit</span><br></pre></td></tr></tbody></table></figure>
+
+
+<h4 id="pycharm-卡死了怎么办？"><a href="#pycharm-卡死了怎么办？" class="headerlink" title="pycharm 卡死了怎么办？"></a>pycharm 卡死了怎么办？</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ps -ef </span><br><span class="line">kill-9 [进程号]</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="pycharm激活："><a href="#pycharm激活：" class="headerlink" title="pycharm激活："></a>pycharm激活：</h4><p><a target="_blank" rel="noopener" href="http://idea.lanyus.com/">激活码http://idea.lanyus.com/</a></p>
+<h4 id="apt-get-找不到包"><a href="#apt-get-找不到包" class="headerlink" title="apt-get 找不到包"></a>apt-get 找不到包</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt update &amp;&amp; apt upgrade</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="dos下输入import"><a href="#dos下输入import" class="headerlink" title="dos下输入import"></a>dos下输入import</h4><p>如果在linux的dos窗口下面输入了import，则系统的光标会变成十字，进而无法进行鼠标操作，这个时候，只要将进程kill掉就可以了。</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ps  a   查看所有进程</span><br><span class="line">kill -9  pid  杀死进程</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="Linux远程桌面进去之后没有菜单栏："><a href="#Linux远程桌面进去之后没有菜单栏：" class="headerlink" title="Linux远程桌面进去之后没有菜单栏："></a>Linux远程桌面进去之后没有菜单栏：</h4><p>右键面板-&gt;面板首选项-&gt;backup and restore -&gt; apply configuration图标</p>
+<h4 id="查看docker日志"><a href="#查看docker日志" class="headerlink" title="查看docker日志"></a>查看docker日志</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker logs -f -t --since="2017-05-31" --tail=10 【容器名称】</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="清空回收站du-hl"><a href="#清空回收站du-hl" class="headerlink" title="清空回收站du -hl"></a>清空回收站du -hl</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo su</span><br><span class="line">rm -rf /home/wanglichun/.Trash</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="shell操作命令"><a href="#shell操作命令" class="headerlink" title="shell操作命令"></a>shell操作命令</h3><h4 id="传递参数"><a href="#传递参数" class="headerlink" title="传递参数"></a>传递参数</h4><p>shell可以通过${1},${2}这种方式访问对应的参数</p>
+<h4 id="shell特殊参数解释"><a href="#shell特殊参数解释" class="headerlink" title="shell特殊参数解释"></a>shell特殊参数解释</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">echo $0    # 当前脚本的文件名（间接运行时还包括绝对路径）。</span><br><span class="line">echo $n    # 传递给脚本或函数的参数。n 是一个数字，表示第几个参数。例如，第一个参数是 $1 。</span><br><span class="line">echo $#    # 传递给脚本或函数的参数个数。</span><br><span class="line">echo $*    # 传递给脚本或函数的所有参数。</span><br><span class="line">echo $@    # 传递给脚本或函数的所有参数。被双引号 (" ") 包含时，与 $* 不同，下面将会讲到。</span><br><span class="line">echo $?    # 上个命令的退出状态，或函数的返回值。</span><br><span class="line">echo $$    # 当前 Shell 进程 ID。对于 Shell 脚本，就是这些脚本所在的进程 ID。</span><br><span class="line">echo $_    # 上一个命令的最后一个参数</span><br><span class="line">echo $!    # 后台运行的最后一个进程的 ID 号</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="shell循环"><a href="#shell循环" class="headerlink" title="shell循环"></a>shell循环</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">for var in $(seq ${1} ${2})</span><br><span class="line">do</span><br><span class="line">    xxxxxx</span><br><span class="line">done</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="tmux操作大全"><a href="#tmux操作大全" class="headerlink" title="tmux操作大全"></a>tmux操作大全</h3><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/congbo/archive/2012/08/30/2649420.html">参考链接：https://www.cnblogs.com/congbo/archive/2012/08/30/2649420.html</a></p>
+<h4 id="启动新会话："><a href="#启动新会话：" class="headerlink" title="启动新会话："></a>启动新会话：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tmux [new -s 会话名 -n 窗口名]</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="恢复会话："><a href="#恢复会话：" class="headerlink" title="恢复会话："></a>恢复会话：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tmux at [-t 会话名]</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="列出所有会话："><a href="#列出所有会话：" class="headerlink" title="列出所有会话："></a>列出所有会话：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tmux ls</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="关闭会话："><a href="#关闭会话：" class="headerlink" title="关闭会话："></a>关闭会话：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tmux kill-session -t 会话名</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="关闭所有会话："><a href="#关闭所有会话：" class="headerlink" title="关闭所有会话："></a>关闭所有会话：</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tmux ls | grep : | cut -d. -f1 | awk '{print substr($1, 0, length($1)-1)}' | xargs kill</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="查看历史信息"><a href="#查看历史信息" class="headerlink" title="查看历史信息"></a>查看历史信息</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ctrl + b   +  【pageup】or【pagedown】</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="分屏"><a href="#分屏" class="headerlink" title="分屏"></a>分屏</h4><figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">分为左右 ctrl + b + %</span><br><span class="line">分为上下 ctrl + b + "</span><br><span class="line">调整大小 ctrl + b + (ctrl + 方向键)</span><br><span class="line">新建窗口 ctrl + b + c</span><br><span class="line">切换窗口 ctrl + b + n</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+
+
+
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%B7%A5%E5%85%B7%E7%B1%BB/" rel="tag"># 工具类</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/02/16/FASF/" rel="next" title="FASF">
+                  <i class="fa fa-chevron-left"></i> FASF
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/03/03/s3fd/" rel="prev" title="S3FD">
+                  S3FD <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">1.</span> <span class="nav-text">Linux基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%A7%BB%E5%8A%A8"><span class="nav-number">1.1.</span> <span class="nav-text">文件移动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%8B%E6%9C%89%E5%A4%9A%E5%B0%91%E6%96%87%E4%BB%B6%EF%BC%9A"><span class="nav-number">1.2.</span> <span class="nav-text">查看文件夹下有多少文件：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8Blinux%E7%9A%84%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4%E5%A4%A7%E5%B0%8F%E4%BB%A5%E5%8F%8A%E5%89%A9%E4%BD%99%E5%91%BD%E4%BB%A4%EF%BC%9A"><span class="nav-number">1.3.</span> <span class="nav-text">查看linux的磁盘空间大小以及剩余命令：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E5%86%85%E5%AD%98%E6%9F%A5%E7%9C%8B%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5%EF%BC%9A"><span class="nav-number">1.4.</span> <span class="nav-text">根据内存查看进程的使用情况：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E8%BF%9B%E7%A8%8B%E6%96%B9%E6%B3%95%EF%BC%9A"><span class="nav-number">1.5.</span> <span class="nav-text">查找进程方法：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E7%94%A8%E6%88%B7%E5%90%8D%E6%9F%A5%E7%9C%8B%E8%BF%9B%E7%A8%8B%EF%BC%9A"><span class="nav-number">1.6.</span> <span class="nav-text">根据用户名查看进程：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#scp%E5%91%BD%E4%BB%A4"><span class="nav-number">1.7.</span> <span class="nav-text">scp命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#linux%E4%B8%8B%E4%BD%BF%E7%94%A8%E5%91%BD%E4%BB%A4%E5%B8%AE%E5%8A%A9%EF%BC%9A"><span class="nav-number">1.8.</span> <span class="nav-text">linux下使用命令帮助：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%8B%E5%AD%98%E5%9C%A8%E7%9A%84-%E7%A9%BA%E7%9A%84%E6%96%87%E4%BB%B6%EF%BC%88size-x3D-0-%EF%BC%89"><span class="nav-number">1.9.</span> <span class="nav-text">删除文件夹下存在的 空的文件（size&#x3D;0 ）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E6%96%87%E4%BB%B6"><span class="nav-number">1.10.</span> <span class="nav-text">压缩文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nvidia%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">2.</span> <span class="nav-text">Nvidia基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8Bcuda%E7%89%88%E6%9C%AC"><span class="nav-number">2.1.</span> <span class="nav-text">查看cuda版本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8Bcudnn%E7%89%88%E6%9C%AC"><span class="nav-number">2.2.</span> <span class="nav-text">查看cudnn版本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nvidia%E6%9F%A5%E7%9C%8B%E8%BF%9B%E7%A8%8B%E5%8D%A0%E7%94%A8%E6%83%85%E5%86%B5"><span class="nav-number">2.3.</span> <span class="nav-text">nvidia查看进程占用情况</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">3.</span> <span class="nav-text">其他</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%BD%AF%E8%BF%9E%E6%8E%A5%E8%BF%9B%E8%A1%8C%E6%96%87%E4%BB%B6%E5%A4%B9%E7%9A%84%E9%93%BE%E6%8E%A5%EF%BC%8C%E5%8F%AF%E4%BB%A5%E8%8A%82%E7%9C%81%E4%B8%80%E5%AE%9A%E7%9A%84%E7%A9%BA%E9%97%B4%EF%BC%9A"><span class="nav-number">3.1.</span> <span class="nav-text">使用软连接进行文件夹的链接，可以节省一定的空间：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pycharm-%E5%8D%A1%E6%AD%BB%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F"><span class="nav-number">3.2.</span> <span class="nav-text">pycharm 卡死了怎么办？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pycharm%E6%BF%80%E6%B4%BB%EF%BC%9A"><span class="nav-number">3.3.</span> <span class="nav-text">pycharm激活：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#apt-get-%E6%89%BE%E4%B8%8D%E5%88%B0%E5%8C%85"><span class="nav-number">3.4.</span> <span class="nav-text">apt-get 找不到包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dos%E4%B8%8B%E8%BE%93%E5%85%A5import"><span class="nav-number">3.5.</span> <span class="nav-text">dos下输入import</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Linux%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9B%E5%8E%BB%E4%B9%8B%E5%90%8E%E6%B2%A1%E6%9C%89%E8%8F%9C%E5%8D%95%E6%A0%8F%EF%BC%9A"><span class="nav-number">3.6.</span> <span class="nav-text">Linux远程桌面进去之后没有菜单栏：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8Bdocker%E6%97%A5%E5%BF%97"><span class="nav-number">3.7.</span> <span class="nav-text">查看docker日志</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B8%85%E7%A9%BA%E5%9B%9E%E6%94%B6%E7%AB%99du-hl"><span class="nav-number">3.8.</span> <span class="nav-text">清空回收站du -hl</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shell%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">shell操作命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A0%E9%80%92%E5%8F%82%E6%95%B0"><span class="nav-number">4.1.</span> <span class="nav-text">传递参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell%E7%89%B9%E6%AE%8A%E5%8F%82%E6%95%B0%E8%A7%A3%E9%87%8A"><span class="nav-number">4.2.</span> <span class="nav-text">shell特殊参数解释</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell%E5%BE%AA%E7%8E%AF"><span class="nav-number">4.3.</span> <span class="nav-text">shell循环</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tmux%E6%93%8D%E4%BD%9C%E5%A4%A7%E5%85%A8"><span class="nav-number">5.</span> <span class="nav-text">tmux操作大全</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%96%B0%E4%BC%9A%E8%AF%9D%EF%BC%9A"><span class="nav-number">5.1.</span> <span class="nav-text">启动新会话：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D%E4%BC%9A%E8%AF%9D%EF%BC%9A"><span class="nav-number">5.2.</span> <span class="nav-text">恢复会话：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%97%E5%87%BA%E6%89%80%E6%9C%89%E4%BC%9A%E8%AF%9D%EF%BC%9A"><span class="nav-number">5.3.</span> <span class="nav-text">列出所有会话：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E9%97%AD%E4%BC%9A%E8%AF%9D%EF%BC%9A"><span class="nav-number">5.4.</span> <span class="nav-text">关闭会话：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E9%97%AD%E6%89%80%E6%9C%89%E4%BC%9A%E8%AF%9D%EF%BC%9A"><span class="nav-number">5.5.</span> <span class="nav-text">关闭所有会话：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%8E%86%E5%8F%B2%E4%BF%A1%E6%81%AF"><span class="nav-number">5.6.</span> <span class="nav-text">查看历史信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%B1%8F"><span class="nav-number">5.7.</span> <span class="nav-text">分屏</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

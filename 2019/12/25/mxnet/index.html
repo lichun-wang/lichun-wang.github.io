@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="自己使用时候总结的MXNet一些基本操作及介绍,深度学习训练框架MXNet的基本操作都在这里了  一、基础篇NDArray介绍篇在mxnet中，NDArray是所有运算的核心数据结构，mxnet中的所有数据均使用NDArray进行表示，NDarray有点类似于numpy中的ndarray，操作上面也与numpy很相似，但是NDArray提供了numpy.ndarray所不具备的操作，比如:GPU">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MXNet">
+<meta property="og:url" content="https://www.wanglichun.tech/2019/12/25/mxnet/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="自己使用时候总结的MXNet一些基本操作及介绍,深度学习训练框架MXNet的基本操作都在这里了  一、基础篇NDArray介绍篇在mxnet中，NDArray是所有运算的核心数据结构，mxnet中的所有数据均使用NDArray进行表示，NDarray有点类似于numpy中的ndarray，操作上面也与numpy很相似，但是NDArray提供了numpy.ndarray所不具备的操作，比如:GPU">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-12-25T00:59:23.000Z">
+<meta property="article:modified_time" content="2020-01-16T05:48:14.000Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="MXNet">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2019/12/25/mxnet/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>MXNet | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2019/12/25/mxnet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MXNet
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-25 08:59:23" itemprop="dateCreated datePublished" datetime="2019-12-25T08:59:23+08:00">2019-12-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 13:48:14" itemprop="dateModified" datetime="2020-01-16T13:48:14+08:00">2020-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Technology/" itemprop="url" rel="index">
+                    <span itemprop="name">Technology</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/12/25/mxnet/" class="post-meta-item leancloud_visitors" data-flag-title="MXNet" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/12/25/mxnet/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/12/25/mxnet/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <html><head></head><body></body></html><html><head></head><body><blockquote>
+<p>自己使用时候总结的MXNet一些基本操作及介绍,深度学习训练框架MXNet的基本操作都在这里了</p>
+</blockquote>
+<h3 id="一、基础篇"><a href="#一、基础篇" class="headerlink" title="一、基础篇"></a>一、基础篇</h3><h4 id="NDArray介绍篇"><a href="#NDArray介绍篇" class="headerlink" title="NDArray介绍篇"></a>NDArray介绍篇</h4><p>在mxnet中，<strong>NDArray是所有运算的核心数据结构，mxnet中的所有数据均使用NDArray进行表示</strong>，NDarray有点类似于numpy中的ndarray，操作上面也与numpy很相似，但是NDArray提供了numpy.ndarray所不具备的操作，比如:<strong>GPU,CPU的切换，自动求梯度的运算等等</strong>，这也是为什么mxnet要重新封装一个NDArray的原因。</p>
+<p>NDArray就好比盖房子的砖，砖有了自然可以盖房子了，所以利用NDArray你便可以实现所有的深度学习模型了，只是深度学习日新月异，如果每个模型都从NDArray开始写，那当然是比较麻烦的，所以MXnet或者gluon帮我们封装了一些函数可以直接使用，接下来我们都会逐一的了解，那么这一节我们先来仔细学习一下mxnet的NDArray：</p>
+<p><strong>特别说明：下面的操作只是NDArray的一些基本操作，<br>获取更多的操作还请查找MXNet文档：<a target="_blank" rel="noopener" href="https://mxnet.incubator.apache.org/api/python/ndarray/ndarray.html">https://mxnet.incubator.apache.org/api/python/ndarray/ndarray.html</a></strong></p>
+<p>==<strong>当然，我希望你可以跟我一起来敲如下的代码而不是看一遍就过去了，事实证明，敲一遍的效果会好很多</strong>==</p>
+<p>在mxnet中，使用NDArray需要引用nd包(nd是ndarray的缩写)，如下：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> mxnet <span class="keyword">import</span> nd</span><br></pre></td></tr></tbody></table></figure>
+<p>在引入nd包之后就可以愉快的使用NDArry了。</p>
+<p><em>特别说明，下面代码中 ‘-&gt;’ 代表的是输出结果</em></p>
+<p><strong>1. 定义x为一个序列，这里与numpy一致，不同的是，这里返回的每个元素类型都是ndarray</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x = nd.arange(<span class="number">12</span>)   -&gt; [<span class="number">0.</span> <span class="number">1.</span> <span class="number">2.</span> <span class="number">3.</span> <span class="number">4.</span> <span class="number">5.</span> <span class="number">6.</span> <span class="number">7.</span> <span class="number">8.</span> <span class="number">9.</span> <span class="number">10.</span> <span class="number">11.</span>]</span><br></pre></td></tr></tbody></table></figure>
+
+
+<p><strong>2. 当然我们可以打印出ndarray的shape以及size,这里的shape和size不要混淆了</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">x.shape      -&gt;  (<span class="number">12</span> ,)</span><br><span class="line">x.size       -&gt;  <span class="number">12</span></span><br><span class="line">x.context    -&gt; x在CPU还是在GPU上</span><br><span class="line"></span><br><span class="line">x.dtype      -&gt; data <span class="built_in">type</span>,即每个元素的类型</span><br><span class="line"><span class="comment">## 当然，我们也可以改变元素的类型</span></span><br><span class="line">x = x.astype(‘float32’) <span class="comment">## 利用astype便可以改变元素的类型了。</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+
+<p><strong>3. 那么如果我们想要构建一个二维矩阵怎么办呢？可以考虑reshape函数</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x = nd.arange(<span class="number">12</span>)</span><br><span class="line">x.reshape(shape=(<span class="number">3</span>,<span class="number">4</span>))</span><br><span class="line"><span class="comment"># 当然你同样可以省略shape参数，直接这样写：</span></span><br><span class="line">x.reshape((<span class="number">3</span>,<span class="number">4</span>)) <span class="comment">## 不过不要忘记（3，4）这个括号</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>4. 如果我们想初始化一个值为0或者值为1的多维矩阵该怎么做呢？</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">zero = nd.zeros((<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>))  <span class="comment"># 别忘记了是负数</span></span><br><span class="line">one = nd.ones((<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>))</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>5. 那如何建立一个随机初始化的矩阵呢？</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">S = nd.random.normal(<span class="number">0</span>,<span class="number">1</span>,shape=(<span class="number">3</span>,<span class="number">4</span>)) <span class="comment"># normal是高斯分布</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>6. 当然我们也可以直接利用list直接建立ndarray，如下：</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Y = nd.array([[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>],[<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>],[<span class="number">9</span>,<span class="number">10</span>,<span class="number">11</span>,<span class="number">12</span>]])</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>7. 在计算机视觉中，图像一般是3维的，但是在进行模型训练的时候，往往需要将多张图像组成一个batch，构成4维数组，ndarray当然支持,使用concat：</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">x=nd.random.normal(shape=(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>))   -&gt;    x.shape (<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">y=nd.random.normal(shape=(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>))   -&gt;    y.shape (<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">z=nd.concat(x,y,dim=<span class="number">0</span>)              -&gt;    z.shape (<span class="number">4</span>,<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line"><span class="comment"># 因为concat是不改变维度的，那么如果构建一个batch呢？利用expand_dims函数</span></span><br><span class="line">x = nd.expand_dims(x, axis=<span class="number">0</span>)      -&gt;     x.shape (<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>) </span><br><span class="line">y = nd.expand_dims(y, axis=<span class="number">0</span>)      -&gt;     y.shape (<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">z=nd.concat(x,y,dim=<span class="number">0</span>)             -&gt;     z.shape (<span class="number">2</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+
+<p><strong>8. ndarray天然支持常用的数学计算，==这里方法较多，可以查阅文档，里面有例子，使用会比较方便==</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">S*Y</span><br><span class="line">S/Y</span><br><span class="line">S.exp()</span><br><span class="line">S == Y</span><br><span class="line">nd.dot(S,Y.T) <span class="comment">## 点乘比较常用，深度学习中矩阵计算就是使用的点乘，如果你从头编写神经网络，一定离不开点乘</span></span><br><span class="line">nd.floor(S) <span class="comment">## 向下取整</span></span><br><span class="line">nd.ceil(S) <span class="comment">## 向上取整</span></span><br><span class="line">nd.argmax() <span class="comment">## 返回最大值的index</span></span><br><span class="line">nd.topk() <span class="comment">## 返回topk</span></span><br></pre></td></tr></tbody></table></figure>
+
+
+<p><strong>9. ndarray与numpy的相互转换</strong>：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ndarray -&gt; numpy</span></span><br><span class="line"></span><br><span class="line">C = S.asnumpy()</span><br><span class="line"></span><br><span class="line"><span class="comment"># numpy -&gt; ndarray</span></span><br><span class="line"></span><br><span class="line">p = np.ones((<span class="number">2</span>,<span class="number">3</span>))</span><br><span class="line">d = nd.array(p)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 同样的，我们也可以直接返回一个标量</span></span><br><span class="line">x = nd.ones((<span class="number">1</span>,), dtype=<span class="string">'int32'</span>)</span><br><span class="line">y = x.asscalar() <span class="comment">## 这里注意，必须是1维的才可以使用，二维会报错。</span></span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+
+<p><strong>10. 前面我们说了，NDArray可以自动计算梯度，那么如何使用呢？</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 引用包   ：<span class="keyword">from</span> mxnet <span class="keyword">import</span> autograd</span><br><span class="line"><span class="number">2.</span> 定义变量 : x = nd.arange(<span class="number">4</span>).reshape((<span class="number">4</span>,<span class="number">1</span>))</span><br><span class="line"><span class="number">3.</span> 关联梯度，默认变量是不为梯度在内存开空间的，如果想要计算梯度，需要进行梯度关联，这样程序才会在内存上为变量开梯度的空间，如下：</span><br><span class="line">x.attach_grad()</span><br><span class="line"></span><br><span class="line"><span class="number">4.</span> 计算的时候，使用autograd.record()记录梯度，如下是点乘的计算。</span><br><span class="line"><span class="keyword">with</span> autograd.record():</span><br><span class="line">    y = <span class="number">2</span> * nd.dot(x.T,x)</span><br><span class="line"><span class="number">5.</span> 使用backward()计算梯度： y.backward()</span><br><span class="line"></span><br><span class="line">总结到一起就是如下：</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> mxnet <span class="keyword">import</span> autograd</span><br><span class="line">x = nd.arange(<span class="number">4</span>).reshape((<span class="number">4</span>,<span class="number">1</span>))</span><br><span class="line">x.attach_grad()</span><br><span class="line"><span class="keyword">with</span> autograd.record():</span><br><span class="line">    y = <span class="number">2</span> * nd.dot(x.T,x)</span><br><span class="line">y.backward()</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+<p><strong>11. 关于CPU与GPU的切换</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x = nd.random.normal(shape=(<span class="number">3</span>,<span class="number">4</span>))  <span class="comment">## 默认在CPU内存中</span></span><br><span class="line">y = nd.random.normal(shape=(<span class="number">3</span>,<span class="number">4</span>), ctx=mx.gpu(<span class="number">0</span>)) <span class="comment">## 利用ctx指定对应的GPU</span></span><br><span class="line">x = x.as_in_context(mx.gpu(<span class="number">0</span>)) <span class="comment">## 利用as_in_context进行CPU到GPU的切换</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>12. 复制也是常用的操作，利用copy（）可以避免浅拷贝的尴尬</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x = nd.array([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br><span class="line">y = x.copy()</span><br><span class="line"><span class="comment">## 为什么要使用copy()呢?因为在python中，默认的copy是浅拷贝，如果直接y=x,当x改变的时候，y会跟着改变，这就会出现错误。</span></span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<p><strong>特别说明：之上只是NDArray的一些基本操作，<br>获取更多的操作还请查找MXNet文档<a target="_blank" rel="noopener" href="https://mxnet.incubator.apache.org/">https://mxnet.incubator.apache.org/</a></strong></p>
+<h4 id="Symbol介绍篇"><a href="#Symbol介绍篇" class="headerlink" title="Symbol介绍篇"></a>Symbol介绍篇</h4><p>Symbol的基本函数</p>
+<ul>
+<li>Symbol.infer_type</li>
+<li>Symbol.infer_shape</li>
+<li>Symbol.list_arguments</li>
+<li>Symbol.list_outputs</li>
+<li>Symbol.list_auxiliary_states</li>
+</ul>
+<p>args = 输入数据symbol + 权值参数symbol</p>
+<p>aux = 辅助symbol，比如bn中的mean以及var</p>
+<p>举个例子：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data = mx.sym.var(<span class="string">'data'</span>)</span><br><span class="line">fc = mx.sym.FullyConnected(data=data, num_hidden=<span class="number">12</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'name:'</span>, fc.list_arguments(), fc.list_outputs(), fc.list_auxiliary_statues())</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'type:'</span>, fc.infer_type(data=(np.float32,np.float32)))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'shape：'</span>， fc.infer_shape(data=(<span class="number">1</span>,<span class="number">2</span>)）)</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">data= mx.sym.var(<span class="string">'data'</span>, shape=(<span class="number">1</span>,<span class="number">2</span>))</span><br><span class="line">weight= mx.sym.var(<span class="string">'data'</span>, shape=(<span class="number">1</span>,<span class="number">2</span>))</span><br><span class="line">bias= mx.sym.var(<span class="string">'data'</span>, shape=(<span class="number">1</span>,<span class="number">2</span>))</span><br><span class="line">fc = mx.sym.FullyConnected(data=data, weight=weight, bias=bias, num_hidden=<span class="number">12</span>)</span><br><span class="line">executor = fc.bind(ctx=mx.cpu(), args={<span class="string">'data'</span>:mx.nd.ones([<span class="number">1</span>,<span class="number">2</span>]),<span class="string">'weight'</span>:mx.nd.normal(shape=(<span class="number">12</span>,<span class="number">2</span>),<span class="string">'bias'</span>:mx.nd.random.normal(shape=(<span class="number">12</span>,)))})</span><br><span class="line">executor.forward()</span><br><span class="line"><span class="built_in">print</span>(executor.outputs[<span class="number">0</span>].asnumpy())</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">data = mx.sym.var(<span class="string">'data'</span>)</span><br><span class="line">fc = mx.sym.FullyConnected(data=data, num_hidden=<span class="number">12</span>)</span><br><span class="line">fc2 = mx.sym.FullyConnected(data=fc, num_hidden=<span class="number">12</span>)</span><br><span class="line"><span class="built_in">print</span>(fc2.get_internals().list_outputs())  <span class="comment">## 可以轻松获得任何一个节点</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="Module介绍篇"><a href="#Module介绍篇" class="headerlink" title="Module介绍篇"></a>Module介绍篇</h4><ul>
+<li>Module是MXNet中集成的接口，将几乎所有的模块封装成一个可以一步完成的训练和测试接口。</li>
+<li>所有的Module均继承了BaseModule</li>
+</ul>
+<h4 id="Metric-介绍篇"><a href="#Metric-介绍篇" class="headerlink" title="Metric 介绍篇"></a>Metric 介绍篇</h4><ul>
+<li>Metric是衡量模型效果的接口，如下是官方的计算Accuracy的例子</li>
+</ul>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Accuracy</span>(<span class="title class_ inherited__">EvalMetric</span>):</span><br><span class="line">    <span class="string">"""Computes accuracy classification score.</span></span><br><span class="line"><span class="string">    Examples</span></span><br><span class="line"><span class="string">    --------</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; predicts = [mx.nd.array([[0.3, 0.7], [0, 1.], [0.4, 0.6]])]</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; labels   = [mx.nd.array([0, 1, 1])]</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; acc = mx.metric.Accuracy()</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; acc.update(preds = predicts, labels = labels)</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; print acc.get()</span></span><br><span class="line"><span class="string">    ('accuracy', 0.6666666666666666)</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, axis=<span class="number">1</span>, name=<span class="string">'accuracy'</span>,</span></span><br><span class="line"><span class="params">                 output_names=<span class="literal">None</span>, label_names=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="built_in">super</span>(Accuracy, self).__init__(</span><br><span class="line">            name, axis=axis,</span><br><span class="line">            output_names=output_names, label_names=label_names,</span><br><span class="line">            has_global_stats=<span class="literal">True</span>)</span><br><span class="line">        self.axis = axis</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">update</span>(<span class="params">self, labels, preds</span>):</span><br><span class="line">        <span class="string">"""Updates the internal evaluation result.</span></span><br><span class="line"><span class="string">        Parameters</span></span><br><span class="line"><span class="string">        ----------</span></span><br><span class="line"><span class="string">        labels : list of `NDArray`</span></span><br><span class="line"><span class="string">            The labels of the data with class indices as values, one per sample.</span></span><br><span class="line"><span class="string">        preds : list of `NDArray`</span></span><br><span class="line"><span class="string">            Prediction values for samples. Each prediction value can either be the class index,</span></span><br><span class="line"><span class="string">            or a vector of likelihoods for all classes.</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        labels, preds = check_label_shapes(labels, preds, <span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> label, pred_label <span class="keyword">in</span> <span class="built_in">zip</span>(labels, preds):</span><br><span class="line">            <span class="keyword">if</span> pred_label.shape != label.shape:</span><br><span class="line">                pred_label = ndarray.argmax(pred_label, axis=self.axis)</span><br><span class="line">            pred_label = pred_label.asnumpy().astype(<span class="string">'int32'</span>)</span><br><span class="line">            label = label.asnumpy().astype(<span class="string">'int32'</span>)</span><br><span class="line">            <span class="comment"># flatten before checking shapes to avoid shape miss match</span></span><br><span class="line">            label = label.flat</span><br><span class="line">            pred_label = pred_label.flat</span><br><span class="line"></span><br><span class="line">            check_label_shapes(label, pred_label)</span><br><span class="line"></span><br><span class="line">            num_correct = (pred_label == label).<span class="built_in">sum</span>()</span><br><span class="line">            self.sum_metric += num_correct</span><br><span class="line">            self.global_sum_metric += num_correct</span><br><span class="line">            self.num_inst += <span class="built_in">len</span>(pred_label)</span><br><span class="line">            self.global_num_inst += <span class="built_in">len</span>(pred_label)</span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li><p>如何实现自己的metric函数</p>
+<blockquote>
+<ul>
+<li><p>需要继承EvalMetric，并重写update函数，注意传入参数的类型。</p>
+</li>
+<li><p>更新sum_metric和num_inst的值，mxnet会调用sum_metric/num_inst来计算当前metric输出值。</p>
+</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<h3 id="二、使用篇"><a href="#二、使用篇" class="headerlink" title="二、使用篇"></a>二、使用篇</h3><h4 id="mxnet生成lst以及rec文件（mxnet指定的训练数据格式）"><a href="#mxnet生成lst以及rec文件（mxnet指定的训练数据格式）" class="headerlink" title="mxnet生成lst以及rec文件（mxnet指定的训练数据格式）"></a>mxnet生成lst以及rec文件（mxnet指定的训练数据格式）</h4><p>生成lst的时候，第一个参数是目标存放地址，第二个参数是图像文件目录，利用如下命令会生成<strong>train.lst以及val.lst</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">python im2rec.py --<span class="built_in">list</span> --recursive --train-ratio <span class="number">0.95</span> /path/train  /path/train <span class="comment"># 前面的参数修改成 /path/lst/data 会生成 data_train.lst</span></span><br><span class="line">python im2rec.py --<span class="built_in">list</span> --recursive --train-ratio <span class="number">0.95</span> /path/val  /path/val</span><br><span class="line"></span><br><span class="line">python im2rec.py --force-resize <span class="number">400</span> --num-thread <span class="number">8</span> /path/train.lst /path/train</span><br><span class="line">python im2rec.py --force-resize <span class="number">400</span> --num-thread <span class="number">8</span> /path/val.lst /path/val</span><br><span class="line"></span><br><span class="line"><span class="comment">#multi-label</span></span><br><span class="line">python im2rec.py --pack-label --num-thread <span class="number">8</span> /path/train_lst.lst /path/train</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="mxnet训练demo"><a href="#mxnet训练demo" class="headerlink" title="mxnet训练demo"></a>mxnet训练demo</h4><h5 id="简单的利用fit直接训练"><a href="#简单的利用fit直接训练" class="headerlink" title="简单的利用fit直接训练"></a>简单的利用fit直接训练</h5><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> mxnet <span class="keyword">as</span> mx</span><br><span class="line">mnist = mx.test_utils.get_mnist()</span><br><span class="line"></span><br><span class="line">batch_size = <span class="number">100</span></span><br><span class="line">train_iter = mx.io.NDArrayIter(mnist[<span class="string">'train_data'</span>], mnist[<span class="string">'train_label'</span>], batch_size, shuffle=<span class="literal">True</span>)</span><br><span class="line">val_iter = mx.io.NDArrayIter(mnist[<span class="string">'test_data'</span>], mnist[<span class="string">'test_label'</span>], batch_size)</span><br><span class="line"></span><br><span class="line">data = mx.sym.var(<span class="string">'data'</span>)</span><br><span class="line"><span class="comment"># Flatten the data from 4-D shape into 2-D (batch_size, num_channel*width*height)</span></span><br><span class="line">data = mx.sym.flatten(data=data) <span class="comment">#需要展开，因为全连接</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The first fully-connected layer and the corresponding activation function</span></span><br><span class="line">fc1  = mx.sym.FullyConnected(data=data, num_hidden=<span class="number">128</span>)</span><br><span class="line">act1 = mx.sym.Activation(data=fc1, act_type=<span class="string">"relu"</span>)</span><br><span class="line">fc2  = mx.sym.FullyConnected(data=act1, num_hidden = <span class="number">64</span>)</span><br><span class="line">act2 = mx.sym.Activation(data=fc2, act_type=<span class="string">"relu"</span>)</span><br><span class="line">fc3  = mx.sym.FullyConnected(data=act2, num_hidden=<span class="number">10</span>)</span><br><span class="line"><span class="comment"># Softmax with cross entropy loss</span></span><br><span class="line">mlp  = mx.sym.SoftmaxOutput(data=fc3, name=<span class="string">'softmax'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># create a trainable module on CPU</span></span><br><span class="line">mlp_model = mx.mod.Module(symbol=mlp, context=mx.cpu())</span><br><span class="line">mlp_model.fit(train_iter,  <span class="comment"># train data</span></span><br><span class="line">              eval_data=val_iter,  <span class="comment"># validation data</span></span><br><span class="line">              optimizer=<span class="string">'sgd'</span>,  <span class="comment"># use SGD to train</span></span><br><span class="line">              optimizer_params={<span class="string">'learning_rate'</span>:<span class="number">0.1</span>},  <span class="comment"># fixed learning rate</span></span><br><span class="line">              eval_metric=<span class="string">'acc'</span>,  <span class="comment"># report accuracy during training</span></span><br><span class="line">              batch_end_callback = mx.callback.Speedometer(batch_size, <span class="number">100</span>), <span class="comment"># output progress for each 100 data batches</span></span><br><span class="line">              num_epoch=<span class="number">10</span>)  <span class="comment"># train for at most 10 dataset passes</span></span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+<h5 id="mxnet的训练过程，step-by-step"><a href="#mxnet的训练过程，step-by-step" class="headerlink" title="mxnet的训练过程，step by step"></a>mxnet的训练过程，step by step</h5><blockquote>
+<p>训练模型主要包括下面几个step:</p>
+<ul>
+<li>bind : prepares environment for the computation by allocating memory</li>
+<li>init_params : assigns and initializes parameters</li>
+<li>init_optimizer : initializes optimizers defaults to sgd</li>
+<li>metric.create : creates evaluation metric from input metric name</li>
+<li>forward : forward computation </li>
+<li>update_metric : evaluates and accumulates evaluation metric on outputs of the last forward computation </li>
+<li>backward: backwoard computation</li>
+<li>update: upadates parameters according to the installed optimizer and the gradients computed in the previous forward-backward batch</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line">logging.getLogger().setLevel(logging.INFO)</span><br><span class="line"><span class="keyword">import</span> mxnet <span class="keyword">as</span> mx</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">fname = mx.test_utils.download(<span class="string">'http://archive.ics.uci.edu/ml/machine-learning-databases/letter-recognition/letter-recognition.data'</span>)</span><br><span class="line">data = np.genfromtxt(fname, delimiter=<span class="string">','</span>)[:,<span class="number">1</span>:]</span><br><span class="line">label = np.array([<span class="built_in">ord</span>(l.split(<span class="string">','</span>)[<span class="number">0</span>])-<span class="built_in">ord</span>(<span class="string">'A'</span>) <span class="keyword">for</span> l <span class="keyword">in</span> <span class="built_in">open</span>(fname, <span class="string">'r'</span>)])</span><br><span class="line"></span><br><span class="line">batch_size = <span class="number">32</span></span><br><span class="line">ntrain = <span class="built_in">int</span>(data.shape[<span class="number">0</span>]*<span class="number">0.8</span>)</span><br><span class="line">train_iter = mx.io.NDArrayIter(data[:ntrain, :], label[:ntrain], batch_size, shuffle=<span class="literal">True</span>)</span><br><span class="line">val_iter = mx.io.NDArrayIter(data[ntrain:, :], label[ntrain:], batch_size)</span><br><span class="line"></span><br><span class="line"><span class="comment">###搭建网络</span></span><br><span class="line">net = mx.sym.Variable(<span class="string">'data'</span>)</span><br><span class="line">net = mx.sym.FullyConnected(net, name=<span class="string">'fc1'</span>, num_hidden=<span class="number">64</span>)</span><br><span class="line">net = mx.sym.Activation(net, name=<span class="string">'relu1'</span>, act_type=<span class="string">"relu"</span>)</span><br><span class="line">net = mx.sym.FullyConnected(net, name=<span class="string">'fc2'</span>, num_hidden=<span class="number">26</span>)</span><br><span class="line">net = mx.sym.SoftmaxOutput(net, name=<span class="string">'softmax'</span>)</span><br><span class="line">mx.viz.plot_network(net)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">mod = mx.mod.Module(symbol=net,</span><br><span class="line">                    context=mx.cpu(),</span><br><span class="line">                    data_names=[<span class="string">'data'</span>],</span><br><span class="line">                    label_names=[<span class="string">'softmax_label'</span>])</span><br><span class="line">                    </span><br><span class="line"></span><br><span class="line"><span class="comment"># allocate memory given the input data and label shapes</span></span><br><span class="line">mod.bind(data_shapes=train_iter.provide_data,label_shapes=train_iter.provide_label)</span><br><span class="line"><span class="comment"># initialize parameters by uniform random numbers</span></span><br><span class="line">mod.init_params(initializer=mx.init.Uniform(scale=<span class="number">.1</span>))</span><br><span class="line"><span class="comment"># use SGD with learning rate 0.1 to train</span></span><br><span class="line">mod.init_optimizer(optimizer=<span class="string">'sgd'</span>, optimizer_params=((<span class="string">'learning_rate'</span>, <span class="number">0.1</span>), ))</span><br><span class="line"><span class="comment"># use accuracy as the metric</span></span><br><span class="line">metric = mx.metric.create(<span class="string">'acc'</span>)</span><br><span class="line"><span class="comment"># train 5 epochs, i.e. going over the data iter one pass</span></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">    train_iter.reset()</span><br><span class="line">    metric.reset()</span><br><span class="line">    <span class="keyword">for</span> batch <span class="keyword">in</span> train_iter:</span><br><span class="line">        mod.forward(batch, is_train=<span class="literal">True</span>)       <span class="comment"># compute predictions</span></span><br><span class="line">        mod.update_metric(metric, batch.label)  <span class="comment"># accumulate prediction accuracy</span></span><br><span class="line">        mod.backward()                          <span class="comment"># compute gradients</span></span><br><span class="line">        mod.update()                            <span class="comment"># update parameters</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'Epoch %d, Training %s'</span> % (epoch, metric.get()))</span><br><span class="line">    </span><br></pre></td></tr></tbody></table></figure>
+
+
+<h4 id="mxnet进行finetune代码示例"><a href="#mxnet进行finetune代码示例" class="headerlink" title="mxnet进行finetune代码示例"></a>mxnet进行finetune代码示例</h4><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">import</span> mxnet <span class="keyword">as</span> mx</span><br><span class="line"><span class="keyword">from</span> mxnet <span class="keyword">import</span> nd</span><br><span class="line"><span class="keyword">import</span> os, sys</span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> CosineScheduler <span class="keyword">import</span> CosineScheduler</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_fine_tune_model</span>(<span class="params">sym, num_classes, layer_name, fixed_layer_name</span>):</span><br><span class="line"></span><br><span class="line">    all_layers = sym.get_internals()</span><br><span class="line">    net = all_layers[layer_name + <span class="string">'_output'</span>]</span><br><span class="line">    net = mx.symbol.FullyConnected(data=net, num_hidden=num_classes, name=<span class="string">'fc'</span>)</span><br><span class="line">    net = mx.symbol.SoftmaxOutput(data=net, name=<span class="string">'softmax'</span>)</span><br><span class="line">    <span class="keyword">return</span> net</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">multi_factor_scheduler</span>(<span class="params">args, epoch_size</span>):</span><br><span class="line">    step = <span class="built_in">range</span>(args.step, args.num_epoch, args.step)</span><br><span class="line">    step_ = [epoch_size * (x - args.begin_epoch) <span class="keyword">for</span> x <span class="keyword">in</span> step <span class="keyword">if</span> x - args.begin_epoch &gt; <span class="number">0</span>]</span><br><span class="line">    <span class="keyword">return</span> mx.lr_scheduler.MultiFactorScheduler(step=step_, factor=args.factor) <span class="keyword">if</span> <span class="built_in">len</span>(step_) <span class="keyword">else</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cos_scheduler</span>(<span class="params">args, epoch_size</span>):</span><br><span class="line">    epoch_steps =  epoch_size</span><br><span class="line">    total_steps = args.num_epoch * epoch_steps</span><br><span class="line">    <span class="keyword">return</span> CosineScheduler(total_steps,epoch_steps,base_lr=args.lr, final_lr = args.lr * <span class="number">1e-3</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">data_loader</span>(<span class="params">args</span>):</span><br><span class="line">    data_shape_list = [<span class="built_in">int</span>(item) <span class="keyword">for</span> item <span class="keyword">in</span> args.image_shape.split(<span class="string">","</span>)]</span><br><span class="line">    data_shape = <span class="built_in">tuple</span>(data_shape_list)</span><br><span class="line"></span><br><span class="line">    train = mx.io.ImageRecordIter(</span><br><span class="line">        path_imgrec=args.data_train,</span><br><span class="line">        label_width=<span class="number">1</span>,</span><br><span class="line">        mean_r=<span class="number">123.68</span>,</span><br><span class="line">        mean_g=<span class="number">116.779</span>,</span><br><span class="line">        mean_b=<span class="number">103.939</span>,</span><br><span class="line">        std_r=<span class="number">58.393</span>,</span><br><span class="line">        std_g=<span class="number">57.12</span>,</span><br><span class="line">        std_b=<span class="number">57.375</span>,</span><br><span class="line">        data_name=<span class="string">'data'</span>,</span><br><span class="line">        label_name=<span class="string">'softmax_label'</span>,</span><br><span class="line">        data_shape=data_shape,</span><br><span class="line">        batch_size=args.batch_size,</span><br><span class="line">        rand_crop=args.random_crop,</span><br><span class="line">        rand_mirror=args.random_mirror,</span><br><span class="line">        <span class="comment"># max_aspect_ratio=args.max_aspect_ratio,</span></span><br><span class="line">        max_random_contrast=args.max_random_contrast,</span><br><span class="line">        max_random_illumination=args.max_random_illumination,</span><br><span class="line">        max_rotate_angle=args.max_rotate_angle,</span><br><span class="line">        shuffle=<span class="literal">True</span>,</span><br><span class="line">        num_parts=kv.num_workers,</span><br><span class="line">        resize=args.resize_train,</span><br><span class="line">        part_index=kv.rank)</span><br><span class="line"></span><br><span class="line">    val = mx.io.ImageRecordIter(</span><br><span class="line">        path_imgrec=args.data_val,</span><br><span class="line">        label_width=<span class="number">1</span>,</span><br><span class="line">        mean_r=<span class="number">123.68</span>,</span><br><span class="line">        mean_g=<span class="number">116.779</span>,</span><br><span class="line">        mean_b=<span class="number">103.939</span>,</span><br><span class="line">        std_r=<span class="number">58.393</span>,</span><br><span class="line">        std_g=<span class="number">57.12</span>,</span><br><span class="line">        std_b=<span class="number">57.375</span>,</span><br><span class="line">        data_name=<span class="string">'data'</span>,</span><br><span class="line">        label_name=<span class="string">'softmax_label'</span>,</span><br><span class="line">        data_shape=data_shape,</span><br><span class="line">        batch_size=args.batch_size,</span><br><span class="line">        rand_crop=<span class="number">0</span>,</span><br><span class="line">        rand_mirror=<span class="number">0</span>,</span><br><span class="line">        shuffle=<span class="literal">False</span>,</span><br><span class="line">        num_parts=kv.num_workers,</span><br><span class="line">        resize=args.resize_val,</span><br><span class="line">        part_index=kv.rank)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> train,val</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">train_model</span>(<span class="params">args, kv=<span class="string">'device'</span></span>):</span><br><span class="line">    train, val = data_loader(args)</span><br><span class="line"></span><br><span class="line">    prefix = args.model</span><br><span class="line">    sym, arg_params, aux_params = mx.model.load_checkpoint(prefix, args.begin_epoch)</span><br><span class="line">    sym = get_symbol(num_classes=args.num_classes, num_layers=<span class="number">50</span>, image_shape=<span class="string">'3,224,224'</span>, fixed_stage= args.fixed_stage)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    new_sym, fix_names = get_fine_tune_model(</span><br><span class="line">        sym, args.num_classes, args.layer_name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    epoch_size = <span class="built_in">max</span>(<span class="built_in">int</span>(args.num_examples / args.batch_size / kv.num_workers), <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">if</span> args.cosine == <span class="literal">True</span>:</span><br><span class="line">        lr_scheduler = cos_scheduler(args, epoch_size)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        lr_scheduler = multi_factor_scheduler(args, epoch_size)</span><br><span class="line"></span><br><span class="line">    optimizer_params = {</span><br><span class="line">        <span class="string">'learning_rate'</span>: args.lr,</span><br><span class="line">        <span class="string">'momentum'</span>: args.mom,</span><br><span class="line">        <span class="string">'wd'</span>: args.wd,</span><br><span class="line">        <span class="string">'lr_scheduler'</span>: lr_scheduler}</span><br><span class="line">    initializer = mx.init.Xavier(</span><br><span class="line">        rnd_type=<span class="string">'gaussian'</span>, factor_type=<span class="string">"in"</span>, magnitude=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> args.gpus == <span class="string">''</span>:</span><br><span class="line">        devs = mx.cpu()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        devs = [mx.gpu(<span class="built_in">int</span>(i)) <span class="keyword">for</span> i <span class="keyword">in</span> args.gpus.split(<span class="string">','</span>)]</span><br><span class="line"></span><br><span class="line">    model = mx.mod.Module(</span><br><span class="line">        context=devs,</span><br><span class="line">        symbol=new_sym,</span><br><span class="line">        label_names=[<span class="string">"softmax_label"</span>],</span><br><span class="line">        fixed_param_names = fix_names</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    checkpoint = mx.callback.do_checkpoint(args.save_result + args.save_name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    eval_metric = mx.metric.CompositeEvalMetric()</span><br><span class="line">    eval_metric.add(CrossEntropy())</span><br><span class="line">    eval_metric.add(Accuracy())</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">	model.fit(train_data=train,</span><br><span class="line">			  eval_data=val,</span><br><span class="line">			  begin_epoch=args.begin_epoch,</span><br><span class="line">			  num_epoch=args.num_epoch,</span><br><span class="line">			  eval_metric=eval_metric,</span><br><span class="line">			  validation_metric=eval_metric,</span><br><span class="line">			  kvstore=kv,</span><br><span class="line">			  optimizer=<span class="string">'sgd'</span>,</span><br><span class="line">			  optimizer_params=optimizer_params,</span><br><span class="line">			  arg_params=arg_params,</span><br><span class="line">			  aux_params=aux_params,</span><br><span class="line">			  initializer=initializer,</span><br><span class="line">			  allow_missing=<span class="literal">True</span>,  <span class="comment"># for new fc layer</span></span><br><span class="line">			  batch_end_callback=mx.callback.Speedometer(args.batch_size, <span class="number">20</span>),</span><br><span class="line">			  epoch_end_callback=checkpoint)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">'score a model on a dataset'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--model'</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, default=<span class="string">'./pretrain_models/resnet50v1d-pretrained'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--gpus'</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, default=<span class="string">'0'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--batch-size'</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=<span class="number">64</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--begin-epoch'</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=<span class="number">0</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--image-shape'</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, default=<span class="string">'3,224,224'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--resize-train'</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=<span class="number">256</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--resize-val'</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=<span class="number">224</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--data-train'</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, default=<span class="string">'/app/data/train_filter_modify.rec'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--data-val'</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, default=<span class="string">'/app/data/test_filter_modify.rec'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--num-classes'</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=<span class="number">3</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--lr'</span>, <span class="built_in">type</span>=<span class="built_in">float</span>, default=<span class="number">0.005</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--num-epoch'</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=<span class="number">25</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--kv-store'</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, default=<span class="string">'device'</span>, <span class="built_in">help</span>=<span class="string">'the kvstore type'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--save-result'</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">'the save path'</span>, default=<span class="string">'/app/output/resnext-50-test'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--num-examples'</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=<span class="number">20000</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--mom'</span>, <span class="built_in">type</span>=<span class="built_in">float</span>, default=<span class="number">0.9</span>, <span class="built_in">help</span>=<span class="string">'momentum for sgd'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--wd'</span>, <span class="built_in">type</span>=<span class="built_in">float</span>, default=<span class="number">0.0001</span>, <span class="built_in">help</span>=<span class="string">'weight decay for sgd'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--save-name'</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">'the save name of model'</span>, default=<span class="string">'resnext-50'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--random-crop'</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=<span class="number">0</span>, <span class="built_in">help</span>=<span class="string">'if or not randomly crop the image'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--random-mirror'</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=<span class="number">1</span>, <span class="built_in">help</span>=<span class="string">'if or not randomly flip horizontally'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--max-aspect-ratio'</span>, <span class="built_in">type</span>=<span class="built_in">float</span>, default=<span class="number">0.3</span>, <span class="built_in">help</span>=<span class="string">'width/height'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--max_random_contrast'</span>, <span class="built_in">type</span>=<span class="built_in">float</span>, default=<span class="number">0.3</span>, <span class="built_in">help</span>=<span class="string">'Chanege the contrast with a value randomly chosen from [-max, max]'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--max_random_illumination'</span>, <span class="built_in">type</span>=<span class="built_in">float</span>, default=<span class="number">30</span>, <span class="built_in">help</span>=<span class="string">'Chanege the illumination with a value randomly chosen from [-max, max]'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--max_rotate_angle'</span>, <span class="built_in">type</span>=<span class="built_in">float</span>, default=<span class="number">15</span>, <span class="built_in">help</span>=<span class="string">'Rotate by a random degree in [-v,v]'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--layer-name'</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, default=<span class="string">'flatten0'</span>, <span class="built_in">help</span>=<span class="string">'the layer name before fullyconnected layer'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--factor'</span>, <span class="built_in">type</span>=<span class="built_in">float</span>, default=<span class="number">0.2</span>, <span class="built_in">help</span>=<span class="string">'factor for learning rate decay'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--step'</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=<span class="number">5</span>, <span class="built_in">help</span>=<span class="string">'step for learning rate decay'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--cosine'</span>, <span class="built_in">type</span>=<span class="built_in">bool</span>, default=<span class="literal">False</span>, <span class="built_in">help</span>=<span class="string">'cosine for learning rate decay'</span>)</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line"></span><br><span class="line">    kv = mx.kvstore.create(args.kv_store)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(args.save_result):</span><br><span class="line">        os.makedirs(args.save_result)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># create a logger and set the level</span></span><br><span class="line">    logger = logging.getLogger()</span><br><span class="line">    logger.setLevel(logging.INFO)</span><br><span class="line"></span><br><span class="line">    formatter = logging.Formatter(<span class="string">'%(asctime)s - %(message)s'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># this handler is used to record information in train.log</span></span><br><span class="line">    hdlr = logging.FileHandler(args.save_result + <span class="string">'/train.log'</span>)</span><br><span class="line">    hdlr.setFormatter(formatter)</span><br><span class="line">    logger.addHandler(hdlr)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># this handler is used to print information in terminal</span></span><br><span class="line">    console = logging.StreamHandler()</span><br><span class="line">    console.setFormatter(formatter)</span><br><span class="line">    logger.addHandler(console)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># record the information of args</span></span><br><span class="line">    logging.info(args)</span><br><span class="line"></span><br><span class="line">    train_model(args=args, kv=kv)</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="finetune的时候，如何调整新加层的学习率"><a href="#finetune的时候，如何调整新加层的学习率" class="headerlink" title="finetune的时候，如何调整新加层的学习率"></a>finetune的时候，如何调整新加层的学习率</h4><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">weight = mx.sym.var(<span class="string">'weight'</span>, lr_mult=<span class="number">5</span>)</span><br><span class="line">add_conv_1 = mx.sym.Convolution(data=data, weight=weight, num_filter=<span class="number">1024</span>, kernel=(<span class="number">1</span>,<span class="number">1</span>), name=<span class="string">'add_conv_1'</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+
+<h4 id="mxnet进行inference代码示例"><a href="#mxnet进行inference代码示例" class="headerlink" title="mxnet进行inference代码示例"></a>mxnet进行inference代码示例</h4><p><strong>这里是我自己的代码，可能不适用所有情况，需要按需修改</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> mxnet <span class="keyword">as</span> mx</span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> shutil</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">data_transpose</span>(<span class="params">data, augments</span>):</span><br><span class="line">    <span class="keyword">for</span> aug <span class="keyword">in</span> augments:</span><br><span class="line">	data = aug(data)</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">img_read_aug</span>(<span class="params">path</span>):</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        img = cv2.imread(path)</span><br><span class="line">        <span class="keyword">if</span> img <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        img = mx.image.imread(path)</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="built_in">print</span>(path)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    cla_cast_aug = mx.image.CastAug()</span><br><span class="line">    cla_resize_aug = mx.image.ForceResizeAug(size=[<span class="number">224</span>, <span class="number">224</span>])</span><br><span class="line"></span><br><span class="line">    color_norm_aug = mx.image.ColorNormalizeAug(mx.nd.array([<span class="number">123.68</span>, <span class="number">116.779</span>, <span class="number">103.939</span>]), mx.nd.array([<span class="number">58.393</span>, <span class="number">57.12</span>, <span class="number">57.375</span>]))</span><br><span class="line"></span><br><span class="line">    cla_augmenters = [cla_cast_aug, cla_resize_aug, color_norm_aug]</span><br><span class="line"></span><br><span class="line">    img = data_transpose(img, cla_augmenters)</span><br><span class="line">    img = mx.nd.transpose(img, axes=(<span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>))</span><br><span class="line">    img = mx.nd.expand_dims(img,axis=<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> img</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">img,mod</span>):</span><br><span class="line"></span><br><span class="line">    data_batch = mx.io.DataBatch([img])</span><br><span class="line">    mod.forward(data_batch)</span><br><span class="line">    prob = mod.get_outputs()[<span class="number">0</span>].asnumpy()</span><br><span class="line">    <span class="keyword">return</span> prob</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">inference</span>(<span class="params">model, base_path, count, recursion, base_result_path,result_anay,class_dict,outfile</span>):</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'process:{}'</span>.<span class="built_in">format</span>(base_path))</span><br><span class="line"></span><br><span class="line">    files = os.listdir(base_path)</span><br><span class="line">    <span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">        <span class="keyword">if</span> os.path.isdir(os.path.join(base_path, file)):</span><br><span class="line"></span><br><span class="line">            <span class="comment">### recursion</span></span><br><span class="line">            inference(model, os.path.join(base_path,file), count,recursion + <span class="number">1</span>, os.path.join(base_result_path,file), result_anay,class_dict,outfile)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            img_path = os.path.join(base_path, file)</span><br><span class="line">            img = img_read_aug(img_path)</span><br><span class="line">            <span class="keyword">if</span> img <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                cla = predict(img, model)</span><br><span class="line">            <span class="keyword">except</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">'predict error'</span>)</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="built_in">max</span> = np.argmax(cla[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">            result_name = <span class="string">'cla'</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(args.num_classes):</span><br><span class="line">                result_name += <span class="string">'-{}-{:.4f}'</span>.<span class="built_in">format</span>(class_dict[i],cla[<span class="number">0</span>][i])</span><br><span class="line"></span><br><span class="line">            result_name +=  (<span class="string">'-'</span> + file)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> recursion == <span class="number">0</span>:</span><br><span class="line">                result_path = os.path.join(base_result_path,<span class="string">'-'</span> + class_dict[<span class="built_in">max</span>])</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                fold_name = base_result_path.split(<span class="string">'/'</span>)[-<span class="number">1</span>]</span><br><span class="line">                result_path = os.path.join(base_result_path, fold_name + <span class="string">'-'</span> + class_dict[<span class="built_in">max</span>])</span><br><span class="line"></span><br><span class="line">                <span class="comment">### result analysis</span></span><br><span class="line">                <span class="keyword">if</span> result_anay.has_key(fold_name + <span class="string">':'</span> + class_dict[<span class="built_in">max</span>]):</span><br><span class="line">                    result_anay[fold_name + <span class="string">':'</span> + class_dict[<span class="built_in">max</span>]] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    result_anay[fold_name + <span class="string">':'</span> + class_dict[<span class="built_in">max</span>]] = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> args.save_txt == <span class="number">1</span>:</span><br><span class="line">                outfile.writelines(result_path + <span class="string">'\t'</span> + result_name + <span class="string">'\n'</span>)</span><br><span class="line">            <span class="keyword">if</span> args.save_image == <span class="number">1</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">'save-image'</span> + <span class="built_in">str</span>(args.save_image))</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(result_path):</span><br><span class="line">                    os.makedirs(result_path)</span><br><span class="line">                shutil.copyfile(img_path, os.path.join(result_path, result_name))</span><br><span class="line">            count += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> count % <span class="number">100</span> == <span class="number">0</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">'--{}--'</span>.<span class="built_in">format</span>(count))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>(<span class="params">args</span>):</span><br><span class="line"></span><br><span class="line">    sym, arg_params, aux_params = mx.model.load_checkpoint(args.model_path, args.model_index)</span><br><span class="line">    model = mx.mod.Module(symbol=sym, context=mx.gpu(args.gpu))</span><br><span class="line">    model.bind(data_shapes=[(<span class="string">'data'</span>,(<span class="number">1</span>,<span class="number">3</span>,<span class="number">224</span>,<span class="number">224</span>))], for_training=<span class="literal">False</span>)</span><br><span class="line">    model.set_params(arg_params, aux_params)</span><br><span class="line"></span><br><span class="line">    base_path = args.test_images_path</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(base_path):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">'images file path error'</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    result_path = args.test_result_path</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(result_path):</span><br><span class="line">        os.makedirs(result_path)</span><br><span class="line"></span><br><span class="line">    outfile = <span class="built_in">open</span>(os.path.join(result_path,<span class="string">'infer_record.txt'</span>),<span class="string">'w'</span>)</span><br><span class="line"></span><br><span class="line">    count = <span class="number">0</span></span><br><span class="line">    recursion = <span class="number">0</span></span><br><span class="line">    result_anay = {}</span><br><span class="line">    class_dict = {i:item <span class="keyword">for</span> i,item <span class="keyword">in</span> <span class="built_in">enumerate</span>(args.class_label.strip().split(<span class="string">','</span>))}</span><br><span class="line"></span><br><span class="line">    inference(model, base_path, count, recursion, result_path,result_anay,class_dict,outfile)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(result_anay)</span><br><span class="line">    outfile.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">'score a model on a dataset'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--model-path'</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, default=<span class="string">''</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--model-index'</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=<span class="number">8</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--num-classes'</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=<span class="number">3</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--class-label'</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, default=<span class="string">'porno,sexy,normal'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--test-images-path'</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, default=<span class="string">'None'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--test-result-path'</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, default=<span class="string">'None'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--save-image'</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=<span class="number">0</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--save-txt'</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=<span class="number">1</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'--gpu'</span>, <span class="built_in">type</span>=<span class="built_in">int</span>, default=<span class="number">0</span>)</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    main(args)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>如下脚本运行上面代码</strong></p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">python ./src/inference.py \</span><br><span class="line">--gpu 1 \</span><br><span class="line">--model-path ./trainoutput/test-fixed-stage-2/porno-resnetv1d-50 \</span><br><span class="line">--model-index 16 \</span><br><span class="line">--num-classes 3 \</span><br><span class="line">--class-label porno,sexy,normal \</span><br><span class="line">--test-images-path /Data/download-data-normal   \</span><br><span class="line">--test-result-path /Data/download-data-normal-result \</span><br><span class="line">--save-image 0 \</span><br><span class="line">--save-txt 1 \</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="mxnet进行inference的时候多种方式读取图像（看你习惯哪一个）"><a href="#mxnet进行inference的时候多种方式读取图像（看你习惯哪一个）" class="headerlink" title="mxnet进行inference的时候多种方式读取图像（看你习惯哪一个）"></a>mxnet进行inference的时候多种方式读取图像（看你习惯哪一个）</h4><p>1、利用mxnet的imread()函数读取图像并进行数据扩增：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">#### data augment function</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">transform</span>(<span class="params">data,augmenters</span>):</span><br><span class="line">    <span class="keyword">for</span> aug <span class="keyword">in</span> augmenters:</span><br><span class="line">        data = aug(data)</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"><span class="comment">#### 常用操作</span></span><br><span class="line">cast_aug = mx.image.CastAug()</span><br><span class="line">resize_aug = mx.image.ForceResizeAug(size=[width,height])</span><br><span class="line">color_normal_aug = mx.image.ColorNormalizeAug(mx.nd.array([<span class="number">123</span>,<span class="number">117</span>,<span class="number">104</span>]),mx.nd.array([<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>]))</span><br><span class="line">argmenters = [cast_aug, resize_aug, color_normal_aug]</span><br><span class="line"></span><br><span class="line"><span class="comment">#### read image</span></span><br><span class="line">image = mx.image.imread(path)  <span class="comment">## 默认是RGB格式的，mxnet默认操作RGB格式数据</span></span><br><span class="line">image = transform(image,argmenters) <span class="comment">## mxnet默认的图像操作在channel_last进行</span></span><br><span class="line">image = mx.nd.transpose(image,axes=()==(<span class="number">2</span>,<span class="number">0</span>,<span class="number">1</span>))</span><br><span class="line">image = mx.nd.expand_dims(image,axis=<span class="number">0</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>2、另一种mxnet图像读取方式：利用数据流：</p>
+<p><strong>这时，data是ndarray格式的数据(imdecode进行图像解码)</strong></p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">image_string = open('file_path', 'rb').read()</span><br><span class="line">data = mx.image.imdecode(image_string, flag=1)</span><br><span class="line">data = mx.nd.transpose(data,axes=(2, 0, 1))</span><br><span class="line">data = mx.nd.expand_dims(data, axis=0)</span><br><span class="line">print('shape:{}'.format(data.shape))</span><br></pre></td></tr></tbody></table></figure>
+
+<p>3、采用opencv读取方式进行图像操作</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">readImage</span>(<span class="params">path</span>):</span><br><span class="line">    img = cv2.imread(path)</span><br><span class="line">    <span class="keyword">if</span> img <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">       <span class="built_in">print</span> <span class="string">'xxx'</span></span><br><span class="line">       <span class="keyword">return</span></span><br><span class="line">    img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)</span><br><span class="line">    img= np.transpose(img,(<span class="number">2</span>,<span class="number">0</span>,<span class="number">1</span>)) <span class="comment">## channel first</span></span><br><span class="line">    img = img[np.newaxis,:] <span class="comment">## add batch -&gt; 4 dims</span></span><br><span class="line">    <span class="keyword">return</span> img</span><br><span class="line">    </span><br></pre></td></tr></tbody></table></figure>
+<p>==<strong>mxnet对于读取的图像类型有局限性，非jpe或者jpeg图像容易出现错误</strong>==</p>
+<h3 id="三、使用升级篇"><a href="#三、使用升级篇" class="headerlink" title="三、使用升级篇"></a>三、使用升级篇</h3><h4 id="mxnet如何获取网络参数"><a href="#mxnet如何获取网络参数" class="headerlink" title="mxnet如何获取网络参数"></a>mxnet如何获取网络参数</h4><p><strong>mxnet可以通过model.get_params() 可以得到arg_params以及aux_params</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> mxnet <span class="keyword">as</span> mx</span><br><span class="line">sym, arg_params, aux_params = mx.model.load_checkpoint(<span class="string">'resnet-50'</span>,<span class="number">0</span>)<span class="comment">#载入模型</span></span><br><span class="line">mod = mx.mod.Module(symbol=sym,context=mx.gpu(<span class="number">0</span>)) <span class="comment">#创建Module</span></span><br><span class="line">mod.bind(for_training=<span class="literal">False</span>,data_shapes=[(<span class="string">'data'</span>,(<span class="number">1</span>,<span class="number">3</span>,<span class="number">224</span>,<span class="number">224</span>))]) </span><br><span class="line">mod.set_params(arg_params,aux_params)</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_image</span>(<span class="params">filename</span>):</span><br><span class="line">    img = cv2.imread(path)</span><br><span class="line">    <span class="keyword">if</span> img <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">       <span class="built_in">print</span> <span class="string">'xxx'</span></span><br><span class="line">       <span class="keyword">return</span></span><br><span class="line">    img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB) <span class="comment">## BGR - &gt; RGB</span></span><br><span class="line">    img= np.transpose(img,(<span class="number">2</span>,<span class="number">0</span>,<span class="number">1</span>)) <span class="comment">## channel first</span></span><br><span class="line">    img = img[np.newaxis,:] <span class="comment">## add batch -&gt; 4 dims</span></span><br><span class="line">    <span class="keyword">return</span> img</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</span><br><span class="line">Batch = namedtuple(<span class="string">'Batch'</span>,[<span class="string">'data'</span>])</span><br><span class="line">img = get_image(<span class="string">'val_1000/0.jpg'</span>) <span class="comment">#获取图片</span></span><br><span class="line">data_batch = Batch([mx.nd.array(img)]) </span><br><span class="line">mod.forward(data_batch) <span class="comment">#预测结果</span></span><br><span class="line"></span><br><span class="line"><span class="comment">################################################</span></span><br><span class="line"><span class="comment">#获取权重信息</span></span><br><span class="line">keys = mod.get_params()[<span class="number">0</span>].keys() <span class="comment"># 列出所有权重名称</span></span><br><span class="line">conv_w = mod.get_params()[<span class="number">0</span>][<span class="string">'conv0_weight'</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">## 方法二：直接从读取的arg_params读取，这个本身就是key，value结构。</span></span><br><span class="line">fc_weight = arg_params[<span class="string">'fc_weight'</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">#获取想要查看的权重信息,如conv_weight</span></span><br><span class="line"><span class="built_in">print</span> conv_w.asnumpy() <span class="comment">#查看具体数值</span></span><br><span class="line"><span class="comment">################################################</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#### 拿到输出结果</span></span><br><span class="line">prob = mod.get_outputs()[<span class="number">0</span>].asnumpy()</span><br><span class="line">y = np.argsort(np.squeeze(prob))[::-<span class="number">1</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'truth label %d; top-1 predict label %d'</span> % (val_label[<span class="number">0</span>], y[<span class="number">0</span>]))</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h4 id="mxnet如何获取中间层特征"><a href="#mxnet如何获取中间层特征" class="headerlink" title="mxnet如何获取中间层特征"></a>mxnet如何获取中间层特征</h4><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 这个主要是使用mx.symbol.Group([xxx,xxx])来多输出</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">### 方法一：定义模型的时候就把中间结果</span></span><br><span class="line"><span class="keyword">import</span> mxnet <span class="keyword">as</span> mx</span><br><span class="line">net = mx.symbol.Variable(<span class="string">'data'</span>)</span><br><span class="line">fc1 = mx.symbol.FullyConnected(data=net, name=<span class="string">'fc1'</span>, num_hidden=<span class="number">128</span>)</span><br><span class="line">net = mx.symbol.Activation(data=fc1, name=<span class="string">'relu1'</span>, act_type=<span class="string">"relu"</span>)</span><br><span class="line">net = mx.symbol.FullyConnected(data=net, name=<span class="string">'fc2'</span>, num_hidden=<span class="number">64</span>)</span><br><span class="line">out = mx.symbol.SoftmaxOutput(data=net, name=<span class="string">'softmax'</span>)</span><br><span class="line"><span class="comment"># 通过把两个输出组成一个group来得到自己需要查看的中间层输出结果</span></span><br><span class="line">group = mx.symbol.Group([fc1, out]) </span><br><span class="line"><span class="built_in">print</span> group.list_outputs()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">### 方法二，在现有模型中将中间层拿出来</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> mxnet <span class="keyword">as</span> mx</span><br><span class="line">sym, arg_params, aux_params = mx.model.load_checkpoint(<span class="string">'resnet-50'</span>,<span class="number">0</span>)<span class="comment">#载入模型</span></span><br><span class="line"></span><br><span class="line">args = sym.get_internals().list_outputs() <span class="comment">#获得所有中间输出</span></span><br><span class="line">internals = model.symbol.get_internals()</span><br><span class="line">fc1 = internals[<span class="string">'fc1_output'</span>]</span><br><span class="line">conv = internals[<span class="string">'stage4_unit3_conv1_output'</span>]</span><br><span class="line">group = mx.symbol.Group([fc1, sym, conv])  <span class="comment">#把需要输出的结果按group方式组合起来，这样就可以得到中间层的输出</span></span><br><span class="line"></span><br><span class="line">mod = mx.mod.Module(symbol=group,context=mx.gpu()) <span class="comment">#创建Module</span></span><br><span class="line">mod.bind(for_training=<span class="literal">False</span>,data_shapes=[(<span class="string">'data'</span>,(<span class="number">1</span>,<span class="number">3</span>,<span class="number">224</span>,<span class="number">224</span>))]) <span class="comment">#绑定，此代码为预测代码，所以training参数设为False</span></span><br><span class="line">mod.set_params(arg_params,aux_params)</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_image</span>(<span class="params">filename</span>):</span><br><span class="line">    img = cv2.imread(path)</span><br><span class="line">    <span class="keyword">if</span> img <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">       <span class="built_in">print</span> <span class="string">'xxx'</span></span><br><span class="line">       <span class="keyword">return</span></span><br><span class="line">    img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB) <span class="comment">## BGR - &gt; RGB</span></span><br><span class="line">    img= np.transpose(img,(<span class="number">2</span>,<span class="number">0</span>,<span class="number">1</span>)) <span class="comment">## channel first</span></span><br><span class="line">    img = img[np.newaxis,:] <span class="comment">## add batch -&gt; 4 dims</span></span><br><span class="line">    <span class="keyword">return</span> img</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</span><br><span class="line">Batch = namedtuple(<span class="string">'Batch'</span>,[<span class="string">'data'</span>])</span><br><span class="line">img = get_image(<span class="string">'val_1000/0.jpg'</span>) <span class="comment">#获取图片</span></span><br><span class="line">mod.forward(Batch([mx.nd.array(img)])) <span class="comment">#预测结果</span></span><br><span class="line">prob = mod.get_outputs()[<span class="number">0</span>].asnumpy()</span><br><span class="line">y = np.argsort(np.squeeze(prob))[::-<span class="number">1</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'truth label %d; top-1 predict label %d'</span> % (val_label[<span class="number">0</span>], y[<span class="number">0</span>]))</span><br></pre></td></tr></tbody></table></figure>
+
+
+<h3 id="Gluon篇"><a href="#Gluon篇" class="headerlink" title="Gluon篇"></a>Gluon篇</h3><h4 id="gluon调用MXNet模型（params-json）进行训练"><a href="#gluon调用MXNet模型（params-json）进行训练" class="headerlink" title="gluon调用MXNet模型（params+json）进行训练"></a>gluon调用MXNet模型（params+json）进行训练</h4><p>参考链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_20622615/article/details/89924387">https://blog.csdn.net/qq_20622615/article/details/89924387</a></p>
+<p>使用symbol得到的模型或者gluon的hybridize之后的模型包括一个.json文件（网络结构）和.params文件（参数），gluon可以使用net = gluon.SymbolBlock.imports(json, [‘data’], params, ctx)导入网络和参数，这样可以进行测试或者进一步训练。</p>
+<p>但是如果只需要使用模型的其中一部分，比如只需要conv层，去掉所有fc层，或者再另外增加一些层， 这样直接导入就会比较复杂。正确的做法如下：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sym, arg_params, aux_params = mx.model.load_checkpoint(<span class="string">"1.0.3"</span>, <span class="number">40</span>)<span class="comment">#这里是model的名字和参数对应的epoch </span></span><br><span class="line">layers = sym.get_internals()<span class="comment">#得到所有的layers </span></span><br><span class="line">outputs = layers[<span class="string">'stage4_unit1_conv2_output'</span>]<span class="comment">#选择输出层 </span></span><br><span class="line">inputs = layers[<span class="string">'data'</span>]<span class="comment">#选择输入层 </span></span><br><span class="line">net = gluon.SymbolBlock(outputs, inputs)<span class="comment">#使用gluon的接口将其封装成一个新的net </span></span><br><span class="line">net.load_parameters(<span class="string">"1.0.3-0040.params"</span>, ignore_extra = <span class="literal">True</span>, allow_missing = <span class="literal">True</span>)<span class="comment">#载入数据 </span></span><br><span class="line">y = net(data) </span><br><span class="line"><span class="built_in">print</span>(y.shape) </span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<p>如果需要在该网络的基础上再新增加一些层，如下定义：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PretrainedNetwork</span>(gluon.HybridBlock):    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, pretrained_layer, **kwargs</span>):        </span><br><span class="line">        <span class="built_in">super</span>(PretrainedNetwork, self).__init__(**kwargs)       </span><br><span class="line">        <span class="keyword">with</span> self.name_scope():            </span><br><span class="line">            self.pretrained_layer = pretrained_layer <span class="comment">#(n, 4, 4, 128)            </span></span><br><span class="line">            self.fc = nn.HybridSequential()            </span><br><span class="line">            self.fc.add(                        </span><br><span class="line">                nn.Flatten(),                        </span><br><span class="line">                nn.Dense(<span class="number">256</span>, activation = <span class="string">'relu'</span>), </span><br><span class="line">                nn.Dropout(rate = <span class="number">0.5</span>),</span><br><span class="line">                nn.Dense(<span class="number">128</span>)</span><br><span class="line">            )            </span><br><span class="line">            self.single_fc = nn.Dense(<span class="number">2</span>)            </span><br><span class="line">            self.fusion_fc = nn.Dense(<span class="number">2</span>)                </span><br><span class="line">      </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">hybrid_forward</span>(<span class="params">self, F, x</span>):        </span><br><span class="line">        x = self.pretrained_layer(x)        </span><br><span class="line">        x = self.fc(x)        </span><br><span class="line">        feat = x        </span><br><span class="line">        y1 = self.single_fc(x)        </span><br><span class="line">        feat = feat.<span class="built_in">sum</span>(axis = <span class="number">1</span>)        </span><br><span class="line">        y2 = self.fusion_fc(feat)        </span><br><span class="line">        <span class="keyword">return</span> y1, y2 </span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<p>通过下面的方式，使用预训练模型初始化其中一部分：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">net = PretrainedNetwork(pretrained_layer = net) </span><br><span class="line">net.initialize(forece_reinit = <span class="literal">False</span>, init = init.Xavier()) </span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<p><strong>需要注意的是，要先load_parameters再用其初始化PretrainedNwtwork</strong>，否则会出现prefix不匹配的问题。</p>
+<p>如果需要fix其中一部分参数，只训练其中一部分，可以通过观察所有layer的名字，找到需要训练的layer。</p>
+<p>print(net.collect_params())#打印所有的参数，这样可以看到所有的layer及其参数</p>
+<p>在Trainer的params通过正则表达式选择需要训练的参数：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trainer = gluon.Trainer(params = net.collect_params(<span class="string">"pretrained*|dense0*"</span>), optimizer = optimizer)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这样没有被选中的参数就会被fix，训练中不会改变。</p>
+<h4 id="导出Gluoncv的预训练模型"><a href="#导出Gluoncv的预训练模型" class="headerlink" title="导出Gluoncv的预训练模型"></a>导出Gluoncv的预训练模型</h4><p><strong>利用gluoncv的export_block导出gluoncv提供的预训练模型</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gluoncv</span><br><span class="line"><span class="keyword">from</span> gluoncv.utils <span class="keyword">import</span> export_block</span><br><span class="line"></span><br><span class="line">net = gluoncv.model-zoo.get_model(<span class="string">'ResNet101_v2'</span>, pretrained=<span class="literal">True</span>)</span><br><span class="line">export_block(<span class="string">'resnet101'</span>, net, preprocess=<span class="literal">None</span>, layout=<span class="string">'CHW'</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+
+<h4 id="gluon训练"><a href="#gluon训练" class="headerlink" title="gluon训练"></a>gluon训练</h4><p>gluon主要有3个方法得到预训练模型：</p>
+<ul>
+<li>gluon自身的model_zoo</li>
+<li>gluoncv提供的model_zoo</li>
+<li>mxnet提供的预训练模型（*.params ，*.json）</li>
+</ul>
+<p>下面分别就这三个方面进行介绍</p>
+<p><strong>1.读取gluon model_zoo提供的模型，并进行finetune</strong></p>
+<p>gluon提供的model主要在gluon.model_zoo.vision下，模型地址：<a target="_blank" rel="noopener" href="https://mxnet.incubator.apache.org/api/python/gluon/model_zoo.html">https://mxnet.incubator.apache.org/api/python/gluon/model_zoo.html</a>,你可以根据自己的情况查找对应的模型进行使用。model_zoo提供的模型均为features+output结构</p>
+<p><strong>调用方法如下：</strong></p>
+<p><strong>一：只修改最终的fc层，进行finetune:</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> mxnet <span class="keyword">import</span> gluon</span><br><span class="line">class_num = <span class="number">3</span></span><br><span class="line">ctx = [mx.gpu(<span class="number">0</span>),mx.gpu(<span class="number">1</span>)]</span><br><span class="line"></span><br><span class="line">finetune_net = gluon.model_zoo.vision.resnet50_v2(pretrained=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> finetune_net.name_scope():</span><br><span class="line">    finetune_net.output = nn.Dense(class_num)</span><br><span class="line">finetune_net.output.initialize(init=mx.init.Xavier(),ctx=ctx)</span><br><span class="line">finetune_net.hybridize()</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<p><strong>二：不仅仅修改最终的fc层，还可以增加几层</strong></p>
+<p>下面的方法，首先提取出features，然后构建增加的sequential,最后将两部分通过sequential合并在一起。</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> mxnet <span class="keyword">import</span> gluon</span><br><span class="line">pretrained_net = gluon.model_zoo.vision.resnet50_v2(pretrained=<span class="literal">True</span>)</span><br><span class="line">pretrained_net_features = pretrained_net.features</span><br><span class="line"></span><br><span class="line">class_num = <span class="number">3</span></span><br><span class="line">ctx = [mx.gpu(<span class="number">0</span>),mx.gpu(<span class="number">1</span>)]</span><br><span class="line">modify_net = nn.HybridSequential(prefix=<span class="string">""</span>)</span><br><span class="line"><span class="keyword">with</span> modify_net.name_scope():</span><br><span class="line">    modify_net.add(nn.Dense(<span class="number">128</span>,activation=<span class="string">'relu'</span>),</span><br><span class="line">                nn.Dropout(<span class="number">0.5</span>),</span><br><span class="line">                nn.Dense(class_num))</span><br><span class="line">    modify_net.collect_params().initialize(init=mx.init.Xavier(),ctx=ctx)</span><br><span class="line">    </span><br><span class="line">net = nn.HybridSequential(prefix=<span class="string">""</span>)</span><br><span class="line"><span class="keyword">with</span> modify_net.name_scope():</span><br><span class="line">    net.add(pretrained_net_features)</span><br><span class="line">    net.add(modify_net)</span><br><span class="line">net.hybridize() <span class="comment">## 该语句代表静态图动态图切换。</span></span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<p>也可以直接修改features,达到同样的效果,不过记得初始化</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> mxnet <span class="keyword">import</span> gluon</span><br><span class="line">class_num = <span class="number">3</span></span><br><span class="line">ctx = [mx.gpu(<span class="number">0</span>),mx.gpu(<span class="number">1</span>)]</span><br><span class="line"></span><br><span class="line">finetune_net = gluon.model_zoo.vision.resnet50_v2(pretrained=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> finetune_net.name_scope():</span><br><span class="line">    finetune_net.features.add(nn.Dense(<span class="number">128</span>,activation=<span class="string">'relu'</span>),</span><br><span class="line">                              nn.Dropout(<span class="number">0.5</span>))</span><br><span class="line">    finetune_net.output = nn.Dense(class_num)</span><br><span class="line">finetune_net.features.initialize(init=mx.init.Xavier(),force_init=<span class="literal">False</span>,ctx=ctx)</span><br><span class="line">finetune_net.output.initialize(init=mx.init.Xavier(),ctx=ctx)</span><br><span class="line">finetune_net.hybridize()</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>2.读取gluoncv model_zoo提供的模型，并进行finetune(==推荐==)</strong></p>
+<p>gluoncv是gluon提供的比较强大的视觉库，其中提供了很多的预训练模型可以使用，链接：<a target="_blank" rel="noopener" href="https://gluon-cv.mxnet.io/model_zoo/classification.html">https://gluon-cv.mxnet.io/model_zoo/classification.html</a></p>
+<p><strong>使用gluoncv的预训练模型也很方便，跟使用gluon的model_zoo方法基本一致，不同点如下：</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> gluoncv.model_zoo <span class="keyword">import</span> get_model</span><br><span class="line"></span><br><span class="line">finetune_net = get_model(<span class="string">'ResNet50_v2'</span>, pretrained=<span class="literal">True</span>)</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<p>其他的就跟上面的一致了。</p>
+<p><strong>3.直接读取mxnet模型（ .params + .json）</strong></p>
+<p>有的时候，我们可能需要利用gluon读取mxnet模型，目前利用gluon读取mxnet模型，只能使用gluon.nn.SymbolBlock()进行读取，如下：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ctx = mx.gpu(0)</span><br><span class="line">sym, arg_params, aux_params = mx.model.load_checkpoint('../model/resnetv1d-101',17) ## model path and model index</span><br><span class="line">internals = sym.get_internals()</span><br><span class="line">net_out = internals['fc1_output']</span><br><span class="line"></span><br><span class="line">net = gluon.nn.SymbolBlock(outputs=net_out, inputs=mx.sym.var('data'))</span><br><span class="line"></span><br><span class="line">net.load_params(filename='../model/resnetv1d-101-0017.params', ctx=ctx)</span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<p>如上，我们便读取了mxnet的model,现在我们便可以对net进行操作了，如下代码构建了一个3分类的网络：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class_num = <span class="number">3</span></span><br><span class="line">finetune_net = nn.HybridSequential(prefix=<span class="string">""</span>)</span><br><span class="line"><span class="keyword">with</span> finetune_net.name_scope():</span><br><span class="line">    finetune_net.add(net)</span><br><span class="line">    finetune_net.add(nn.Dense(class_num))<span class="comment">## 输出3分类</span></span><br><span class="line">net.hybridize() <span class="comment">## 该语句代表静态图动态图切换。</span></span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>4.最优雅的方式，重新定义网络，实现任意的操作</strong></p>
+<p>这种方法最为优雅，也最灵活，你可以采用上面个各个方法读取模型，然后重写forward，实现网络的任意操作</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PretrainedNetwork</span>(gluon.HybridBlock):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, pretrained_layer, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(PretrainedNetwork, self).__init__(**kwargs)</span><br><span class="line">        <span class="keyword">with</span> self.name_scope():</span><br><span class="line">            self.pretrained_layer = pretrained_layer </span><br><span class="line">            self.fc = nn.HybridSequential()</span><br><span class="line">            self.fc.add(</span><br><span class="line">                        nn.Flatten(),</span><br><span class="line">                        nn.Dense(<span class="number">256</span>, activation = <span class="string">'relu'</span>),</span><br><span class="line">                        nn.Dropout(rate = <span class="number">0.5</span>),</span><br><span class="line">                        nn.Dense(<span class="number">128</span>)</span><br><span class="line">                        )</span><br><span class="line">            self.output = nn.Dense(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">            </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">hybrid_forward</span>(<span class="params">self, F, x</span>):  <span class="comment">## 这里注意F不要忘记。</span></span><br><span class="line">        x = self.pretrained_layer(x)</span><br><span class="line">        x = self.fc(x)</span><br><span class="line">        out = self.output(x)</span><br><span class="line">     </span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line"><span class="comment">### 采用如下得到网络：</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> gluoncv.model_zoo <span class="keyword">import</span> get_model</span><br><span class="line"></span><br><span class="line">finetune_net = get_model(<span class="string">'ResNet50_v2'</span>, pretrained=<span class="literal">True</span>)    </span><br><span class="line">net = PretrainedNetwork(pretrained_layer = finetune_net)</span><br><span class="line">net.initialize(forece_reinit = <span class="literal">False</span>, init = init.Xavier()) <span class="comment">## 初始化</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h3 id="四、其他的杂七杂八"><a href="#四、其他的杂七杂八" class="headerlink" title="四、其他的杂七杂八"></a>四、其他的杂七杂八</h3><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">body = mx.sym.Convolution(data=data, num_filter=<span class="number">64</span>, kernel=(<span class="number">7</span>, <span class="number">7</span>), stride=(<span class="number">2</span>,<span class="number">2</span>), pad=(<span class="number">0</span>, <span class="number">0</span>),</span><br><span class="line">                                  no_bias=<span class="literal">True</span>, name=<span class="string">"conv1"</span>, workspace=workspace)                      </span><br><span class="line"><span class="comment"># 最大值池化     </span></span><br><span class="line">body = mx.sym.Pooling(data=body, kernel=(<span class="number">3</span>, <span class="number">3</span>), stride=(<span class="number">2</span>,<span class="number">2</span>), pad=(<span class="number">1</span>,<span class="number">1</span>), pool_type=<span class="string">'max'</span>)</span><br><span class="line"><span class="comment"># 均值池化</span></span><br><span class="line">body = mx.symbol.Pooling(data=body, kernel=(<span class="number">7</span>,<span class="number">7</span>) , pool_type=<span class="string">'avg'</span> , name = <span class="string">'avg1'</span>)</span><br><span class="line"><span class="comment"># global average pooling </span></span><br><span class="line">pool = mx.sym.Pooling(data=last_fm, kernel=(pool_size, pool_size), stride=(<span class="number">1</span>, <span class="number">1</span>), </span><br><span class="line">                              pool_type=<span class="string">"avg"</span>, name=<span class="string">"global_pool"</span>, global_pool=<span class="literal">True</span>)</span><br><span class="line"><span class="comment"># BN</span></span><br><span class="line">body = mx.sym.BatchNorm(data=body, fix_gamma=<span class="literal">False</span>, momentum=<span class="number">0.9</span>, eps=<span class="number">2e-5</span>, name=<span class="string">'bn1'</span>)</span><br><span class="line">*注*eps参数是在cudnn中使用的，目的是防止除数为<span class="number">0</span>的情况，默认参数是<span class="number">0.001</span>，这里使用的是<span class="number">0.00002</span></span><br><span class="line"><span class="comment"># RELU  </span></span><br><span class="line">body = mx.sym.Activation(data=body, act_type=<span class="string">'relu'</span>, name=<span class="string">'relu0'</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+</body></html>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MXNet/" rel="tag"># MXNet</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/12/25/mobilenet-v3/" rel="next" title="MobileNet-V3">
+                  <i class="fa fa-chevron-left"></i> MobileNet-V3
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/12/25/consitent-optimization/" rel="prev" title="Consistent Optimization for Single-Shot Object Detection - 你的anchor用对了吗">
+                  Consistent Optimization for Single-Shot Object Detection - 你的anchor用对了吗 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%AF%87"><span class="nav-number">1.</span> <span class="nav-text">一、基础篇</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#NDArray%E4%BB%8B%E7%BB%8D%E7%AF%87"><span class="nav-number">1.1.</span> <span class="nav-text">NDArray介绍篇</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Symbol%E4%BB%8B%E7%BB%8D%E7%AF%87"><span class="nav-number">1.2.</span> <span class="nav-text">Symbol介绍篇</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Module%E4%BB%8B%E7%BB%8D%E7%AF%87"><span class="nav-number">1.3.</span> <span class="nav-text">Module介绍篇</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Metric-%E4%BB%8B%E7%BB%8D%E7%AF%87"><span class="nav-number">1.4.</span> <span class="nav-text">Metric 介绍篇</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%BD%BF%E7%94%A8%E7%AF%87"><span class="nav-number">2.</span> <span class="nav-text">二、使用篇</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mxnet%E7%94%9F%E6%88%90lst%E4%BB%A5%E5%8F%8Arec%E6%96%87%E4%BB%B6%EF%BC%88mxnet%E6%8C%87%E5%AE%9A%E7%9A%84%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">mxnet生成lst以及rec文件（mxnet指定的训练数据格式）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mxnet%E8%AE%AD%E7%BB%83demo"><span class="nav-number">2.2.</span> <span class="nav-text">mxnet训练demo</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E5%88%A9%E7%94%A8fit%E7%9B%B4%E6%8E%A5%E8%AE%AD%E7%BB%83"><span class="nav-number">2.2.1.</span> <span class="nav-text">简单的利用fit直接训练</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#mxnet%E7%9A%84%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B%EF%BC%8Cstep-by-step"><span class="nav-number">2.2.2.</span> <span class="nav-text">mxnet的训练过程，step by step</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mxnet%E8%BF%9B%E8%A1%8Cfinetune%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.3.</span> <span class="nav-text">mxnet进行finetune代码示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#finetune%E7%9A%84%E6%97%B6%E5%80%99%EF%BC%8C%E5%A6%82%E4%BD%95%E8%B0%83%E6%95%B4%E6%96%B0%E5%8A%A0%E5%B1%82%E7%9A%84%E5%AD%A6%E4%B9%A0%E7%8E%87"><span class="nav-number">2.4.</span> <span class="nav-text">finetune的时候，如何调整新加层的学习率</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mxnet%E8%BF%9B%E8%A1%8Cinference%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.5.</span> <span class="nav-text">mxnet进行inference代码示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mxnet%E8%BF%9B%E8%A1%8Cinference%E7%9A%84%E6%97%B6%E5%80%99%E5%A4%9A%E7%A7%8D%E6%96%B9%E5%BC%8F%E8%AF%BB%E5%8F%96%E5%9B%BE%E5%83%8F%EF%BC%88%E7%9C%8B%E4%BD%A0%E4%B9%A0%E6%83%AF%E5%93%AA%E4%B8%80%E4%B8%AA%EF%BC%89"><span class="nav-number">2.6.</span> <span class="nav-text">mxnet进行inference的时候多种方式读取图像（看你习惯哪一个）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E4%BD%BF%E7%94%A8%E5%8D%87%E7%BA%A7%E7%AF%87"><span class="nav-number">3.</span> <span class="nav-text">三、使用升级篇</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mxnet%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96%E7%BD%91%E7%BB%9C%E5%8F%82%E6%95%B0"><span class="nav-number">3.1.</span> <span class="nav-text">mxnet如何获取网络参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mxnet%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96%E4%B8%AD%E9%97%B4%E5%B1%82%E7%89%B9%E5%BE%81"><span class="nav-number">3.2.</span> <span class="nav-text">mxnet如何获取中间层特征</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gluon%E7%AF%87"><span class="nav-number">4.</span> <span class="nav-text">Gluon篇</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#gluon%E8%B0%83%E7%94%A8MXNet%E6%A8%A1%E5%9E%8B%EF%BC%88params-json%EF%BC%89%E8%BF%9B%E8%A1%8C%E8%AE%AD%E7%BB%83"><span class="nav-number">4.1.</span> <span class="nav-text">gluon调用MXNet模型（params+json）进行训练</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%BC%E5%87%BAGluoncv%E7%9A%84%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.2.</span> <span class="nav-text">导出Gluoncv的预训练模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gluon%E8%AE%AD%E7%BB%83"><span class="nav-number">4.3.</span> <span class="nav-text">gluon训练</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%85%B6%E4%BB%96%E7%9A%84%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB"><span class="nav-number">5.</span> <span class="nav-text">四、其他的杂七杂八</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>
