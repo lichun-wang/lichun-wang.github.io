@@ -51,12 +51,12 @@
   };
 </script>
 
-  <meta name="description" content="这篇文章读下来，感觉就是一个tricks的集大成，作者实验做的可是真的很详细，好多trick我都没有听过，我看网上有人评论说，可以当做目标检测的入门手册了，哈哈，确实，能做如此多的实验，足见作者的功底。总体来说，文章的创新点不是特别多，大多是在试各种tricks，然后找到效果最好的，文章值得好好的读一读。   论文名称：YOLOv4: Optimal Speed and Accuracy of">
+  <meta name="description" content="这篇文章读下来，感觉就是一个tricks的集大成，作者实验做的可是真的很详细，好多trick我都没有听过，我看网上有人评论说，可以当做目标检测的入门手册了，哈哈，确实，能做如此多的实验，足见作者的功底。总体来说，文章的创新点不是特别多，大多是在试各种tricks，然后找到效果最好的，文章值得好好的读一读。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="YOLO-V4">
 <meta property="og:url" content="https://www.wanglichun.tech/2020/05/16/yolov4/index.html">
 <meta property="og:site_name" content="Spring&#39;s Idea">
-<meta property="og:description" content="这篇文章读下来，感觉就是一个tricks的集大成，作者实验做的可是真的很详细，好多trick我都没有听过，我看网上有人评论说，可以当做目标检测的入门手册了，哈哈，确实，能做如此多的实验，足见作者的功底。总体来说，文章的创新点不是特别多，大多是在试各种tricks，然后找到效果最好的，文章值得好好的读一读。   论文名称：YOLOv4: Optimal Speed and Accuracy of">
+<meta property="og:description" content="这篇文章读下来，感觉就是一个tricks的集大成，作者实验做的可是真的很详细，好多trick我都没有听过，我看网上有人评论说，可以当做目标检测的入门手册了，哈哈，确实，能做如此多的实验，足见作者的功底。总体来说，文章的创新点不是特别多，大多是在试各种tricks，然后找到效果最好的，文章值得好好的读一读。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://www.wanglichun.tech/1.png">
 <meta property="og:image" content="https://www.wanglichun.tech/10.png">
@@ -76,7 +76,7 @@
 <meta property="og:image" content="https://www.wanglichun.tech/13.png">
 <meta property="og:image" content="https://www.wanglichun.tech/conclusion.jpg">
 <meta property="article:published_time" content="2020-05-16T03:04:42.000Z">
-<meta property="article:modified_time" content="2020-05-16T07:16:00.000Z">
+<meta property="article:modified_time" content="2022-05-28T01:33:48.515Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="YOLO V2">
 <meta name="twitter:card" content="summary">
@@ -246,10 +246,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-05-16 11:04:42 / 修改时间：15:16:00" itemprop="dateCreated datePublished" datetime="2020-05-16T11:04:42+08:00">2020-05-16</time>
+              <time title="创建时间：2020-05-16 11:04:42" itemprop="dateCreated datePublished" datetime="2020-05-16T11:04:42+08:00">2020-05-16</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-28 09:33:48" itemprop="dateModified" datetime="2022-05-28T09:33:48+08:00">2022-05-28</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -294,9 +300,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <html><head></head><body></body></html><html><head></head><body><blockquote>
+        <blockquote>
 <p>这篇文章读下来，感觉就是一个tricks的集大成，作者实验做的可是真的很详细，好多trick我都没有听过，我看网上有人评论说，可以当做目标检测的入门手册了，哈哈，确实，能做如此多的实验，足见作者的功底。总体来说，文章的创新点不是特别多，大多是在试各种tricks，然后找到效果最好的，文章值得好好的读一读。</p>
 </blockquote>
+<span id="more"></span>
+
 <hr>
 <p>论文名称：YOLOv4: Optimal Speed and Accuracy of Object Detection</p>
 <p>作者：Alexey Bochkovskiy &amp; Chien-Yao Wang  等</p>
@@ -339,7 +347,7 @@
 <ul>
 <li>IOU loss</li>
 <li>GIOU loss<blockquote>
-<p>$GIOU = IOU -\frac {A_c - U} {A_c}$<code> </code>$L_{GIOU}=1-GIOU$</p>
+<p>$GIOU &#x3D; IOU -\frac {A_c - U} {A_c}$<code> </code>$L_{GIOU}&#x3D;1-GIOU$</p>
 </blockquote>
 </li>
 <li>DIOU loss<blockquote>
@@ -391,7 +399,7 @@
 <li>Mish</li>
 </ul>
 <blockquote>
-<p>$mish=x*tanh(ln(1+e^x))$</p>
+<p>$mish&#x3D;x*tanh(ln(1+e^x))$</p>
 </blockquote>
 <blockquote>
 <p><img src="/15.png" alt="15.png"><br>4. nms</p>
@@ -448,7 +456,7 @@
 <p><img src="/11.png" alt="11.png"><br><img src="/12.png" alt="12.png"><br><img src="/13.png" alt="13.png"></p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>下面是网上网友总结的YOLO-V4的tricks,很全，大家可以按图查询，查缺补漏。</p>
 <p><img src="/conclusion.jpg" alt="conclusion.jpg"></p>
-</body></html>
+
     </div>
 
     
@@ -543,7 +551,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-count">40</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

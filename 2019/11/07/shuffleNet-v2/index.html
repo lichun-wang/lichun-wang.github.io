@@ -72,7 +72,7 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbgy1fucu2vj7gbj20eu04xdgb.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fucu8q1wauj20iv07umyj.jpg">
 <meta property="article:published_time" content="2019-11-07T00:33:29.000Z">
-<meta property="article:modified_time" content="2021-11-06T11:01:38.000Z">
+<meta property="article:modified_time" content="2022-05-28T01:32:37.748Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="ShuffleNet">
 <meta name="twitter:card" content="summary">
@@ -250,7 +250,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-06 19:01:38" itemprop="dateModified" datetime="2021-11-06T19:01:38+08:00">2021-11-06</time>
+                <time title="修改时间：2022-05-28 09:32:37" itemprop="dateModified" datetime="2022-05-28T09:32:37+08:00">2022-05-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -296,9 +296,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <html><head></head><body></body></html><html><head></head><body><blockquote>
+        <blockquote>
 <p>目前，CNN网络在图像识别领域大放异彩，从最初的AlexNet到后面的GoogLeNet,ResNet,识别精度越来越高，但是除了精度之外，模型的计算复杂度也越来越引起大家的思考，如何降低网络的复杂度，以使网络可以高效的运行在诸如手机登移动端设备，也得到了众多研究者的研究。本文便主要在这方面发力，提出了提高网络速度设计的4个准则，并基于此设计了shuffleNet v2,在速度、精度均超过了目前的主流轻量级网络（shuffleNet v1, mobileNet v2等）,本文是Face++提出，发表于ECCV2018.</p>
 </blockquote>
+<span id="more"></span>
+
 <hr>
 <p><strong>论文名称：ShuffleNet V2: Practical Guidelines for Efficient CNN Architecture Design</strong></p>
 <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1807.11164">论文地址：https://arxiv.org/abs/1807.11164</a></p>
@@ -324,12 +326,12 @@
 <p>为什么这么说：</p>
 <p>由于目前主流网络均使用的depthwise separable convolutions，其中pointwise convolution占据了很大一块的运算量，这个在shuffleNet V1中有说明<a target="_blank" rel="noopener" href="https://blog.csdn.net/Chunfengyanyulove/article/details/81664890">详细参见博客：shuffleNet V1</a>，作者以1*1网络为例，假设feature map的大小为h*w输入输出channel分别为c1和c2,那么：</p>
 <p>FLOPs:</p>
-<p>$$B=hw(c_1*1*1*c_2)=hwc_1c_2$$</p>
+<p>$$B&#x3D;hw(c_1*1*1*c_2)&#x3D;hwc_1c_2$$</p>
 <p>MAC:</p>
-<p>$$MAC=hw(c_1+c_2)+c_1*c_2$$</p>
+<p>$$MAC&#x3D;hw(c_1+c_2)+c_1*c_2$$</p>
 <p>(这里解释一下这个是怎么计算的：因为特征图大小为hw，在计算1*1卷积过程中我们需要将将所有的输入特征图和卷积核载入cache一次，这样需要$hwc_1+c_1c_2$次访存；然后需要将计算结果返回到内存，需要$hwc_2$次访存。)</p>
-<p>利用均值不等式（$c_1+c_2 &gt;= 2\sqrt{c_1c_2}$）化简可以得到：</p>
-<p>$$MAC&gt;=2\sqrt{hwB}+\frac{B} {hw}$$</p>
+<p>利用均值不等式（$c_1+c_2 &gt;&#x3D; 2\sqrt{c_1c_2}$）化简可以得到：</p>
+<p>$$MAC&gt;&#x3D;2\sqrt{hwB}+\frac{B} {hw}$$</p>
 <p>根据这个结果可以发现，当$c_1,c_2$相等的时候，可以取到最小值。</p>
 <p><strong>得证</strong></p>
 <p>下图的结果是作者的实验，实验结果同样支持<strong>G1</strong>结论。</p>
@@ -338,7 +340,7 @@
 <p>group convolution最大的作用在于改变了所有channel间的dense convolution变为sparse卷积，（解释一下：如果没有group，每个output feature的每个cell是上层所有channel的feature map对应的cell的卷积结果，而分组之后，只需要计算组内的cell卷积结果，计算量就自然少了很多）</p>
 <p><strong>在固定的FLOPs条件下，采用group convolution可以使用更多的channel，这也是为什么采用group convolution提高精度的主要手段，但是增加了channel的同时，也增加了更多的MAC</strong></p>
 <p>采用分组卷积的MAC计算如下：</p>
-<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MAC=hw(c_1+c_2)+\frac{c_1c_2}{g}</span><br><span class="line"></span><br><span class="line">MAC=hwc_1+\frac{Bg}{c_1}+\frac{B}{hw}</span><br><span class="line"></span><br><span class="line">B = \frac{hwc_1c_2}{g}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MAC=hw(c_1+c_2)+\frac&#123;c_1c_2&#125;&#123;g&#125;</span><br><span class="line"></span><br><span class="line">MAC=hwc_1+\frac&#123;Bg&#125;&#123;c_1&#125;+\frac&#123;B&#125;&#123;hw&#125;</span><br><span class="line"></span><br><span class="line">B = \frac&#123;hwc_1c_2&#125;&#123;g&#125;</span><br></pre></td></tr></table></figure>
 
 <p>由上面公式可以很清楚的看出来，MAC会随着g的增加而增加，同样的，作者进行了实验，验证这个结论，如下：</p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fuajvk9d6hj20u30a4mym.jpg"></p>
@@ -355,10 +357,10 @@
 <p><strong>注：另外作者在这提到，depthwise convolution（group数等于通道数，每个卷积核只卷积一个channel）也认为是一种element-wise操作</strong></p>
 <p>为了证明这个观点，作者利用resnet的一个block进行实验，将ReLU以及short-cut作为elemet-wise进行实验对比，实验结果如下图所示：</p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fubiux5vr1j20tu09ewg2.jpg"></p>
-<p>根据实验结果可以发现，ReLU以及short-cut操作如果都是no，速度为2842 batches/s，加入后为2427 batches/s，速度下降的还是挺明显的，CPU中，也是一样的趋势。</p>
+<p>根据实验结果可以发现，ReLU以及short-cut操作如果都是no，速度为2842 batches&#x2F;s，加入后为2427 batches&#x2F;s，速度下降的还是挺明显的，CPU中，也是一样的趋势。</p>
 <p>所以，一个高效的网络应该具备这些因素：</p>
 <ul>
-<li>use balance convolution，input channel == output channel</li>
+<li>use balance convolution，input channel &#x3D;&#x3D; output channel</li>
 <li>consider of group convolution</li>
 <li>reduce the degree of fragmentation</li>
 <li>reduce element-wise operation</li>
@@ -368,9 +370,9 @@
 <p>在了解shuffleNet V2之前，可以先了解一下<a target="_blank" rel="noopener" href="https://blog.csdn.net/Chunfengyanyulove/article/details/81664890">shuffleNet V1</a></p>
 <p>先show一张shuffleNet V2 与shuffleNet的对比图</p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fubjrmf2k6j20u60ih768.jpg"></p>
-<p>其中图（a,b）是shuffleNet的结构，图（c,d）是shuffleNet的改进结构，比较（a）与（c），可以发现，读了一个split操作，这也是shuffleNet V2的创新点，全称是channel split，其做法就是，首先将channel分成两个分支，c-c’和c’,为了满足G3,减少多分支计算，一个分支直接传下来，另一个分支包含了3个卷积，并且都是input-channel== output-channel的（符合G1），并且两个point-wise convolution不再使用group操作（满足G2）,最终，两个分支进行concat操作（满足G4）,后面的shuffle操作用来进行两个分支的信息交流。</p>
-<p>对于需要down sampling的模块，如图（d）所示，将split操作去除，然后stride=2进行操作，这样输出的维度便增加了一倍。</p>
-<p>最终，通过该block的堆叠，得到shuffleNet V2,结构如下图所示：其中repeat对应不同block的个数。本文中c’ = c/2</p>
+<p>其中图（a,b）是shuffleNet的结构，图（c,d）是shuffleNet的改进结构，比较（a）与（c），可以发现，读了一个split操作，这也是shuffleNet V2的创新点，全称是channel split，其做法就是，首先将channel分成两个分支，c-c’和c’,为了满足G3,减少多分支计算，一个分支直接传下来，另一个分支包含了3个卷积，并且都是input-channel&#x3D;&#x3D; output-channel的（符合G1），并且两个point-wise convolution不再使用group操作（满足G2）,最终，两个分支进行concat操作（满足G4）,后面的shuffle操作用来进行两个分支的信息交流。</p>
+<p>对于需要down sampling的模块，如图（d）所示，将split操作去除，然后stride&#x3D;2进行操作，这样输出的维度便增加了一倍。</p>
+<p>最终，通过该block的堆叠，得到shuffleNet V2,结构如下图所示：其中repeat对应不同block的个数。本文中c’ &#x3D; c&#x2F;2</p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fubnnptljtj20tx0hq0v0.jpg"></p>
 <p>整体结构与shuffleNet V1基本一致,shuffleNet V1结构如下图所示：</p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fu890fyzz8j20w80f4tax.jpg"></p>
@@ -387,7 +389,7 @@
 <p>另外，作者在COCO数据集上进行检测的测试，采用Light-Head框架，检测结果如下图所示：</p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fucu8q1wauj20iv07umyj.jpg"></p>
 <p>可见，shuffleNet V2在相同FLOPs下，其精度最高，同时作者也指出：<strong>对于分类精度：ShuffleNet v2 &gt; MobileNet V2 &gt; ShuffleNet v1 &gt; Xception, 但是对于检测的结果是：ShuffleNet v2 &gt; Xception &gt; ShuffleNet v1 &gt; MobileNet v2</strong>,为什么会出现这种情况呢？作者解释到，可能是由于Xception较大的感受野，基于此为了增大感受野，作者在每个block的第一个pointwise convolution前面加入了一个3*3的depthwise convolution ，为shuffleNet v2*,可见上图的v2*确实在精度上有所提升。</p>
-</body></html>
+
     </div>
 
     
@@ -481,7 +483,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-count">40</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

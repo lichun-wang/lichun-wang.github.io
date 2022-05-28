@@ -51,12 +51,12 @@
   };
 </script>
 
-  <meta name="description" content="shuffleNet是face++在2017年提出，目的是提高深度模型的执行效率，可在移动端执行。   论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1707.01083  摘要我们知道深度学习网络在包括图像识别等多个领域发展迅速，但是随着模型的深度越来越深，模型的参数量越来越大，现如今模型一般都跑的GPU上面，那么如何能在嵌入式或者移动端使用深度学习也是目前研究比较多的领域，shuff">
+  <meta name="description" content="shuffleNet是face++在2017年提出，目的是提高深度模型的执行效率，可在移动端执行。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ShuffleNet">
 <meta property="og:url" content="https://www.wanglichun.tech/2019/11/07/shuffleNet/index.html">
 <meta property="og:site_name" content="Spring&#39;s Idea">
-<meta property="og:description" content="shuffleNet是face++在2017年提出，目的是提高深度模型的执行效率，可在移动端执行。   论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1707.01083  摘要我们知道深度学习网络在包括图像识别等多个领域发展迅速，但是随着模型的深度越来越深，模型的参数量越来越大，现如今模型一般都跑的GPU上面，那么如何能在嵌入式或者移动端使用深度学习也是目前研究比较多的领域，shuff">
+<meta property="og:description" content="shuffleNet是face++在2017年提出，目的是提高深度模型的执行效率，可在移动端执行。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbgy1fu81twbwsqj208z065ac3.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbgy1fu86xldurnj20wd0f0jt2.jpg">
@@ -68,7 +68,7 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbgy1fu92ah1scoj20ku08qwfq.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fu94b13jf3j20qn06ct9z.jpg">
 <meta property="article:published_time" content="2019-11-07T00:33:19.000Z">
-<meta property="article:modified_time" content="2020-02-16T00:02:08.000Z">
+<meta property="article:modified_time" content="2022-05-28T01:32:45.941Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="ShuffleNet">
 <meta name="twitter:card" content="summary">
@@ -246,7 +246,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-16 08:02:08" itemprop="dateModified" datetime="2020-02-16T08:02:08+08:00">2020-02-16</time>
+                <time title="修改时间：2022-05-28 09:32:45" itemprop="dateModified" datetime="2022-05-28T09:32:45+08:00">2022-05-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -292,9 +292,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <html><head></head><body></body></html><html><head></head><body><blockquote>
+        <blockquote>
 <p>shuffleNet是face++在2017年提出，目的是提高深度模型的执行效率，可在移动端执行。</p>
 </blockquote>
+<span id="more"></span>
+
 <hr>
 <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1707.01083">论文链接：https://arxiv.org/abs/1707.01083</a></p>
 <hr>
@@ -303,11 +305,11 @@
 <p><strong>与shuffleNet相关的两个网络，一个是Xception，一个是MobileNet，有兴趣的读者可以看一下这两个网络</strong></p>
 <h5 id="shuffleNet策略之一：分组卷积"><a href="#shuffleNet策略之一：分组卷积" class="headerlink" title="shuffleNet策略之一：分组卷积"></a>shuffleNet策略之一：分组卷积</h5><p>为了提高网络的效率，除了<strong>剪枝、量化</strong>等手段，另一个主要的手段便是在网络设计阶段在保证精度的情况下减少一定的网络参数量，分组卷积便是这样的一个手段，<strong>这里解释一下什么是分组卷积，举个例子，比如你的特征图有64个channel，分成2个组，每个组的32个特征图分别处理，得到结果之后再进行合并，这就是分组卷积了，另外补充一个，depthwise separable convolution是分组卷积的一个特例，其就是特征图有几个channel，我就分为几个组，保证每个组只有一个特征图进行处理，这是在mobileNet中提出的，shuffleNet用到了分组卷积以及depthwise separable convolution</strong>。其实分组卷积在alexnet中便被使用，当时受限于GPU的显存，alex将网络分别在两个GPU上同时训练，另一个比较火的分组卷积网络便是resneXt，resneXt通过分组卷积，比resnet精度提高了一些，但是resneXt的分组卷积也有一个缺点：**dense 1*1卷积耗费了大量的计算，占到了总计算量的93.3%**，怎么计算出来的呢？下面说明一下：</p>
 <p>首先明确一下resnext一个unit的网络结构：如下图：</p>
-<p>下面我们假设输入的特征图大小为d*d，来计算一下该网络结构的计算量：首先对于最上面的降维:$256*1*d*d*4$,中间的计算量为：$4*3*3*d*d*4$,最后的输出的计算量为：$4*1*1*d*d*256$,则最终pointwise所占的计算量为：$\frac{256*1*1*d*d*4*2}{256*1*1*d*d*4*2+4*3*3*d*d*4}$ = $\frac{14}{15}$ =93.3%,由此可见，如果1*1降维太多的话（channel数减少太多），1*1卷积网络的参数量就占bottleneck主导地位了。</p>
+<p>下面我们假设输入的特征图大小为d*d，来计算一下该网络结构的计算量：首先对于最上面的降维:$256*1*d*d*4$,中间的计算量为：$4*3*3*d*d*4$,最后的输出的计算量为：$4*1*1*d*d*256$,则最终pointwise所占的计算量为：$\frac{256*1*1*d*d*4*2}{256*1*1*d*d*4*2+4*3*3*d*d*4}$ &#x3D; $\frac{14}{15}$ &#x3D;93.3%,由此可见，如果1*1降维太多的话（channel数减少太多），1*1卷积网络的参数量就占bottleneck主导地位了。</p>
 <p><strong>注：分组卷积，比如原来是128维，3*3后变仍为128维，通过分组卷积分为32组，那就是输入4维，输出仍为4维，并不是输入为4维输出为128维，如果是128维，那跟没分组也没啥区别了，笔者在这就搞晕了，算了半天也不对</strong></p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fu81twbwsqj208z065ac3.jpg" alt="resneXt unit结构"></p>
 <h5 id="shuffleNet是怎么操作的呢？"><a href="#shuffleNet是怎么操作的呢？" class="headerlink" title="shuffleNet是怎么操作的呢？"></a>shuffleNet是怎么操作的呢？</h5><p>首先，为了解决1*1卷积在分组unit中计算量占比较大，作者提出在1*1卷积中同样使用分组卷积，但是这样会带来一个问题，就是组内的channel之间的相关性很弱，那怎么解决这个问题呢？作者提出了使用shuffle操作，来帮助信息在不同的channel间进行流动。如下图（a）就是单纯的对1*1卷积（pointwise conv）进行分组操作，根据不同的颜色可以发现，其实不同组之间没有交集，图（b，c）显示利用shuffle操作，增加不同channel之间的关联性。<strong>具体怎么操作呢？假设，我们将卷积层分为g组每组n个channel，则共有g*n个channel，（b,g*n,h,w）,首先reshape成（b,g，n,h,w）然后transpose为（b,n,g,h,w）,shuffle后在reshape成（b,n*g,h,w）</strong>，<strong>channel是可微的，可以嵌入到end-to-end网络中</strong></p>
-<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">channel_shuffle</span>(<span class="params">data, groups</span>):</span><br><span class="line">	data = mx.sym.reshape(data, shape=(<span class="number">0</span>, -<span class="number">4</span>, groups, -<span class="number">1</span>, -<span class="number">2</span>))</span><br><span class="line">	data = mx.sym.swapaxes(data, <span class="number">1</span>, <span class="number">2</span>) <span class="comment"># </span></span><br><span class="line">	data = mx.sym.reshape(data, shape=(<span class="number">0</span>, -<span class="number">3</span>, -<span class="number">2</span>))</span><br><span class="line">	<span class="keyword">return</span> data</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">channel_shuffle</span>(<span class="params">data, groups</span>):</span><br><span class="line">	data = mx.sym.reshape(data, shape=(<span class="number">0</span>, -<span class="number">4</span>, groups, -<span class="number">1</span>, -<span class="number">2</span>))</span><br><span class="line">	data = mx.sym.swapaxes(data, <span class="number">1</span>, <span class="number">2</span>) <span class="comment"># </span></span><br><span class="line">	data = mx.sym.reshape(data, shape=(<span class="number">0</span>, -<span class="number">3</span>, -<span class="number">2</span>))</span><br><span class="line">	<span class="keyword">return</span> data</span><br></pre></td></tr></table></figure>
 
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fu86xldurnj20wd0f0jt2.jpg"></p>
 <p>基于此，作者设计网络如下：</p>
@@ -318,14 +320,14 @@
 <p>另外为了增加stride操作，作者这里做了2个改变（i）增加了3*3的average pooling在shortcut上面，（ii）shortcut的相加变为了相乘，使得channel增加。</p>
 <p>下面是shuffleNet每个unit的计算量的对比：(其中c代表输入channel,m代表输出channel，g代表分组卷积组数)</p>
 <p>resnet: $h*w*c*1*1*m*2 + h*w*m*3*3*m$</p>
-<p>resneXt: $h*w*c*1*1*m/g*g*2 + h*w*m/g*3*3*m/g*g$</p>
-<p>shuffleNet: $h*w*c/g*1*1*m/g*g*2 + h*w*m/g*3*3*1*g$</p>
+<p>resneXt: $h*w*c*1*1*m&#x2F;g*g*2 + h*w*m&#x2F;g*3*3*m&#x2F;g*g$</p>
+<p>shuffleNet: $h*w*c&#x2F;g*1*1*m&#x2F;g*g*2 + h*w*m&#x2F;g*3*3*1*g$</p>
 <p>化简的结果,可见shuffleNet的计算量小了很多：</p>
 <p>resnet: $hw(2cm+9m^{2})$</p>
-<p>resneXt: $hw(2cm+9m^2/g)$</p>
-<p>shuffleNet: $hw(2cm/g+9m)$</p>
+<p>resneXt: $hw(2cm+9m^2&#x2F;g)$</p>
+<p>shuffleNet: $hw(2cm&#x2F;g+9m)$</p>
 <p>shuffleNet网络详细结构图如下：</p>
-<p>在每个Stage中的一个block设置stride=2,来减少特征图的大小，其他的保持特征图大小不变，bottleneck中channel输出为输入的1/4,下图table中显示了不同的group的结果，<br><img src="http://ww1.sinaimg.cn/large/87675bbbly1fu890fyzz8j20w80f4tax.jpg"></p>
+<p>在每个Stage中的一个block设置stride&#x3D;2,来减少特征图的大小，其他的保持特征图大小不变，bottleneck中channel输出为输入的1&#x2F;4,下图table中显示了不同的group的结果，<br><img src="http://ww1.sinaimg.cn/large/87675bbbly1fu890fyzz8j20w80f4tax.jpg"></p>
 <h5 id="对比实验"><a href="#对比实验" class="headerlink" title="对比实验"></a>对比实验</h5><p>1.首先针对Pointwise Group</p>
 <p>Convolutions的效果如下图所示：【其中0.5*代表channel数为原来的0.5倍】</p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1fu91rok7ldj20jm04wmxq.jpg"></p>
@@ -342,7 +344,7 @@
 <p>最后作者在mobile中进行上实验，发现group取3是精度与效率的trade-off，与不同的网络对于结果如下：</p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fu94b13jf3j20qn06ct9z.jpg"></p>
 <p>可见shuffleNet的效率还是杠杠滴</p>
-</body></html>
+
     </div>
 
     
@@ -437,7 +439,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-count">40</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

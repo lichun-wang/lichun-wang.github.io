@@ -51,12 +51,12 @@
   };
 </script>
 
-  <meta name="description" content="原文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1608.06993 DenseNet原版代码：https:&#x2F;&#x2F;github.com&#x2F;liuzhuang13&#x2F;DenseNet 如果出现图像或者公式显示不完整，可以访问如下博客： CSDN博客：http:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove&#x2F;article&#x2F;details&#x2F;79476475 创新点：DenseNet">
+  <meta name="description" content="创新点：DenseNet作为2017CVPR最佳论文，其在ResNet基础上，提出了更优秀的shortcut方式，Dense Connection 不仅能使得feature更加强健，还能带来更快的收敛速度。并且DenseNet具有比ResNet更少的参数，在测试时具有更快的速度">
 <meta property="og:type" content="article">
 <meta property="og:title" content="DenseNet">
 <meta property="og:url" content="https://www.wanglichun.tech/2019/11/12/densenet/index.html">
 <meta property="og:site_name" content="Spring&#39;s Idea">
-<meta property="og:description" content="原文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1608.06993 DenseNet原版代码：https:&#x2F;&#x2F;github.com&#x2F;liuzhuang13&#x2F;DenseNet 如果出现图像或者公式显示不完整，可以访问如下博客： CSDN博客：http:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove&#x2F;article&#x2F;details&#x2F;79476475 创新点：DenseNet">
+<meta property="og:description" content="创新点：DenseNet作为2017CVPR最佳论文，其在ResNet基础上，提出了更优秀的shortcut方式，Dense Connection 不仅能使得feature更加强健，还能带来更快的收敛速度。并且DenseNet具有比ResNet更少的参数，在测试时具有更快的速度">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://img.blog.csdn.net/20180306185904712?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
 <meta property="og:image" content="http://img.blog.csdn.net/20180306200052989?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
@@ -66,7 +66,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20180307202444623?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbgy1frvio3hy1wj208t0muq3c.jpg">
 <meta property="article:published_time" content="2019-11-12T01:22:23.000Z">
-<meta property="article:modified_time" content="2020-01-16T05:44:48.000Z">
+<meta property="article:modified_time" content="2022-05-28T01:28:04.215Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="DenseNet">
 <meta name="twitter:card" content="summary">
@@ -244,7 +244,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-16 13:44:48" itemprop="dateModified" datetime="2020-01-16T13:44:48+08:00">2020-01-16</time>
+                <time title="修改时间：2022-05-28 09:28:04" itemprop="dateModified" datetime="2022-05-28T09:28:04+08:00">2022-05-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -290,11 +290,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <html><head></head><body></body></html><html><head></head><body><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1608.06993">原文链接：https://arxiv.org/abs/1608.06993</a></p>
+        <blockquote>
+<p><strong>创新点：DenseNet作为2017CVPR最佳论文，其在ResNet基础上，提出了更优秀的shortcut方式，Dense Connection 不仅能使得feature更加强健，还能带来更快的收敛速度。并且DenseNet具有比ResNet更少的参数，在测试时具有更快的速度</strong></p>
+</blockquote>
+<span id="more"></span>
+
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1608.06993">原文链接：https://arxiv.org/abs/1608.06993</a></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/liuzhuang13/DenseNet">DenseNet原版代码：https://github.com/liuzhuang13/DenseNet</a></p>
 <p><strong>如果出现图像或者公式显示不完整，可以访问如下博客：</strong></p>
 <p><a target="_blank" rel="noopener" href="http://blog.csdn.net/Chunfengyanyulove/article/details/79476475">CSDN博客：http://blog.csdn.net/Chunfengyanyulove/article/details/79476475</a></p>
-<p><strong>创新点：DenseNet作为2017CVPR最佳论文，其在ResNet基础上，提出了更优秀的shortcut方式，Dense Connection 不仅能使得feature更加强健，还能带来更快的收敛速度。并且DenseNet具有比ResNet更少的参数，在测试时具有更快的速度</strong></p>
 <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>在传统的ResNet中，layer与layer之间具有L个connection，DenseNet在ResNet的shorter connection的基础上，在每个Layer之间均加入shorter connection，共包含</p>
 <p>$$\frac{L(L+1)}{2}$$</p>
 <p>个连接。如下图1所示。<br>不同于ResNet，DenseNet采用concatenation的方式进行特征图的叠加，而ResNet采用相加的方式进行叠加。<br>DenseNet 特征重用，使得denseNet更容易去训练，具有更高的效率。<br><img src="http://img.blog.csdn.net/20180306185904712?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
@@ -307,9 +311,9 @@
 </ul>
 <h3 id="DenseNet"><a href="#DenseNet" class="headerlink" title="DenseNet"></a>DenseNet</h3><p><strong>Dense Connectivity</strong></p>
 <p>Resnet:</p>
-<p>$$x_l=H_l(x_{l-1})+x_{l-1}$$</p>
+<p>$$x_l&#x3D;H_l(x_{l-1})+x_{l-1}$$</p>
 <p>DenseNet:</p>
-<p>$$x_l=H_l([x_0,x_1,…,x_{l-1}])$$</p>
+<p>$$x_l&#x3D;H_l([x_0,x_1,…,x_{l-1}])$$</p>
 <p><strong>composite function</strong></p>
 <p>BN-ReLU-Conv(3*3)</p>
 <p><strong>pooling layers</strong></p>
@@ -320,13 +324,13 @@
 <p>个特征图，为了防止网络变得很宽，k需要被限制为一个较小的数，作者将k称作growth rate。</p>
 <p><strong>bottleneck layers</strong><br>同样为了降低网络的宽度，DenseNet同样利用1*1卷积进行降维，Dense Block被设计为：<br>DenseNet-B结构：BN-ReLU-Conv(1*1)-BN-ReLU-Conv(3*3)<br>其中1*1的filter-num为growth rate 的 4倍<br>3*3的filter-num为growth rate</p>
 <p><strong>Compression</strong><br>在block之间，可以利用卷积进行模型维度压缩，在本文实验中，作者设置压缩比例为0.5。</p>
-<p>block之间的channels变换：<br>n_channels += units[i]*growth_rate</p>
-<p>compression进行模型压缩的channel变化：<br>n_channels =int(math.floor(n_channels*reduction))</p>
+<p>block之间的channels变换：<br>n_channels +&#x3D; units[i]*growth_rate</p>
+<p>compression进行模型压缩的channel变化：<br>n_channels &#x3D;int(math.floor(n_channels*reduction))</p>
 <p><strong>模型详细描述如下：</strong><br><img src="http://img.blog.csdn.net/20180306210121233?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2h1bmZlbmd5YW55dWxvdmU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
 <h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><p>作者首先在CIFAR SVHN ImageNet进行分类实验。</p>
 <p><strong>CIFAR 与 SVHN</strong><br>实验结果如下图所示：</p>
 <ul>
-<li>实验表明，在Accuracy中，DenseNet表现非常好，DenseNet-BC(L=190 and k=40)在多个数据集中均具有最好的表现，并且通过实验可以发现，随着DenseNet模型容量的增加，模型的精度有提升。</li>
+<li>实验表明，在Accuracy中，DenseNet表现非常好，DenseNet-BC(L&#x3D;190 and k&#x3D;40)在多个数据集中均具有最好的表现，并且通过实验可以发现，随着DenseNet模型容量的增加，模型的精度有提升。</li>
 <li>通过实验可以看出，DenseNet的参数数量较少，说明DenseNet模型参数具有更高的有效性。</li>
 <li>DenseNet不容易过拟合</li>
 </ul>
@@ -342,7 +346,7 @@
 <p>如果采用bottle-neck操作，每个block中1*1的卷积和的数量是growth_rate的4倍，估计可能是提高维度会取得较好效果吧，一般bottle-neck在网络层数较深的时候使用。</p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbgy1frvio3hy1wj208t0muq3c.jpg"></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/bruinxiong/densenet.mxnet/blob/master/symbol_densenet.py">mxnet,实现代码链接</a></p>
-</body></html>
+
     </div>
 
     
@@ -437,7 +441,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-count">40</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

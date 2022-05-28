@@ -51,12 +51,12 @@
   };
 </script>
 
-  <meta name="description" content="Mask R-CNN是He Kaiming大神2017年的力作，其在进行目标检测的同时进行实例分割，取得了出色的效果，其在没有任何trick的情况下，取得了COCO 2016比赛的冠军。其网络的设计也比较简单，在Faster R-CNN基础上，在原本的两个分支上（分类+坐标回归）增加了一个分支进行语义分割，如下图所示：    论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1703.068">
+  <meta name="description" content="Mask R-CNN是He Kaiming大神2017年的力作，其在进行目标检测的同时进行实例分割，取得了出色的效果，其在没有任何trick的情况下，取得了COCO 2016比赛的冠军。其网络的设计也比较简单，在Faster R-CNN基础上，在原本的两个分支上（分类+坐标回归）增加了一个分支进行语义分割，如下图所示：">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mask RCNN">
 <meta property="og:url" content="https://www.wanglichun.tech/2019/11/18/maskrcnn/index.html">
 <meta property="og:site_name" content="Spring&#39;s Idea">
-<meta property="og:description" content="Mask R-CNN是He Kaiming大神2017年的力作，其在进行目标检测的同时进行实例分割，取得了出色的效果，其在没有任何trick的情况下，取得了COCO 2016比赛的冠军。其网络的设计也比较简单，在Faster R-CNN基础上，在原本的两个分支上（分类+坐标回归）增加了一个分支进行语义分割，如下图所示：    论文链接：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1703.068">
+<meta property="og:description" content="Mask R-CNN是He Kaiming大神2017年的力作，其在进行目标检测的同时进行实例分割，取得了出色的效果，其在没有任何trick的情况下，取得了COCO 2016比赛的冠军。其网络的设计也比较简单，在Faster R-CNN基础上，在原本的两个分支上（分类+坐标回归）增加了一个分支进行语义分割，如下图所示：">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fwqd6wta1mj20kc07l3zg.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fwqd7eel6lj20jr0e1107.jpg">
@@ -69,7 +69,7 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fwqda5mwhij20r306w762.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fwqdan4lrgj21720eonpd.jpg">
 <meta property="article:published_time" content="2019-11-18T01:47:44.000Z">
-<meta property="article:modified_time" content="2020-02-16T06:58:54.000Z">
+<meta property="article:modified_time" content="2022-05-28T01:30:55.016Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="Mask RCNN">
 <meta name="twitter:card" content="summary">
@@ -247,7 +247,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-16 14:58:54" itemprop="dateModified" datetime="2020-02-16T14:58:54+08:00">2020-02-16</time>
+                <time title="修改时间：2022-05-28 09:30:55" itemprop="dateModified" datetime="2022-05-28T09:30:55+08:00">2022-05-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -293,15 +293,17 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <html><head></head><body></body></html><html><head></head><body><blockquote>
+        <blockquote>
 <p>Mask R-CNN是He Kaiming大神2017年的力作，其在进行目标检测的同时进行实例分割，取得了出色的效果，其在没有任何trick的情况下，取得了COCO 2016比赛的冠军。<strong>其网络的设计也比较简单，在Faster R-CNN基础上，在原本的两个分支上（分类+坐标回归）增加了一个分支进行语义分割</strong>，如下图所示：</p>
 </blockquote>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwqd6wta1mj20kc07l3zg.jpg"></p>
+<span id="more"></span>
+
 <hr>
 <p><a href="%5Bhttps://arxiv.org/abs/1703.06870">论文链接：https://arxiv.org/abs/1703.06870</a></p>
 <hr>
 <h4 id="Mask-R-CNN详细介绍"><a href="#Mask-R-CNN详细介绍" class="headerlink" title="Mask R-CNN详细介绍"></a>Mask R-CNN详细介绍</h4><p><strong>那么为什么该网络会有如此好的效果，又有哪些网络细节呢？下面详细逐一介绍。</strong></p>
-<p>在介绍Mask R-CNN之前，首先了解一下什么是分割，因为Mask R-CNN是做这个的，所以这个首先要搞清楚，看下图，主要介绍了几种不同的分割，其中Mask RCNN做的是其中的==instance segmentation==.</p>
+<p>在介绍Mask R-CNN之前，首先了解一下什么是分割，因为Mask R-CNN是做这个的，所以这个首先要搞清楚，看下图，主要介绍了几种不同的分割，其中Mask RCNN做的是其中的&#x3D;&#x3D;instance segmentation&#x3D;&#x3D;.</p>
 <ul>
 <li>语义分割（semantic segmentation）：对图像中逐像素进行分类。</li>
 <li>实例分割（instance segmentation）：对图像中的object进行检测，并对检测到的object进行分割。</li>
@@ -318,10 +320,10 @@
 <p><strong>自然而然，这变成一个多任务问题</strong></p>
 <p><strong>网络结构如下</strong></p>
 <p>下图所示是两种典型的Mask R-CNN网络结构，作者借鉴<a target="_blank" rel="noopener" href="https://blog.csdn.net/Chunfengyanyulove/article/details/81390796"><strong>FPN（不了解FPN可以点击参考此博文）</strong></a>的思想，分别设计了两种网络结构，左边的是采用<strong>ResNet or ResNeXt</strong>作为网络的backbone提取特征，右边的网络采用<strong>FPN</strong>网络作为backbone进行特征提取，<strong>并且作者指明，使用FPN作为基础网络的效果其实是最好的。</strong></p>
-<p><strong>对于如何在Faster RCNN中使用FPN网络不了解的读者，可以参考此博文：</strong><a target="_blank" rel="noopener" href="https://blog.csdn.net/Jesse_Mx/article/details/54588085">https://blog.csdn.net/Jesse_Mx/article/details/54588085</a></p>
+<p><strong>对于如何在Faster RCNN中使用FPN网络不了解的读者，可以参考此博文：</strong><a target="_blank" rel="noopener" href="https://blog.csdn.net/Jesse_Mx/article/details/54588085">https://blog.csdn.net/Jesse_Mx&#x2F;article&#x2F;details&#x2F;54588085</a></p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwqd8t5cvtj20d70bimyz.jpg"></p>
 <p><strong>损失函数的设计是网络的精髓所在</strong></p>
-<p><strong>Mask R-CNN的损失函数为：</strong>   $L=L_{cls}+L_{box}+L_{mask}$</p>
+<p><strong>Mask R-CNN的损失函数为：</strong>   $L&#x3D;L_{cls}+L_{box}+L_{mask}$</p>
 <p>这里主要介绍一下$L_{mask}$，$L_{mask}$是对每个像素进行分类，其含有$K<em>m</em>m$维度的输出，K代表类别的数量，m<em>m是提取的ROI图像的大小。$L_{mask}$被定义为 average binary cross-entropy loss（平均二值交叉熵损失函数）。这里解释一下是如何计算的，*<em>首先分割层会输出channel为K的Mask，每个Mask对应一个类别，利用sigmoid函数进行二分类，判断是否是这个类别，然后在计算loss的时候，假如ROI对应的ground-truth的类别是</em></em>$K_{i}$，<strong>则计算第</strong>$K_{i}$<strong>个mask对应的loss，其他的mask对这个loss没有贡献计算二值交叉熵搞的公式如下图中的函数接口</strong>。这里不同于FCN的是，FCN是对每个像素进行softmax分类，分为K个类别，然后计算softmax loss。那在inference的时候选择哪个mask作为最终的输出呢？作者根据分类分支的预测结果进行判断，是不是很神奇，并且作者解释到，利用这种方法比softmax效果要好，【这里我觉得是肯定的，因为简化了loss并且利用了分类信息，应该会有提升的】。<br><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwqd8cbr11j20gc06rmxf.jpg"></p>
 <p><strong>另一个创新点：ROI Align</strong></p>
 <p>另外由于分割需要较准确的像素位置，而Faster R-CNN方法中，在进行Roi-Pooling之前需要进行两次量化操作（第一次是原图像中的目标到conv5之前的缩放，比如缩放32倍，目标大小是600，结果不是整数，需要进行量化舍弃，第二次量化是比如特征图目标是5*5，ROI-pooling后是2*2，这里由于5不是2的倍数，需要再一次进行量化，这样对于Roi Pooling之后的结果就与原来的图像位置相差比较大了），因此作者对ROI-Pooling进行了改进，提出了RoI Align方法，在下采样的时候，对像素进行对准，使得像素更准确一些。</p>
@@ -334,7 +336,7 @@
 <p><strong>网络训练</strong></p>
 <p>这里其实跟Faster R-CNN基本一致，IOU &gt; 0.5的是正样本，并且$L_{mask}$只在正样本的时候才计算，<strong>图像变换到短边 800， 正负样本比例 1：3 ， RPN采用5个scale以及3个aspect ratio。</strong></p>
 <p><strong>inference细节</strong></p>
-<p>采用ResNet作为backbone的Mask R-CNN产生300个候选区域进行分类回归，采用FPN方法的生成1000个候选区域进行分类回归，然后进行非极大值抑制操作，** 最后检测分数前100的区域进行mask检测<strong>，==这里没有使用跟训练一样的并行操作，作者解释说是可以提高精度和效率==，然后mask分支可以预测k个类别的mask，但是这里根据分类的结果，选取对应的第k个类别，得到对应的mask后，再resize到ROI的大小, 然后利用阈值0.5进行二值化即可。（</strong>这里由于resize需要插值操作，所以需要再次进行二值化，m的大小可以参考上图，mask最后并不是ROI大小，而是一个相对较小的图, 所以需要进行resize操作。**）</p>
+<p>采用ResNet作为backbone的Mask R-CNN产生300个候选区域进行分类回归，采用FPN方法的生成1000个候选区域进行分类回归，然后进行非极大值抑制操作，** 最后检测分数前100的区域进行mask检测<strong>，&#x3D;&#x3D;这里没有使用跟训练一样的并行操作，作者解释说是可以提高精度和效率&#x3D;&#x3D;，然后mask分支可以预测k个类别的mask，但是这里根据分类的结果，选取对应的第k个类别，得到对应的mask后，再resize到ROI的大小, 然后利用阈值0.5进行二值化即可。（</strong>这里由于resize需要插值操作，所以需要再次进行二值化，m的大小可以参考上图，mask最后并不是ROI大小，而是一个相对较小的图, 所以需要进行resize操作。**）</p>
 <h4 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h4><p>实验效果还是杠杠的，Mask R-CNN轻松打败了上界冠军FCIS（其使用了multi-scale训练，水平翻转测试，OHEM等）</p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwqd9a3hhoj20qj05zq4h.jpg"></p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwqd9ls1bcj20qv0f74qp.jpg"></p>
@@ -359,7 +361,7 @@
 <li>人体关键点检测， 最后的mask分辨率是56*56，不再是28*28，作者解释，较高的分辨率有利于人体关键点的检测。</li>
 </ul>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fwqdan4lrgj21720eonpd.jpg"></p>
-</body></html>
+
     </div>
 
     
@@ -454,7 +456,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-count">40</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

@@ -51,12 +51,12 @@
   };
 </script>
 
-  <meta name="description" content="本篇文章是一篇优化目标检测精度的文章，在two stage方法上进行模型优化的，文章的主要关注点在于目标尺度（Scale）。基于作者对目标尺度的实验与分析，设计了SNIP方法，该方法实验证明，可以有效提高目标检测的精度   论文名称:An Analysis of Scale Invariance in Object Detection – SNIP 作者：Bharat Singh &amp; L">
+  <meta name="description" content="本篇文章是一篇优化目标检测精度的文章，在two stage方法上进行模型优化的，文章的主要关注点在于目标尺度（Scale）。基于作者对目标尺度的实验与分析，设计了SNIP方法，该方法实验证明，可以有效提高目标检测的精度">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SNIP">
 <meta property="og:url" content="https://www.wanglichun.tech/2019/11/20/snip/index.html">
 <meta property="og:site_name" content="Spring&#39;s Idea">
-<meta property="og:description" content="本篇文章是一篇优化目标检测精度的文章，在two stage方法上进行模型优化的，文章的主要关注点在于目标尺度（Scale）。基于作者对目标尺度的实验与分析，设计了SNIP方法，该方法实验证明，可以有效提高目标检测的精度   论文名称:An Analysis of Scale Invariance in Object Detection – SNIP 作者：Bharat Singh &amp; L">
+<meta property="og:description" content="本篇文章是一篇优化目标检测精度的文章，在two stage方法上进行模型优化的，文章的主要关注点在于目标尺度（Scale）。基于作者对目标尺度的实验与分析，设计了SNIP方法，该方法实验证明，可以有效提高目标检测的精度">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fzpr76prkzj20d5083jsg.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fzqp6o6kkej20d70biq63.jpg">
@@ -68,7 +68,7 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fzsdl4j65gj20e406kjsq.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fzr0o91wksj20r509stbq.jpg">
 <meta property="article:published_time" content="2019-11-20T01:39:26.000Z">
-<meta property="article:modified_time" content="2020-02-16T04:24:06.000Z">
+<meta property="article:modified_time" content="2022-05-28T01:32:50.978Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="SNIP">
 <meta name="twitter:card" content="summary">
@@ -246,7 +246,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-16 12:24:06" itemprop="dateModified" datetime="2020-02-16T12:24:06+08:00">2020-02-16</time>
+                <time title="修改时间：2022-05-28 09:32:50" itemprop="dateModified" datetime="2022-05-28T09:32:50+08:00">2022-05-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -292,9 +292,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <html><head></head><body></body></html><html><head></head><body><blockquote>
+        <blockquote>
 <p>本篇文章是一篇优化目标检测精度的文章，在two stage方法上进行模型优化的，文章的主要关注点在于目标尺度（Scale）。基于作者对目标尺度的实验与分析，设计了SNIP方法，该方法实验证明，可以有效提高目标检测的精度</p>
 </blockquote>
+<span id="more"></span>
+
 <hr>
 <p><strong>论文名称:An Analysis of Scale Invariance in Object Detection – SNIP</strong></p>
 <p><strong>作者：Bharat Singh &amp; Larry S.Davis</strong></p>
@@ -306,7 +308,7 @@
 <h4 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h4><p>那么作者对<strong>目标尺度</strong>的分析到底有什么特殊发现呢？</p>
 <p>作者对比了ImageNet以及COCO数据集中目标尺度的差异，目标的尺度统计结果如下图Figure 1所示，其中棕色线以及蓝色线分别对应于ImageNet以及COCO数据集的尺度统计结果，（两条线你可以理解为对尺度数量做累加，最后都会到1），根据统计结果发现，<strong>在ImageNet中，排在中位的尺度是0.554，但是在COCO中，排在中位的尺度是0.106，这就说明了在COCO数据集中，大部分的目标的尺度其实是小于图像面积的1%的</strong>。更糟糕的是，作者统计了COCO中最大的10%的目标以及最小的10%的目标的尺度，<strong>发现最小的10%中，最大的目标尺度是0.024，而最大的10%中，最小的目标尺度为0.472，两者相差了大约20倍</strong>，如图Figure 1中绿色箭头所示。这巨大的差异将成为detector需要面临的巨大的挑战。另外，在进行目标检测的时候，我们一般会采用ImageNet上训练的预训练模型作为检测模型的backbone，而训练imagenet我们常使用的尺度是224*224，而目标检测往往会采用更大一些的尺度，这种分类与检测中存在的尺度的巨大差异也将带来一定的问题，作者将其称为<strong>domain-shift</strong>，本篇文章主要就是解决的就是这两个问题。</p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzpr76prkzj20d5083jsg.jpg"></p>
-<p>目前在解决尺度变换以及小目标的问题上，已经存在一定的研究并且具有一定的成果，比如，FPN，将浅层特征与深层特征相结合来提高小目标的检测精度，dilated/deformable convolution，扩大检测的感受野来提高对大尺度目标的检测，还有在不同尺度的卷积层预测不同尺度的目标，以及利用多尺度训练或者多尺度inference等。虽然这些方法已经显著的改善了目标检测的结果，但是还有很多问题其实是没有被解决的，这里作者提出了两个疑问：</p>
+<p>目前在解决尺度变换以及小目标的问题上，已经存在一定的研究并且具有一定的成果，比如，FPN，将浅层特征与深层特征相结合来提高小目标的检测精度，dilated&#x2F;deformable convolution，扩大检测的感受野来提高对大尺度目标的检测，还有在不同尺度的卷积层预测不同尺度的目标，以及利用多尺度训练或者多尺度inference等。虽然这些方法已经显著的改善了目标检测的结果，但是还有很多问题其实是没有被解决的，这里作者提出了两个疑问：</p>
 <ol>
 <li><strong>为了检测小目标将图像放大是必要的吗？对于小分辨率图像，我们是否可以不放大图像，然后将stride调小一点呢？</strong></li>
 <li><strong>在进行检测器fine-tune的时候，我们是否应该只选择目标尺度在[64,256]范围内的进行训练，因为ImageNet的目标主要集中在该范围内，选择COCO数据集的所有尺度[16,800]进行训练，对效果会有影响吗？</strong></li>
@@ -315,7 +317,7 @@
 <h5 id="问题一：对于小目标，是放大图像效果好还是调整stride效果好呢？"><a href="#问题一：对于小目标，是放大图像效果好还是调整stride效果好呢？" class="headerlink" title="问题一：对于小目标，是放大图像效果好还是调整stride效果好呢？"></a>问题一：对于小目标，是放大图像效果好还是调整stride效果好呢？</h5><p>由于目前stage-of-the-art检测器多是在800*1200分辨率进行训练，inference的时候采用的是图像金字塔，这就包括了更高的分辨率1400*2000，那么为了提高小目标的检测，在inference阶段将图像放大来提高小目标的检测效果是否有效果呢？</p>
 <p>这里作者在分类模型上进行了对比实验。</p>
 <p>（1）作者将image图像分别缩放到48*48，64*64，80*80，96*96，128*128,然后在ImageNet上，用224*224训练的模型进行测试，以此来验证对小目标，直接放大后inference的效果，实验结果如下图Figure 4(a)所示，Figure 4(a)为top-1的accuracy，可以发现分辨率被缩放的越低，模型的效果实际上越差，换句话说就是，模型最适应的还是跟训练尺度一样的图像。</p>
-<p>（2）那么既然小目标在分类中表现的不是那么理想，会不会是网络下采样的时候，把小目标的特征丢失了，那么我们是否可以采用多尺度的训练来强化小目标特征的学习呢？将各个尺度的图像都拿来训练。我们知道ResNet101网络的输入是7*7，stride=2的卷积，然后接一个3*3,stride=2的pooling结构，作者进行了如下修改，在输入图像为48*48的时候，使用3*3的卷积，stride=1，对于输入图像是96*96,则使用kernel size 5*5, stride=2. 这也就可以利用小卷积来get到小目标的特征了，实验结果怎么样呢？图Figure 4（b）中CNN-S，可以发现，还是有一定的效果的，比原来的模型效果提升了不少。</p>
+<p>（2）那么既然小目标在分类中表现的不是那么理想，会不会是网络下采样的时候，把小目标的特征丢失了，那么我们是否可以采用多尺度的训练来强化小目标特征的学习呢？将各个尺度的图像都拿来训练。我们知道ResNet101网络的输入是7*7，stride&#x3D;2的卷积，然后接一个3*3,stride&#x3D;2的pooling结构，作者进行了如下修改，在输入图像为48*48的时候，使用3*3的卷积，stride&#x3D;1，对于输入图像是96*96,则使用kernel size 5*5, stride&#x3D;2. 这也就可以利用小卷积来get到小目标的特征了，实验结果怎么样呢？图Figure 4（b）中CNN-S，可以发现，还是有一定的效果的，比原来的模型效果提升了不少。</p>
 <p>（3）又或者，我们直接将小图放大到224*224去fine-tune我们的模型，结果又会怎么样呢？实验结果如图Figure 4(c)CNN-B-FT，可以发现，实验结果比实验二还要好一些，说明将图像放大后，还是可以get到一些小目标的特征的。<strong>这就是我们平时在进行模型迁移时候的finetune的方法</strong></p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzqp6o6kkej20d70biq63.jpg"></p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzqp8w1dv9j20r407zmz4.jpg"></p>
@@ -337,14 +339,14 @@
 <ul>
 <li>RPN网络的一点改变<br>为了提高RPN的效果，作者将conv4与conv5连接在一起，并且使用了7个anchor scales.</li>
 </ul>
-<h4 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h4><p>下表是使用不同尺度方法的模型对比，其中Single scale是使用单一尺度进行训练和测试，单一尺度为（800,1200），MS Test是使用多尺度进行inference，MS Train/Test是使用多尺度进行训练以及使用多尺度进行测试，SNIP为本文方法，从测试结果可以发现，SNIP还是有明显优势的，较MS提高了2个点。</p>
+<h4 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h4><p>下表是使用不同尺度方法的模型对比，其中Single scale是使用单一尺度进行训练和测试，单一尺度为（800,1200），MS Test是使用多尺度进行inference，MS Train&#x2F;Test是使用多尺度进行训练以及使用多尺度进行测试，SNIP为本文方法，从测试结果可以发现，SNIP还是有明显优势的，较MS提高了2个点。</p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzsd9q4f9zj20dh05vwf3.jpg"></p>
 <p>下表是RPN召回率的结果图，实验结果显示，Baseline的平均召回率只有大约57.6%，SNIP方法的平均召回率达到了64%。</p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzsdl4j65gj20e406kjsq.jpg"></p>
 <p>下表是SNIP与其他检测网络的精度对比，在实验中，作者使用了DCN以及Soft-NMS.在D-RFCN中相比较于不使用SNIP，使用SNIP后平均精度提高了大约3.5%，观察表中，精度最高的是Faster-RCNN + SNIP（RPN+RCN）,backbone使用ResNet-101,平均精度达到了惊人的44.4%，小目标的建精度达到了56.9%。</p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzr0o91wksj20r509stbq.jpg"></p>
 <h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>纵观本文，不仅仅作者的方法提高了目标检测的mAP，同等重要的是作者对数据的分析，以及详细的实验证明，从数据中发现问题，进而利用详细的实验证明，进而解决问题，这也是值得我们学习的解决问题的方法。<strong>大数据时代，从数据角度去优化模型，往往会比单纯的杠模型取得更好的效果。</strong></p>
-</body></html>
+
     </div>
 
     
@@ -439,7 +441,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-count">40</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

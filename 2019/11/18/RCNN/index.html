@@ -51,12 +51,12 @@
   };
 </script>
 
-  <meta name="description" content="知识点总结 首先利用Selective Search方法提取Region Proposal Region Proposal缩放后送入到CNN网络，为什么要缩放，因为fc层要求固定大小的输入。 CNN提取特征后，送入到后面的SVM进行分类（这里还涉及到难例挖掘） 回归部分，利用4个线性回归，对proposal的坐标计算。 CNN使用预训练模型，然后在VOC上进行finetune   重要链接论文链接">
+  <meta name="description" content="知识点总结 首先利用Selective Search方法提取Region Proposal Region Proposal缩放后送入到CNN网络，为什么要缩放，因为fc层要求固定大小的输入。 CNN提取特征后，送入到后面的SVM进行分类（这里还涉及到难例挖掘） 回归部分，利用4个线性回归，对proposal的坐标计算。 CNN使用预训练模型，然后在VOC上进行finetune">
 <meta property="og:type" content="article">
 <meta property="og:title" content="R-CNN">
 <meta property="og:url" content="https://www.wanglichun.tech/2019/11/18/RCNN/index.html">
 <meta property="og:site_name" content="Spring&#39;s Idea">
-<meta property="og:description" content="知识点总结 首先利用Selective Search方法提取Region Proposal Region Proposal缩放后送入到CNN网络，为什么要缩放，因为fc层要求固定大小的输入。 CNN提取特征后，送入到后面的SVM进行分类（这里还涉及到难例挖掘） 回归部分，利用4个线性回归，对proposal的坐标计算。 CNN使用预训练模型，然后在VOC上进行finetune   重要链接论文链接">
+<meta property="og:description" content="知识点总结 首先利用Selective Search方法提取Region Proposal Region Proposal缩放后送入到CNN网络，为什么要缩放，因为fc层要求固定大小的输入。 CNN提取特征后，送入到后面的SVM进行分类（这里还涉及到难例挖掘） 回归部分，利用4个线性回归，对proposal的坐标计算。 CNN使用预训练模型，然后在VOC上进行finetune">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://img-blog.csdn.net/20180313195405918?watermark/2/text/Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
 <meta property="og:image" content="http://img-blog.csdn.net/20180313202105697?watermark/2/text/Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
@@ -64,7 +64,7 @@
 <meta property="og:image" content="https://www.wanglichun.tech/1.png">
 <meta property="og:image" content="https://www.wanglichun.tech/2.png">
 <meta property="article:published_time" content="2019-11-18T01:37:03.000Z">
-<meta property="article:modified_time" content="2020-01-16T05:48:34.000Z">
+<meta property="article:modified_time" content="2022-05-28T01:31:37.156Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="RCNN">
 <meta name="twitter:card" content="summary">
@@ -242,7 +242,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-16 13:48:34" itemprop="dateModified" datetime="2020-01-16T13:48:34+08:00">2020-01-16</time>
+                <time title="修改时间：2022-05-28 09:31:37" itemprop="dateModified" datetime="2022-05-28T09:31:37+08:00">2022-05-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -288,13 +288,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <html><head></head><body></body></html><html><head></head><body><h5 id="知识点总结"><a href="#知识点总结" class="headerlink" title="知识点总结"></a>知识点总结</h5><ul>
+        <h5 id="知识点总结"><a href="#知识点总结" class="headerlink" title="知识点总结"></a>知识点总结</h5><ul>
 <li>首先利用Selective Search方法提取Region Proposal</li>
 <li>Region Proposal<strong>缩放</strong>后送入到CNN网络，为什么要缩放，因为fc层要求固定大小的输入。</li>
 <li>CNN提取特征后，送入到后面的SVM进行分类（这里还涉及到难例挖掘）</li>
 <li>回归部分，利用4个线性回归，对proposal的坐标计算。</li>
 <li>CNN使用预训练模型，然后在VOC上进行finetune</li>
 </ul>
+<span id="more"></span>
+
 <hr>
 <h5 id="重要链接"><a href="#重要链接" class="headerlink" title="重要链接"></a>重要链接</h5><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1311.2524">论文链接：https://arxiv.org/abs/1311.2524</a></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/rbgirshick/rcnn">GitHub代码链接：https://github.com/rbgirshick/rcnn</a></p>
@@ -337,20 +339,20 @@
 <p>对于在训练CNN以及SVM的时候，正负样本的定义不同，主要在于训练数据集有限。作者采用IOU为0.5增加了将近30倍的训练数据，这可以有效的在fine-tuning的过程中<strong>防止过拟合</strong>，但是由于使用了这些数据，导致其在目标定位中的精度下降。<br>这就带来了另一个问题，我们为什么不直接在网络后面利用回归进行检测而是训练SVM分类器呢？作者实际上使用softmax进行了测试，但是作者发现，其精度降低了，导致精度降低的主要有几方面，如：进行fine-tuning时候的目标精度本身就存在偏差，不是ground truth，另外softmax的训练采用的是随机的负样本而不是采用的hard negatives样本。<br>另外，作者提出，不使用SVM应该也可以达到类似的精度，可以进行进一步的研究。</p>
 <h5 id="Bounding-box-Regression"><a href="#Bounding-box-Regression" class="headerlink" title="Bounding-box Regression"></a>Bounding-box Regression</h5><p>进一步的，作者设计了Bounding-box Regression用于对坐标进行微调，使得得到的目标更接近于ground truth</p>
 <p>对于region proposal 以及ground truth，本文分别用如下代替：</p>
-<p>$$P_i=(P_{x}^{i},P_{y}^{i},P_{w}^{i},P_{h}^{i})$$</p>
-<p>$$G_i=(G_{x}^{i},G_{y}^{i},G_{w}^{i},G_{h}^{i})$$</p>
+<p>$$P_i&#x3D;(P_{x}^{i},P_{y}^{i},P_{w}^{i},P_{h}^{i})$$</p>
+<p>$$G_i&#x3D;(G_{x}^{i},G_{y}^{i},G_{w}^{i},G_{h}^{i})$$</p>
 <p>其中x,y为中心点坐标，w和h分别为长和宽。<br>作者通过线性变换，计算P的偏移量，得到预测坐标如下：</p>
-<p>$$\hat{G}_{x} = P_wd_x(P)+P_x$$</p>
-<p>$$\hat{G}_{y} = P_hd_y(P)+P_y$$</p>
-<p>$$\hat{G}_{w} = P_wexp(d_w(P))$$</p>
-<p>$$\hat{G}_{h} = P_wexp(d_h(P))$$</p>
-<p>其中$d_*(P)$代表一种线性变换，对pool5特征进行计算,我们标记特征为$\phi_5(P)$，$d_*(P)=w_*^T\phi_5(P)$，作者设定优化函数为：</p>
-<p>$w_*=argmin_{w_*}\sum(t_*^i-w_*^T\phi_5(P^i))^2+\lambda||w_*||$</p>
+<p>$$\hat{G}_{x} &#x3D; P_wd_x(P)+P_x$$</p>
+<p>$$\hat{G}_{y} &#x3D; P_hd_y(P)+P_y$$</p>
+<p>$$\hat{G}_{w} &#x3D; P_wexp(d_w(P))$$</p>
+<p>$$\hat{G}_{h} &#x3D; P_wexp(d_h(P))$$</p>
+<p>其中$d_*(P)$代表一种线性变换，对pool5特征进行计算,我们标记特征为$\phi_5(P)$，$d_*(P)&#x3D;w_*^T\phi_5(P)$，作者设定优化函数为：</p>
+<p>$w_*&#x3D;argmin_{w_*}\sum(t_*^i-w_*^T\phi_5(P^i))^2+\lambda||w_*||$</p>
 <p>$t_*$定义如下：</p>
-<p>$$t_x=(G_x-P_x)/P_w$$</p>
-<p>$$t_y=(G_y-P_y)/P_h$$</p>
-<p>$$t_w=log(G_w/P_w)$$</p>
-<p>$$t_h=log(G_h/P_h)$$</p>
+<p>$$t_x&#x3D;(G_x-P_x)&#x2F;P_w$$</p>
+<p>$$t_y&#x3D;(G_y-P_y)&#x2F;P_h$$</p>
+<p>$$t_w&#x3D;log(G_w&#x2F;P_w)$$</p>
+<p>$$t_h&#x3D;log(G_h&#x2F;P_h)$$</p>
 <blockquote>
 <p>这里分析一下，为什么作者在x,y分别除了w和h，原因在于其偏移量产生的loss与proposal的大小有关，比如同样是向左偏移10个像素，如果proposal是100*100和10*10产生的误差是不一样的，所以作者除了w和h。</p>
 </blockquote>
@@ -365,7 +367,7 @@
 <li>对pool5,fc6,fc7采用fune-tuning进行实验对比，作者发现，fune-tuning之后，模型的识别能力提升了近8%，fc6和fc7提升明显，但是pool5提升不明显，这样说明了pool5提取的特征具有一定的泛化性。row 4-7</li>
 <li>与其他方法进行对比，优势明显。row 8-10<br><img src="/2.png" alt="这里写图片描述"></li>
 </ul>
-</body></html>
+
     </div>
 
     
@@ -460,7 +462,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-count">40</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

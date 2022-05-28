@@ -51,18 +51,18 @@
   };
 </script>
 
-  <meta name="description" content="这篇文章更偏向于网络设计，主要在于将conv与atten相结合，各取其有点，conv更擅长进行归纳总结，atten具有更大的容量，所以将二者进行结合，可以去得进一步提点的效果，然后为了减少计算量，采用了前面是conv，后面是atten的结构，同时，实验了结构里面每个stage有多少的block效果最好等等，代码没有开源，具体的实现细节还需要等开源再看。   https:&#x2F;&#x2F;arxiv.org&#x2F;p">
+  <meta name="description" content="这篇文章更偏向于网络设计，主要在于将conv与atten相结合，各取其有点，conv更擅长进行归纳总结，atten具有更大的容量，所以将二者进行结合，可以去得进一步提点的效果，然后为了减少计算量，采用了前面是conv，后面是atten的结构，同时，实验了结构里面每个stage有多少的block效果最好等等，代码没有开源，具体的实现细节还需要等开源再看。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CoAtNet">
 <meta property="og:url" content="https://www.wanglichun.tech/2021/11/06/CoAtNet/index.html">
 <meta property="og:site_name" content="Spring&#39;s Idea">
-<meta property="og:description" content="这篇文章更偏向于网络设计，主要在于将conv与atten相结合，各取其有点，conv更擅长进行归纳总结，atten具有更大的容量，所以将二者进行结合，可以去得进一步提点的效果，然后为了减少计算量，采用了前面是conv，后面是atten的结构，同时，实验了结构里面每个stage有多少的block效果最好等等，代码没有开源，具体的实现细节还需要等开源再看。   https:&#x2F;&#x2F;arxiv.org&#x2F;p">
+<meta property="og:description" content="这篇文章更偏向于网络设计，主要在于将conv与atten相结合，各取其有点，conv更擅长进行归纳总结，atten具有更大的容量，所以将二者进行结合，可以去得进一步提点的效果，然后为了减少计算量，采用了前面是conv，后面是atten的结构，同时，实验了结构里面每个stage有多少的block效果最好等等，代码没有开源，具体的实现细节还需要等开源再看。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://www.wanglichun.tech/image-20210928114232584.png">
 <meta property="og:image" content="https://www.wanglichun.tech/image-20210929143259557.png">
 <meta property="og:image" content="https://www.wanglichun.tech/image-20210929143943118.png">
 <meta property="article:published_time" content="2021-11-06T07:25:57.000Z">
-<meta property="article:modified_time" content="2022-01-27T19:45:56.000Z">
+<meta property="article:modified_time" content="2022-05-28T01:26:52.854Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="Vision_Transformer">
 <meta name="twitter:card" content="summary">
@@ -240,7 +240,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-28 03:45:56" itemprop="dateModified" datetime="2022-01-28T03:45:56+08:00">2022-01-28</time>
+                <time title="修改时间：2022-05-28 09:26:52" itemprop="dateModified" datetime="2022-05-28T09:26:52+08:00">2022-05-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -286,9 +286,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <html><head></head><body></body></html><html><head></head><body><blockquote>
+        <blockquote>
 <p>这篇文章更偏向于网络设计，主要在于将conv与atten相结合，各取其有点，conv更擅长进行归纳总结，atten具有更大的容量，所以将二者进行结合，可以去得进一步提点的效果，然后为了减少计算量，采用了前面是conv，后面是atten的结构，同时，实验了结构里面每个stage有多少的block效果最好等等，代码没有开源，具体的实现细节还需要等开源再看。</p>
 </blockquote>
+<span id="more"></span>
+
+
+
 <hr>
 <p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2106.04803v2.pdf">https://arxiv.org/pdf/2106.04803v2.pdf</a></p>
 <p>Google Brain</p>
@@ -296,14 +300,14 @@
 <p>没开源</p>
 <hr>
 <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
-<li>虽然transformers倾向于更大的模型容量，但是由于其缺乏正确的归纳偏差（right inductive bias），可能会比conv弱一些。==这里后来我的理解就是泛化性比较弱，所以需要大量的图像嘛==。</li>
+<li>虽然transformers倾向于更大的模型容量，但是由于其缺乏正确的归纳偏差（right inductive bias），可能会比conv弱一些。&#x3D;&#x3D;这里后来我的理解就是泛化性比较弱，所以需要大量的图像嘛&#x3D;&#x3D;。</li>
 <li>depthwise conv + self-attention</li>
 <li>vertical stacking conv and attention</li>
 <li>imagenet : 86%,  if use jft-3b : 99.88%</li>
 </ul>
 <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
 <li>vit的better performance 很大程度上是依赖于大量的数据的JFT-300，如果没有大量数据，vit效果不行的。</li>
-<li>说缺乏certain desireable inductive biases, 需要大量的数据进行补偿，==归纳偏差是说对图像的特征进行归纳吗？没太理解？==， 后来在wikipedia找到了答案：<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Inductive_bias%EF%BC%8C%E7%AE%80%E5%8D%95%E8%AF%B4%E5%B0%B1%E6%98%AF%E5%BD%92%E7%BA%B3%E8%83%BD%E5%8A%9B%EF%BC%8C%E6%B3%9B%E5%8C%96%E8%83%BD%E5%8A%9B%E3%80%82">https://en.wikipedia.org/wiki/Inductive_bias，简单说就是归纳能力，泛化能力。</a></li>
+<li>说缺乏certain desireable inductive biases, 需要大量的数据进行补偿，&#x3D;&#x3D;归纳偏差是说对图像的特征进行归纳吗？没太理解？&#x3D;&#x3D;， 后来在wikipedia找到了答案：<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Inductive_bias%EF%BC%8C%E7%AE%80%E5%8D%95%E8%AF%B4%E5%B0%B1%E6%98%AF%E5%BD%92%E7%BA%B3%E8%83%BD%E5%8A%9B%EF%BC%8C%E6%B3%9B%E5%8C%96%E8%83%BD%E5%8A%9B%E3%80%82">https://en.wikipedia.org/wiki/Inductive_bias，简单说就是归纳能力，泛化能力。</a></li>
 <li>卷积具有较强的归纳能力，可以快速收敛；atten具有较好的模型能力，适应较大的数据量，那将二者进行结合不就既有了generalization又有了model capacity.</li>
 </ul>
 <h2 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h2><h3 id="Merging-Convolution-and-Self-Attention"><a href="#Merging-Convolution-and-Self-Attention" class="headerlink" title="Merging Convolution and Self-Attention"></a>Merging Convolution and Self-Attention</h3><ul>
@@ -315,14 +319,14 @@
 <ul>
 <li><p>conv的kernel是一个独立的超参数，而self attention是根据输入决定的，所以self attention更适合处理复杂的空间位置关系，这个属性比较适合处理high-level的信息，但是也比较容易过拟合。</p>
 </li>
-<li><p>==对于给定的position pair(i, j), conv weight 更关注与i 和 j 的偏移信息，而不是i和j的值。这个属性通常被称为等价翻译，更使用于提高泛化性。而由于vit使用了绝对的位置信息，破坏了这个属性，所以其效果变差。==这个可以好好分析分析，不是特别的理解。</p>
+<li><p>&#x3D;&#x3D;对于给定的position pair(i, j), conv weight 更关注与i 和 j 的偏移信息，而不是i和j的值。这个属性通常被称为等价翻译，更使用于提高泛化性。而由于vit使用了绝对的位置信息，破坏了这个属性，所以其效果变差。&#x3D;&#x3D;这个可以好好分析分析，不是特别的理解。</p>
 </li>
 <li><p>感受野问题，self attention 具有大的感受野（但是大的感受野，往往带来的是较大的计算量。）</p>
 </li>
 </ul>
 </blockquote>
 </li>
-<li><p>基于上面的分析，很自然的想法就是如下的结合：$w_{i-1}$是一个常数（==咋算的后面附录A.1详述==）</p>
+<li><p>基于上面的分析，很自然的想法就是如下的结合：$w_{i-1}$是一个常数（&#x3D;&#x3D;咋算的后面附录A.1详述&#x3D;&#x3D;）</p>
 <p><img src="/image-20210928114232584.png" alt="image-20210928114232584"></p>
 </li>
 </ul>
@@ -330,9 +334,9 @@
 <li><p>如果按照上面的结构进行设计，由于attention是对全图进行计算，那么计算量会比较大，有啥方法可以尝试减少计算量呢？</p>
 <blockquote>
 <ul>
-<li>先降维，然后再使用attention操作。（==作者的主要尝试与探索==）</li>
-<li>限制感受野，像卷积那样，使用小的感受野。（==发现其实没有用，增加了访存次数，反而更慢了==）</li>
-<li>softmax attention 替换成近似的linear attention, 减少计算量。（==试了，没有啥效果==）</li>
+<li>先降维，然后再使用attention操作。（&#x3D;&#x3D;作者的主要尝试与探索&#x3D;&#x3D;）</li>
+<li>限制感受野，像卷积那样，使用小的感受野。（&#x3D;&#x3D;发现其实没有用，增加了访存次数，反而更慢了&#x3D;&#x3D;）</li>
+<li>softmax attention 替换成近似的linear attention, 减少计算量。（&#x3D;&#x3D;试了，没有啥效果&#x3D;&#x3D;）</li>
 </ul>
 </blockquote>
 </li>
@@ -349,8 +353,8 @@
 </ul>
 <h2 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h2><ul>
 <li>作者在imagenet-1k, imagenet-21k, JFT上进行实验。 we first pre-train our models on each of the three datasets at resolution 224 for 300, 90 and 14 epochs respectively. Then, we finetune the pre-trained models on ImageNet-1K at the desired resolutions for 30 epochs and obtain the corresponding evaluation accuracy.</li>
-<li>RandAugment and MixUp + stochastic depth  ， label smoothing  and weight decay,==又有了这个stochastic depth==</li>
-<li>Specifically, we have an interesting observation that if a certain type of augmentation is entirely disabled during pre-training, simply turning it on during fine-tuning would most likely harm the performance rather than improving==这个观察很神奇？why?==</li>
+<li>RandAugment and MixUp + stochastic depth  ， label smoothing  and weight decay,&#x3D;&#x3D;又有了这个stochastic depth&#x3D;&#x3D;</li>
+<li>Specifically, we have an interesting observation that if a certain type of augmentation is entirely disabled during pre-training, simply turning it on during fine-tuning would most likely harm the performance rather than improving&#x3D;&#x3D;这个观察很神奇？why?&#x3D;&#x3D;</li>
 <li>实验效果，论文中表示，效果挺好的。</li>
 </ul>
 <h2 id="Ablation-Studies"><a href="#Ablation-Studies" class="headerlink" title="Ablation Studies"></a>Ablation Studies</h2><ul>
@@ -359,7 +363,7 @@
 <p><img src="/image-20210929143259557.png" alt="image-20210929143259557"></p>
 <h2 id="model-Details"><a href="#model-Details" class="headerlink" title="model Details"></a>model Details</h2><p><img src="/image-20210929143943118.png" alt="image-20210929143943118"></p>
 <h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>A.1， 公式（3）的实现，那个w是如何实现的呢？我也是初略的看了，不知道对不对，作者设了一个（2H-1）x (2W-1)的参数，然后计算的时候直接进行索引。</p>
-</body></html>
+
     </div>
 
     
@@ -454,7 +458,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-count">40</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

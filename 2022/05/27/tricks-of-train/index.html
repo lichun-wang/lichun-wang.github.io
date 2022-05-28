@@ -58,27 +58,27 @@
 <meta property="og:site_name" content="Spring&#39;s Idea">
 <meta property="og:description" content="很多时候，外界同学管深度学习算法工程师叫做调参工程师，简单直接的概括了深度学习工程师的工作，搞深度学习的同学自己也经常自嘲，称自己的工作是炼丹，的确，深度学习模型有时候确实很奇妙，而调参在一个模型的优化中起着至关重要的作用，正因为如此，也有越来越多的研究放在了调参这件事上，比如：学习率的优化算法，模型初始化算法等等。其实，拿一个别人已经训练好的模型（比如ImageNet上预训练的ResNet），">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://latex.codecogs.com/gif.latex?y=\gamma&amp;space;\widehat{x}+\beta">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?y=\gamma&space;\widehat{x}&plus;\beta">
 <meta property="og:image" content="https://www.wanglichun.tech/1.PNG">
 <meta property="og:image" content="https://www.wanglichun.tech/2.PNG">
 <meta property="og:image" content="https://www.wanglichun.tech/3.PNG">
 <meta property="og:image" content="https://www.wanglichun.tech/4.PNG">
-<meta property="og:image" content="https://latex.codecogs.com/gif.latex?\eta&amp;space;_{n}=\frac{1}{2}(1+cos(\frac{t\pi&amp;space;}{T}))\eta">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?\eta&space;_{n}=\frac{1}{2}(1&plus;cos(\frac{t\pi&space;}{T}))\eta">
 <meta property="og:image" content="https://www.wanglichun.tech/5.PNG">
 <meta property="og:image" content="https://www.wanglichun.tech/6.PNG">
-<meta property="og:image" content="https://latex.codecogs.com/gif.latex?l=(p,softmax(z))+T^{2}l(softmax(r/T),softmax(z/T))">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?l=(p,softmax(z))&plus;T^{2}l(softmax(r/T),softmax(z/T))">
 <meta property="og:image" content="https://www.wanglichun.tech/7.PNG">
-<meta property="og:image" content="https://latex.codecogs.com/gif.latex?\widehat{x}=\lambda&amp;space;x_i+(1-\lambda&amp;space;)x_j&amp;space;,&amp;space;\widehat{y}=\lambda&amp;space;y_i+(1-\lambda&amp;space;)y_j">
+<meta property="og:image" content="https://latex.codecogs.com/gif.latex?\widehat{x}=\lambda&space;x_i&plus;(1-\lambda&space;)x_j&space;,&space;\widehat{y}=\lambda&space;y_i&plus;(1-\lambda&space;)y_j">
 <meta property="og:image" content="https://www.wanglichun.tech/8.PNG">
 <meta property="og:image" content="https://www.wanglichun.tech/9.PNG">
 <meta property="og:image" content="https://www.wanglichun.tech/10.PNG">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fzlf1xibwij20is0fhdh5.jpg">
 <meta property="article:published_time" content="2022-05-27T05:14:50.000Z">
-<meta property="article:modified_time" content="2020-02-15T19:31:28.000Z">
+<meta property="article:modified_time" content="2022-05-28T01:33:15.143Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="Tricks">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://latex.codecogs.com/gif.latex?y=\gamma&amp;space;\widehat{x}+\beta">
+<meta name="twitter:image" content="https://latex.codecogs.com/gif.latex?y=\gamma&space;\widehat{x}&plus;\beta">
 
 <link rel="canonical" href="https://www.wanglichun.tech/2022/05/27/tricks-of-train/">
 
@@ -252,7 +252,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-16 03:31:28" itemprop="dateModified" datetime="2020-02-16T03:31:28+08:00">2020-02-16</time>
+                <time title="修改时间：2022-05-28 09:33:15" itemprop="dateModified" datetime="2022-05-28T09:33:15+08:00">2022-05-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -298,9 +298,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <html><head></head><body></body></html><html><head></head><body><blockquote>
+        <blockquote>
 <p>很多时候，外界同学管深度学习算法工程师叫做<strong>调参工程师</strong>，简单直接的概括了深度学习工程师的工作，搞深度学习的同学自己也经常自嘲，称自己的工作是<strong>炼丹</strong>，的确，深度学习模型有时候确实很奇妙，而<strong>调参</strong>在一个模型的优化中起着至关重要的作用，正因为如此，也有越来越多的研究放在了<strong>调参</strong>这件事上，比如：学习率的优化算法，模型初始化算法等等。<br>其实，拿一个别人已经训练好的模型（比如ImageNet上预训练的ResNet），直接在自己的数据集上进行finetune，不需要怎么调参，一般都会得到不错的效果，这就是站在巨人的肩膀上，但是如果想继续提高模型的精度，该怎么做？继续调参？还是有一些其他的方法可以采用？<strong>本篇文章就介绍了Amazon工程师总结的分类模型的调参技巧。</strong></p>
 </blockquote>
+<span id="more"></span>
+
 <hr>
 <p><strong>论文名称：Bag of Tricks for Image Classification with Convolutional Neural Networks</strong></p>
 <p><strong><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1812.01187.pdf">论文链接：https://arxiv.org/pdf/1812.01187.pdf</a></strong></p>
@@ -313,7 +315,7 @@
 </ul>
 <ol>
 <li>随机旋转一个batch的图像，然后将其编码成32位浮点数[0-255]。</li>
-<li>随机截取一个长宽比在[3/4,4/3]的矩形，矩形面积占图像面积的[0.8,1],截取后将图像resize到224*224。</li>
+<li>随机截取一个长宽比在[3&#x2F;4,4&#x2F;3]的矩形，矩形面积占图像面积的[0.8,1],截取后将图像resize到224*224。</li>
 <li>按照0.5的比例进行水平翻转。</li>
 <li>对亮度，色度，饱和度进行跳帧。</li>
 <li>增加PCA噪声，噪声分布为正态分布(0,0.1)。</li>
@@ -332,7 +334,7 @@
 </ul>
 <ol start="10">
 <li>卷积层以及全连接层采用Xavier算法进行初始化。</li>
-<li>bn层，$\gamma=1$,$\beta=0$</li>
+<li>bn层，$\gamma&#x3D;1$,$\beta&#x3D;0$</li>
 </ol>
 <ul>
 <li><strong>参数优化方法</strong></li>
@@ -346,10 +348,10 @@
 <p><strong>上面是最常用的深度学习模型的参数设置，作者将其作为模型的baseline，基础有了，下面我们来谈谈如何提升模型效果：</strong></p>
 <h5 id="batch-size是不是越大越好？"><a href="#batch-size是不是越大越好？" class="headerlink" title="batch size是不是越大越好？"></a><strong>batch size是不是越大越好？</strong></h5><p>增加batch size可以增加网络的并行度，降低通信消耗，但是使用大的batch size同样也会带来一定的问题，比如：凸优化问题，<strong>随着batch size的增加，会增加数据的收敛的难度</strong>，换句话说，相同的epoch，使用大的batch size相比较使用小的batch size，小的batch size可能精度会更高一点。</p>
 <p><strong>那么我们是不是不该使用大的batch size，当然不是，下面介绍几种方法:</strong></p>
-<h5 id="方法一：线性改变学习率"><a href="#方法一：线性改变学习率" class="headerlink" title="方法一：线性改变学习率"></a><strong>方法一：线性改变学习率</strong></h5><p>在梯度下降中，由于选择的sample是随机的，所以其梯度下降的方向也是随机的，当提高batch size之后，并不能改变这种随机性，但是由于图像数量的增加，却可以中和掉一部分的噪声，所以这个时候，我们可以增加一部分的学习率，使得学习的步子迈的大一点，比如，在resnet50中，batch size=256,我们选择了lr=0.1，当batchsize增大到b的时候，lr可以调整为$0.1b/256$</p>
+<h5 id="方法一：线性改变学习率"><a href="#方法一：线性改变学习率" class="headerlink" title="方法一：线性改变学习率"></a><strong>方法一：线性改变学习率</strong></h5><p>在梯度下降中，由于选择的sample是随机的，所以其梯度下降的方向也是随机的，当提高batch size之后，并不能改变这种随机性，但是由于图像数量的增加，却可以中和掉一部分的噪声，所以这个时候，我们可以增加一部分的学习率，使得学习的步子迈的大一点，比如，在resnet50中，batch size&#x3D;256,我们选择了lr&#x3D;0.1，当batchsize增大到b的时候，lr可以调整为$0.1b&#x2F;256$</p>
 <h5 id="方法二：学习率预热"><a href="#方法二：学习率预热" class="headerlink" title="方法二：学习率预热"></a><strong>方法二：学习率预热</strong></h5><p>当我们开始训练模型的时候，往往模型的参数都是随机初始化的，并不能代表什么，所以如果此时选择一个较大的学习率，往往会导致模型的不稳定，那么什么是学习率预热，简单来说就是先使用一个较小的学习率，先迭代几个epoch，等到模型基本稳定的时候再用初始设置的学习率进行训练。举个例子，比如预热5个epoch，学习率设置成lr，则前5个epoch可以设置学习率线性递增，即第一个epoch：0.2*lr,第二个:0.4*epoch,依次类推，到第五个变为lr。</p>
 <h5 id="方法三：部分BN层r-gamma-设置成0"><a href="#方法三：部分BN层r-gamma-设置成0" class="headerlink" title="方法三：部分BN层r(gamma)设置成0"></a><strong>方法三：部分BN层r(gamma)设置成0</strong></h5><p>resnet我们都知道，中间有很多BN层，BN层的提出可以说是模型训练的一个里程碑，它使得模型的训练更加简单，模型收敛更加快速，并且可以使用更大的学习率进行训练，BN层的作用就是对数据进行归一化操作，然后通过设置两个学习参数对归一化进行调整，即：</p>
-<p><a href="https://www.codecogs.com/eqnedit.php?latex=y=\gamma&amp;space;\widehat{x}+\beta" target="_blank"><img src="https://latex.codecogs.com/gif.latex?y=\gamma&amp;space;\widehat{x}+\beta" title="y=\gamma \widehat{x}+\beta"></a></p>
+<p><a href="https://www.codecogs.com/eqnedit.php?latex=y=\gamma&space;\widehat{x}&plus;\beta" target="_blank"><img src="https://latex.codecogs.com/gif.latex?y=\gamma&space;\widehat{x}&plus;\beta" title="y=\gamma \widehat{x}+\beta" /></a></p>
 <p>其中$\gamma$以及$\beta$是可以学习的，$\widehat{x}$是对输入进行标准化的结果，通常的做法是将$\gamma$初始化为1，$\beta$初始化为0，这里作者建议在使用resnet的时候，将每个block的最后的BN层的$\gamma$初始化为0，这样无论前面的结果如何，经过这一层都被清零了，block的输出就只有前面的short cut部分，导致每个block的输入都是一样的，作者解释说，这样可以使得网络的训练更加的方便。</p>
 <h5 id="方法四：不使用bias-decay"><a href="#方法四：不使用bias-decay" class="headerlink" title="方法四：不使用bias decay"></a><strong>方法四：不使用bias decay</strong></h5><p>在深度学习训练中，decay是一个很好的策略，可以防止参数多大引起过拟合，一般常采用的策略是L2范数，这里作者建议在做decay的时候，只对卷基层以及全连接层的weight加入decay就可以了，不需要对bias进行处理。</p>
 <h5 id="方法五：低精度训练"><a href="#方法五：低精度训练" class="headerlink" title="方法五：低精度训练"></a><strong>方法五：低精度训练</strong></h5><p>目前的GPU训练基本是采用32位浮点数进行数据存储的，即FP32,但是新的GPU比如Nvidia V100,支持16为浮点数的运行，速度可以提升2-3倍，而且采用更大的batchsize后（当然使用了前面的各种策略来配合batchsize的提升），精度还小有提升。如下面Table3所示。</p>
@@ -361,32 +363,32 @@
 <ul>
 <li>ResNet B:</li>
 </ul>
-<p>由于在ResNet中，每个stage的第一个block会进行图像尺度的缩小，采用了如图Figure1 深蓝色那部分结构，首先是1*1卷积层，stride=2，使得网络的feature map缩小一半，然后再经过3*3的卷积层，但是stride=2的1*1的卷积层会带来一个问题，会损失掉一半的信息（这里论文中提到是3/4），ResNet B修改了这个结构，将stride=2放到了3*3的卷积，这样就不会带来信息的损失了。</p>
+<p>由于在ResNet中，每个stage的第一个block会进行图像尺度的缩小，采用了如图Figure1 深蓝色那部分结构，首先是1*1卷积层，stride&#x3D;2，使得网络的feature map缩小一半，然后再经过3*3的卷积层，但是stride&#x3D;2的1*1的卷积层会带来一个问题，会损失掉一半的信息（这里论文中提到是3&#x2F;4），ResNet B修改了这个结构，将stride&#x3D;2放到了3*3的卷积，这样就不会带来信息的损失了。</p>
 <ul>
 <li>ResNet C:</li>
 </ul>
-<p>使用3个3*3的卷积来替换resnet的7*7的卷积。并且前2个卷积的stride=3,channel=32,最后一个channel=64，这是一个比较老的套路了，在inception网络中被提出。</p>
+<p>使用3个3*3的卷积来替换resnet的7*7的卷积。并且前2个卷积的stride&#x3D;3,channel&#x3D;32,最后一个channel&#x3D;64，这是一个比较老的套路了，在inception网络中被提出。</p>
 <ul>
 <li>ResNet D:</li>
 </ul>
-<p>既然主通道可以通过修改stride来降低信息损失，那么short cut为什么不可以呢？当然可以，作者是怎么做的呢？首先增加了一个2*2的average pooling layer， 设置stride=2，conv层的stride变为1。</p>
+<p>既然主通道可以通过修改stride来降低信息损失，那么short cut为什么不可以呢？当然可以，作者是怎么做的呢？首先增加了一个2*2的average pooling layer， 设置stride&#x3D;2，conv层的stride变为1。</p>
 <p><strong>对比一下这几个结构的精度,resnet B的提升是最有效的，相对提升了约0.5个百分点resnet C以及resnet D分别又提升了0.2%以及0.3%，整体大约提升了1个百分点。</strong></p>
 <p><img src="/4.PNG"></p>
 <h4 id="模型的训练技巧"><a href="#模型的训练技巧" class="headerlink" title="模型的训练技巧"></a><strong>模型的训练技巧</strong></h4><h5 id="技巧一-cosine-learning-rate-decay："><a href="#技巧一-cosine-learning-rate-decay：" class="headerlink" title="技巧一  : cosine learning rate decay："></a>技巧一  : cosine learning rate decay：</h5><p>前面我们提到了训练模型的时候学习率需要warmup，可是在warmup之后，随着epoch的增加，学习率需要适度的调低，这就叫learning rate decay，我们常采用的方法是使用<strong>step decay</strong>,最简单的比如每20个epoch降低学习率为原来的10%，本篇综述提到了使用cosine learning rate decay，即采用cosine的方式来降低学习率，公式如下：</p>
-<p><a href="https://www.codecogs.com/eqnedit.php?latex=\eta&amp;space;_{n}=\frac{1}{2}(1+cos(\frac{t\pi&amp;space;}{T}))\eta" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\eta&amp;space;_{n}=\frac{1}{2}(1+cos(\frac{t\pi&amp;space;}{T}))\eta" title="\eta _{n}=\frac{1}{2}(1+cos(\frac{t\pi }{T}))\eta"></a></p>
+<p><a href="https://www.codecogs.com/eqnedit.php?latex=\eta&space;_{n}=\frac{1}{2}(1&plus;cos(\frac{t\pi&space;}{T}))\eta" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\eta&space;_{n}=\frac{1}{2}(1&plus;cos(\frac{t\pi&space;}{T}))\eta" title="\eta _{n}=\frac{1}{2}(1+cos(\frac{t\pi }{T}))\eta" /></a></p>
 <p>红色的线为采用cosine decay策略，蓝色的为采用step decay策略，可以发现，cosine decay策略更加的平滑，训练的精度提升也是逐步提升，不像step策略，会有跳跃。不过训到最后，精度基本差不多，<strong>个人觉得，step其实也挺好用。</strong></p>
 <p><img src="/5.PNG"></p>
 <h5 id="技巧二-Label-Smoothing"><a href="#技巧二-Label-Smoothing" class="headerlink" title="技巧二 : Label Smoothing"></a>技巧二 : Label Smoothing</h5><p>在分类算法中，我们常采用的是one-hot编码，label smoothing的策略就是在one-hot的基础上，减去一个较小的值，如下公式，作者解释到，<strong>这样可以一定程度上减少过拟合</strong>，在采用one-hot编码的时候，只需要计算label类别的损失就可以了，采用label smoothing后，不仅仅需要计算label类别的损失，还需要增加其他类别的损失，这样，在one-hot编码的时候，对应目标的输出的目标值是正无穷，这样跟其他类别的差距更大，而增加了smooth label之后，由于引入了参数$\sigma$，所以随着$\sigma$的变化，其目标发生了变化，作者也画出了其目标图，如图figure 4(a)，可见Gap基本集中在9左右，实际的实验结果如图Figure 4(b)，也证实了这一点，b也符合a中基本都集中在9左右，并且b中smooth明显要比one-hot要小一点。</p>
 <p><img src="/6.PNG"></p>
 <h5 id="技巧三：知识蒸馏"><a href="#技巧三：知识蒸馏" class="headerlink" title="技巧三：知识蒸馏"></a>技巧三：知识蒸馏</h5><p>知识蒸馏也是提升模型精度的一个方法，知识蒸馏中，一般有一个精度较好的model作为teacher model，利用teacher model去帮助student model训练，比如：可以采用resnet-152作为teacher model，resnet-50作为student model。在利用知识蒸馏的方法进行训练的时候，需要增加用于蒸馏的loss,举个例子，假设p是真实概率，z和r分别是student以及teacher model的全连接层的输出结果，则损失函数为：</p>
-<p><a href="https://www.codecogs.com/eqnedit.php?latex=l=(p,softmax(z))+T^{2}l(softmax(r/T),softmax(z/T))" target="_blank"><img src="https://latex.codecogs.com/gif.latex?l=(p,softmax(z))+T^{2}l(softmax(r/T),softmax(z/T))" title="l=(p,softmax(z))+T^{2}l(softmax(r/T),softmax(z/T))"></a></p>
+<p><a href="https://www.codecogs.com/eqnedit.php?latex=l=(p,softmax(z))&plus;T^{2}l(softmax(r/T),softmax(z/T))" target="_blank"><img src="https://latex.codecogs.com/gif.latex?l=(p,softmax(z))&plus;T^{2}l(softmax(r/T),softmax(z/T))" title="l=(p,softmax(z))+T^{2}l(softmax(r/T),softmax(z/T))" /></a></p>
 <p>这里解释一下这个T(蒸馏温度参数)，T是一个使得softmax output更加平滑的参数，以便于student model从teacher model学习参数。</p>
 <p>下图是设置不同的T(蒸馏温度)得到的值，可以看到随着T的增大，曲线便的越来越平滑，其实设置这个标签的目的就是软化标签，增加训练难度，这样在inference的时候，将T重新设置为1，有难度的时候都可以表现很好，简单模式下，这样其分类的准确性就会更高了。</p>
 <p><img src="/7.PNG"></p>
 <h5 id="技巧四：mixup-training"><a href="#技巧四：mixup-training" class="headerlink" title="技巧四：mixup training"></a>技巧四：mixup training</h5><p>所谓的mixup training，就是每次要取出2张图像，然后将两张图像进行线性组合，得到新的图像，以此来作为新的训练样本，进行网络的训练，如下公式，其中x代表图像数据，y代表标签，则得到的$\widehat{x}$,$\widehat{y}$则为送入网络的训练样本。</p>
-<p><a href="https://www.codecogs.com/eqnedit.php?latex=\widehat{x}=\lambda&amp;space;x_i+(1-\lambda&amp;space;)x_j&amp;space;,&amp;space;\widehat{y}=\lambda&amp;space;y_i+(1-\lambda&amp;space;)y_j" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\widehat{x}=\lambda&amp;space;x_i+(1-\lambda&amp;space;)x_j&amp;space;,&amp;space;\widehat{y}=\lambda&amp;space;y_i+(1-\lambda&amp;space;)y_j" title="\widehat{x}=\lambda x_i+(1-\lambda )x_j , \widehat{y}=\lambda y_i+(1-\lambda )y_j"></a></p>
+<p><a href="https://www.codecogs.com/eqnedit.php?latex=\widehat{x}=\lambda&space;x_i&plus;(1-\lambda&space;)x_j&space;,&space;\widehat{y}=\lambda&space;y_i&plus;(1-\lambda&space;)y_j" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\widehat{x}=\lambda&space;x_i&plus;(1-\lambda&space;)x_j&space;,&space;\widehat{y}=\lambda&space;y_i&plus;(1-\lambda&space;)y_j" title="\widehat{x}=\lambda x_i+(1-\lambda )x_j , \widehat{y}=\lambda y_i+(1-\lambda )y_j" /></a></p>
 <p>mixup方法主要增强了训练样本之间的线性表达，增强网络的泛化能力，并且使用mixup方法需要较长的时间收敛。</p>
-<h4 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h4><p>Table 6是作者使用上面不同的方法进行的实验结果，其中w/代表的是with,w/o代表的是without，根据实验结果可以发现，在使用了cosine decay，label smooth方法，在ImageNet的结果上，基本会提高一个点左右。采用mixup方法，三个网络也基本一致的提升了，对于蒸馏的效果，resnet网络的效果提升了大约0.3%，但是对于Inception-V3以及MobileNet，精度都下降了，为什么会出现这种情况呢？原因可能是：由于这里是利用ResNet-152作为teacher model的，而ResNet-152的输出的数据分布和Inception以及mobileNet的分布不同，所以导致了结果的不一致性。</p>
+<h4 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h4><p>Table 6是作者使用上面不同的方法进行的实验结果，其中w&#x2F;代表的是with,w&#x2F;o代表的是without，根据实验结果可以发现，在使用了cosine decay，label smooth方法，在ImageNet的结果上，基本会提高一个点左右。采用mixup方法，三个网络也基本一致的提升了，对于蒸馏的效果，resnet网络的效果提升了大约0.3%，但是对于Inception-V3以及MobileNet，精度都下降了，为什么会出现这种情况呢？原因可能是：由于这里是利用ResNet-152作为teacher model的，而ResNet-152的输出的数据分布和Inception以及mobileNet的分布不同，所以导致了结果的不一致性。</p>
 <p>Table 7是作者在Places 365数据集的测试结果，结果表明，采用这几个策略进行训练的结果同样也是有效的。</p>
 <p><img src="/8.PNG"></p>
 <p><strong>既然我们的模型在分类任务上表现提升了，那么使用此模型，在目标检测以及目标分割上是否有用呢？</strong></p>
@@ -397,12 +399,12 @@
 <h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>本篇文章是Amazon对于分类模型炼丹方法的一个总结，介绍了很多trick，还是有很多借鉴意义的，至少我现在使用的其提供的resnet模型，在分类效果上确实有一定的提升。</p>
 <h4 id="彩弹"><a href="#彩弹" class="headerlink" title="彩弹"></a>彩弹</h4><p>对于Amazon这样的大公司，当然也不会只是纸上谈兵，既然讲了这么多的方法，有没有预训练模型提供给我们使用呢？当然是有的，不过由于亚马逊推的是自己的深度学习框架MXNet+Gluon,所以这些预训练模型是在最新的GluonCV的model_zoo中提供。</p>
 <p>有兴趣的读者可以自行查看，网站链接如下：</p>
-<p><a target="_blank" rel="noopener" href="https://gluon-cv.mxnet.io/model_zoo/classification.html">https://gluon-cv.mxnet.io/model_zoo/classification.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://gluon-cv.mxnet.io/model_zoo/classification.html">https://gluon-cv.mxnet.io/model_zoo&#x2F;classification.html</a></p>
 <p>并且，gluoncv中还给出了各个模型的运行时间对比，内存消耗对比等，如下图所示，方便大家根据自己的需求选择合适的模型。</p>
 <p><img src="http://ww1.sinaimg.cn/large/87675bbbly1fzlf1xibwij20is0fhdh5.jpg"></p>
 <p>最后附上一段使用gluoncv进行imagenet分类的代码：</p>
-<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> mxnet <span class="keyword">as</span> mx</span><br><span class="line"><span class="keyword">import</span> gluoncv</span><br><span class="line"></span><br><span class="line"><span class="comment"># you can change it to your image filename</span></span><br><span class="line">filename = <span class="string">'classification-demo.png'</span></span><br><span class="line"><span class="comment"># you may modify it to switch to another model. The name is case-insensitive</span></span><br><span class="line">model_name = <span class="string">'ResNet50_v1d'</span></span><br><span class="line"><span class="comment"># download and load the pre-trained model</span></span><br><span class="line">net = gluoncv.model_zoo.get_model(model_name, pretrained=<span class="literal">True</span>)</span><br><span class="line"><span class="comment"># load image</span></span><br><span class="line">img = mx.image.imread(filename)</span><br><span class="line"><span class="comment"># apply default data preprocessing</span></span><br><span class="line">transformed_img = gluoncv.data.transforms.presets.imagenet.transform_eval(img)</span><br><span class="line"><span class="comment"># run forward pass to obtain the predicted score for each class</span></span><br><span class="line">pred = net(transformed_img)</span><br><span class="line"><span class="comment"># map predicted values to probability by softmax</span></span><br><span class="line">prob = mx.nd.softmax(pred)[<span class="number">0</span>].asnumpy()</span><br><span class="line"><span class="comment"># find the 5 class indices with the highest score</span></span><br><span class="line">ind = mx.nd.topk(pred, k=<span class="number">5</span>)[<span class="number">0</span>].astype(<span class="string">'int'</span>).asnumpy().tolist()</span><br><span class="line"><span class="comment"># print the class name and predicted probability</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'The input picture is classified to be'</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'- [%s], with probability %.3f.'</span>%(net.classes[ind[i]], prob[ind[i]]))</span><br></pre></td></tr></tbody></table></figure>
-</body></html>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> mxnet <span class="keyword">as</span> mx</span><br><span class="line"><span class="keyword">import</span> gluoncv</span><br><span class="line"></span><br><span class="line"><span class="comment"># you can change it to your image filename</span></span><br><span class="line">filename = <span class="string">&#x27;classification-demo.png&#x27;</span></span><br><span class="line"><span class="comment"># you may modify it to switch to another model. The name is case-insensitive</span></span><br><span class="line">model_name = <span class="string">&#x27;ResNet50_v1d&#x27;</span></span><br><span class="line"><span class="comment"># download and load the pre-trained model</span></span><br><span class="line">net = gluoncv.model_zoo.get_model(model_name, pretrained=<span class="literal">True</span>)</span><br><span class="line"><span class="comment"># load image</span></span><br><span class="line">img = mx.image.imread(filename)</span><br><span class="line"><span class="comment"># apply default data preprocessing</span></span><br><span class="line">transformed_img = gluoncv.data.transforms.presets.imagenet.transform_eval(img)</span><br><span class="line"><span class="comment"># run forward pass to obtain the predicted score for each class</span></span><br><span class="line">pred = net(transformed_img)</span><br><span class="line"><span class="comment"># map predicted values to probability by softmax</span></span><br><span class="line">prob = mx.nd.softmax(pred)[<span class="number">0</span>].asnumpy()</span><br><span class="line"><span class="comment"># find the 5 class indices with the highest score</span></span><br><span class="line">ind = mx.nd.topk(pred, k=<span class="number">5</span>)[<span class="number">0</span>].astype(<span class="string">&#x27;int&#x27;</span>).asnumpy().tolist()</span><br><span class="line"><span class="comment"># print the class name and predicted probability</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;The input picture is classified to be&#x27;</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;- [%s], with probability %.3f.&#x27;</span>%(net.classes[ind[i]], prob[ind[i]]))</span><br></pre></td></tr></table></figure>
+
     </div>
 
     
@@ -497,7 +499,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-count">40</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
