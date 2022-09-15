@@ -58,25 +58,25 @@
 <meta property="og:site_name" content="Spring&#39;s Idea">
 <meta property="og:description" content="本篇文章是一篇anchor free的目标检测方法，主要是在CornerNet(该篇文章很经典，还没总结，后面补上)的基础上发展而来。文章的主要思想在于：CornerNet中只检测目标的左上角点和右下角点，bounding box错检率会比较高（即检测出目标框但是与目标重合比较少，这也是keypoint检测的常见问题），作者分析错检的主要原因在于——-在进行Corner检测的时候，没有关注bou">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//1.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//2.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//3.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//4.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//5.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//6.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//7.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//8.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//9.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//10.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//11.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//12.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//13.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/4.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/5.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/6.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/7.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/8.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/9.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/10.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/11.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/12.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/13.png">
 <meta property="article:published_time" content="2020-01-16T00:22:01.000Z">
 <meta property="article:modified_time" content="2022-05-28T01:26:44.550Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="CenterNet">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.wanglichun.tech/.tech//1.png">
+<meta name="twitter:image" content="https://www.wanglichun.tech/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/1.png">
 
 <link rel="canonical" href="https://www.wanglichun.tech/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/">
 
@@ -316,15 +316,15 @@
 <li>大量的anchor导致正负样本不均匀问题。</li>
 </ul>
 <p>为了尽可能避免使用anchor这些问题，anchor free方法被提出，比较典型的代表就是CornerNet，该网络的灵感来源于关键点检测，通过直接检测目标的左上角点和右下角点的方法来检测目标区域，并且取得了不错的效果。但是其也存在一定的问题，那就是只检测两个点，缺少对中心内容的感知，这样就容易产生检测点的误匹配。如下图Figure 1第一行所示，红框便是错误的框。Table 1展示的是作者统计COCO数据集中CornerNet的错检率（false discovery rates）。可见整体还是比较高的，其中32.7%的检测框与groud truth的IOU重合率小于0.05%，43.8%的小于50%，在小样本中，占比更高，达到了60.3%.</p>
-<p><img src="/.tech//1.png" alt="1.png"></p>
+<p><img src="/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/1.png" alt="1.png"></p>
 <p>为了解决这个问题，作者提出了centerNet，如下图第二行所示，通过中心keypoint对中心内容进行感知，正常情况，中心keypoint的类别应该跟坐标框的类别相同，利用这种方法来过滤掉错误的匹配框。</p>
-<p><img src="/.tech//2.png" alt="2.png"></p>
+<p><img src="/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/2.png" alt="2.png"></p>
 <h4 id="本文方法"><a href="#本文方法" class="headerlink" title="本文方法"></a>本文方法</h4><p>在介绍CenterNet之前，先简单介绍一下CornerNet是怎么做的，下图（Fig. 4）是CornerNet的结构图，backbone采用的是Hourglass结构(这是关键点检测常用的网络)，然后会接两个分支，分别用于检测左上角点以及右下角点，每个分支又会输出三个向量，分别对应Heatmaps，Embeddings，Offsets，heatmaps代表的是不同类别的keypoints的位置，以及对应的score，embeddings代表的是哪些keypoints是属于一个bounding box的，offsets是特征图到原图的映射，对keypoints进行微调的。</p>
-<p><img src="/.tech//3.png" alt="3.png"></p>
+<p><img src="/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/3.png" alt="3.png"></p>
 <p>那既然，已经猜想出问题出在在进行关键点检测的时候，没有get到bounding box内部的信息，除了本文提出的，又有哪些方法可以解决呢？文章中也提到了，可以采用two-stage方法，后面再接一个ROI-pooling，去识别内部信息，但是耗时会增加比较多。</p>
 <p>好了，下面进入正题，今天的主角CenterNet.</p>
 <p>下图Figure 2 所示为CenterNet结构图，对比CornerNet，本文方法多增加了一个分支用于检测目标中心，同时，将目标中心的类别与Corner检测结果相合并。</p>
-<p><img src="/.tech//4.png" alt="4.png"></p>
+<p><img src="/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/4.png" alt="4.png"></p>
 <p>具体是这么做的呢？<br>假设我们已经通过上面的网络得到了corners keypoints以及center keypoints的输出，那么后面的逻辑如何融合呢？具体的操作流程如下：</p>
 <ol>
 <li>选取top-k的bounding box。</li>
@@ -335,23 +335,23 @@
 </ol>
 <p><strong>中心区域的定义</strong></p>
 <p>如果中心区域定义的太大，那么对大物体的精度会下降；如果定义的中心区域太小，那么对小物体的召回又会下降。所以本文有提出了一种动态的中心区域选取方法，公式如下，公式看起来挺复杂，但是结果很好理解，就是下图Figure 3，如果n&#x3D;3，其实就是对bounding box进行三等分，然后去中间的区域，n&#x3D;5就是对其进行5等分，然后取中间区域。</p>
-<p><img src="/.tech//5.png" alt="5.png"></p>
-<p><img src="/.tech//6.png" alt="6.png"></p>
+<p><img src="/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/5.png" alt="5.png"></p>
+<p><img src="/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/6.png" alt="6.png"></p>
 <p><strong>下面介绍一下本文另外两个创新点，center pooling 以及cascade corner pooling</strong></p>
 <p>在介绍center pooling以及cascade corner pooling之前，先来回忆一下CornerNet中提到的left pooling以及right pooling。，如下图所示，分别是left pooling以及top pooling，看图应该就一目了然了。</p>
-<p><img src="/.tech//7.png" alt="7.png"></p>
+<p><img src="/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/7.png" alt="7.png"></p>
 <p><strong>center pooling</strong></p>
 <p>center pooling的目的是找到图像中的center keypoint（即行列都比较大的点）<br>center pooling的做法也很简单，即通过在水平垂直的方向检测特征图的最大值，如图Figure 4a所示为Center pooling示意图。center pooling的具体做法就是如下图，上面代表：left pooling -&gt; right pooling，下面代表 down pooling -&gt; top pooling，然后将结果进行element-add操作。这就找到了中心最大点。</p>
-<p><img src="/.tech//8.png" alt="8.png"></p>
+<p><img src="/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/8.png" alt="8.png"></p>
 <p>举个例子：<br>第一行依次是left pooling, right pooling，第二行依次是top pooling down pooling ,最终add到一起，根据值的大小就可以依次选出行和列的的极致情况，显然图中14是最大的，对应到原图7也是最大的。</p>
-<p><img src="/.tech//9.png" alt="9.png"></p>
+<p><img src="/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/9.png" alt="9.png"></p>
 <p><strong>cascade corner pooling</strong><br>cascade corner pooling在corner pooling的基础上，增加了更多的内部的内容信息。Figure 4:(c)所示即为cascade corner pooling,主要思想就是不仅仅找到边缘的最大值，同时，将corner内部的内容也加到corner keypoints上面，提高corner keypoints对内容的感知能力，实际的做法就是如下图（b）所示为Top Corner Pooling，首先做一个left pooling，然后与原图求和，后面再过一个top pooling，这样就图中1和2都加到了left-topcorner上，同样的再做left corner pooling, down corner pooling right corner pooling就OK啦。</p>
-<p><img src="/.tech//10.png" alt="10.png"></p>
-<p><img src="/.tech//11.png" alt="11.png"></p>
+<p><img src="/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/10.png" alt="10.png"></p>
+<p><img src="/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/11.png" alt="11.png"></p>
 <h4 id="实验分析"><a href="#实验分析" class="headerlink" title="实验分析"></a>实验分析</h4><p>不同网络的精度对比结果如下：</p>
-<p><img src="/.tech//12.png" alt="12.png"></p>
+<p><img src="/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/12.png" alt="12.png"></p>
 <p>另外，作者做了溶解实验，来对比本文主要的三个关键点的效果提升，其中CRE代表central region exploration ,CTP代表center pooling, CCP代表cascade corner pooling，可见CRE效果提升是最明显的，也侧面说明了增加对中心内容的感知的重要性。</p>
-<p><img src="/.tech//13.png" alt="13.png"></p>
+<p><img src="/2020/01/16/CenterNet-Keypoint-Triplts-for-Object-Detection/13.png" alt="13.png"></p>
 <h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>本文是在CornerNet基础上发展来的，主要提到的就是3个重点，一个是中间区域信息的引入思想，另外两个分别是Center Pooling以及Cascade Corner Pooling，思想还是比较好的，值得学习。</p>
 <p><strong>最后附上center pooling的代码，其他代码可以自行查看开头连接</strong></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">center_pool</span>(<span class="title class_ inherited__">pool_cross</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, dim</span>):</span><br><span class="line">        <span class="built_in">super</span>(center_pool, self).__init__(dim, TopPool, LeftPool, BottomPool, RightPool) <span class="comment">## 调用pool_cross</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">pool_cross</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, dim, pool1, pool2, pool3, pool4</span>):</span><br><span class="line">        <span class="built_in">super</span>(pool_cross, self).__init__()</span><br><span class="line">        self.p1_conv1 = convolution(<span class="number">3</span>, dim, <span class="number">128</span>)</span><br><span class="line">        self.p2_conv1 = convolution(<span class="number">3</span>, dim, <span class="number">128</span>)</span><br><span class="line"></span><br><span class="line">        self.p_conv1 = nn.Conv2d(<span class="number">128</span>, dim, (<span class="number">3</span>, <span class="number">3</span>), padding=(<span class="number">1</span>, <span class="number">1</span>), bias=<span class="literal">False</span>)</span><br><span class="line">        self.p_bn1   = nn.BatchNorm2d(dim)</span><br><span class="line"></span><br><span class="line">        self.conv1 = nn.Conv2d(dim, dim, (<span class="number">1</span>, <span class="number">1</span>), bias=<span class="literal">False</span>)</span><br><span class="line">        self.bn1   = nn.BatchNorm2d(dim)</span><br><span class="line">        self.relu1 = nn.ReLU(inplace=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">        self.conv2 = convolution(<span class="number">3</span>, dim, dim)</span><br><span class="line"></span><br><span class="line">        self.pool1 = pool1()</span><br><span class="line">        self.pool2 = pool2()</span><br><span class="line">        self.pool3 = pool3()</span><br><span class="line">        self.pool4 = pool4()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        <span class="comment"># pool 1</span></span><br><span class="line">        p1_conv1 = self.p1_conv1(x)</span><br><span class="line">        pool1    = self.pool1(p1_conv1) <span class="comment">## 这里先来个top pooling</span></span><br><span class="line">        pool1    = self.pool3(pool1)    <span class="comment">## 接着来个 down pooling</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># pool 2</span></span><br><span class="line">        p2_conv1 = self.p2_conv1(x)</span><br><span class="line">        pool2    = self.pool2(p2_conv1)   <span class="comment">## left pooling</span></span><br><span class="line">        pool2    = self.pool4(pool2)      <span class="comment">## right pooling</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># pool 1 + pool 2</span></span><br><span class="line">        p_conv1 = self.p_conv1(pool1 + pool2)  <span class="comment">## add </span></span><br><span class="line">        p_bn1   = self.p_bn1(p_conv1)</span><br><span class="line"></span><br><span class="line">        conv1 = self.conv1(x)</span><br><span class="line">        bn1   = self.bn1(conv1)</span><br><span class="line">        relu1 = self.relu1(p_bn1 + bn1)</span><br><span class="line"></span><br><span class="line">        conv2 = self.conv2(relu1)</span><br><span class="line">        <span class="keyword">return</span> conv2</span><br></pre></td></tr></table></figure>
@@ -371,8 +371,8 @@
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2020/01/16/YOLO/" rel="next" title="YOLO">
-                  <i class="fa fa-chevron-left"></i> YOLO
+                <a href="/2020/01/16/FCOS/" rel="next" title="FCOS">
+                  <i class="fa fa-chevron-left"></i> FCOS
                 </a>
             </div>
 

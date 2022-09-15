@@ -58,26 +58,26 @@
 <meta property="og:site_name" content="Spring&#39;s Idea">
 <meta property="og:description" content="mobilenet-v3是Google继mobilenet-v2之后的又一力作，作为mobilenet系列的新成员，自然效果会提升，mobilenet-v3提供了两个版本，分别为mobilenet-v3 large 以及mobilenet-v3 small，分别适用于对资源不同要求的情况，论文中提到，mobilenet-v3 small在imagenet分类任务上，较mobilenet-v2，精">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//1.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//2.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//3.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//4.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/4.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190613144714722.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190613144629645.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//5.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//6.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//7.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//8.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//9.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//10.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//11.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//12.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/5.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/6.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/7.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/8.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/9.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/10.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/11.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/12.png">
 <meta property="article:published_time" content="2019-12-25T00:50:21.000Z">
 <meta property="article:modified_time" content="2022-05-28T01:31:06.490Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="MobileNet">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.wanglichun.tech/.tech//1.png">
+<meta name="twitter:image" content="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/1.png">
 
 <link rel="canonical" href="https://www.wanglichun.tech/2019/12/25/mobilenet-v3/">
 
@@ -331,20 +331,20 @@
 <ul>
 <li>1.引入SE结构<br>在bottlenet结构中加入了SE结构，并且放在了depthwise filter之后，如下图。<strong>因为SE结构会消耗一定的时间，所以作者在含有SE的结构中，将expansion layer的channel变为原来的1&#x2F;4,这样作者发现，即提高了精度，同时还没有增加时间消耗。并且SE结构放在了depthwise之后。</strong></li>
 </ul>
-<p><img src="/.tech//1.png" alt="在这里插入图片描述"></p>
+<p><img src="/2019/12/25/mobilenet-v3/1.png" alt="在这里插入图片描述"></p>
 <ul>
 <li>2.修改尾部结构：<br>在mobilenetv2中，在avg pooling之前，存在一个1x1的卷积层，目的是提高特征图的维度，更有利于结构的预测，但是这其实带来了一定的计算量了，所以这里作者修改了，将其放在avg pooling的后面，首先利用avg pooling将特征图大小由7x7降到了1x1，降到1x1后，然后再利用1x1提高维度，这样就减少了7x7&#x3D;49倍的计算量。并且为了进一步的降低计算量，作者直接去掉了前面纺锤型卷积的3x3以及1x1卷积，进一步减少了计算量，就变成了如下图第二行所示的结构，作者将其中的3x3以及1x1去掉后，精度并没有得到损失。这里降低了大约15ms的速度。</li>
 </ul>
-<p><img src="/.tech//2.png" alt="在这里插入图片描述"></p>
+<p><img src="/2019/12/25/mobilenet-v3/2.png" alt="在这里插入图片描述"></p>
 <ul>
 <li>3.修改channel数量<br>修改头部卷积核channel数量，mobilenet v2中使用的是32 x 3 x 3，作者发现，其实32可以再降低一点，所以这里作者改成了16，在保证了精度的前提下，降低了3ms的速度。，这里给出了mobilenet v2以及mobilenet v3的结构对比：</li>
 </ul>
-<p><img src="/.tech//3.png" alt="3.png"><br><img src="/.tech//4.png" alt="在这里插入图片描述"></p>
+<p><img src="/2019/12/25/mobilenet-v3/3.png" alt="3.png"><br><img src="/2019/12/25/mobilenet-v3/4.png" alt="在这里插入图片描述"></p>
 <ul>
 <li>4.非线性变换的改变<br>使用h-swish替换swish，swish是谷歌自家的研究成果，颇有点自卖自夸的意思，这次在其基础上，为速度进行了优化。swish与h-swish公式如下所示，由于sigmoid的计算耗时较长，特别是在移动端，这些耗时就会比较明显，所以作者使用ReLU6(x+3)&#x2F;6来近似替代sigmoid，观察下图可以发现，其实相差不大的。<strong>利用ReLU有几点好处，1.可以在任何软硬件平台进行计算，2.量化的时候，它消除了潜在的精度损失，使用h-swish替换swith，在量化模式下回提高大约15%的效率，另外，h-swish在深层网络中更加明显。</strong></li>
 </ul>
 <p>$$swish(x)&#x3D;x*\sigma(x)$$</p>
-<p>$$h-swish[x]&#x3D;x*frac{ReLU6(x+3)}{6}$$<br><img src="https://img-blog.csdnimg.cn/20190613144714722.png" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20190613144629645.png" alt="在这里插入图片描述"><br><img src="/.tech//5.png" alt="在这里插入图片描述"><br>如下两张图展示的是使用h-swish对于时间以及精度的影响，可以发现，使用h-swish@16可以提高大约0.2%的精度，但是持剑延长了大约20%。<br><img src="/.tech//6.png" alt="在这里插入图片描述"></p>
+<p>$$h-swish[x]&#x3D;x*frac{ReLU6(x+3)}{6}$$<br><img src="https://img-blog.csdnimg.cn/20190613144714722.png" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20190613144629645.png" alt="在这里插入图片描述"><br><img src="/2019/12/25/mobilenet-v3/5.png" alt="在这里插入图片描述"><br>如下两张图展示的是使用h-swish对于时间以及精度的影响，可以发现，使用h-swish@16可以提高大约0.2%的精度，但是持剑延长了大约20%。<br><img src="/2019/12/25/mobilenet-v3/6.png" alt="在这里插入图片描述"></p>
 <p><strong>虽然mobilenet v3结构你已经知道了，但是，本文的重点，如何设计出的这个网络，即如何进行网络结构的搜索，还是有必要提一下的，这里我也没有细细研究，想深入了解的同学可以自行对应阅读论文</strong></p>
 <p><strong>总体过程很简单，先通用NAS算法，优化每一个block，得到大体的网络结构，然后使用NetAdapt 算法来确定每个filter的channel的数量</strong></p>
 <p><strong>这里由于small model的精度以及耗时影响相对较大，mobilenet v3 large和mobilenet v3 small是分别使用NAS设计的。</strong></p>
@@ -367,10 +367,10 @@
 <li>减少botleneck</li>
 </ul>
 <h4 id="实验部分："><a href="#实验部分：" class="headerlink" title="实验部分："></a>实验部分：</h4><p>首先是分类部分的实验，向来比较豪的谷歌这次也不例外，作者使用16块TPU，batchsize为4096进行训练。然后作者选择在Google的Pixel Phone进行测试。</p>
-<p>下图为作者ImageNet网络的测试结果，结果可以看出V3 large相比较与V2 1.0 精度上提高了大约3个点，但是速度却从78ms下降到66ms(Pixel-1手机)，V3 small 相比较与V2 0.35,精度从60%提高到了67%，速度稍有增加，从19ms增加到21ms(Pixel-1手机).<br><img src="/.tech//7.png" alt="在这里插入图片描述"></p>
-<p>下图对比了不同的google phone上面，模型量化后（<strong>float量化，非int8量化</strong>）的耗时，其中P-1,P-2,P-3分别代表的是不同性能的手机。我这里主要分析一下V3-Large网络吧，可见量化后，TOP-1精度从上面图的75.2%下降到了73.8%，降低了大约1.5个点，符合正常情况，在P1-P3的加速效果来看P1加速了9ms(66ms)，P2加速了20ms(77ms)，P3加速了15ms(52.6ms)。与V2网络相比，其实速度相差不大，（<strong>为啥原本速度相差还挺大，量化之后相差不大了呢？这是个值得考虑的问题</strong>）<br><img src="/.tech//8.png" alt="在这里插入图片描述"></p>
-<p>下图是作者实验了使用不同的分辨率以及不同的模型深度的精度对比，分辨率分别选择的是[96,128,160,192,224,256],深度分别选为原来的[0.35,0.5,0.75,1.0,1.25]。可见，其实resolution对于精度以及速度的平衡效果更好，可以达到更快的速度，同时精度没有改变模型深度精度低，反而更高。（但是很多时候，其实分辨率的大小是根据场景决定的，比如检测和分割就需要较大尺度的图像）。<br><img src="/.tech//9.png" alt="在这里插入图片描述"></p>
-<p>下图展示了从MnasNet经过一系列的修改，到mobileNet v3的精度与速度变化的过程。<br><img src="/.tech//10.png" alt="在这里插入图片描述"><br>下图是将mobilenet v3应用于SSD-Lite在COCO测试集的精度结果。观察可以发现，在V3-Large上面，mAP没有特别大的提升但是速度确实降低了一些的。<br><img src="/.tech//11.png" alt="在这里插入图片描述"><br>下图是分割的结构图，这里就不详细介绍了，感兴趣的读者可以自行看论文。<br><img src="/.tech//12.png" alt="在这里插入图片描述"></p>
+<p>下图为作者ImageNet网络的测试结果，结果可以看出V3 large相比较与V2 1.0 精度上提高了大约3个点，但是速度却从78ms下降到66ms(Pixel-1手机)，V3 small 相比较与V2 0.35,精度从60%提高到了67%，速度稍有增加，从19ms增加到21ms(Pixel-1手机).<br><img src="/2019/12/25/mobilenet-v3/7.png" alt="在这里插入图片描述"></p>
+<p>下图对比了不同的google phone上面，模型量化后（<strong>float量化，非int8量化</strong>）的耗时，其中P-1,P-2,P-3分别代表的是不同性能的手机。我这里主要分析一下V3-Large网络吧，可见量化后，TOP-1精度从上面图的75.2%下降到了73.8%，降低了大约1.5个点，符合正常情况，在P1-P3的加速效果来看P1加速了9ms(66ms)，P2加速了20ms(77ms)，P3加速了15ms(52.6ms)。与V2网络相比，其实速度相差不大，（<strong>为啥原本速度相差还挺大，量化之后相差不大了呢？这是个值得考虑的问题</strong>）<br><img src="/2019/12/25/mobilenet-v3/8.png" alt="在这里插入图片描述"></p>
+<p>下图是作者实验了使用不同的分辨率以及不同的模型深度的精度对比，分辨率分别选择的是[96,128,160,192,224,256],深度分别选为原来的[0.35,0.5,0.75,1.0,1.25]。可见，其实resolution对于精度以及速度的平衡效果更好，可以达到更快的速度，同时精度没有改变模型深度精度低，反而更高。（但是很多时候，其实分辨率的大小是根据场景决定的，比如检测和分割就需要较大尺度的图像）。<br><img src="/2019/12/25/mobilenet-v3/9.png" alt="在这里插入图片描述"></p>
+<p>下图展示了从MnasNet经过一系列的修改，到mobileNet v3的精度与速度变化的过程。<br><img src="/2019/12/25/mobilenet-v3/10.png" alt="在这里插入图片描述"><br>下图是将mobilenet v3应用于SSD-Lite在COCO测试集的精度结果。观察可以发现，在V3-Large上面，mAP没有特别大的提升但是速度确实降低了一些的。<br><img src="/2019/12/25/mobilenet-v3/11.png" alt="在这里插入图片描述"><br>下图是分割的结构图，这里就不详细介绍了，感兴趣的读者可以自行看论文。<br><img src="/2019/12/25/mobilenet-v3/12.png" alt="在这里插入图片描述"></p>
 <h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>总结来看，mobilenet V3其实并没有惊艳的结构提出，最主要的还是应用了诸如SE、H-Swish等tricks，然后利用Google前面提出的NAS以及NetAdapt算法进行结构的自动搜索，提升了一定的精度，降低了一定的速度。可能本篇论文的重点更在于进一步展示一下网络自动结构搜索的有效性，这样对应了文中的标题：Searching for，毕竟这也是发展的一个势头。</p>
 <p><strong>文中有不足或错误的地方，欢迎广大小伙伴批评指正。</strong></p>
 

@@ -58,15 +58,15 @@
 <meta property="og:site_name" content="Spring&#39;s Idea">
 <meta property="og:description" content="Fast R-CNN是RBG大神于2015年发表的目标检测网络，其在SPP-Net的基础上，通过进一步的改进，使得目标检测精度以及检测速度有了进一步的提升，下面详细介绍Fast R-CNN的创新点。主要创新点在于：1. Fast R-CNN设计了multi-loss方式进行目标分类以及位置回归，不需要进行特征存储到disk，使得效率有了大大的提升，2. 不需要multi-pipeline。3.">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//1.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//3.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/11/18/fast-rcnn/1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/11/18/fast-rcnn/3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/11/18/fast-rcnn/2.png">
 <meta property="article:published_time" content="2019-11-18T01:47:44.000Z">
 <meta property="article:modified_time" content="2022-05-28T01:29:02.579Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="Fast-RCNN">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.wanglichun.tech/.tech//1.png">
+<meta name="twitter:image" content="https://www.wanglichun.tech/2019/11/18/fast-rcnn/1.png">
 
 <link rel="canonical" href="https://www.wanglichun.tech/2019/11/18/fast-rcnn/">
 
@@ -307,7 +307,7 @@
 <li>使用mini-batch SGD方式进行训练。</li>
 <li>利用SVD方式进行速度的提升。</li>
 </ol>
-<p><img src="/.tech//1.png" alt="这里写图片描述"></p>
+<p><img src="/2019/11/18/fast-rcnn/1.png" alt="这里写图片描述"></p>
 <center>Fast R-CNN结构图</center>
 
 <h4 id="Q3-ROI-pooling"><a href="#Q3-ROI-pooling" class="headerlink" title="Q3:ROI-pooling"></a>Q3:ROI-pooling</h4><p>fast r-cnn网络的roi-pooling没有选择与spp-net相同的多级金字塔式的池化，而是选择了单级固定大小的池化，作者也通过实验证明，其实选择多级金字塔池化对精度会有一定的提升，但是影响不大，但是会降低速度，所以有点鸡肋。</p>
@@ -339,11 +339,11 @@
 <p>In words, for each mini-batch RoI r and for each pooling output unit yrj, the partial derivative ∂L&#x2F;∂yrj is accumulated if i is the argmax selected for yrj by max pooling.</p>
 </blockquote>
 <h4 id="Q7-利用奇异值分解进行提速"><a href="#Q7-利用奇异值分解进行提速" class="headerlink" title="Q7:利用奇异值分解进行提速"></a>Q7:利用奇异值分解进行提速</h4><p>作者提到，在进行前向传播中，将近一半的时间在全连接层，所以如果可以在此进行加速，将对整个网络的速度提升有较大帮助，因此作者提出可以利用奇异值分解。</p>
-<p><img src="/.tech//3.png" alt="这里写图片描述"></p>
+<p><img src="/2019/11/18/fast-rcnn/3.png" alt="这里写图片描述"></p>
 <center>图2，奇异值分解效果</center>
 
 <h4 id="Q8-Fast-R-CNN实验效果"><a href="#Q8-Fast-R-CNN实验效果" class="headerlink" title="Q8: Fast R-CNN实验效果"></a>Q8: Fast R-CNN实验效果</h4><p>看图最清晰了。</p>
-<p><img src="/.tech//2.png" alt="这里写图片描述"></p>
+<p><img src="/2019/11/18/fast-rcnn/2.png" alt="这里写图片描述"></p>
 <h4 id="Q9-Which-layers-to-fine-tune"><a href="#Q9-Which-layers-to-fine-tune" class="headerlink" title="Q9:Which layers to fine-tune"></a>Q9:Which layers to fine-tune</h4><p>作者通过实验证明，训练CNN网络的时候，前面几层训练带来的精度提升不明显，说明前面提取的特征如：边缘等比较固定有效，对于后面几层的训练对于精度提升比较明显。<br>对于越深的网络越需要训练。</p>
 <h4 id="Q10-作者其他的说明"><a href="#Q10-作者其他的说明" class="headerlink" title="Q10: 作者其他的说明"></a>Q10: 作者其他的说明</h4><ol>
 <li>对于尺度不变的说明，作者实验证明了通过多尺度可以提高检测精度。</li>
@@ -365,8 +365,8 @@
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2019/11/18/faster-rcnn/" rel="next" title="Faster-RCNN">
-                  <i class="fa fa-chevron-left"></i> Faster-RCNN
+                <a href="/2019/11/18/fpn/" rel="next" title="FPN">
+                  <i class="fa fa-chevron-left"></i> FPN
                 </a>
             </div>
 

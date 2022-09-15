@@ -61,8 +61,8 @@
 <meta property="og:image" content="http://img-blog.csdn.net/20180313195405918?watermark/2/text/Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
 <meta property="og:image" content="http://img-blog.csdn.net/20180313202105697?watermark/2/text/Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
 <meta property="og:image" content="http://img-blog.csdn.net/20180314090358635?watermark/2/text/Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//1.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/11/18/RCNN/1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/11/18/RCNN/2.png">
 <meta property="article:published_time" content="2019-11-18T01:37:03.000Z">
 <meta property="article:modified_time" content="2022-05-28T01:31:37.156Z">
 <meta property="article:author" content="Spring Wang">
@@ -360,12 +360,12 @@
 <h5 id="R-CNN精度对比"><a href="#R-CNN精度对比" class="headerlink" title="R-CNN精度对比"></a>R-CNN精度对比</h5><p>作者对比了R-CNN（是否包含bounding box方法），以及其他算法的精度，测试结果见下图，由下图可以发现，R-CNN BB的精度遥遥领先。</p>
 <p><img src="http://img-blog.csdn.net/20180314090358635?watermark/2/text/Ly9ibG9nLmNzZG4ubmV0L0NodW5mZW5neWFueXVsb3Zl/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
 <h5 id="学习特征可视化"><a href="#学习特征可视化" class="headerlink" title="学习特征可视化"></a>学习特征可视化</h5><p>作者设计了一种无须参数的可视化方式，来判断每个unit学到的是什么，该方法首先选定一个特定的unit，然后在10万个region proposal中找到激活值最大的前几个，并利用非极大值抑制，最后显示出学到的区域，作者在CNN网络的pool5后进行实验，作者论文中展示了6组测试结果，如下：</p>
-<p><img src="/.tech//1.png" alt="这里写图片描述"></p>
+<p><img src="/2019/11/18/RCNN/1.png" alt="这里写图片描述"></p>
 <h5 id="Ablation-studies"><a href="#Ablation-studies" class="headerlink" title="Ablation studies"></a>Ablation studies</h5><p>为了验证不同层在检测中的作用，作者进行了如下对比实验，实验结果如下图：</p>
 <ul>
 <li>针对pool5，fc6，fc7层的分类能力对比，作者发现，其实pool5的分类能力已经很强，fc6和fc7虽然占有大量的参数，但是并没有取得实质的提升。row1-3</li>
 <li>对pool5,fc6,fc7采用fune-tuning进行实验对比，作者发现，fune-tuning之后，模型的识别能力提升了近8%，fc6和fc7提升明显，但是pool5提升不明显，这样说明了pool5提取的特征具有一定的泛化性。row 4-7</li>
-<li>与其他方法进行对比，优势明显。row 8-10<br><img src="/.tech//2.png" alt="这里写图片描述"></li>
+<li>与其他方法进行对比，优势明显。row 8-10<br><img src="/2019/11/18/RCNN/2.png" alt="这里写图片描述"></li>
 </ul>
 
     </div>

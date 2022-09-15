@@ -58,22 +58,22 @@
 <meta property="og:site_name" content="Spring&#39;s Idea">
 <meta property="og:description" content="本篇论文是发表于CVPR2020的一篇轻量级网络的论文，作者是华为诺亚方舟实验室，文章的总体思路比较清晰，为了减少网络计算量，作者将传统的卷积分成两步进行，首先利用较少的计算量通过传统的卷积生成channel较小的特征图，然后在此特征图的基础上，通过cheap operation(depthwise conv)再进一步利用较少的计算量，生成新的特征图，最后将两组特征图拼接到一起，得到最终的out">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//2.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//0.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//1.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//3.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//4.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//5.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//11.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//8.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//9.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//10.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/03/08/ghostnet/2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/03/08/ghostnet/0.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/03/08/ghostnet/1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/03/08/ghostnet/3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/03/08/ghostnet/4.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/03/08/ghostnet/5.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/03/08/ghostnet/11.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/03/08/ghostnet/8.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/03/08/ghostnet/9.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/03/08/ghostnet/10.png">
 <meta property="article:published_time" content="2020-03-08T00:28:08.000Z">
 <meta property="article:modified_time" content="2022-05-28T01:30:02.076Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="GhostNet">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.wanglichun.tech/.tech//2.png">
+<meta name="twitter:image" content="https://www.wanglichun.tech/2020/03/08/ghostnet/2.png">
 
 <link rel="canonical" href="https://www.wanglichun.tech/2020/03/08/ghostnet/">
 
@@ -307,10 +307,10 @@
 <hr>
 <p>虽然说mobileNet或者是shuffleNet提出了使用depthwise或者是shuffle等操作，但是引入的1x1卷积依然会产生一定的计算量。</p>
 <p>为什么1x1依然会产生较大的计算量?看卷积计算量的计算公式$n*h*w*c*k*k$,可以发现，由于c和n都是比较大的，所以会导致这个计算量也是比较大的，但是作者在分析输出的特征图的时候发现，其实有些特征图是比较相似的，如下所示，作者认为可以通过简单的变换得到。</p>
-<p><img src="/.tech//2.png" alt="2.png"></p>
+<p><img src="/2020/03/08/ghostnet/2.png" alt="2.png"></p>
 <p>基于此，作者得到启发，是不是每张图都需要用这么大的计算量去得到？是否可以通过cheap transformation得到这些相似的特征图？</p>
 <p>于是乎，就诞生了GhostNet。Ghost就是说相似的特征图，犹如另一个的幽灵，可以通过简单的线性变换得到。</p>
-<p><img src="/.tech//0.png" alt="0.png"></p>
+<p><img src="/2020/03/08/ghostnet/0.png" alt="0.png"></p>
 <center>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -327,7 +327,7 @@
 <p>由于Ghost的变换过程中最后存在一个恒等变换（Identity），所以实际有效的变换数量是s-1,所以上式可以得到如下公式：</p>
 <p>$$m * (s-1) &#x3D; n&#x2F;s * (s-1)$$</p>
 <p>所以我们便可以计算得到如下结果：</p>
-<p><img src="/.tech//1.png" alt="1.png"></p>
+<p><img src="/2020/03/08/ghostnet/1.png" alt="1.png"></p>
 <p>当然这里还有一个条件：m &lt;&lt; n</p>
 <p><strong>通过这么分析，可以体会到，其实GhostNet的方法也很简单，无外乎就是将原本的乘法变成了两个乘法相加，然后在代码实现中，其实第二个变换是用depthwise conv实现的。作者在文中也提到，前面的卷积使用pointwise效率比较高，所以网络嫣然类似一个mobilenet的反过来的版本，只不过GhostNet采用了拼接的方式，进一步减少了计算量</strong></p>
 <p>Ghost module的pytorch代码如下：</p>
@@ -339,7 +339,7 @@
 <li>Ghost使用了更多的线性变换。</li>
 </ul>
 <h4 id="GhostNet结构"><a href="#GhostNet结构" class="headerlink" title="GhostNet结构"></a>GhostNet结构</h4><p>下图是Ghost bottleneck结构图，很类似resnet结构，不同的是channel是先升维再降维。</p>
-<p><img src="/.tech//3.png" alt="3.png"></p>
+<p><img src="/2020/03/08/ghostnet/3.png" alt="3.png"></p>
 <center>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -349,7 +349,7 @@
 
 
 <p>下面是GhostNet的网络结构图，可以看到channel控制的比较小，并且引入了SE结构。</p>
-<p><img src="/.tech//4.png" alt="4.png"></p>
+<p><img src="/2020/03/08/ghostnet/4.png" alt="4.png"></p>
 <center>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -358,14 +358,14 @@
 </center>
 
 <h4 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h4><p>作者首先采用控制变量法，测试不同的s以及d的效果。经过测试发现在s&#x3D;2,d&#x3D;3的情况下模型表现较好。</p>
-<p><img src="/.tech//5.png" alt="5.png"></p>
+<p><img src="/2020/03/08/ghostnet/5.png" alt="5.png"></p>
 <p>下表为在resnet50实验的不同网络的压缩比例以及精度对比</p>
-<p><img src="/.tech//11.png" alt="11.png"></p>
+<p><img src="/2020/03/08/ghostnet/11.png" alt="11.png"></p>
 <p>ImageNet效果对比</p>
-<p><img src="/.tech//8.png" alt="8.png"></p>
-<p><img src="/.tech//9.png" alt="9.png"></p>
+<p><img src="/2020/03/08/ghostnet/8.png" alt="8.png"></p>
+<p><img src="/2020/03/08/ghostnet/9.png" alt="9.png"></p>
 <p>目标检测的效果</p>
-<p><img src="/.tech//10.png" alt="10.png"></p>
+<p><img src="/2020/03/08/ghostnet/10.png" alt="10.png"></p>
 
     </div>
 

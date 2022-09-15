@@ -60,7 +60,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://i.imgur.com/gqYMaEH.png">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbgy1fsouayxihnj209n03l0su.jpg">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/01/16/YOLO-v2/1.png">
 <meta property="og:image" content="https://pic2.zhimg.com/80/v2-c94c787a81c1216d8963f7c173c6f086_hd.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/87675bbbly1fsq0couag9j20ff0cygm2.jpg">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/4998541-c9351cd377d82589.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
@@ -315,7 +315,7 @@
 <p>$b_h &#x3D; p_he^{t_h}$</p>
 <p>$Pr(object) * IOU(b, object) &#x3D; \sigma(t_o)$</p>
 <p>上面的描述可能不清楚，我们看下面的图像，yolo网络将416*416大小的输入，经过卷积缩小32倍，得到13*13的输出,如下图中Cx,Cy便代表cell相对于图像左上角的偏移，<strong>注意这里每个cell的宽度为1</strong>，sigmoid（tx）与sigmoid（ty）在0-1之间，这样就保证了中心点的偏移仍然在当前cell内，bw与bh是相对于pw于ph的缩放，pw与ph代表anchor的长宽，<strong>至于为什么在e上进行计算，这里我暂时觉得与faster rcnn中的log作用类似</strong>。</p>
-<p><img src="/.tech//1.png" alt="1.png"></p>
+<p><img src="/2020/01/16/YOLO-v2/1.png" alt="1.png"></p>
 <h4 id="Fine-Grained-Features"><a href="#Fine-Grained-Features" class="headerlink" title="Fine-Grained Features"></a>Fine-Grained Features</h4><p>作者考虑到，模型最终输出是13*13,对于小物体的预测可能精度不够高，所以同样采用了类似于SSD的多个特征图的特征，但是作者不是像SSD那样直接对每个特征图进行分类与预测边界框，而是搞了一个passthrough layer，这个是怎么搞的呢？举例说明，作者对上一分辨率的输出（大小为：26*26*512），通过passthrough变换为13*13*2048大小，如何变换的如下图所示：作者利用pooling操作，将4*4的区域变换成4个channel，利用这样的方法，将特征图边长缩小一倍，但是channel数增大4倍，然后将2048维的13*13与原本的1024维的13*13进行concat,得到3072维度的特征图。（另，备注，这里可以采用1*1进行512维度的降维，比如降到64，这样passthrough之后就只有64*4&#x3D;256维了，而不是2048那么大了）<br>作者说这种方法，将精度提高了1%。</p>
 <p><img src="https://pic2.zhimg.com/80/v2-c94c787a81c1216d8963f7c173c6f086_hd.jpg" alt="https://pic2.zhimg.com/80/v2-c94c787a81c1216d8963f7c173c6f086_hd.jpg"></p>
 <h4 id="Multi-Scale-Training"><a href="#Multi-Scale-Training" class="headerlink" title="Multi-Scale Training"></a>Multi-Scale Training</h4><p>为了使yolo v2适应多种不同的尺度，作者采用了多尺度对yolo v2进行训练，作者每10个batches自动选择缩放的尺度，从[320:608:32]进行选择，最小的是320*320，最大的是608*608，为什么选择32呢？因为yolo v2的缩放是32倍，这样可以成倍的减少。</p>

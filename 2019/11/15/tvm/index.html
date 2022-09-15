@@ -58,21 +58,21 @@
 <meta property="og:site_name" content="Spring&#39;s Idea">
 <meta property="og:description" content="简介笔者也是最近偶然的机会才开始接触TVM，使用过后发现，经过auto-tuning后的TVM模型在速度是竟然超过了TensorRT,并且笔者使用的是MXNet模型，TVM对MXNet绝对的友好，对于Pytorch等模型，可以使用ONNX，操作一样简单，使用起来基本类似一键操作，本篇文章是笔者对TVM的简单整理，也算是对TVM的入门。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//2.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//1.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//6.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//7.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//8.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//9.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//3.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//4.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//5.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/11/15/tvm/2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/11/15/tvm/1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/11/15/tvm/6.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/11/15/tvm/7.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/11/15/tvm/8.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/11/15/tvm/9.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/11/15/tvm/3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/11/15/tvm/4.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2019/11/15/tvm/5.png">
 <meta property="article:published_time" content="2019-11-15T00:44:39.000Z">
 <meta property="article:modified_time" content="2022-05-28T01:33:22.268Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="模型加速">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.wanglichun.tech/.tech//2.png">
+<meta name="twitter:image" content="https://www.wanglichun.tech/2019/11/15/tvm/2.png">
 
 <link rel="canonical" href="https://www.wanglichun.tech/2019/11/15/tvm/">
 
@@ -316,7 +316,7 @@
 <p><strong>TVM做了哪些工作</strong></p>
 <p>针对第一个问题：</p>
 <p>TVM将不同前端（深度学习框架）训练的模型，转换为统一的中间语言表示，如果想详细理解这里，可以了解一下<strong>NNVM</strong>，<strong>NNVM</strong>是陈天奇团队开发的可以针对不同框架进行深度学习编译的框架，在TVM中，陈天奇团队进一步优化，实现了<strong>NNVM</strong>的第二代<strong>Relay</strong>。Relay是TVM中实现的一种高级IR，可以简单理解为另一种计算图表示。其在TVM所处的位置如下图所示，并且该部分实现了比如<strong>运算融合</strong>等操作，可以提升一部分模型效率。</p>
-<p><img src="/.tech//2.png" alt="2.png"></p>
+<p><img src="/2019/11/15/tvm/2.png" alt="2.png"></p>
 <center>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -327,7 +327,7 @@
 
 <p>针对第二个问题：</p>
 <p>TVM设计了对不同的硬件后端，自动优化tensor操作，以达到加速的目的。该部分的实现，TVM使用机器学习的方法进行计算空间的最优化搜索，通过在目标硬件上跑大量trial，来获得该硬件上相关运算（例如卷积）的最优实现。详细介绍可以参考TVM主页以及论文。</p>
-<p><img src="/.tech//1.png" alt="1.png"></p>
+<p><img src="/2019/11/15/tvm/1.png" alt="1.png"></p>
 <center>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -359,7 +359,7 @@
 <li>auto tuning</li>
 </ul>
 <p>其实简单的使用主要就是这两块内容，如果不想细研究其代码，可以将其当成一个工具使用，通过compile deep learning models,无论你使用什么样的框架，都可以生成统一的模型，一般会生成3个东西如下：</p>
-<p><img src="/.tech//6.png" alt="6.png"></p>
+<p><img src="/2019/11/15/tvm/6.png" alt="6.png"></p>
 <p>这里一般会做一些层的融合等操作，速度会有一定的提升的，但是不是特别大。这时如果你需要进一步提速可以试试<strong>auto tuning</strong>,这部分可以参考tutorials以及下面的例子代码，auto-tune的时间一般比较长，但是效果还是比较显著的，本地测试，resnet在nvidia 1080ti上可以提高3倍左右。</p>
 <h4 id="Demo代码"><a href="#Demo代码" class="headerlink" title="Demo代码"></a>Demo代码</h4><p>TVM的原理很复杂但是使用起来还是比较方便的，下面是使用MXNet进行TVM转换的demo。</p>
 <p>代码一：生成TVM模型。</p>
@@ -373,7 +373,7 @@
 </ul>
 <p>首先在，两卡机上测试性能，分别测试了resnet50v1d，resnet101v1d以及输入尺度320的resnet101v1d，测试结果如下表：</p>
 <p>可以发现，相比较mxnet模型  tensorRT大约加速比70%-80%，TVM提速可以达到50%-60%</p>
-<p><img src="/.tech//7.png" alt="7.png"></p>
+<p><img src="/2019/11/15/tvm/7.png" alt="7.png"></p>
 <center>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -395,7 +395,7 @@
 <li>重新在2080机器上tune后，相比不tune，效果的提升还是比较明显的。</li>
 <li>重新在2080机器上tune后，跟在1080上的速度相差不大。</li>
 </ul>
-<p><img src="/.tech//8.png" alt="8.png"></p>
+<p><img src="/2019/11/15/tvm/8.png" alt="8.png"></p>
 <center>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -404,7 +404,7 @@
 </center>
 
 <p>下面测试了内存的消耗。总体来看TVM比较省内存和显存。</p>
-<p><img src="/.tech//9.png" alt="9.png"></p>
+<p><img src="/2019/11/15/tvm/9.png" alt="9.png"></p>
 <center>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -429,7 +429,7 @@
 <blockquote>
 <p>网络结构的水平融合</p>
 </blockquote>
-<p><img src="/.tech//3.png" alt="3.png"></p>
+<p><img src="/2019/11/15/tvm/3.png" alt="3.png"></p>
 <center>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -438,7 +438,7 @@
 </center>
 
 
-<p><img src="/.tech//4.png" alt="4.png"></p>
+<p><img src="/2019/11/15/tvm/4.png" alt="4.png"></p>
 <center>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -447,7 +447,7 @@
 </center>
 
 
-<p><img src="/.tech//5.png" alt="5.png"></p>
+<p><img src="/2019/11/15/tvm/5.png" alt="5.png"></p>
 <center>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;

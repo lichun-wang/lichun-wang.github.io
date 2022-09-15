@@ -58,17 +58,17 @@
 <meta property="og:site_name" content="Spring&#39;s Idea">
 <meta property="og:description" content="Cait: Going deeper with Image Transformers 本文是对vision transformer的改进，主要贡献在于layerScale以及class-attention这两点，最近facebook研究transformer的那伙人发了好几篇针对transformer的修改篇，我觉的这篇有点不太实用，没有进行具体的尝试。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//image-20211021160222487.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//image-20211021170138217.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//image-20211021172133697.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//image-20211021180832794.png">
-<meta property="og:image" content="https://www.wanglichun.tech/.tech//image-20211022112141837.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/06/Cait/image-20211021160222487.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/06/Cait/image-20211021170138217.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/06/Cait/image-20211021172133697.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/06/Cait/image-20211021180832794.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/06/Cait/image-20211022112141837.png">
 <meta property="article:published_time" content="2021-11-06T07:15:14.000Z">
 <meta property="article:modified_time" content="2022-05-28T01:26:34.772Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="Vision_Transformer">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.wanglichun.tech/.tech//image-20211021160222487.png">
+<meta name="twitter:image" content="https://www.wanglichun.tech/2021/11/06/Cait/image-20211021160222487.png">
 
 <link rel="canonical" href="https://www.wanglichun.tech/2021/11/06/Cait/">
 
@@ -314,17 +314,17 @@
 <li>作者在实验中发现，移除norm采用fix那几个方法并不奏效，反而训练很不稳定，但是把norm加回来训练就稳定多了，所以作者就加回来了，还做了改进，由单个scalar变成了一个对角矩阵。</li>
 <li>layerscale的参数都设置的比较小，前18层是0.1 ，然后是10e-5,然后24层是10e-6</li>
 </ul>
-<p><img src="/.tech//image-20211021160222487.png" alt="image-20211021160222487"></p>
+<p><img src="/2021/11/06/Cait/image-20211021160222487.png" alt="image-20211021160222487"></p>
 <h2 id="Specializing-layers-for-class-atention"><a href="#Specializing-layers-for-class-atention" class="headerlink" title="Specializing layers for class atention"></a>Specializing layers for class atention</h2><ul>
 <li>This design aims at circumventing one of the problems of the ViT architecture: the learned weights are asked to optimize two contradictory(矛盾) objectives:(1) guiding the self-attention between patches while (2) summarizing the information useful to the linear classifier.&#x3D;&#x3D;很重要的一句话，说出来作者的idea来源&#x3D;&#x3D;</li>
 <li>改变了cls的位置，不是在一开始就插入，使得最开始的layer可完全在patch中计算self-attention。</li>
 <li>self-attention 跟vit差不多，不过没有了[cls]。</li>
 <li>class-attention  将patch embedding合成到cls中进行分类。</li>
 </ul>
-<p><img src="/.tech//image-20211021170138217.png" alt="image-20211021170138217"></p>
+<p><img src="/2021/11/06/Cait/image-20211021170138217.png" alt="image-20211021170138217"></p>
 <ul>
 <li><p>class-attention是怎么做的呢？主要就是下面这个公式，理解这个公式就可以里，其中 Q是只有xclass的，z是[xclass, xpatch]</p>
-<p><img src="/.tech//image-20211021172133697.png" alt="image-20211021172133697"></p>
+<p><img src="/2021/11/06/Cait/image-20211021172133697.png" alt="image-20211021172133697"></p>
 </li>
 <li><p>这里说一下计算$Q*K^T$本来是len_q * dim  和  len_k * dim  ,这里的len_q 就变成了1， 最后得到的attention也变成了 1 x dim</p>
 </li>
@@ -334,14 +334,14 @@
 </li>
 <li><p>加了layerscale可以使得训练的更稳定，layer间的差别更小，下图 右边。</p>
 </li>
-<li><p><img src="/.tech//image-20211021180832794.png" alt="image-20211021180832794"></p>
+<li><p><img src="/2021/11/06/Cait/image-20211021180832794.png" alt="image-20211021180832794"></p>
 </li>
 <li><p>AdamW + cosine + 5 warmup + weight decay 0.05 </p>
 </li>
 <li><p>引入了Deit的蒸馏策略，采用”hard distillation”</p>
 </li>
 <li><p>Deti -&gt;  Cait的优化进程：</p>
-<p><img src="/.tech//image-20211022112141837.png" alt="image-20211022112141837"></p>
+<p><img src="/2021/11/06/Cait/image-20211022112141837.png" alt="image-20211022112141837"></p>
 </li>
 </ul>
 <ul>
