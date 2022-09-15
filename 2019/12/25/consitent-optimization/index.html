@@ -58,24 +58,24 @@
 <meta property="og:site_name" content="Spring&#39;s Idea">
 <meta property="og:description" content="本篇论文中，作者提出在one stage目标检测中影响网络精度的一个原因在于优化的目标与inference设置的不一致性（misalignment between the optimization target and inference configurations），解释来说就是，现在流行的目标检测方法，一般会有两个分支，一个分类，一个坐标框回归，而这两个分支往往是独立的，都是对原始anch">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.wanglichun.tech/1.png">
-<meta property="og:image" content="https://www.wanglichun.tech/2.png">
-<meta property="og:image" content="https://www.wanglichun.tech/3.png">
-<meta property="og:image" content="https://www.wanglichun.tech/4.png">
-<meta property="og:image" content="https://www.wanglichun.tech/5.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//4.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//5.png">
 <meta property="og:image" content="https://latex.codecogs.com/gif.latex?L_{cls}=\frac{1}{N_{cls}}=&space;\sum_{i}[L_{cls}(ci,ci*)&plus;aL_{cls}(ci,ci&plus;)]">
 <meta property="og:image" content="https://latex.codecogs.com/gif.latex?L_{reg}=\frac{1}{N^0_{reg}}=&space;\sum_{i}[L^0_{reg}(t_i^0,t_i^*)&plus;&space;\sum_{i}&space;L^1_{reg}(t_i^1,t_i^&plus;)]">
-<meta property="og:image" content="https://www.wanglichun.tech/6.png">
-<meta property="og:image" content="https://www.wanglichun.tech/7.png">
-<meta property="og:image" content="https://www.wanglichun.tech/8.png">
-<meta property="og:image" content="https://www.wanglichun.tech/9.png">
-<meta property="og:image" content="https://www.wanglichun.tech/10.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//6.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//7.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//8.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//9.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//10.png">
 <meta property="article:published_time" content="2019-12-25T01:01:26.000Z">
 <meta property="article:modified_time" content="2022-05-28T01:27:02.700Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="Consistent Optimization">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.wanglichun.tech/1.png">
+<meta name="twitter:image" content="https://www.wanglichun.tech/.tech//1.png">
 
 <link rel="canonical" href="https://www.wanglichun.tech/2019/12/25/consitent-optimization/">
 
@@ -311,23 +311,23 @@
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Chunfengyanyulove/article/details/86708549"><strong>CSDN博客地址：https://blog.csdn.net/Chunfengyanyulove/article/details/86708549</strong></a></p>
 <hr>
 <p><strong>先上一张图，下图为论文中提供的RetinaNet加入了Consistent Optimization之后的效果，在COCO数据集上，AP平均提高1个百分点，很稳，也说明了本文方法的有效性，下面一起来学习一下这篇文章吧。</strong></p>
-<p><img src="/1.png"></p>
+<p><img src="/.tech//1.png"></p>
 <hr>
 <h4 id="文章详细解析"><a href="#文章详细解析" class="headerlink" title="文章详细解析"></a>文章详细解析</h4><p>首先，为了证明存在上面提到的不一致性的问题，作者进行了实验分析，分析结果如下图Figure 3,可以发现，Input IOU在[0.3,0.5]之间的anchor,经过回归之后，已经变到[0.5,0.85]，而在网络训练的时候，IOU在0.4以下是被当做负样本的，显然，强行将anchor的分类得分代表坐标回归后的anchor的得分是有问题的。</p>
-<p><img src="/2.png"></p>
+<p><img src="/.tech//2.png"></p>
 <p>另外论文中，作者指出，<strong>当两个目标交叉在一起的时候，回归器容易产生疑惑</strong>。如下图Figure2所示，红框和黄框对应的类别都是bicycle，但是由于人与自行车交叠在一起，黄框在进行回归的时候，容易误回归到人，但如果它的分类标签还是自行车的话，就可能出现问题，如Figure2(b)所示，结果黄框的score比红框还高，这就容易导致红框在NMS的时候被干掉了，影响了目标检测的精度。</p>
-<p><img src="/3.png"></p>
+<p><img src="/.tech//3.png"></p>
 <p>另外作者同时分析了在RetinaNet上面对于不同的IOU的output，输出的平均的score及其方差，以及输出的output IOU的均值及其方差，实验结果如下图Figure 5所示，根据实验结果可以发现output的IOU与output score是呈正相关的，但是图（b）显示，随着Output IOU的增大，其标准差也在增长，这说明检测器对于负样本更加的鲁棒，对正样本波动比较大，但是我们希望其对正样本也具有更强的稳定性，红线是采用的consistent方法的结果，虽然没有完全解决问题，但是明显效果要好一些，符合我们的预期。</p>
-<p><img src="/4.png"></p>
+<p><img src="/.tech//4.png"></p>
 <p><strong>说了这么多consistent的效果，你一定很想知道consistent到底是怎么做的，下面我们就来详细学习一下。</strong></p>
 <p><strong>其实，解决方法也很简单，既然anchor进行坐标框回归之后，与原来的anchor相差较大，那么我们直接对回归后的坐标框再进行一次处理就可以了。</strong></p>
 <p>这样做的可选的方案其实还不少呢，如下图Figure4所示，其中图（b）是cascade rcnn的方式，图（c）是cascade rcnn的变体，图（d）是作者设计的consistent optimization结构，都可以达到目的。</p>
-<p><img src="/5.png"></p>
+<p><img src="/.tech//5.png"></p>
 <p>这里先说一下作者的结构（肯定这个是最好的），在作者设计的结构中，并没有增加额外的head，不增加额外的计算，仅仅是在原有的模型基础上，修改了网络的loss,将回归后的anchor与其更新后的ground truth的loss也加入到网络的loss中。</p>
 <p>分类loss修改如下，i代表的是anchor的index，ci代表的是预测的概率，ci*代表的是代表的是原anchor对应的ground truth，ci+代表的是refined anchor对应的ground truth。<strong>并且作者指出，其实只使用refined anchor来训练网络已经可以得到更好的表现了，组合这两个loss一起，可以使得训练的结果更加的稳定</strong></p>
-<p><a href="https://www.codecogs.com/eqnedit.php?latex=L_{cls}=\frac{1}{N_{cls}}=&space;\sum_{i}[L_{cls}(ci,ci*)&plus;aL_{cls}(ci,ci&plus;)]" target="_blank"><img src="https://latex.codecogs.com/gif.latex?L_{cls}=\frac{1}{N_{cls}}=&space;\sum_{i}[L_{cls}(ci,ci*)&plus;aL_{cls}(ci,ci&plus;)]" title="L_{cls}=\frac{1}{N_{cls}}= \sum_{i}[L_{cls}(ci,ci*)+aL_{cls}(ci,ci+)]" /></a></p>
+<p><a href="https://www.codecogs.com/eqnedit.php?latex=L_{cls}=\frac{1}{N_{cls}}=&space;\sum_{i}[L_{cls}(ci,ci*)&plus;aL_{cls}(ci,ci&plus;)]" target="_blank"><img src="https://latex.codecogs.com/gif.latex?L_{cls}=\frac{1}{N_{cls}}=&space;\sum_{i}[L_{cls}(ci,ci*)&plus;aL_{cls}(ci,ci&plus;)]" title="L_{cls}=\frac{1}{N_{cls}}= \sum_{i}[L_{cls}(ci,ci*)+aL_{cls}(ci,ci+)]"></a></p>
 <p>为了保持与分类的一致性，检测的loss修改如下:其中ti0是原始anchor输出的offset，ti1是refined anchor的输出offset,ti*$和ti+分别是其对应的ground truth</p>
-<p><a href="https://www.codecogs.com/eqnedit.php?latex=L_{reg}=\frac{1}{N^0_{reg}}=&space;\sum_{i}[L^0_{reg}(t_i^0,t_i^*)&plus;&space;\sum_{i}&space;L^1_{reg}(t_i^1,t_i^&plus;)]" target="_blank"><img src="https://latex.codecogs.com/gif.latex?L_{reg}=\frac{1}{N^0_{reg}}=&space;\sum_{i}[L^0_{reg}(t_i^0,t_i^*)&plus;&space;\sum_{i}&space;L^1_{reg}(t_i^1,t_i^&plus;)]" title="L_{reg}=\frac{1}{N^0_{reg}}= \sum_{i}[L^0_{reg}(t_i^0,t_i^*)+ \sum_{i} L^1_{reg}(t_i^1,t_i^+)]" /></a></p>
+<p><a href="https://www.codecogs.com/eqnedit.php?latex=L_{reg}=\frac{1}{N^0_{reg}}=&space;\sum_{i}[L^0_{reg}(t_i^0,t_i^*)&plus;&space;\sum_{i}&space;L^1_{reg}(t_i^1,t_i^&plus;)]" target="_blank"><img src="https://latex.codecogs.com/gif.latex?L_{reg}=\frac{1}{N^0_{reg}}=&space;\sum_{i}[L^0_{reg}(t_i^0,t_i^*)&plus;&space;\sum_{i}&space;L^1_{reg}(t_i^1,t_i^&plus;)]" title="L_{reg}=\frac{1}{N^0_{reg}}= \sum_{i}[L^0_{reg}(t_i^0,t_i^*)+ \sum_{i} L^1_{reg}(t_i^1,t_i^+)]"></a></p>
 <p><strong>讲到这你可能还不是特别理解网络到底是怎么做的，我在详细讲一下，最简单的方法，我们将优化后的anchor的gt交给分类，然后利用上面的分类loss进行训练，作者说明，这个方法是有效的，这个应该理解，再进一步的，就是作者推荐的，不仅仅是将优化后的anchor交给分类，坐标回归也同样进行两次，即在第一次回归的基础上，再进行一次回归（我猜想这就可以解决前面提到的第二个问题，容易产生混淆的问题），最终给出结果，至于怎么回归两次，其实就是在倒数第二层输出回归offset的时候，多输出4个offset，作为第二次的结果，而这4个的gt是第一次优化后anchor重新求的gt。</strong></p>
 <p><strong>为什么最终作者选择了那个结构呢？主要原因还在于，这个结构的效果在这几个中是最好的。</strong></p>
 <hr>
@@ -337,19 +337,19 @@
 <p>观察表1可以发现，使用cascade方式，虽然加入了更多的参数以及计算量，但是并没有增加AP，相反作者这种没有增加计算量的方法却取得了较好的效果。</p>
 <p><strong>这个实验也说明了，效果的改善并不是因为更多的参数或者结构的设计，而是如何能将训练器训练的更好</strong></p>
 <p><strong>并且对于，Cascade RCNN这种级联的方式，在two stage方法中，在anchor调整了之后，可以利用RoiPooling方式对目标区域重新提取特征，具有一定的效果，但是在one stage方法中，由于是采用卷积来联系起anchor与其gt，在anchor调整了之后，仍然是利用卷积去提取特征，只是gt做了修改而已，这样效果其实是有限的，网络较难学习到其内在的变换</strong></p>
-<p><img src="/6.png"></p>
+<p><img src="/.tech//6.png"></p>
 <ul>
 <li><strong>那是不是可以多refined几次，stage是不是越多越有效呢？</strong></li>
 </ul>
 <p>作者同样进行了实验，如下：在实验中，作者分别对比了不同stage下的模型效果，并且对不同的stage，设置了不同的IOU阈值，第二个stage的正负样本IOU阈值分别为0.6，0.5，第三个stage的正负样本阈值分别为0.7，0.6，实验结果如下表，第一行是baseline,第二行是进行两次的classification，可以发现，效果提升了大约0.8个百分点，实验结果发现，进行2次分类加2次回归的实验效果是最好的，进一步增加stage，下过反而下降了，并且第三行结果显示（第三行带星号，代表的是inference时候只进行一次的回归），结果仍然提升了大约1个点，进一步说明了算法的有效性。</p>
-<p><img src="/7.png"></p>
+<p><img src="/.tech//7.png"></p>
 <p>作者同样对比了对于不同输入尺度的模型效果，结果如下表：<br>可以发现，<strong>在使用了consistent optimization之后，基本上AP可以提高一个百分点左右，增大图像的尺度还是有效果的，图像大小从500增加到800之后，平均可以提高3个点左右。并且对比下图使用consistent的结果可以发现，对于大图的精度的提升是最明显的（$AP_L$平均提升了约3个百分点）。</strong></p>
-<p><img src="/8.png"></p>
+<p><img src="/.tech//8.png"></p>
 <p>为了进一步证明consistent方法的泛化效果，作者在SSD上面进行了实验，实验结果如下，结果是令人满意的：</p>
-<p><img src="/9.png"></p>
+<p><img src="/.tech//9.png"></p>
 <p>与目前的state-of-the-art网络的对比，结果显示，ConRetinaNet还是很有优势的。<strong>这里的ConRetinaNet训练的时候使用了尺度的变化</strong>。加星的为使用过多预处理的技巧结果。</p>
 <p>另外ConRetinaNet的精度比Cascade R-CNN以及基于Deformable ConvNet的Faster R-CNN的效果差一点，困难在哪呢？也许Cascade RCNN就是因为可以在修改了anchor之后提取对应的feature，而Deformable ConvNet则很好的学习了物体的几何变换，不过，他们的参数也比ConRetinaNet要多一些吧。</p>
-<p><img src="/10.png"></p>
+<p><img src="/.tech//10.png"></p>
 <h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>本篇文章主要总结了在目标检测中，回归后的anchor与分类的anchor会产生不一致的问题，并在此基础上设计了consistent优化，其想法其实是很简单的，实验结果也比较不错，总体的思想还是对anchor进行进一步优化，只是采用了与cascade rcnn不同的方式，本文采用了更简单的方法实现，并在在结尾作者也说了，要想进一步提高，其实引入region-based方法的anchor效果应该更好，不过那也就不是one-stage了。</p>
 
     </div>

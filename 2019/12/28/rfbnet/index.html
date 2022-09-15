@@ -58,22 +58,22 @@
 <meta property="og:site_name" content="Spring&#39;s Idea">
 <meta property="og:description" content="RFBNet是ECCV2018的一篇文章，文章的主要创新点在于通过Inception结构以及dilated conv模拟了人类的视觉结构—越往外视觉感受野也越大，提出了RFB结构，并将RFB结构应用于SSD结构上，实现了在不增加过多计算量的情况下模型效果的提升。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.wanglichun.tech/1.png">
-<meta property="og:image" content="https://www.wanglichun.tech/3.png">
-<meta property="og:image" content="https://www.wanglichun.tech/2.png">
-<meta property="og:image" content="https://www.wanglichun.tech/4.png">
-<meta property="og:image" content="https://www.wanglichun.tech/5.png">
-<meta property="og:image" content="https://www.wanglichun.tech/6.png">
-<meta property="og:image" content="https://www.wanglichun.tech/7.png">
-<meta property="og:image" content="https://www.wanglichun.tech/8.png">
-<meta property="og:image" content="https://www.wanglichun.tech/9.png">
-<meta property="og:image" content="https://www.wanglichun.tech/10.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//4.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//5.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//6.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//7.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//8.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//9.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//10.png">
 <meta property="article:published_time" content="2019-12-27T22:11:05.000Z">
 <meta property="article:modified_time" content="2022-05-28T01:32:26.048Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="RFBNet">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.wanglichun.tech/1.png">
+<meta name="twitter:image" content="https://www.wanglichun.tech/.tech//1.png">
 
 <link rel="canonical" href="https://www.wanglichun.tech/2019/12/28/rfbnet/">
 
@@ -305,40 +305,40 @@
 <hr>
 <h3 id="RFB背景"><a href="#RFB背景" class="headerlink" title="RFB背景"></a>RFB背景</h3><p>我们说为什么深度学习的效果会比其他的机器学习方法要好，关键点在于CNN的表征能力比较强，而往往越深的网络，表征能力也越强，带来的也是更多的计算量，更慢的速度。所以要达到速度快，精度高的目标，就需要我们在轻量级网络中，通过设计某种方法，提高网络的特征表征能力。本文作者的灵感来源于人类的视觉系统，在人类的视觉系统中，往往离中心比较近的地方，感受野会比较小，而比较远的地方，感受野会比较大，借鉴于此，本文就引入了RFB结构，达到了这个目标。</p>
 <p>在人类视觉系统中，视觉感受野是一个视网膜离心率的函数,下图表示了离心率与感受野尺寸的示意图，可见，离心率越大，尺寸也越大。</p>
-<p><img src="/1.png" alt="1.png"></p>
+<p><img src="/.tech//1.png" alt="1.png"></p>
 <p>反观，我们现在的CNN网络，感受野基本都是一致的，这就会带来一定的特征的损失。</p>
 <p>Inception block虽然使用了多个分支，构造了不同感受野，但是其融合的时候是以相同的中心进行融合的，ASPP网络，选择使用dilated conv实现了相同中心，不同距离的采样，但是感受野是一致的，如下图所示。</p>
-<p><img src="/3.png" alt="3.png"></p>
+<p><img src="/.tech//3.png" alt="3.png"></p>
 <p>其实，RFBNet就是将Inception和ASPP进行了融合，达到更好的效果。如下图所示，使用空洞卷积来控制离心率，得到不同的感受野大小。通过这张图的方式得到右下角的感受野是不是就和右上角的人类视觉系统很像了呢。</p>
-<p><img src="/2.png" alt="2.png"></p>
+<p><img src="/.tech//2.png" alt="2.png"></p>
 <p><strong>总结来看，RFB Block实际上就是两个部分</strong></p>
 <ul>
 <li>多分支的卷积</li>
 <li>dilated conv或者dilated pool</li>
 </ul>
 <p>下图是作者设计的两种RFB结构，看图就很简单了，一目了然。（a）是比较普通版，（b）实际上就是参考inception进行升级版。rate代表的是dilated，rate&#x3D;3代表dilated&#x3D;3,最后的结果使用concat拼接到一起。</p>
-<p><img src="/4.png" alt="4.png"></p>
+<p><img src="/.tech//4.png" alt="4.png"></p>
 <h3 id="RFB-in-Detection"><a href="#RFB-in-Detection" class="headerlink" title="RFB in Detection"></a>RFB in Detection</h3><p>如下，便是作者在SSD-300进行的修改，其实主要做的东西就是将一部分卷积替换成了RFB结构，如下图已经很清晰了，不需要再详述了，注意观察RFB那几个框，作者不仅仅在分类检测分支使用了RFB，在主干也同样使用了RFB。</p>
-<p><img src="/5.png" alt="5.png"></p>
+<p><img src="/.tech//5.png" alt="5.png"></p>
 <h3 id="实验部分"><a href="#实验部分" class="headerlink" title="实验部分"></a>实验部分</h3><p>作者在VOC上进行的实验</p>
 <ul>
 <li>warmup 5个epoch</li>
 </ul>
-<p><img src="/6.png" alt="6.png"></p>
+<p><img src="/.tech//6.png" alt="6.png"></p>
 <p>实验解析</p>
 <ul>
 <li>其实从第一个实验RFB-max pooling已经显现出RFB的效果了。</li>
 </ul>
-<p><img src="/7.png" alt="7.png"></p>
+<p><img src="/.tech//7.png" alt="7.png"></p>
 <p>与其他网络结构的对比</p>
 <ul>
 <li>这里作者调整了网络结构，使得不同的网络参数量基本一致。</li>
 </ul>
-<p><img src="/8.png" alt="8.png"></p>
+<p><img src="/.tech//8.png" alt="8.png"></p>
 <p>在COCO的实验结果：</p>
-<p><img src="/9.png" alt="9.png"></p>
+<p><img src="/.tech//9.png" alt="9.png"></p>
 <p>速度精度对比的一个图</p>
-<p><img src="/10.png" alt="10.png"></p>
+<p><img src="/.tech//10.png" alt="10.png"></p>
 <h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>总的来看，RFBNet的思想很简单，但是很新颖，并没有增加过多的东西，但是取得的效果还是很不错的，达到了一个速度与精度的平衡。</p>
 
     </div>

@@ -58,15 +58,15 @@
 <meta property="og:site_name" content="Spring&#39;s Idea">
 <meta property="og:description" content="这篇文章更偏向于网络设计，主要在于将conv与atten相结合，各取其有点，conv更擅长进行归纳总结，atten具有更大的容量，所以将二者进行结合，可以去得进一步提点的效果，然后为了减少计算量，采用了前面是conv，后面是atten的结构，同时，实验了结构里面每个stage有多少的block效果最好等等，代码没有开源，具体的实现细节还需要等开源再看。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.wanglichun.tech/image-20210928114232584.png">
-<meta property="og:image" content="https://www.wanglichun.tech/image-20210929143259557.png">
-<meta property="og:image" content="https://www.wanglichun.tech/image-20210929143943118.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//image-20210928114232584.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//image-20210929143259557.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//image-20210929143943118.png">
 <meta property="article:published_time" content="2021-11-06T07:25:57.000Z">
 <meta property="article:modified_time" content="2022-05-28T01:26:52.854Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="Vision_Transformer">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.wanglichun.tech/image-20210928114232584.png">
+<meta name="twitter:image" content="https://www.wanglichun.tech/.tech//image-20210928114232584.png">
 
 <link rel="canonical" href="https://www.wanglichun.tech/2021/11/06/CoAtNet/">
 
@@ -327,7 +327,7 @@
 </blockquote>
 </li>
 <li><p>基于上面的分析，很自然的想法就是如下的结合：$w_{i-1}$是一个常数（&#x3D;&#x3D;咋算的后面附录A.1详述&#x3D;&#x3D;）</p>
-<p><img src="/image-20210928114232584.png" alt="image-20210928114232584"></p>
+<p><img src="/.tech//image-20210928114232584.png" alt="image-20210928114232584"></p>
 </li>
 </ul>
 <h3 id="Vertical-Layout-Design"><a href="#Vertical-Layout-Design" class="headerlink" title="Vertical Layout Design"></a>Vertical Layout Design</h3><ul>
@@ -360,8 +360,8 @@
 <h2 id="Ablation-Studies"><a href="#Ablation-Studies" class="headerlink" title="Ablation Studies"></a>Ablation Studies</h2><ul>
 <li>加入attention的作用</li>
 </ul>
-<p><img src="/image-20210929143259557.png" alt="image-20210929143259557"></p>
-<h2 id="model-Details"><a href="#model-Details" class="headerlink" title="model Details"></a>model Details</h2><p><img src="/image-20210929143943118.png" alt="image-20210929143943118"></p>
+<p><img src="/.tech//image-20210929143259557.png" alt="image-20210929143259557"></p>
+<h2 id="model-Details"><a href="#model-Details" class="headerlink" title="model Details"></a>model Details</h2><p><img src="/.tech//image-20210929143943118.png" alt="image-20210929143943118"></p>
 <h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>A.1， 公式（3）的实现，那个w是如何实现的呢？我也是初略的看了，不知道对不对，作者设了一个（2H-1）x (2W-1)的参数，然后计算的时候直接进行索引。</p>
 
     </div>

@@ -58,18 +58,18 @@
 <meta property="og:site_name" content="Spring&#39;s Idea">
 <meta property="og:description" content="本篇文章是CVPR2019的一篇Anchor-Free的文章，是一篇很好的Anchor Free的目标检测的文章，目前基于anchor的目标检测方法，大多采用不同的level预测不同尺度的instance，而分配规则往往是人为设计的，这导致anchor的匹配策略可能不是最优的。那有没有更优的匹配方法？文章从level选取的点进行切入，利用FASF实现不同的instance在不同level的动态分">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.wanglichun.tech/1.png">
-<meta property="og:image" content="https://www.wanglichun.tech/2.png">
-<meta property="og:image" content="https://www.wanglichun.tech/3.png">
-<meta property="og:image" content="https://www.wanglichun.tech/4.png">
-<meta property="og:image" content="https://www.wanglichun.tech/5.png">
-<meta property="og:image" content="https://www.wanglichun.tech/6.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//4.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//5.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//6.png">
 <meta property="article:published_time" content="2020-02-16T00:21:19.000Z">
 <meta property="article:modified_time" content="2022-05-28T01:28:56.263Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="FASF">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.wanglichun.tech/1.png">
+<meta name="twitter:image" content="https://www.wanglichun.tech/.tech//1.png">
 
 <link rel="canonical" href="https://www.wanglichun.tech/2020/02/16/FASF/">
 
@@ -306,20 +306,20 @@
 </ol>
 <p>目前基于anchor的目标检测方法，大多采用不同的level预测不同尺度的instance，而分配规则往往是人为设计的，这导致anchor的匹配策略可能不是最优的。本文提出了feature selective anchor-free module来解决这个限制。并且FASF可以与anchor-based 分支协同并行工作，提高模型效果。在COCO上，可以达到44.6%的mAP</p>
 <h3 id="Feature-Selective-Anchor-Free"><a href="#Feature-Selective-Anchor-Free" class="headerlink" title="Feature Selective Anchor Free"></a>Feature Selective Anchor Free</h3><h4 id="Network-Architecture"><a href="#Network-Architecture" class="headerlink" title="Network Architecture"></a>Network Architecture</h4><p>FSAF的结构展示如下图，作者的实验是以RetinaNet为基础，所以下图的主干部分代表的是RetinaNet的FPN结构，同样的从P3-P7引出subnets进行分类与预测，如下图所示，P3-P7对应的分辨率<code>$1/2^l$</code>。</p>
-<p><img src="/1.png" alt="1.png"></p>
+<p><img src="/.tech//1.png" alt="1.png"></p>
 <p>FSAF重点是下图中引出来的Anchor-Free branch,分类的分支，通过一个3x3的卷积以及sigmoid得到WxHxK的特征图，用于预测K个类别，至于回归分支，通过一个3x3的卷积以及ReLU得到WxHx4的特征图，用于预测每个实例的坐标框。</p>
 <h4 id="Ground-Truth-and-Loss"><a href="#Ground-Truth-and-Loss" class="headerlink" title="Ground Truth and Loss"></a>Ground Truth and Loss</h4><p>首先，如何定义正负样本呢？如下图所示，Groud Truth是汽车的蓝框，正样本便是中间图中白色的部分，当然除了正样本也不全是负样本，在正负样本之间还有一部分忽略样本，论文中正样本占比为宽度的0.2，忽略部分界限占比为宽度的0.5，所以每个level在宽度比例0.2-0.5的一圈是不加入训练，另外，不同level的界限间的像素也同样不加入训练，用公式表示是：<code>$(b^&#123;i&#125;_&#123;e&#125;-b^&#123;l&#125;_&#123;e&#125;);(b_&#123;i&#125;^&#123;l-1&#125;,b_&#123;i&#125;^&#123;l+1&#125;)$</code>(其实不加入训练这里，论文描述的挺复杂，其实计算后发现，就是每层的Ground Truth往外扩一圈)，其余的就为负样本。并且如果两个实例在同一个level重合了，以小的那个为主。</p>
 <p><strong>训练的时候分类采用的是Focal loss，box回归的是边界的上下左右，这里使用的是IOU Loss</strong></p>
-<p><img src="/2.png" alt="2.png"></p>
+<p><img src="/.tech//2.png" alt="2.png"></p>
 <h4 id="Online-Feature-Selection"><a href="#Online-Feature-Selection" class="headerlink" title="Online Feature Selection"></a>Online Feature Selection</h4><p>这部分是本篇文章的精髓所在，如果自动去给不同的instance分配合适的level进行预测呢？<br>其实答案也很简单，就如下图所示，作者分别对不同的level的分支结果求loss，然后选择loss最小的那个作为该实例的分支。</p>
-<p><img src="/3.png" alt="3.png"></p>
+<p><img src="/.tech//3.png" alt="3.png"></p>
 <h4 id="Joint-Inference-and-Training"><a href="#Joint-Inference-and-Training" class="headerlink" title="Joint Inference and Training"></a>Joint Inference and Training</h4><p>这部分将介绍，如何将anchor-based与anchor-free方法结合起来，如上面图Figure 4所示。</p>
 <p>首先，在训练的时候，保持anchor-based的分支参数不变。在inference的时候，将anchor based得到的box以及anchor free得到的box一起用非极大值一致的方法，得到最终的结果。</p>
 <h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><h4 id="FASF-模块的效果以及online-feature-selection的重要性。"><a href="#FASF-模块的效果以及online-feature-selection的重要性。" class="headerlink" title="FASF 模块的效果以及online feature selection的重要性。"></a>FASF 模块的效果以及online feature selection的重要性。</h4><p>下图是在RetinaNet上使用FASF模块的效果，可以看出，其实只使用FASF的效果已经要好于RetinaNet了，并且在实验中可以看出，如果不使用online feature selection 效果也不错的，但是没有使用online feature selection效果好，相差了大约10个点。</p>
-<p><img src="/4.png" alt="4.png"></p>
+<p><img src="/.tech//4.png" alt="4.png"></p>
 <h4 id="FASF选择的level到底怎么样？"><a href="#FASF选择的level到底怎么样？" class="headerlink" title="FASF选择的level到底怎么样？"></a>FASF选择的level到底怎么样？</h4><p>实验表明，大部分的检测框还是遵循原来的设计的，前面的level检测小目标，后面的level检测大目标，但是也有特例，就是下图中红色框框住的那些就是，level发生了变化。</p>
-<p><img src="/5.png" alt="5.png"></p>
-<h4 id="FASF与SOTA相比较"><a href="#FASF与SOTA相比较" class="headerlink" title="FASF与SOTA相比较"></a>FASF与SOTA相比较</h4><p><img src="/6.png" alt="6.png"></p>
+<p><img src="/.tech//5.png" alt="5.png"></p>
+<h4 id="FASF与SOTA相比较"><a href="#FASF与SOTA相比较" class="headerlink" title="FASF与SOTA相比较"></a>FASF与SOTA相比较</h4><p><img src="/.tech//6.png" alt="6.png"></p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这篇文章同样是一篇很好的Anchor Free的目标检测的文章，文章从level选取的点进行切入，利用Anchor实现不同的instance在不同level的动态分配，设计了FASF方法进行level的动态选择，并且设计了anchor free跟anchor-based相结合，提升模型效果，取得了可观的结果。</p>
 
     </div>

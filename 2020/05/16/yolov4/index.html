@@ -58,29 +58,29 @@
 <meta property="og:site_name" content="Spring&#39;s Idea">
 <meta property="og:description" content="这篇文章读下来，感觉就是一个tricks的集大成，作者实验做的可是真的很详细，好多trick我都没有听过，我看网上有人评论说，可以当做目标检测的入门手册了，哈哈，确实，能做如此多的实验，足见作者的功底。总体来说，文章的创新点不是特别多，大多是在试各种tricks，然后找到效果最好的，文章值得好好的读一读。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.wanglichun.tech/1.png">
-<meta property="og:image" content="https://www.wanglichun.tech/10.png">
-<meta property="og:image" content="https://www.wanglichun.tech/14.png">
-<meta property="og:image" content="https://www.wanglichun.tech/3.png">
-<meta property="og:image" content="https://www.wanglichun.tech/2.png">
-<meta property="og:image" content="https://www.wanglichun.tech/16.png">
-<meta property="og:image" content="https://www.wanglichun.tech/15.png">
-<meta property="og:image" content="https://www.wanglichun.tech/4.png">
-<meta property="og:image" content="https://www.wanglichun.tech/5.png">
-<meta property="og:image" content="https://www.wanglichun.tech/6.png">
-<meta property="og:image" content="https://www.wanglichun.tech/7.png">
-<meta property="og:image" content="c:/Users/wanglichun/Desktop/blog-img/yolov4/8.png">
-<meta property="og:image" content="https://www.wanglichun.tech/0.png">
-<meta property="og:image" content="https://www.wanglichun.tech/11.png">
-<meta property="og:image" content="https://www.wanglichun.tech/12.png">
-<meta property="og:image" content="https://www.wanglichun.tech/13.png">
-<meta property="og:image" content="https://www.wanglichun.tech/conclusion.jpg">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//10.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//14.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//3.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//16.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//15.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//4.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//5.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//6.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//7.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//Users/wanglichun/Desktop/blog-img/yolov4/8.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//0.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//11.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//12.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//13.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//conclusion.jpg">
 <meta property="article:published_time" content="2020-05-16T03:04:42.000Z">
 <meta property="article:modified_time" content="2022-05-28T01:33:48.515Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="YOLO V2">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.wanglichun.tech/1.png">
+<meta name="twitter:image" content="https://www.wanglichun.tech/.tech//1.png">
 
 <link rel="canonical" href="https://www.wanglichun.tech/2020/05/16/yolov4/">
 
@@ -313,7 +313,7 @@
 <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p><strong>本文主要创新点在于干了下面几件事</strong></p>
 <p>1、YOLOv4，训练方便，1个1080或者2080就可以训起来了。<br>2、对比了很多tricks,验证了一些trick的影响,并选取了较好的tricks的组合。<br>3、优化了一些现存的方法，使其可以高效的训练在单个GPU上。</p>
 <h4 id="目标检测的网络结构"><a href="#目标检测的网络结构" class="headerlink" title="目标检测的网络结构"></a>目标检测的网络结构</h4><p>下图很清晰的描述了目标检测网络的结构，包括backbone,neck,head等。</p>
-<p><img src="/1.png" alt="1.png"></p>
+<p><img src="/.tech//1.png" alt="1.png"></p>
 <h4 id="bag-of-freebies"><a href="#bag-of-freebies" class="headerlink" title="bag of freebies"></a>bag of freebies</h4><p>什么是bag of freebies呢？就是那些会提高模型效果，但是又不会增加模型部署后latency的方法。</p>
 <ol>
 <li>data augmentation</li>
@@ -332,7 +332,7 @@
 </blockquote>
 </li>
 </ul>
-<p><img src="/10.png" alt="10.png"></p>
+<p><img src="/.tech//10.png" alt="10.png"></p>
 <ol start="2">
 <li>problem of semantic distribution bias,  data imbalance between different classes</li>
 </ol>
@@ -351,7 +351,7 @@
 </blockquote>
 </li>
 <li>DIOU loss<blockquote>
-<p><img src="/14.png" alt="14.png"></p>
+<p><img src="/.tech//14.png" alt="14.png"></p>
 </blockquote>
 </li>
 <li>CIOU loss</li>
@@ -370,14 +370,14 @@
 <ul>
 <li>channel-wise atention (SENet)</li>
 </ul>
-<p><img src="/3.png" alt="3.png"></p>
+<p><img src="/.tech//3.png" alt="3.png"></p>
 <ul>
 <li>point-wise attention ：SAM(Spatial Attention Module)<blockquote>
 <p>SAM介绍:作者表示不仅在channel层面在spatial层面上也需要网络能明白feature map中哪些部分应该有更高的响应。具体怎么做的呢？如下图，首先，还是使用average pooling和max pooling对输入feature map进行压缩操作，只不过这里的压缩变成了通道层面上的压缩，对输入特征分别在通道维度上做了mean和max操作。最后得到了两个二维的feature，将其按通道维度拼接在一起得到一个通道数为2的feature map，之后使用一个包含单个卷积核的隐藏层对其进行卷积操作，要保证最后得到的feature在spatial维度上与输入的feature map一致，最后通过sigmoid对原来的特征图进行加权。</p>
 </blockquote>
 </li>
 </ul>
-<p><img src="/2.png" alt="2.png"></p>
+<p><img src="/.tech//2.png" alt="2.png"></p>
 <ol start="3">
 <li>activation function</li>
 </ol>
@@ -392,7 +392,7 @@
 <p>$x*sigmoid(x)$</p>
 </blockquote>
 <blockquote>
-<p><img src="/16.png" alt="16.png"></p>
+<p><img src="/.tech//16.png" alt="16.png"></p>
 </blockquote>
 <ul>
 <li>hard-Swish : quantization network</li>
@@ -402,7 +402,7 @@
 <p>$mish&#x3D;x*tanh(ln(1+e^x))$</p>
 </blockquote>
 <blockquote>
-<p><img src="/15.png" alt="15.png"><br>4. nms</p>
+<p><img src="/.tech//15.png" alt="15.png"><br>4. nms</p>
 </blockquote>
 <ul>
 <li>soft nms</li>
@@ -424,10 +424,10 @@
 <li>modified SAM, PAN and Cross mini-Batch Normalization(CmBN)</li>
 </ul>
 <p><strong>backbone如下</strong></p>
-<p><img src="/4.png" alt="4.png"></p>
+<p><img src="/.tech//4.png" alt="4.png"></p>
 <p><strong>Mosaic</strong></p>
 <p>就是拼图，好处就是减小了目标的尺寸，同时变相增大了batchsize</p>
-<p><img src="/5.png" alt="5.png"></p>
+<p><img src="/.tech//5.png" alt="5.png"></p>
 <ul>
 <li>Self-Adversarial Training(SAT)</li>
 </ul>
@@ -435,27 +435,27 @@
 <ul>
 <li>Cross mini-Batch Normalization</li>
 </ul>
-<p><img src="/6.png" alt="6.png"></p>
+<p><img src="/.tech//6.png" alt="6.png"></p>
 <p>原始的BN层是在每个mini-batch中计算BN</p>
 <p>CBN的提出是因为当模型较大的时候，单张卡的batch较小，影响模型效果，所以CBN不仅仅利用当前的mini-batch，还利用上几个iter的mini-batch，使得batch变得大一些。</p>
 <p>CmBN类似于BN的升级版，只在mini-batch内部累加BN</p>
 <ul>
 <li>SAM的修改</li>
 </ul>
-<p><img src="/7.png" alt="7.png"></p>
+<p><img src="/.tech//7.png" alt="7.png"></p>
 <p>如图所示，将pooling 修改成了卷积,修改后就变成了point-wise的attention。</p>
 <ul>
 <li>PAN的修改</li>
 </ul>
-<p><img src="C:/Users/wanglichun/Desktop/blog-img/yolov4/8.png" alt="C:\Users\wanglichun\Desktop\blog-img\yolov4\8
+<p><img src="/.tech//Users/wanglichun/Desktop/blog-img/yolov4/8.png" alt="C:\Users\wanglichun\Desktop\blog-img\yolov4\8
 .png"></p>
 <p>PANet原始结构: 自顶向下  自下上顶</p>
-<p><img src="/0.png" alt="0.png"></p>
+<p><img src="/.tech//0.png" alt="0.png"></p>
 <h3 id="实验部分"><a href="#实验部分" class="headerlink" title="实验部分"></a>实验部分</h3><p>作者的实验做的是真的很全，对比的很充分，感兴趣的同学可以自行阅读一下，这里不介绍了，总之就是各种trick的对比。</p>
 <p>最后放一下，不同网络的对比结果。</p>
-<p><img src="/11.png" alt="11.png"><br><img src="/12.png" alt="12.png"><br><img src="/13.png" alt="13.png"></p>
+<p><img src="/.tech//11.png" alt="11.png"><br><img src="/.tech//12.png" alt="12.png"><br><img src="/.tech//13.png" alt="13.png"></p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>下面是网上网友总结的YOLO-V4的tricks,很全，大家可以按图查询，查缺补漏。</p>
-<p><img src="/conclusion.jpg" alt="conclusion.jpg"></p>
+<p><img src="/.tech//conclusion.jpg" alt="conclusion.jpg"></p>
 
     </div>
 

@@ -58,19 +58,19 @@
 <meta property="og:site_name" content="Spring&#39;s Idea">
 <meta property="og:description" content="这篇文章是ECCV2017一篇比较经典的人脸检测的文章，是一篇很实用的针对小脸优化的文章。读下来，文章并没有提出特别牛逼的理论或者网络，而是在SSD的基础上，进行了针对小脸的一系列优化，最终实现了对小脸检测效果的提升，相比于提出高大上理论的论文，本篇论文中提出的方法更容易实用到实际项目中，产生收益，特别是针对小目标，文章中的方法值得借鉴，我喜欢这种文章。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.wanglichun.tech/1.png">
-<meta property="og:image" content="https://www.wanglichun.tech/2.png">
-<meta property="og:image" content="https://www.wanglichun.tech/4.png">
-<meta property="og:image" content="https://www.wanglichun.tech/5.png">
-<meta property="og:image" content="https://www.wanglichun.tech/6.png">
-<meta property="og:image" content="https://www.wanglichun.tech/7.png">
-<meta property="og:image" content="https://www.wanglichun.tech/8.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//1.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//2.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//4.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//5.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//6.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//7.png">
+<meta property="og:image" content="https://www.wanglichun.tech/.tech//8.png">
 <meta property="article:published_time" content="2020-03-02T23:17:52.000Z">
 <meta property="article:modified_time" content="2022-05-28T01:32:31.931Z">
 <meta property="article:author" content="Spring Wang">
 <meta property="article:tag" content="S3FD">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.wanglichun.tech/1.png">
+<meta name="twitter:image" content="https://www.wanglichun.tech/.tech//1.png">
 
 <link rel="canonical" href="https://www.wanglichun.tech/2020/03/03/s3fd/">
 
@@ -318,7 +318,7 @@
 </ul>
 <p><strong>网络的速度在titan x上测试可以达到36fps</strong></p>
 <h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>正文部分详细介绍一下上面提到的作者的几点改进。</p>
-<h4 id="网络结构修改"><a href="#网络结构修改" class="headerlink" title="网络结构修改"></a>网络结构修改</h4><p><img src="/1.png" alt="1.png"></p>
+<h4 id="网络结构修改"><a href="#网络结构修改" class="headerlink" title="网络结构修改"></a>网络结构修改</h4><p><img src="/.tech//1.png" alt="1.png"></p>
 <center>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -326,7 +326,7 @@
     padding: 2px;">S3FD网络结构图</div>
 </center>
 
-<p><img src="/2.png" alt="2.png"></p>
+<p><img src="/.tech//2.png" alt="2.png"></p>
 <center>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -340,7 +340,7 @@
 <li><strong>equal-proportion interval principle,等间距采样原则</strong></li>
 </ul>
 <p>意思就是说，anchor的大小和anchor的stride是成比例的，这里作者采用的是4，这就保证了采样的密度是一样的，所以不同的脸可以匹配的anchor的数量也就一致了。为什么一致呢？因为匹配是计算IOU嘛，所以密度都一样，数量也就一样了，这里作者还给了一张示意图。</p>
-<p><img src="/4.png" alt="4.png"></p>
+<p><img src="/.tech//4.png" alt="4.png"></p>
 <center>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -349,22 +349,22 @@
 </center>
 
 <h4 id="匹配策略的设计"><a href="#匹配策略的设计" class="headerlink" title="匹配策略的设计"></a>匹配策略的设计</h4><p>接下来就到了那个问题，anchor的尺度是离散的，但是人脸的尺度是连续的，这样偏离anchor较远的人脸的匹配数量就会较少，如下图花圈所示，影响召回效果，这怎么办呢？</p>
-<p><img src="/5.png" alt="5.png"></p>
+<p><img src="/.tech//5.png" alt="5.png"></p>
 <p>作者采用了如下策略解决：</p>
 <ul>
 <li>将IOU的阈值降低，IOU阈值大于0.35的anchor都算作正样本。</li>
 <li>对于仍然没有足够匹配anchor的人脸怎么办呢？首先选取那些IOU大于0.1的anchor，然后排序，选取top-N的anchor作为匹配，而N的选取可以参考上一条的平均值。</li>
 </ul>
 <h4 id="max-out-background"><a href="#max-out-background" class="headerlink" title="max-out background"></a>max-out background</h4><p>由于在较浅层检测小尺寸目标，带来的最直接问题就是，在浅层会产生较多的负样本，下表分析了不同层产生的anchor的数量，可见conv3_3产生的anchor数量占到了全部的75%以上，也就带来了非常多的负样本。</p>
-<p><img src="/6.png" alt="6.png"></p>
+<p><img src="/.tech//6.png" alt="6.png"></p>
 <p>那么怎么去平衡正负样本呢？</p>
 <p>最简单的方法当然是采用类似SSD的方法hard  negative，对loss进行排序，选取loss较大的anchor</p>
 <p>但是对于小脸来讲这样做是不够的，因为conv3_3的负样本的数量比较大，如果只采用har negative ,显然这层依然会存在较多的负样本，依然较容易会产生较多的误检，所以为了在一定程度减少这层的负样本数量，并且还能提取较好的负样本，这里作者采用了max-out background方法。</p>
 <p>分析为什么不干掉过多的负样本会产生较多的误检，究其原因，或许是将较多的负样本都预测成背景这一个类别，太简单粗暴了，所以这里作者采用的方法是对每个anchor预测多个背景类别，然后选取其中最大的那个值作为背景的概率，这就相当于将原本的二分类（脸，背景）变成了多分类（脸，背景1，背景2…背景n），对背景进行了一定的划分，这样其实就起到了一定的类别均衡的作用，这样背景被正确分类的概率也就提高了，也就可以减少一定的误检了，如下图所示。</p>
-<p><img src="/7.png" alt="7.png"></p>
+<p><img src="/.tech//7.png" alt="7.png"></p>
 <p>这步处理conv3_3，后面使用hard negative就好了。</p>
 <h3 id="实验部分"><a href="#实验部分" class="headerlink" title="实验部分"></a>实验部分</h3><p>实验部分，作者主要跟SSD-face ,RPN-face做对比，下表中F代表使用本文结构，S代表使用本文的anchor匹配策略，M代表使用max-out background label.其实每个操作都带来了一定的提升。修改了结构之后，对于hard-face提升尤其明显，提升了差不多9个点，可见stride太大对于小脸的影响确实是显著的。</p>
-<p><img src="/8.png" alt="8.png"></p>
+<p><img src="/.tech//8.png" alt="8.png"></p>
 <p>其他实验不详述了，读者可以自行阅读论文。</p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>总的来看，这是一篇实用性很强的文章，不论是人脸还是其他领域，都很值得借鉴。</p>
 
