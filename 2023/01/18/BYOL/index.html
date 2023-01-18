@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="BYOL使用了Teacher-Student架构进行自监督训练（其中Teacher Network是Student Network的历史版本的EMA），在没有任何负样本约束的情况下达到了不错的效果。本篇文章最大的创新点在于，没有使用对比学习常用的负样本，只是使用了正样本对来进行训练，关键点在于其增加的predictor，加了这个，相当于给了projection的输出结果一个缓冲，predicto">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BYOL">
+<meta property="og:url" content="https://www.wanglichun.tech/2023/01/18/BYOL/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="BYOL使用了Teacher-Student架构进行自监督训练（其中Teacher Network是Student Network的历史版本的EMA），在没有任何负样本约束的情况下达到了不错的效果。本篇文章最大的创新点在于，没有使用对比学习常用的负样本，只是使用了正样本对来进行训练，关键点在于其增加的predictor，加了这个，相当于给了projection的输出结果一个缓冲，predicto">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wanglichun.tech/2023/01/18/BYOL/image-20220113110739934.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2023/01/18/BYOL/image-20220113192129808.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2023/01/18/BYOL/image-20220113191926086.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2023/01/18/BYOL/image-20220113192943909.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2023/01/18/BYOL/image-20220113193706267.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2023/01/18/BYOL/image-20220114100756688.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2023/01/18/BYOL/image-20220114102425474.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2023/01/18/BYOL/image-20220114104229499.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2023/01/18/BYOL/image-20220114105932393.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2023/01/18/BYOL/image-20220114141745111.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2023/01/18/BYOL/image-20220114142536118.png">
+<meta property="article:published_time" content="2023-01-18T02:15:13.000Z">
+<meta property="article:modified_time" content="2023-01-18T02:24:19.019Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="BYOL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.wanglichun.tech/2023/01/18/BYOL/image-20220113110739934.png">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2023/01/18/BYOL/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>BYOL | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2023/01/18/BYOL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          BYOL
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-01-18 10:15:13 / 修改时间：10:24:19" itemprop="dateCreated datePublished" datetime="2023-01-18T10:15:13+08:00">2023-01-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Contrastive-learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Contrastive learning</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2023/01/18/BYOL/" class="post-meta-item leancloud_visitors" data-flag-title="BYOL" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/01/18/BYOL/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/01/18/BYOL/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>BYOL使用了Teacher-Student架构进行自监督训练（其中Teacher Network是Student Network的历史版本的EMA），在没有任何负样本约束的情况下达到了不错的效果。<strong>本篇文章最大的创新点在于，没有使用对比学习常用的负样本</strong>，只是使用了正样本对来进行训练，关键点在于其增加的predictor，加了这个，相当于给了projection的输出结果一个缓冲，predictor是不会把参数传递给target网络的，所以这就相当于不再需要target网络的输出与online网络的输出是完全一致的，predictor还能做一轮映射，这个在减少坍塌上应该也起到了一定的作用（虽然在论文中的实验结果显示，有负样本参加训练的时候去掉predictor没掉几个点，但是只采用正样本的时候影响应该是比较大的，这个论文中没看到证明）</p>
+</blockquote>
+<hr>
+<span id="more"></span>
+
+<p>论文名称：BYOL(bootstrap your own latent)</p>
+<p>GitHub : <a target="_blank" rel="noopener" href="https://github.com/deepmind/deepmind-research/tree/master/byol">https://github.com/deepmind/deepmind-research/tree/master/byol</a></p>
+<hr>
+<h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
+<li>BYOL 利用2个神经网络，分别称为online和target，相互作用相互学习。</li>
+<li>用online网络来预测target网络的输出，两个网络的输入是不同的augment。</li>
+<li>target网络的更是采用了slow-moving average的方法(momentum方法)，利用online的参数来进行更新。</li>
+<li>BYOL不需要负样本对。</li>
+<li>linear evaluation上，resnet50上的表现，BYOL取得了74.3%的成绩。</li>
+</ul>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
+<li>目前主流的图像的特征表示学习上，表现比较好的是对比学习的方法，这种方法比较依赖于样本对的选取，比如：大的batch size, memory bank ,或者是难例挖掘策略等，并且也比较依赖于图像augment的选择。</li>
+<li>BYOL没有采用负样本，取得了sota的水平。并且对augment更加的鲁棒</li>
+<li>解决collapsed问题比较关键，比如所有图像都输出相同的vector，本文采用了两个方法，1. 在online网络上增加了预测头，2. 对于target网络的更新，使用了一个slow-moving average的方法； 这里鼓励online的投影可以encode越来越多的信息，同时避免网络崩溃。</li>
+<li>byol效果不错，如下图，但是当只使用random crop 作为augment的时候，byol效果没有simclr效果好。</li>
+</ul>
+<p><img src="/2023/01/18/BYOL/image-20220113110739934.png" alt="image-20220113110739934"></p>
+<h2 id="Related-work"><a href="#Related-work" class="headerlink" title="Related work"></a>Related work</h2><ul>
+<li>对比学习的方法一般使用大量的负样本，那么问题来了，使用负样本对是必须的吗？</li>
+<li>DeepClaster [17]，用前面版本的representation作为后面representation的target，这个需要比较耗时的聚类的阶段以及预防措施避免崩溃。</li>
+<li>PBL是一个跟我们相似的工作。</li>
+<li>在半监督中，一般unsupervised loss会组合一个classification loss来使得训练稳定，在作者后面的实验中，去掉了classification loss后出现了训练的崩溃，作为对比，byol这里加了一个预测层来避免collapse. </li>
+<li>跟moco一样，byol也是使用的momentum更新技术。</li>
+</ul>
+<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><ul>
+<li><p>contrastive的方法中，通过判断不同的augment来进行discriminate图像，需要大量的负样本，这个判别任务具备一定的挑战性，来避免训练崩溃的问题。</p>
+</li>
+<li><p>那么这些负样本是一定要采用的吗？也就是文章的灵感来源。</p>
+<blockquote>
+<p>如果固定住初始化的网络来产生target,这样可以避免训练崩溃的问题，但是这样无法得到好的特征表示，但是这样做已经比初始化固定的特征表示效果要好了。</p>
+<p>那么我们是不是，阶段性的替换掉初始化固定的那个网络就可以得到越来越好的结果了呢？</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="Description-of-BYOL"><a href="#Description-of-BYOL" class="headerlink" title="Description of BYOL"></a>Description of BYOL</h2><ul>
+<li>结构如下图：</li>
+</ul>
+<p><img src="/2023/01/18/BYOL/image-20220113192129808.png" alt="image-20220113192129808"></p>
+<p><img src="/2023/01/18/BYOL/image-20220113191926086.png" alt="image-20220113191926086"></p>
+<ul>
+<li><p>teacher是由online 更新来的</p>
+</li>
+<li><p>online会多一个predict layer , target没有这个layer，使得两个网络为非对称网络</p>
+</li>
+<li><p>loss采用的是简单的平方差loss,下面那个公式带hat的loss将 输入网络的v 和 v’互换后送入网络，计算的loss</p>
+<p><img src="/2023/01/18/BYOL/image-20220113192943909.png" alt="image-20220113192943909"></p>
+<p><img src="/2023/01/18/BYOL/image-20220113193706267.png" alt="image-20220113193706267"></p>
+<ul>
+<li>最终在下游任务中，我们只会使用$f_{\theta}$</li>
+</ul>
+</li>
+</ul>
+<h2 id="Intuitions-on-BYOL‘s-behavior"><a href="#Intuitions-on-BYOL‘s-behavior" class="headerlink" title="Intuitions on BYOL‘s behavior"></a>Intuitions on BYOL‘s behavior</h2><ul>
+<li>BYOL训练没有崩溃的主要原因在于，BYOL的target网络参数的更新不是通过梯度计算的</li>
+</ul>
+<h2 id="Implementation-details"><a href="#Implementation-details" class="headerlink" title="Implementation details"></a>Implementation details</h2><ul>
+<li>augmentations as in simCLR</li>
+<li>projection 的结构跟simclr也是一样的，并且predict layer也采用更projection相同的结构。默认情况下，projection和predictor的layer数量是2，如下代码：</li>
+<li>LARS optimizer， cosine decay, base lr &#x3D; 0.2  ， weight decay &#x3D; 1.5e-6</li>
+<li>momentum的变化是动态进行的 最开始是0.996，然后越来越大，直到1.</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class MLP(nn.Module):</span><br><span class="line">    def __init__(self, dim, projection_size, hidden_size = 4096):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.net = nn.Sequential(</span><br><span class="line">            nn.Linear(dim, hidden_size),</span><br><span class="line">            nn.BatchNorm1d(hidden_size),</span><br><span class="line">            nn.ReLU(inplace=True),</span><br><span class="line">            nn.Linear(hidden_size, projection_size)</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    def forward(self, x):</span><br><span class="line">        return self.net(x)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Exp"><a href="#Exp" class="headerlink" title="Exp"></a>Exp</h2><ul>
+<li><p>Linear evaluation on ImageNet： res50达到了74.3%， res200（x2） 达到了79.6%</p>
+</li>
+<li><p><img src="/2023/01/18/BYOL/image-20220114100756688.png" alt="image-20220114100756688"></p>
+</li>
+<li><p>迁移性如何呢？，应该说基本都超过了simclr，在多个任务上甚至超过了supervised</p>
+<p><img src="/2023/01/18/BYOL/image-20220114102425474.png" alt="image-20220114102425474"></p>
+</li>
+<li><p>实验证明在voc也是有效的，这里不贴图了。</p>
+</li>
+</ul>
+<h2 id="Building-intuitions-with-ablations"><a href="#Building-intuitions-with-ablations" class="headerlink" title="Building intuitions with ablations"></a>Building intuitions with ablations</h2><ul>
+<li><p>Batch Size的影响：simclr由于负样本的数量减少快速的下降，byol并没有，在256-&gt;128这里才快速的下降，这里作者解释下降的原因是bn layer，因为只有这个是跟bs有关的。</p>
+<p><img src="/2023/01/18/BYOL/image-20220114104229499.png" alt="image-20220114104229499"></p>
+</li>
+<li><p>augment的探索，这里作者说，说相同的图像的不同crop会共享图像的颜色直方图，这样就简单化了，使得网络不care其他信息了，所以simclr在这个基础上又加上了color jitter来进行调整。</p>
+</li>
+<li><p>相比较于simclr，byol对于augment就会更加的鲁棒，因为online和target的网络不是同时更新的，所以会迫使online学到更多的信息，实验事实也证明，确实byol对augment更加的鲁棒</p>
+</li>
+<li><p>动量参数的探索：0不行，1也不行，0.99以上比较好</p>
+</li>
+<li><p><img src="/2023/01/18/BYOL/image-20220114105932393.png" alt="image-20220114105932393"></p>
+</li>
+<li><p>&#x3D;&#x3D;探索一下target network以及predict layer的作用&#x3D;&#x3D;</p>
+<blockquote>
+<ol>
+<li><p>加了target network是有用的，对simclr加了target network后也涨点了，但是loss的参数需要做相应调整，比如温度会调整为0.3，而不是0.1，这说明moco的方法，不仅仅在增加负样本方面有作用，在byol中并没有采用负样本，也有一定的作用。补充材料里进一步说明：使用target network,一个作用是在预测target的时候，没有使用梯度回传，第二个是可以稳定训练。那这两个到底哪个影响比较大，作者进一步对比table 19 显示，可以看simclr加不加sg,效果相差不大，说明主要产生作用的其实是训练的稳定性。</p>
+</li>
+<li><p>simclr 加 predictor layer是没有作用的。</p>
+</li>
+<li><p>下面的$\beta$参数代表是否使用负样本。</p>
+</li>
+</ol>
+</blockquote>
+<p><img src="/2023/01/18/BYOL/image-20220114141745111.png" alt="image-20220114141745111"></p>
+</li>
+</ul>
+<p><img src="/2023/01/18/BYOL/image-20220114142536118.png" alt="image-20220114142536118"></p>
+<ul>
+<li>predictor是防止训练崩溃的关键</li>
+<li>predictor和target network缺一不可，但如果采用最优的predictor可以去掉target network,那么如何得到最优的predictor,可以提高predictor的学习率。。。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/BYOL/" rel="tag"># BYOL</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2022/05/27/resnet/" rel="next" title="ResNet(Deep Residual Learning for Image Recognition)">
+                  <i class="fa fa-chevron-left"></i> ResNet(Deep Residual Learning for Image Recognition)
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Related-work"><span class="nav-number">3.</span> <span class="nav-text">Related work</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Method"><span class="nav-number">4.</span> <span class="nav-text">Method</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Description-of-BYOL"><span class="nav-number">5.</span> <span class="nav-text">Description of BYOL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Intuitions-on-BYOL%E2%80%98s-behavior"><span class="nav-number">6.</span> <span class="nav-text">Intuitions on BYOL‘s behavior</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Implementation-details"><span class="nav-number">7.</span> <span class="nav-text">Implementation details</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exp"><span class="nav-number">8.</span> <span class="nav-text">Exp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Building-intuitions-with-ablations"><span class="nav-number">9.</span> <span class="nav-text">Building intuitions with ablations</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>
