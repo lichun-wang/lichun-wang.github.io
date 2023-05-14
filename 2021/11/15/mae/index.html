@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="又是一篇自监督领域的作品，这篇论文采用了mask的方式，跟bert很类似，设计了encoder,decoder,decoder的作用是重建mask的图像，本文mask的比例很高，在75%，最后重建的效果竟然还可以，很是厉害。这篇文章的模型采用的是vit,finetune后的模型精度非常高，另外作者设计了将mask的patches放到decoder(轻量)中，这样可以有效的减少计算量，提升训练速度">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MAE">
+<meta property="og:url" content="https://www.wanglichun.tech/2021/11/15/mae/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="又是一篇自监督领域的作品，这篇论文采用了mask的方式，跟bert很类似，设计了encoder,decoder,decoder的作用是重建mask的图像，本文mask的比例很高，在75%，最后重建的效果竟然还可以，很是厉害。这篇文章的模型采用的是vit,finetune后的模型精度非常高，另外作者设计了将mask的patches放到decoder(轻量)中，这样可以有效的减少计算量，提升训练速度">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/15/mae/image-20211115155326990.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/15/mae/image-20211115172358115.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/15/mae/image-20211115172644848.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/15/mae/image-20211115173841876.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/15/mae/image-20211116095410502.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/15/mae/image-20211116103731822.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/15/mae/image-20211116104105031.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/15/mae/image-20211116105404351.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/15/mae/image-20211116105640056.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/15/mae/image-20211116110141007.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/15/mae/image-20211116110952127.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/15/mae/image-20211116114014288.png">
+<meta property="article:published_time" content="2021-11-15T01:02:42.000Z">
+<meta property="article:modified_time" content="2023-05-14T13:23:51.438Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="MAE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.wanglichun.tech/2021/11/15/mae/image-20211115155326990.png">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2021/11/15/mae/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>MAE | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2021/11/15/mae/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MAE
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-15 09:02:42" itemprop="dateCreated datePublished" datetime="2021-11-15T09:02:42+08:00">2021-11-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-14 21:23:51" itemprop="dateModified" datetime="2023-05-14T21:23:51+08:00">2023-05-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Self-Supervise/" itemprop="url" rel="index">
+                    <span itemprop="name">Self Supervise</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/11/15/mae/" class="post-meta-item leancloud_visitors" data-flag-title="MAE" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/11/15/mae/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/11/15/mae/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>又是一篇自监督领域的作品，这篇论文采用了mask的方式，跟bert很类似，设计了encoder,decoder,decoder的作用是重建mask的图像，本文mask的比例很高，在75%，最后重建的效果竟然还可以，很是厉害。这篇文章的模型采用的是vit,finetune后的模型精度非常高，另外作者设计了将mask的patches放到decoder(轻量)中，这样可以有效的减少计算量，提升训练速度。</p>
+</blockquote>
+<hr>
+<span id="more"></span>
+
+
+
+<p>论文名称：Masked Autoencoders Are Scalable Vision Learners</p>
+<p>作者：Kaiming He</p>
+<p>论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2111.06377">https://arxiv.org/abs/2111.06377</a></p>
+<p>Github:<a target="_blank" rel="noopener" href="https://github.com/facebookresearch/mae">https://github.com/facebookresearch/mae</a></p>
+<hr>
+<h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
+<li>autoencoder的模型结构，随机mask掉一部分的patches，然后通过decoder来重建缺失的pixels</li>
+<li>encoder只见没有被mask的patches, 然后输出特征跟mask的patches一起送入decoder进行重建。</li>
+<li>采用这种方式使得训练更快（3x or more）,并且取得了更好的精度</li>
+<li>vit-huge 取得了 87.8%的精度在imagenet-1k</li>
+</ul>
+<p><img src="/2021/11/15/mae/image-20211115155326990.png" alt="image-20211115155326990"></p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
+<li><p>将mask方式引入cv，那么cv和nlp最大的不同点是什么呢？</p>
+<blockquote>
+<ol>
+<li>cv中conv为主，相比nlp中的transformer不善于整合位置信息等，但是现在已经有了cv transformer， 这个问题得以解决.</li>
+<li>信息密度不同，图像的冗余信息太多了，为了克服这个不同，本文采用的方法是，mask掉大部分的patches，极大的降低信息冗余，让图像自己去理解全局信息。</li>
+<li>decoder的不同，在cv中，decoder需要预测的是像素级别的语义信息，在NLP中，预测的是word级别的语义信息，显然word含有更为丰富的语义信息。</li>
+</ol>
+</blockquote>
+</li>
+<li><p>将mask token转移到decoder（本文用了一个轻量的decoder）中进行计算，可以减少大量的计算量。</p>
+</li>
+<li><p>并且，一个大的mask比例可以取得双赢的效果。比如75%的patches被mask掉</p>
+</li>
+<li><p>因为减少了计算量，我们就可以训练大容量的模型了，比如vit-huge</p>
+</li>
+</ul>
+<h2 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h2><h2 id="Approach"><a href="#Approach" class="headerlink" title="Approach"></a>Approach</h2><ul>
+<li><strong>Masking</strong>: 随机去mask掉一部分的patches, 并且是mask的大部分，使得通过相邻的patch不是很容易推断出中间内容</li>
+<li><strong>MAE encoder</strong>就是vit huge, add position embedding</li>
+<li><strong>MAE decoder</strong>: mask token is shared , learned vector,  add position embedding, 只在pre-training使用</li>
+<li><strong>Reconstruction target</strong>: 最后一层输出的channel数就是每个patch的像素的数量，采用的是MSE loss，只在mask的patch上计算loss , 另外作者做实验，如果对patch先进行归一化（减均值除方差），预测归一化的mask，效果会更好。</li>
+<li><strong>Simple implementation</strong> : shuffle,然后尾部的x%去掉即可。</li>
+</ul>
+<h2 id="ImageNet-Exp"><a href="#ImageNet-Exp" class="headerlink" title="ImageNet Exp"></a>ImageNet Exp</h2><ul>
+<li>使用MAE， finetune效果还是不错的：only finetune 50 epoch 就超过了原版</li>
+</ul>
+<p><img src="/2021/11/15/mae/image-20211115172358115.png" alt="image-20211115172358115"></p>
+<ul>
+<li><p>Masking ratio，发现我们最好的是mask 75%， 而bert是15%，如下图是不同mask ratio的效果，可以发现finetune无论多大的ratio，都是比scratch要好的，并且两个不同的ratio的结果波动还是比较大的。</p>
+<p><img src="/2021/11/15/mae/image-20211115172644848.png" alt="image-20211115172644848"></p>
+</li>
+<li><p>decoder design:观察下表a可以看到，不同的block深度，对ft影响不大，但是lin影响比较大，为啥呢？主要原因在于重建时候的<strong>像素预测与分类任务之间存在的gap</strong>，最后的几层更重在重建，而不是识别。</p>
+</li>
+</ul>
+<p><img src="/2021/11/15/mae/image-20211115173841876.png" alt="image-20211115173841876"></p>
+<ul>
+<li><p>Mask token: 如果在encoder中也加入mask token，模型的表现反而会变差，linear probing掉了14%,这其中主要有一个<strong>训练和部署的gap</strong>，预训练时候有很多的mask但是在inference的时候却没有了，所以对encoder去掉所有的mask，只看到真实的patch是有效的，也是因为此，导致的模型训练速度很快，因为75的patches的计算量没有了。</p>
+</li>
+<li><p>Reconstruction target:  基于像素的图像重建效果就比较好了（带normalize的效果会更好）， PCA的方法和dVAE的方法没干过pixel norm,dVAE是怎么做的呢？我理解应该是先通过encoder提取token, 然后利用本文的encoder，decoder来重建这个token，不知道对不对， &#x3D;&#x3D;这里留下个问题，这个PCA是怎么做的？先对patch提取PCA， 然后decoder重建的向量跟PCA算loss？&#x3D;&#x3D;</p>
+<p><img src="/2021/11/15/mae/image-20211116095410502.png" alt="image-20211116095410502"></p>
+</li>
+<li><p>Data augmentation: <strong>仅仅使用rand crop效果是比较好的，加了color jitter反而效果变差了，这跟contastive方法还是有比较大的差别的</strong></p>
+<p><img src="/2021/11/15/mae/image-20211116103731822.png" alt="image-20211116103731822"></p>
+</li>
+<li><p>mask sampling stategy: 随机的比较好</p>
+<p><img src="/2021/11/15/mae/image-20211116104105031.png" alt="image-20211116104105031"></p>
+</li>
+<li><p>Training schedule:</p>
+<blockquote>
+<p>800 epoch pre-training</p>
+<p>acc增长相对平稳</p>
+<p>linear probing acc 即使到了1600epoch也还没有饱和，这跟moco v3不同，v3在300就饱和了</p>
+</blockquote>
+<h3 id="Comparisons-with-Previous-Result"><a href="#Comparisons-with-Previous-Result" class="headerlink" title="Comparisons with Previous Result"></a>Comparisons with Previous Result</h3><ul>
+<li>优势明显，而且我们训的快，即使是1600epoch 也比别人训的快</li>
+<li>并且，增大模型，我们得到了稳定的精度提升</li>
+</ul>
+<p><img src="/2021/11/15/mae/image-20211116105404351.png" alt="image-20211116105404351"></p>
+<ul>
+<li>与有监督方法相比，如下，模型越大，提升的点越多。</li>
+</ul>
+<p><img src="/2021/11/15/mae/image-20211116105640056.png" alt="image-20211116105640056"></p>
+<h3 id="Partial-Finetuning"><a href="#Partial-Finetuning" class="headerlink" title="Partial Finetuning"></a>Partial Finetuning</h3><ul>
+<li>linear probing， 缺少了追求强大但是非线性的特征，这在深度学习是很重要的。</li>
+<li>作为权衡，提出了partial fine-tuning策略， 只finetune最后一些层的参数。</li>
+<li>下表是patital finetuning的结果对比，可以发现稍微增加一些finetune的层，效果就很显著。这说明了MAE提取的特征表示是线性不可分离的，是比较强的非线性特征。</li>
+<li><img src="/2021/11/15/mae/image-20211116110141007.png" alt="image-20211116110141007"></li>
+</ul>
+<h3 id="Transfer-Learning"><a href="#Transfer-Learning" class="headerlink" title="Transfer Learning"></a>Transfer Learning</h3><ul>
+<li>这里发现 使用dvae的效果跟pixel差不多，增加了dvae反而增加了复杂度，所以还是不用的好。</li>
+</ul>
+<p><img src="/2021/11/15/mae/image-20211116110952127.png" alt="image-20211116110952127"></p>
+</li>
+</ul>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><p><img src="/2021/11/15/mae/image-20211116114014288.png" alt="image-20211116114014288"></p>
+<ul>
+<li>MAE也加入了一个冗余的cls token,但是有没有这个cls token，都是可以正常工作的。</li>
+<li>在训练linear classifier的时候，加上normalize一般是有用的</li>
+<li>vit的代码直接训练是没有训出来的，后来这里做了一些修改训出来了精度更高了。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MAE/" rel="tag"># MAE</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2021/11/10/simclr/" rel="next" title="SimClr v1 v2">
+                  <i class="fa fa-chevron-left"></i> SimClr v1 v2
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2022/01/06/mocov1v2/" rel="prev" title="MoCo v1 v2">
+                  MoCo v1 v2 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Related-Work"><span class="nav-number">3.</span> <span class="nav-text">Related Work</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Approach"><span class="nav-number">4.</span> <span class="nav-text">Approach</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ImageNet-Exp"><span class="nav-number">5.</span> <span class="nav-text">ImageNet Exp</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Comparisons-with-Previous-Result"><span class="nav-number">5.1.</span> <span class="nav-text">Comparisons with Previous Result</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Partial-Finetuning"><span class="nav-number">5.2.</span> <span class="nav-text">Partial Finetuning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Transfer-Learning"><span class="nav-number">5.3.</span> <span class="nav-text">Transfer Learning</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95"><span class="nav-number">6.</span> <span class="nav-text">附录</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">63</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

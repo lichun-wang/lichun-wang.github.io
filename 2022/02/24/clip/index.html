@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="这篇是openai在多模态领域的一大力作，关注度很高，也掀起了大家对自然语言监督视觉训练的一个浪潮，文章中的方法其实比较简单，利用图像文本对，利用对比学习进行训练而已，训练完了之后，利用文本进行检索就可以了，实现了zero-shot,并且效果还很好，就很惊人。并且文章中新建了一个4亿的图像文本对，也起了大作用。前面也有人是这么干的，没有这么好的效果，主要是因为数据量不够。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Clip">
+<meta property="og:url" content="https://www.wanglichun.tech/2022/02/24/clip/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="这篇是openai在多模态领域的一大力作，关注度很高，也掀起了大家对自然语言监督视觉训练的一个浪潮，文章中的方法其实比较简单，利用图像文本对，利用对比学习进行训练而已，训练完了之后，利用文本进行检索就可以了，实现了zero-shot,并且效果还很好，就很惊人。并且文章中新建了一个4亿的图像文本对，也起了大作用。前面也有人是这么干的，没有这么好的效果，主要是因为数据量不够。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wanglichun.tech/2022/02/24/clip/image-20220224164538637.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2022/02/24/clip/image-20220228155455676.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2022/02/24/clip/image-20220310192533502.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2022/02/24/clip/image-20220310192523352.png">
+<meta property="article:published_time" content="2022-02-24T01:02:42.000Z">
+<meta property="article:modified_time" content="2023-05-14T14:46:25.540Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="Clip">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.wanglichun.tech/2022/02/24/clip/image-20220224164538637.png">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2022/02/24/clip/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Clip | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2022/02/24/clip/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Clip
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-24 09:02:42" itemprop="dateCreated datePublished" datetime="2022-02-24T09:02:42+08:00">2022-02-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-14 22:46:25" itemprop="dateModified" datetime="2023-05-14T22:46:25+08:00">2023-05-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%9A%E6%A8%A1%E6%80%81/" itemprop="url" rel="index">
+                    <span itemprop="name">多模态</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/02/24/clip/" class="post-meta-item leancloud_visitors" data-flag-title="Clip" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/02/24/clip/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/02/24/clip/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>这篇是openai在多模态领域的一大力作，关注度很高，也掀起了大家对自然语言监督视觉训练的一个浪潮，文章中的方法其实比较简单，利用图像文本对，利用对比学习进行训练而已，训练完了之后，利用文本进行检索就可以了，实现了zero-shot,并且效果还很好，就很惊人。并且文章中新建了一个4亿的图像文本对，也起了大作用。前面也有人是这么干的，没有这么好的效果，主要是因为数据量不够。</p>
+</blockquote>
+<hr>
+<span id="more"></span>
+
+
+
+<p>论文名称：Learning Transferable Visual Models From Natural Language Supervision</p>
+<p>作者：OpenAI</p>
+<p>论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2103.00020">https://arxiv.org/abs/2103.00020</a></p>
+<p>Github:<a target="_blank" rel="noopener" href="https://github.com/OpenAI/CLIP">https://github.com/OpenAI/CLIP</a></p>
+<p>一些基于clip的产物：styleclip、clipdraw、视频检索、how to train really large models on many gpus</p>
+<hr>
+<h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
+<li>如果可以直接利用language来作为图像的监督信息进行训练，将极大的拓展学习的边界（这样就不会受限于标注的类别）</li>
+<li>预训练任务： 判断哪个图像跟文本是配对的。</li>
+<li>400million的数据对。</li>
+<li>zero-shot transfer</li>
+</ul>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
+<li>在nlp的任务中，依赖网络搜索的数据，已经可以打败人工标注（crowd-labeled）的数据集。</li>
+<li>为啥研究文本-图像联合训练的人比较少呢？主要是因为利用文本作为监督信息，取得的zero-shot transfer的效果不是很好，所以更多的人来研究如何使用弱监督来提高模型的效果，比如采用jft-300M的数据集等等。</li>
+<li>目前方法中 ， 从自然文本中学习 与 从弱监督标注数据中学习 有一个关键的不同点是 规模，主要是从文本中学习的数据规模太小了。</li>
+<li>lineaar-probe效果很好。zero-shot 效果很好。</li>
+</ul>
+<h2 id="Approoach"><a href="#Approoach" class="headerlink" title="Approoach"></a>Approoach</h2><ul>
+<li>Learning from natural language also has an important advantage over most unsupervised or self-supervised learning approaches in that it doesn’t “just” learn a representation but also connects that representation to language which enables flexible zero-shot transfer.</li>
+<li>构建WIT数据集 ，含有大约4亿的图像文本对。</li>
+<li>方法的选择上，高效是很必要的。</li>
+<li>近期在视觉任务上的表示是说，对比目标比预测目标可以学到更好的特征表示。生成的方法可以得到更好的特征表示，但是往往需要更多的计算。【Generative pretraining from pixels】，基于此呢，作者团队设计的比较高效的方法是将文本当成是一个整体与图像配对，而不去管文本中具体的单词</li>
+<li>具体方法如下图：</li>
+<li>论文中这么描述：clips learns a  multi-modal embedding space by jointly training an image encoder and text encoder to maximize the cosine similarity of the image and text embeddings of the N real pairs in the batch while minimizing the cosine similarity of the embeddings of the N2− N incorrect pairings.</li>
+<li>所以模型 从头开训的</li>
+<li><strong>在特征表示与contrastive loss之间 并没有使用非线性映射。</strong></li>
+<li>只使用了random crop resize这个初始化，其他都没有使用。</li>
+<li>resnet50， replace global average pooling to attention pooling mechanism【QKV】</li>
+<li>text: transformer,  max sequence length is 76</li>
+<li>train 5 resnet and 3 vit</li>
+<li>train 32 epochs</li>
+<li>adam , cosine schedule</li>
+<li>minibatch size : 32768</li>
+<li>mixed-precision</li>
+</ul>
+<p><img src="/2022/02/24/clip/image-20220224164538637.png" alt="image-20220224164538637"></p>
+<p><img src="/2022/02/24/clip/image-20220228155455676.png" alt="image-20220228155455676"></p>
+<h2 id="Exp"><a href="#Exp" class="headerlink" title="Exp"></a>Exp</h2><h3 id="zero-shot-transfer"><a href="#zero-shot-transfer" class="headerlink" title="zero shot transfer"></a>zero shot transfer</h3><ul>
+<li><ol>
+<li>image encoder and text encoder 计算特征</li>
+<li>特征计算cosine 相似度</li>
+<li>softmax 找最大</li>
+<li>text的特征可以复用，提一遍就可以了。</li>
+</ol>
+</li>
+</ul>
+<h4 id="PROMPT-ENGINEERING-AND-ENSEMBLING"><a href="#PROMPT-ENGINEERING-AND-ENSEMBLING" class="headerlink" title="PROMPT ENGINEERING AND ENSEMBLING"></a>PROMPT ENGINEERING AND ENSEMBLING</h4><ul>
+<li>作者使用 模板 ：A photo of a {label} 来进行匹配，主要解决预训练就是用的句子的的原因。这带来了大约1.3%的提升。</li>
+<li>另外加上提示信息会更有用，比如： a photo of a {label}, a type of pet</li>
+<li>另外可以加上 引号：“”，</li>
+<li>a satellite photo of a {label}</li>
+<li>组合多个提示词，进行召回。</li>
+</ul>
+<p>在一些较难的任务上，研究zero-shot是比较好的吗？（zero-shot跟few-shot是对立的），比如肿瘤细胞的图像分类，zero-shot合适吗？</p>
+<p>zero-shot的效果很好，超过了resnet的16-shot,而 clip的few-shot,平均需要4-shot来达到zero-shot的能力。</p>
+<p><img src="/2022/02/24/clip/image-20220310192533502.png" alt="image-20220310192533502"></p>
+<p>利用few-shot 训练 linear-probe 来达到zero-shot的能力，各个数据集需要的数据量：imagenet大约是16-shot</p>
+<p><img src="/2022/02/24/clip/image-20220310192523352.png" alt="image-20220310192523352"></p>
+<p>在few-shot的实验中，我们做的是linear classifier，由于固定住了网络参数，而且本身网络的分类层也是线性的，再加一个线性分类层相当于扩大了原来的边界（ because CLIP’s zero-shot classifier is also a linear classifier, the performance of the fully supervised classifiers roughly sets an upper bound for what zero-shot transfer can achieve. ）</p>
+<p>往往，越大的网络，zero-shot的表现会更好。</p>
+<p>&#x3D;&#x3D;linear-prob的超参数比较少，也比较好调节。方便训练多个任务进行对比&#x3D;&#x3D;</p>
+<p>在linear-probe实验中，clip在大部分的任务上都超过了最好的label监督的网络，并且，确实对比学习为代表的self-supervised 的方法要表现的更好一些。在比如cifar10这种数据上表现不太好，可能是网络训练时候这种样本太少了的缘故。</p>
+<p>为什么imagenet上表现很好，但是换到其他的任务上表现就没那么好了呢？研究表明，深度学习的可以通过训练数据来找到数据间的模式和相关性，来帮助他们提高内在表现。但是这些相关性和模型不一定是对的，所以在换到其他分布数据的时候可能会带来性能的下降</p>
+<h4 id="clip-具有更高效的鲁棒性与泛化能力"><a href="#clip-具有更高效的鲁棒性与泛化能力" class="headerlink" title="clip 具有更高效的鲁棒性与泛化能力"></a>clip 具有更高效的鲁棒性与泛化能力</h4><h4 id="由于在预训练使用了更大的数据集以及文本作为监督信息，其具有更好的鲁棒性，无论是zero-shot还是fine-tuned"><a href="#由于在预训练使用了更大的数据集以及文本作为监督信息，其具有更好的鲁棒性，无论是zero-shot还是fine-tuned" class="headerlink" title="由于在预训练使用了更大的数据集以及文本作为监督信息，其具有更好的鲁棒性，无论是zero-shot还是fine-tuned."></a>由于在预训练使用了更大的数据集以及文本作为监督信息，其具有更好的鲁棒性，无论是zero-shot还是fine-tuned.</h4><p>大的数据集也有一个不好的点，就是数据集很大，评估数据都在数据集中出现过了，评估就不准确了</p>
+<h3 id="Limitation"><a href="#Limitation" class="headerlink" title="Limitation"></a>Limitation</h3><ul>
+<li>zero-shot 目前还做不到sota，扩大规模可以稳定的提升模型效果，但是我们估计需要1000x的规模才能达到sota的效果。</li>
+<li>细粒度分类效果不太行</li>
+<li>抽象任务不太行</li>
+<li>不能动态生成图像的caption,  【后续可以考虑使用contastive and generative objective 方法组合】</li>
+<li>数据依赖严重，数据利用率的低效性。</li>
+<li>利用现有的supervised dataset来对比zero shot的效果不好，并不是真正的zero-shot，因为可以利用validation set进行调节。</li>
+<li>利用linear classifier 进行few-shot并没有体现很大的优势，人类在one-shot会有很大的提升，但是clip却没有。这里需要进一步的探索增强。</li>
+<li>zero-shot  &#x3D;&gt;  one-shot learning 是可以探索的方向。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Clip/" rel="tag"># Clip</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2022/01/17/dino/" rel="next" title="Dino">
+                  <i class="fa fa-chevron-left"></i> Dino
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2022/03/14/blip/" rel="prev" title="BLIP">
+                  BLIP <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Approoach"><span class="nav-number">3.</span> <span class="nav-text">Approoach</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exp"><span class="nav-number">4.</span> <span class="nav-text">Exp</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#zero-shot-transfer"><span class="nav-number">4.1.</span> <span class="nav-text">zero shot transfer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PROMPT-ENGINEERING-AND-ENSEMBLING"><span class="nav-number">4.1.1.</span> <span class="nav-text">PROMPT ENGINEERING AND ENSEMBLING</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#clip-%E5%85%B7%E6%9C%89%E6%9B%B4%E9%AB%98%E6%95%88%E7%9A%84%E9%B2%81%E6%A3%92%E6%80%A7%E4%B8%8E%E6%B3%9B%E5%8C%96%E8%83%BD%E5%8A%9B"><span class="nav-number">4.1.2.</span> <span class="nav-text">clip 具有更高效的鲁棒性与泛化能力</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%B1%E4%BA%8E%E5%9C%A8%E9%A2%84%E8%AE%AD%E7%BB%83%E4%BD%BF%E7%94%A8%E4%BA%86%E6%9B%B4%E5%A4%A7%E7%9A%84%E6%95%B0%E6%8D%AE%E9%9B%86%E4%BB%A5%E5%8F%8A%E6%96%87%E6%9C%AC%E4%BD%9C%E4%B8%BA%E7%9B%91%E7%9D%A3%E4%BF%A1%E6%81%AF%EF%BC%8C%E5%85%B6%E5%85%B7%E6%9C%89%E6%9B%B4%E5%A5%BD%E7%9A%84%E9%B2%81%E6%A3%92%E6%80%A7%EF%BC%8C%E6%97%A0%E8%AE%BA%E6%98%AFzero-shot%E8%BF%98%E6%98%AFfine-tuned"><span class="nav-number">4.1.3.</span> <span class="nav-text">由于在预训练使用了更大的数据集以及文本作为监督信息，其具有更好的鲁棒性，无论是zero-shot还是fine-tuned.</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Limitation"><span class="nav-number">4.2.</span> <span class="nav-text">Limitation</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">63</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

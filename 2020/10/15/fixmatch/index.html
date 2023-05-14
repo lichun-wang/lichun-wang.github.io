@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="这是一篇比较经典的半监督的论文，利用弱Aug与强Aug对无标签数据进行打标，然后用弱Aug的结果来监督强Aug的结果，来训练模型，思想很简单，值得一提的是，在计算softmax loss的时候，温度是个不要被忽略的参数！！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FixMach">
+<meta property="og:url" content="https://www.wanglichun.tech/2020/10/15/fixmatch/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="这是一篇比较经典的半监督的论文，利用弱Aug与强Aug对无标签数据进行打标，然后用弱Aug的结果来监督强Aug的结果，来训练模型，思想很简单，值得一提的是，在计算softmax loss的时候，温度是个不要被忽略的参数！！">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/10/15/fixmatch/image-20210923173832975.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/10/15/fixmatch/image-20210923170531395.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/10/15/fixmatch/image-20210923170559174.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/10/15/fixmatch/image-20210924105404133.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2020/10/15/fixmatch/image-20210924110251736.png">
+<meta property="article:published_time" content="2020-10-15T01:02:42.000Z">
+<meta property="article:modified_time" content="2023-05-14T13:06:53.046Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="FixMach">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.wanglichun.tech/2020/10/15/fixmatch/image-20210923173832975.png">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2020/10/15/fixmatch/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>FixMach | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2020/10/15/fixmatch/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          FixMach
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-15 09:02:42" itemprop="dateCreated datePublished" datetime="2020-10-15T09:02:42+08:00">2020-10-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-14 21:06:53" itemprop="dateModified" datetime="2023-05-14T21:06:53+08:00">2023-05-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Semi-Supervise/" itemprop="url" rel="index">
+                    <span itemprop="name">Semi-Supervise</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/10/15/fixmatch/" class="post-meta-item leancloud_visitors" data-flag-title="FixMach" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/10/15/fixmatch/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/10/15/fixmatch/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>这是一篇比较经典的半监督的论文，利用弱Aug与强Aug对无标签数据进行打标，然后用弱Aug的结果来监督强Aug的结果，来训练模型，思想很简单，值得一提的是，在计算softmax loss的时候，温度是个不要被忽略的参数！！</p>
+</blockquote>
+<hr>
+<span id="more"></span>
+
+
+
+<p>论文名称：FixMatch: Simplifying Semi-Supervised Learning with Consistency and Confidence</p>
+<p>作者：Kihyuk Sohn</p>
+<p>论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2001.07685">https://arxiv.org/abs/2001.07685</a></p>
+<p>Github:<a target="_blank" rel="noopener" href="https://github.com/google-research/fixmatch">https://github.com/google-research/fixmatch</a>.</p>
+<hr>
+<h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
+<li>FixMatch first generates pseudo-labels using the model’s predictions &#x3D;&#x3D;on weakly-augmented&#x3D;&#x3D; unlabeled images.</li>
+<li>only retained high-confidence prediction</li>
+<li>use strongly-augmented to pseudo-label images to train model</li>
+<li>这篇论文很多idea 来源于mixmatch 和 remixmatch ，建议看一下这两篇论文。</li>
+</ul>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
+<li>数据难标，特别是专业的数据更难标，比如专业的医学图像。</li>
+<li>FixMatch, produces artificial labels using &#x3D;&#x3D;both consistency regularization and pseudo-labeling&#x3D;&#x3D;.</li>
+<li>Inspired by UDA [54] and ReMixMatch [3], we leverage &#x3D;&#x3D;Cutout [14], CTAugment [3], and RandAugment [11]&#x3D;&#x3D;for strong augmentation</li>
+<li>fewer additional hyperparameters</li>
+</ul>
+<h2 id="FixMatch"><a href="#FixMatch" class="headerlink" title="FixMatch"></a>FixMatch</h2><h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><ul>
+<li>consistency regularization: 就是同一张图像的不同变换，输出的结果应该是一致的。</li>
+<li>p-labeling: 打伪标签，保留高阈值。</li>
+</ul>
+<h3 id="FixMatch-1"><a href="#FixMatch-1" class="headerlink" title="FixMatch"></a>FixMatch</h3><ul>
+<li>包含两个损失，分别是labeled data(&#x3D;&#x3D;weakly augmented&#x3D;&#x3D;)的 cross-entropy 以及 unlabeled data cross-entropy</li>
+<li>关键点： unlabeled data的标签，先通过weakly-augmened得到，然后最后计算loss的时候，是通过strongly-augment得到的。</li>
+</ul>
+<h3 id="Augmentation-in-FixMatch"><a href="#Augmentation-in-FixMatch" class="headerlink" title="Augmentation in FixMatch"></a>Augmentation in FixMatch</h3><ul>
+<li>weak aug: flip and shift</li>
+<li>strong aug: RandAugmnet + Cutout</li>
+<li>Augmentation anchoring,来自 remixmatch论文，就是先采用简单的数据增强来得到p-label</li>
+</ul>
+<h3 id="Additional-important-factors"><a href="#Additional-important-factors" class="headerlink" title="Additional important factors"></a>Additional important factors</h3><ul>
+<li>regularization is particularly important,    should use simply weight decay regularization.</li>
+<li>SGD is good</li>
+<li>cosine learning rate decay</li>
+</ul>
+<h2 id="Related-work"><a href="#Related-work" class="headerlink" title="Related work"></a>Related work</h2><ul>
+<li>Unsupervised Data Augmentation (UDA) [54] and ReMixMatch [3]. They both use a weakly-augmented<br>example to generate an artificial label and enforce consistency against strongly-augmented examples</li>
+</ul>
+<h2 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h2><ul>
+<li>竞品：  Π-Model [43], Mean Teacher [51],Pseudo-Label [25], MixMatch [4], UDA [54], and ReMixMatch [3].</li>
+<li>CTAugment 和RandAugment的效果比较相似</li>
+<li>结果如下：（Error rates）</li>
+<li><img src="/2020/10/15/fixmatch/image-20210923173832975.png" alt="image-20210923173832975"></li>
+<li>在cifar-100上，remixmatch比fixmatch好一些，实验发现是&#x3D;&#x3D;Distribution Alignment&#x3D;&#x3D;(这个东西可以看一下remixmatch论文，就是利用有标签的数据类别分布，去对无标签的label进行干预)操作带来的</li>
+<li>在imagenet上，S4L效果比较好，是因为S4L在训练后，又用p-label retrain了一下，以及supervised finetune</li>
+</ul>
+<h2 id="算法流程"><a href="#算法流程" class="headerlink" title="算法流程"></a>算法流程</h2><p><img src="/2020/10/15/fixmatch/image-20210923170531395.png" alt="image-20210923170531395"></p>
+<p><img src="/2020/10/15/fixmatch/image-20210923170559174.png" alt="image-20210923170559174"></p>
+<h2 id="Ablation-Study"><a href="#Ablation-Study" class="headerlink" title="Ablation Study"></a>Ablation Study</h2><ul>
+<li>sharpering and thresholding  , sharpening是啥意思呢？就是使用参数T来控制softmax输出的形状，在蒸馏中也有使用，蒸馏中的T是大于1的，使得分布更加平缓，而这里的T是小于1的，使得分布更加的尖锐。</li>
+<li>cutout 和ctaugment都很重要，去了谁都会掉点。</li>
+<li>weakly aug 不能太强，太强了模型不收敛了，如果weakly 没有aug了，容易过拟合。</li>
+<li>unlabeled data 和 labeled data的比例，8以上就比较稳定了。</li>
+<li><img src="/2020/10/15/fixmatch/image-20210924105404133.png" alt="image-20210924105404133"></li>
+<li>训练细节的总结：</li>
+<li><img src="/2020/10/15/fixmatch/image-20210924110251736.png" alt="image-20210924110251736"></li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>这篇文章的方法竟然能train起来，还真的想尝试尝试，这篇文章主要将p-label与self-training的方法进行了结合。有哪些值得我们学习的呢？1、利用简单的aug来产生p-label,然后利用更强的aug来计算loss,增加难度。weakly_aug以及strong_aug的一致性检验；hard-label与p-label一起进行训练。sharpering and thresholding这个方法可以借鉴一下。其实就是针对unlabeled的数据利用上，使用了consistent 的方法，做consistent是针对强弱的数据增强方法。总体思想就是：unlabeled主要是学习特征，然后label进行分类提升。</li>
+</ul>
+<h2 id="代码阅读"><a href="#代码阅读" class="headerlink" title="代码阅读"></a>代码阅读</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> batch_idx <span class="keyword">in</span> <span class="built_in">range</span>(args.eval_step):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        inputs_x, targets_x = labeled_iter.<span class="built_in">next</span>()</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">if</span> args.world_size &gt; <span class="number">1</span>:</span><br><span class="line">            labeled_epoch += <span class="number">1</span></span><br><span class="line">            labeled_trainloader.sampler.set_epoch(labeled_epoch)</span><br><span class="line">        labeled_iter = <span class="built_in">iter</span>(labeled_trainloader)</span><br><span class="line">        inputs_x, targets_x = labeled_iter.<span class="built_in">next</span>()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        (inputs_u_w, inputs_u_s), _ = unlabeled_iter.<span class="built_in">next</span>() <span class="comment"># 这里的两个就分别是weakly aug 以及 strong aug</span></span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">if</span> args.world_size &gt; <span class="number">1</span>:</span><br><span class="line">            unlabeled_epoch += <span class="number">1</span></span><br><span class="line">            unlabeled_trainloader.sampler.set_epoch(unlabeled_epoch)</span><br><span class="line">        unlabeled_iter = <span class="built_in">iter</span>(unlabeled_trainloader)</span><br><span class="line">        (inputs_u_w, inputs_u_s), _ = unlabeled_iter.<span class="built_in">next</span>()</span><br><span class="line"></span><br><span class="line">    data_time.update(time.time() - end)</span><br><span class="line">    batch_size = inputs_x.shape[<span class="number">0</span>]</span><br><span class="line">    inputs = interleave(</span><br><span class="line">        torch.cat((inputs_x, inputs_u_w, inputs_u_s)), <span class="number">2</span>*args.mu+<span class="number">1</span>).to(args.device)</span><br><span class="line">    targets_x = targets_x.to(args.device)</span><br><span class="line">    logits = model(inputs)</span><br><span class="line">    logits = de_interleave(logits, <span class="number">2</span>*args.mu+<span class="number">1</span>)</span><br><span class="line">    logits_x = logits[:batch_size]</span><br><span class="line">    logits_u_w, logits_u_s = logits[batch_size:].chunk(<span class="number">2</span>)</span><br><span class="line">    <span class="keyword">del</span> logits</span><br><span class="line"></span><br><span class="line">    Lx = F.cross_entropy(logits_x, targets_x, reduction=<span class="string">&#x27;mean&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    pseudo_label = torch.softmax(logits_u_w.detach()/args.T, dim=-<span class="number">1</span>) <span class="comment"># 这里是重点,注意温度T</span></span><br><span class="line">    max_probs, targets_u = torch.<span class="built_in">max</span>(pseudo_label, dim=-<span class="number">1</span>)</span><br><span class="line">    mask = max_probs.ge(args.threshold).<span class="built_in">float</span>()</span><br><span class="line"></span><br><span class="line">    Lu = (F.cross_entropy(logits_u_s, targets_u,</span><br><span class="line">                          reduction=<span class="string">&#x27;none&#x27;</span>) * mask).mean()</span><br><span class="line"></span><br><span class="line">    loss = Lx + args.lambda_u * Lu  <span class="comment"># 两个loss求和</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> args.amp:</span><br><span class="line">        <span class="keyword">with</span> amp.scale_loss(loss, optimizer) <span class="keyword">as</span> scaled_loss:</span><br><span class="line">            scaled_loss.backward()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        loss.backward()</span><br><span class="line"></span><br><span class="line">    losses.update(loss.item())</span><br><span class="line">    losses_x.update(Lx.item())</span><br><span class="line">    losses_u.update(Lu.item())</span><br><span class="line">    optimizer.step()</span><br><span class="line">    scheduler.step()</span><br><span class="line">    <span class="keyword">if</span> args.use_ema:</span><br><span class="line">        ema_model.update(model)</span><br><span class="line">    model.zero_grad()</span><br></pre></td></tr></table></figure>
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/FixMach/" rel="tag"># FixMach</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/06/24/network-slimming/" rel="next" title="Network Slimming">
+                  <i class="fa fa-chevron-left"></i> Network Slimming
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/11/28/pruingfromscratch/" rel="prev" title="Pruning From Scratch">
+                  Pruning From Scratch <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FixMatch"><span class="nav-number">3.</span> <span class="nav-text">FixMatch</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background"><span class="nav-number">3.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FixMatch-1"><span class="nav-number">3.2.</span> <span class="nav-text">FixMatch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Augmentation-in-FixMatch"><span class="nav-number">3.3.</span> <span class="nav-text">Augmentation in FixMatch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Additional-important-factors"><span class="nav-number">3.4.</span> <span class="nav-text">Additional important factors</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Related-work"><span class="nav-number">4.</span> <span class="nav-text">Related work</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Experiments"><span class="nav-number">5.</span> <span class="nav-text">Experiments</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E6%B5%81%E7%A8%8B"><span class="nav-number">6.</span> <span class="nav-text">算法流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ablation-Study"><span class="nav-number">7.</span> <span class="nav-text">Ablation Study</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E9%98%85%E8%AF%BB"><span class="nav-number">9.</span> <span class="nav-text">代码阅读</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">63</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

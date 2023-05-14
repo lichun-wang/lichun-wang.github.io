@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="kernl是一个针对Pytorch transformer模型进行GPU加速的一个框架，利用OpenAI的Triton接口，利用Torch2.0的新特性，而不再使用CUDA来实现，加速方法也是非常的简单，只需简单几行即可完成，故而在本地进行了一些尝试，测试结果显示，其对cuda版本以及显卡型号有较高的要求，同时python也需要较高版本的适配，对于transformer加速效果，当len比较短的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kernl">
+<meta property="og:url" content="https://www.wanglichun.tech/2023/02/17/kernl/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="kernl是一个针对Pytorch transformer模型进行GPU加速的一个框架，利用OpenAI的Triton接口，利用Torch2.0的新特性，而不再使用CUDA来实现，加速方法也是非常的简单，只需简单几行即可完成，故而在本地进行了一些尝试，测试结果显示，其对cuda版本以及显卡型号有较高的要求，同时python也需要较高版本的适配，对于transformer加速效果，当len比较短的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://office.netease.com/api/admin/file/download?path=cowork/2023/02/17/b19543cfa1da414192ff6c53bd29793d.png">
+<meta property="og:image" content="https://office.netease.com/api/admin/file/download?path=cowork/2023/02/17/d3bdfffb7f1b43fba82688dc59942571.png">
+<meta property="og:image" content="https://office.netease.com/api/admin/file/download?path=cowork/2023/02/17/32aae9ff93e046eeaaec2fdb8fe9852e.png">
+<meta property="article:published_time" content="2023-02-17T01:02:42.000Z">
+<meta property="article:modified_time" content="2023-05-14T12:09:55.522Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="kernl">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://office.netease.com/api/admin/file/download?path=cowork/2023/02/17/b19543cfa1da414192ff6c53bd29793d.png">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2023/02/17/kernl/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>kernl | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2023/02/17/kernl/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          kernl
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-02-17 09:02:42" itemprop="dateCreated datePublished" datetime="2023-02-17T09:02:42+08:00">2023-02-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-14 20:09:55" itemprop="dateModified" datetime="2023-05-14T20:09:55+08:00">2023-05-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SpeedUp/" itemprop="url" rel="index">
+                    <span itemprop="name">SpeedUp</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2023/02/17/kernl/" class="post-meta-item leancloud_visitors" data-flag-title="kernl" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/02/17/kernl/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/02/17/kernl/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>kernl是一个针对Pytorch transformer模型进行GPU加速的一个框架，利用OpenAI的Triton接口，利用Torch2.0的新特性，而不再使用CUDA来实现，加速方法也是非常的简单，只需简单几行即可完成，故而在本地进行了一些尝试，测试结果显示，其对cuda版本以及显卡型号有较高的要求，同时python也需要较高版本的适配，对于transformer加速效果，当len比较短的时候，会取得比较好的效果，当len比较长的时候，不一定比tensorrt会更好，期待起进一步发展吧，持续跟进。</p>
+</blockquote>
+<hr>
+<span id="more"></span>
+
+<p>网址：<a target="_blank" rel="noopener" href="https://www.kernl.ai/">https://www.kernl.ai/</a></p>
+<p>Github：<a target="_blank" rel="noopener" href="https://github.com/ELS-RD/kernl">https://github.com/ELS-RD/kernl</a></p>
+<hr>
+<p><strong>当前结论</strong></p>
+<p><strong>硬件要求</strong>：</p>
+<ul>
+<li>这个库对GPU的算力要求比较高，代码中强制要求要8.0以上，2080只有7.5不行，所以下面结论都是在3080测试得到的。</li>
+</ul>
+<p><strong>速度提升</strong>：</p>
+<ul>
+<li>kernl对transformer类模型加速效果还是比较好，比如bert，albert，swin等，部分速度是超过tensorrt的，对resnet也有一定的加速效果，但是相对tensorrt的速度会没有优势，<strong>详细可以参考下面的速度对比</strong>。</li>
+<li>在NLP语言模型上，以albert为例子，len越短，kernl的速度相比tensorrt会快一些，当len&lt;128时候kernl的速度是超过tensorrt的，当len&gt;128，tensorrt会更快，<strong>详细见下面的速度表格</strong>。</li>
+<li>在CV模型上，kernl没有优势，以resnet50为例子，tensorrt还是比kernl快挺多的。</li>
+<li>速度的优化主要依赖于实现的算子，目前优化的算子主要是transformer的atten啥的，如果后期提供的优化算子越来越多，效果应该会越来越好，期待未来的发展。</li>
+</ul>
+<p><strong>使用场景</strong>：</p>
+<ul>
+<li>使用起来真的挺方便的，一行代码即可，python无脑使用。</li>
+<li>模型需要在线生成，无法保存到本地，不过在线生成的速度也挺快的。</li>
+<li>项目还有些许bug：比如batch只能为1，Git提了issue，作者回复确实是个bug。</li>
+</ul>
+<p><strong>一、项目地址：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ELS-RD/kernl">https://github.com/ELS-RD/kernl</a></p>
+<p><strong>二、docker运行：</strong></p>
+<p># build DOCKER_BUILDKIT&#x3D;1 docker build -t kernl . # run docker run –rm -it –gpus all -v $(pwd):&#x2F;kernl kernl # 安装torchvision以及torch2.0 pip3 install numpy –pre torch torchvision torchaudio –force-reinstall –index-url <a target="_blank" rel="noopener" href="https://download.pytorch.org/whl/nightly/cu117">https://download.pytorch.org/whl/nightly/cu117</a></p>
+<p><strong>三、环境需求：</strong></p>
+<ul>
+<li>python3.9 （这个是因为openai的triton需要的）</li>
+<li>cuda11.7以上。</li>
+<li>pytorch 2.0以上，需要支持torch.dynamo</li>
+<li>nvidia的算力要求：8.0及以上</li>
+</ul>
+<p><strong>四、使用方法：</strong></p>
+<p>很简单，参考如下代码即可。</p>
+<p>from kernl.model_optimization import optimize_model optimize_model(model_opt) with torch.inference_mode(), torch.cuda.amp.autocast(enabled&#x3D;True, dtype&#x3D;torch.float16, cache_enabled&#x3D;True):    inputs &#x3D; {            “input_ids”: torch.ones((batch,seq_len), device&#x3D;”cuda”, dtype&#x3D;torch.long),            “attention_mask”: torch.ones((batch, seq_len), device&#x3D;”cuda”, dtype&#x3D;torch.long),        }     outputs &#x3D; model_opt(**inputs)</p>
+<p><strong>五、速度对比:</strong></p>
+<p>备注：单位ms， 3080ti机器(10.219.20.239)</p>
+<table>
+<thead>
+<tr>
+<th>kernl与tensorrt的耗时对比</th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>batch*len</td>
+<td>1x256</td>
+<td>1x128</td>
+<td>1x64</td>
+<td>1x32</td>
+<td>swin</td>
+<td>resnet50</td>
+</tr>
+<tr>
+<td>pytorch（half）</td>
+<td>15.7</td>
+<td>16</td>
+<td>15.5</td>
+<td>16</td>
+<td>22</td>
+<td>5.7</td>
+</tr>
+<tr>
+<td><strong>kernl（fp16）</strong></td>
+<td><strong>1.95</strong></td>
+<td><strong>1.6</strong></td>
+<td><strong>1.02</strong></td>
+<td><strong>0.84</strong></td>
+<td><strong>2.95</strong></td>
+<td><strong>0.96</strong></td>
+</tr>
+<tr>
+<td><strong>tensorrt（fp16）</strong></td>
+<td><strong>1.74</strong></td>
+<td><strong>1.36</strong></td>
+<td><strong>1.19</strong></td>
+<td><strong>1.05</strong></td>
+<td><strong>2.2</strong></td>
+<td><strong>0.55</strong></td>
+</tr>
+<tr>
+<td>kernl提升倍数</td>
+<td>8.05</td>
+<td>10.00</td>
+<td>15.20</td>
+<td>19.05</td>
+<td>7.46</td>
+<td>5.94</td>
+</tr>
+<tr>
+<td>tensorrt提升倍数</td>
+<td>9.02</td>
+<td>11.76</td>
+<td>13.03</td>
+<td>15.24</td>
+<td>10.00</td>
+<td>10.36</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>​    <img src="https://office.netease.com/api/admin/file/download?path=cowork/2023/02/17/b19543cfa1da414192ff6c53bd29793d.png" alt="0"></p>
+<p><strong>六、输出结果校验：结果基本一致</strong></p>
+<p><strong>6.1 kernl：</strong></p>
+<p>第一行是pytorch，第二行是kernl，albert模型，fp16加速。</p>
+<p>​    <img src="https://office.netease.com/api/admin/file/download?path=cowork/2023/02/17/d3bdfffb7f1b43fba82688dc59942571.png" alt="0"></p>
+<p><strong>七、依然没解决的问题</strong></p>
+<ul>
+<li>目前经过kernl优化的模型，batch维度只能为1，不知道为何。。。。尝试了半天没有修复，算了吧，提个issue，看看有没有人帮我。。。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://github.com/ELS-RD/kernl/issues/286">https://github.com/ELS-RD/kernl/issues/286</a></p>
+<p>目前作者已经回复了，确实是个bug，待他们研究一下。</p>
+<ul>
+<li>无法将优化后的模型保存下来，只能在线优化，git issue给的解释如下：</li>
+</ul>
+<p>PyTorch 2.0 有一种方法可以保存在磁盘上并重新加载已编译的 Triton 内核。 使用他们的 API 应该可以在预热期间节省大量时间。 我们刚刚合并了一个最新版本的 PyTorch 2.0，所以我想调用他们的 API 来启动 Triton 内核而不是原来的 Triton 内核是非常可行的。 但是，无法导出和重用 CUDA 图。 主要原因是内核使用它们的参数重新执行。 这些参数包括 gpu 内存地址。 并且您的张量内存地址很可能会在每次启动时发生变化（如果您退出 Python 会话并且 CUDA 池被释放）。 理论上更新图形参数当然是可能的，但这似乎非常困难，所以重新运行预热可能更好（无需重新编译 triton 内核 ofc）。</p>
+<p>关注这个issue : <a target="_blank" rel="noopener" href="https://github.com/ELS-RD/kernl/issues/224">https://github.com/ELS-RD/kernl/issues/224</a></p>
+<p><strong>八、遇到的一些已经解决的问题</strong></p>
+<p><strong>8.1  git提供的镜像打不起来：</strong></p>
+<p>分析原因，github提供的镜像ubuntu版本太高了，本机ubuntu版本比较低，有bug</p>
+<p><strong>另外需要注意，kernl需要python3.9， cuda11.7以上</strong></p>
+<p>解决方式，把FROM的基础镜像改了，同时，python地方也需要修改，按照如下方式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># FROM nvidia/cuda:12.0.0-devel-ubuntu22.04 </span></span><br><span class="line">FROM nvcr.io/nvidia/tensorrt:<span class="number">22.09</span>-py3 </span><br><span class="line">  <span class="comment"># RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1 &amp;&amp; \ </span></span><br><span class="line">  <span class="comment">#   update-alternatives --install /usr/bin/python python /usr/bin/python3.9 2 &amp;&amp; \ </span></span><br><span class="line">  <span class="comment">#   update-alternatives --set python /usr/bin/python3.9 &amp;&amp; \ </span></span><br><span class="line">  <span class="comment">#   update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 &amp;&amp; \ </span></span><br><span class="line">  <span class="comment">#   update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 2 &amp;&amp; \ </span></span><br><span class="line">  <span class="comment">#   update-alternatives --set python3 /usr/bin/python3.9 </span></span><br><span class="line">RUN update-alternatives --install /usr/<span class="built_in">bin</span>/python python /usr/<span class="built_in">bin</span>/python3<span class="number">.9</span> <span class="number">2</span> &amp;&amp; \  </span><br><span class="line">update-alternatives --<span class="built_in">set</span> python /usr/<span class="built_in">bin</span>/python3<span class="number">.9</span> &amp;&amp; \  </span><br><span class="line">update-alternatives --install /usr/<span class="built_in">bin</span>/python3 python3 /usr/<span class="built_in">bin</span>/python3<span class="number">.9</span> <span class="number">2</span> &amp;&amp; \  </span><br><span class="line">update-alternatives --<span class="built_in">set</span> python3 /usr/<span class="built_in">bin</span>/python3<span class="number">.9</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p><strong>8.2 安装timm会遇到问题</strong></p>
+<p> 在安装timm的时候，需要安装torchvision，默认会安装非最新版，所以需要手动先安装好最新版的torchvision</p>
+<p>解决方法：手动安装最新版torchvision后，再安装torchvision</p>
+<p><strong>8.3 算力要求8.0以上：</strong></p>
+<p>解决方法：换机器</p>
+<p>raise RuntimeError(“GPU compute capability 8.0 (Ampere) or higher is required to use Kernl”)</p>
+<p>​    <img src="https://office.netease.com/api/admin/file/download?path=cowork/2023/02/17/32aae9ff93e046eeaaec2fdb8fe9852e.png" alt="0"></p>
+<p><strong>九、一些原理性的东西</strong></p>
+<p>kernl库如何实现的加速呢？其实主要有三个东西</p>
+<ul>
+<li>torchdynamo，可以自定义后端，利用优化的内核替换掉原来的。</li>
+<li>cudagraph</li>
+<li>openai triton，可以更方便的写cuda内核代码。</li>
+</ul>
+<p>自定义后端在src&#x2F;kernl&#x2F;model_optimization.py中定义，代码如下：</p>
+<p>def compiler(gm: torch.fx.GraphModule, example_inputs: List[torch.Tensor]):    dynamo_backend_ofi(gm)    return cuda_graphs_wrapper(gm, example_inputs, pool&#x3D;pool)</p>
+<p>目前代码支持的自定义后端有如下一些 ：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">def dynamo_backend_ofi(gm: torch.fx.GraphModule, assume_causal=False):   </span><br><span class="line">  normalize_operators(gm)    </span><br><span class="line">  remove_dropout(gm)   </span><br><span class="line">  fuse_attention_pattern_1(gm, assume_causal)   </span><br><span class="line">  fuse_attention_pattern_2(gm, assume_causal)   </span><br><span class="line">  fuse_attention_pattern_3(gm, assume_causal)   </span><br><span class="line">  replace_all_linear(gm)   </span><br><span class="line">  replace_layer_norm(gm)   </span><br><span class="line">  replace_layer_norm_rms(gm)   </span><br><span class="line">  return gm</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>所以，目前来看，优化还处于初级阶段，提速的本质还是依靠实现的内核，目前支持的都是transformer的内核替换，所以在transformer上的提速较为明显，期待未来的更为完善。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/kernl/" rel="tag"># kernl</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2022/05/27/resnet/" rel="next" title="ResNet(Deep Residual Learning for Image Recognition)">
+                  <i class="fa fa-chevron-left"></i> ResNet(Deep Residual Learning for Image Recognition)
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2023/02/20/latent-diffusion/" rel="prev" title="Latent Diffusion">
+                  Latent Diffusion <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">63</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="contrastive learning，简单来说就是通过unlabel data,构建相似图像与非相似图像集，然后判断模型的输出向量，相似图像比较接近，非相似图像比较远。本文的主要方法也比较简单，相比较于moco采用的query encoder 和key encoder的动量方法,本文采用相同的encoder，通过大的batch（8192）来构建相似与非相似样本集，通过不同的augment来产">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SimClr v1 v2">
+<meta property="og:url" content="https://www.wanglichun.tech/2021/11/10/simclr/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="contrastive learning，简单来说就是通过unlabel data,构建相似图像与非相似图像集，然后判断模型的输出向量，相似图像比较接近，非相似图像比较远。本文的主要方法也比较简单，相比较于moco采用的query encoder 和key encoder的动量方法,本文采用相同的encoder，通过大的batch（8192）来构建相似与非相似样本集，通过不同的augment来产">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/10/simclr/image-20211110105603900.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/10/simclr/image-20211111154404267.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/10/simclr/image-20211110112345449.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/10/simclr/image-20211111154921350.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/10/simclr/image-20211110174646352.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/10/simclr/image-20211111142903339.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/10/simclr/image-20211111144136313.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/10/simclr/image-20211111144524754.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/10/simclr/image-20211111145019009.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/10/simclr/image-20211111151242266.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/10/simclr/image-20220111100442618.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/10/simclr/image-20220111100853755.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/10/simclr/image-20220111105809415.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/10/simclr/image-20220111105937442.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2021/11/10/simclr/image-20220111113030474.png">
+<meta property="article:published_time" content="2021-11-10T01:02:42.000Z">
+<meta property="article:modified_time" content="2023-05-14T14:31:57.992Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="SimClr">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.wanglichun.tech/2021/11/10/simclr/image-20211110105603900.png">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2021/11/10/simclr/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>SimClr v1 v2 | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2021/11/10/simclr/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SimClr v1 v2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-10 09:02:42" itemprop="dateCreated datePublished" datetime="2021-11-10T09:02:42+08:00">2021-11-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-14 22:31:57" itemprop="dateModified" datetime="2023-05-14T22:31:57+08:00">2023-05-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Contrastive-learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Contrastive learning</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/11/10/simclr/" class="post-meta-item leancloud_visitors" data-flag-title="SimClr v1 v2" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/11/10/simclr/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/11/10/simclr/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>contrastive learning，简单来说就是通过unlabel data,构建相似图像与非相似图像集，然后判断模型的输出向量，相似图像比较接近，非相似图像比较远。本文的主要方法也比较简单，相比较于moco采用的query encoder 和key encoder的动量方法,本文采用相同的encoder，通过大的batch（8192）来构建相似与非相似样本集，通过不同的augment来产生positive pair以及negative pair, 通过positive pair和nagative pair 的相似度来计算contrastive loss，得到一个比较好的特征表达的模型。</p>
+</blockquote>
+<hr>
+<span id="more"></span>
+
+
+
+<p>论文名称：SimClr v1 v2</p>
+<p>作者：Ting Chen, Hinton</p>
+<p>论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2002.05709.pdf">https://arxiv.org/pdf/2002.05709.pdf</a> &amp; <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2006.10029.pdf">https://arxiv.org/pdf/2006.10029.pdf</a></p>
+<p>Github:<a target="_blank" rel="noopener" href="https://github.com/google-research/simclr">https://github.com/google-research/simclr</a>.</p>
+<hr>
+<h1 id="SimCLR"><a href="#SimCLR" class="headerlink" title="SimCLR"></a>SimCLR</h1><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
+<li>data augment 在定义高效的预测任务中扮演着重要的角色，并且这个角色比在监督训练中还要大。</li>
+<li>在特征表达以及contrastive loss中，建立一个可学习的非线性转换，对于特征表达的学习具有重大意义。</li>
+<li>对embedding进行normalize以及适当的调整温度系数，利用contrastive celoss 特征表达的学习。</li>
+<li>&#x3D;&#x3D;contrastive learning需要更大的batchsize以及更多的训练steps。&#x3D;&#x3D;</li>
+</ul>
+<p>下图是linear classifiers 的效果</p>
+<p><img src="/2021/11/10/simclr/image-20211110105603900.png" alt="image-20211110105603900"></p>
+<p><img src="/2021/11/10/simclr/image-20211111154404267.png" alt="image-20211111154404267"></p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
+<li>学习高效的特征表达主要有两点，1个是generative（生成），另一个是discriminative（鉴别），生成的方法比如pixel的预测，会比较依赖计算资源。鉴别的方法比较依赖于pretext的设计。最近的 discriminative + contrastive learning的方法取得了不错的效果。</li>
+</ul>
+<h2 id="Relation"><a href="#Relation" class="headerlink" title="Relation"></a>Relation</h2><ul>
+<li>handcrafted pretext  tasks: 通过定义代理任务，来完成特征的学习，比如预测，相邻patch,拼图，旋转角度，color变换等，但这种方法太依赖与任务的设定。</li>
+<li>contrastive visual representation learning，这个是通过判断是否是positive pair 还是negative pair来进行特征的学习。</li>
+</ul>
+<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><h3 id="contrastive-learning-framework"><a href="#contrastive-learning-framework" class="headerlink" title="contrastive learning framework"></a>contrastive learning framework</h3><ul>
+<li>随机的augment来产生positive pairs</li>
+<li>网络结构比较随意，这里采用的是resnet，average pooling layer的输出作为特征表达</li>
+<li>在上面的输出上，加上了一个projection head(2层MLP，中间ReLU)，实验发现，这样做更有利于contrastive loss的计算</li>
+<li>对于batch_size&#x3D;N，经过aug，我们会得到2N的数据，其中正样本1对，其余的2（N-1）的数据，均作为负样本。</li>
+<li>$sim(u,v) &#x3D; u^Tv&#x2F;||u||*||v||$, 这不就是数学上向量的内积的夹角嘛，在代码中，相当于点积后做了归一化操作，&#x3D;&#x3D;就是cosine similarity，余弦相似度&#x3D;&#x3D;， &#x3D;&#x3D;这里跟moco也是一样的，只不过moco的归一化操作L2 norm在网络中完成了&#x3D;&#x3D;</li>
+<li><img src="/2021/11/10/simclr/image-20211110112345449.png" alt="image-20211110112345449"></li>
+<li>最终的loss是计算的所有的positive pairs，both (i,j) and (j, i)</li>
+<li>伪代码如下：</li>
+<li><img src="/2021/11/10/simclr/image-20211111154921350.png" alt="image-20211111154921350"></li>
+</ul>
+<h3 id="Training-with-Large-Batch-Size"><a href="#Training-with-Large-Batch-Size" class="headerlink" title="Training with Large Batch Size"></a>Training with Large Batch Size</h3><ul>
+<li>simclr并没有使用memory bank,而是使用的大的batch size，将训练batch从256调整到8192,8192可以带来16382的负样本。</li>
+<li>由于batch size 太大了，使用sgd训练可能会不稳定，所以本文使用的是&#x3D;&#x3D;LARS optimizer&#x3D;&#x3D;，&#x3D;&#x3D;这个是什么优化器？没用过&#x3D;&#x3D;</li>
+<li>128个TPU cores</li>
+</ul>
+<h3 id="Global-BN"><a href="#Global-BN" class="headerlink" title="Global BN"></a>Global BN</h3><ul>
+<li>意思就是如果采用分布式计算的情况下，各个卡分别计算自己的数据，这会导致局部信息优化预测的精度，但是并不会带来特征表达的提升。&#x3D;&#x3D;啥意思没整明白，是不是说自己训自己的，对自己有益，但是对全局无益&#x3D;&#x3D;</li>
+<li>所以，simclr是对全局进行的bn，或者像moco那种采用shuffle计算bn也行，就是麻烦了一点。</li>
+</ul>
+<p>Default settng</p>
+<ul>
+<li>resnet50</li>
+<li>2-layer MLP projection head -&gt; 128-dim</li>
+<li>optimize: LARS, lr:4.8,weight decay:  1e-6</li>
+</ul>
+<h2 id="Data-Augmentation-for-Contrastive-Repressentation-Learning"><a href="#Data-Augmentation-for-Contrastive-Repressentation-Learning" class="headerlink" title="Data Augmentation for Contrastive Repressentation Learning"></a>Data Augmentation for Contrastive Repressentation Learning</h2><ul>
+<li>实验发现，如果是两个组合的话，random crop + color distortion 效果比较好</li>
+<li>并且实验发现，使用auto augment没有random crop + color distortion的效果好</li>
+<li>并且对color distortion进行研究发现，随着强度的增强，模型效果会变好，但是supervise model，会变坏。</li>
+<li>&#x3D;&#x3D;<strong>总而言之，unserpervise learning 比 supervise learning 需要更强的augment</strong>&#x3D;&#x3D;</li>
+</ul>
+<h2 id="Architectures"><a href="#Architectures" class="headerlink" title="Architectures"></a>Architectures</h2><ul>
+<li>Unsupervised contrastive learning benefits (more) from bigger models</li>
+<li>nonlinear的头还是比较有用的，提升比较大，&#x3D;&#x3D;kaiming的moco就是没有采用nonlinear，而是采用的linear&#x3D;&#x3D;。</li>
+<li><img src="/2021/11/10/simclr/image-20211110174646352.png" alt="image-20211110174646352"></li>
+<li>NT-Xent损失函数，下面的XT-Xent 的loss就是对上面的loss ，log提取后的结果。</li>
+</ul>
+<p><img src="/2021/11/10/simclr/image-20211111142903339.png" alt="image-20211111142903339"></p>
+<ul>
+<li><p>作者对比了在loss中，L2 norm, 和温度的对比效果，实验发现，没有了norm之后 contrastive acc很高，但是特征表达不是特别好，比较低。同时合适的温度也有较为明显的影响。（这里就是dot product和cosine similarity的区别，说明进行归一化还是很有必要的）</p>
+<p><img src="/2021/11/10/simclr/image-20211111144136313.png" alt="image-20211111144136313"></p>
+</li>
+<li><p>&#x3D;&#x3D;larger batch is better&#x3D;&#x3D;, longer training is better,（作者的部分对比实验是训练了1000epoch）</p>
+</li>
+</ul>
+<h2 id="Comparison-with-Sota"><a href="#Comparison-with-Sota" class="headerlink" title="Comparison with Sota"></a>Comparison with Sota</h2><ul>
+<li>Linear evaluation:</li>
+<li><img src="/2021/11/10/simclr/image-20211111144524754.png" alt="image-20211111144524754"></li>
+<li>transfer learning:(可见基本上是有点效果的，相比supervised)</li>
+</ul>
+<p><img src="/2021/11/10/simclr/image-20211111145019009.png" alt="image-20211111145019009"></p>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><ul>
+<li><p>randomresizecrop() 通用设置，crop size 0.08-1, aspect 3&#x2F;4 - 4&#x2F;3,  horizontal flip</p>
+</li>
+<li><p>color_distortion代码如下，</p>
+</li>
+<li><p><img src="/2021/11/10/simclr/image-20211111151242266.png" alt="image-20211111151242266"></p>
+</li>
+<li><p>发现针对LARS optimizer , square root learning rate scaling 效果比单纯的scaling效果要好。</p>
+</li>
+<li><p>实验显示，bs&#x3D;8192的时候 ， 似乎 饱和了，继续增大到32k，并没有显著改善效果了</p>
+</li>
+<li><p>finetune 参数</p>
+<blockquote>
+<p>bs:4096, lr:0.8, momentum:0.9,</p>
+<p>1%数据 finetune 60 epochs, 10%数据再finetune 30 epoch</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h1 id="simclr-V2"><a href="#simclr-V2" class="headerlink" title="simclr - V2"></a>simclr - V2</h1><blockquote>
+<p>V2主要想表达的不只是提出了一个对比学习的self-supervised learning的算法，更重要的是想表达一个pretraining + finetune的范式，只不过当只有少量数据的时候，小模型的表现也不是特别好，虽然已经有了提升，但是跟全量finetune有个比较大的gap,但是大模型表现很好(这里大模型也可以再来一轮的自监督)，所以这里作者又引入了蒸馏的思想，来实现这个范式，我猜这就是作者的实验过程。</p>
+<p>跟有监督相比，如果只是替换了预训练模型为自监督的预训练模型，那么finetune后的效果的提升可能是模型越大越明显一些，相对于resnet50提升特别的大，resnet152x2+sk提升的很明显，但是预训练模型的优势在于，如果只使用10%的数据进行finetune，在大模型上可以达到跟有监督相同的精度效果，resnet50还是要差点，这个时候，如果加上蒸馏，teacher可以选择个大模型（也是finetune+semi得到的），这样resnet50的精度也能上来了，成功的实现了少量数据，小模型，达到大数据finetune的近乎相同效果，如果是大模型甚至可能会超过finetune的效果。</p>
+</blockquote>
+<hr>
+<ul>
+<li><p>大量无标签自监督加上finetune，虽然这个预训练是任务无关的，但是对于半监督有很好的效果。&#x3D;&#x3D;关键在于需要使用大的宽的网络来进行预训练和finetune&#x3D;&#x3D;</p>
+</li>
+<li><p>并且标签的数据越少，这个大模型的自监督的收益越大</p>
+</li>
+<li><p>fine-tuning后，可以使用unlabel data + 蒸馏等进一步缩小模型</p>
+</li>
+<li><p>总结起来就是三步：</p>
+<blockquote>
+<ol>
+<li>自监督预训练一个大的resnet模型</li>
+<li>在小规模数据集进行finetune</li>
+<li>unlabeled data上进行蒸馏</li>
+</ol>
+</blockquote>
+</li>
+<li><p>1% label data在imagenet上，resnet50 可以达到73.9%的效果。</p>
+</li>
+<li><p>10% label data 在imagenet上，resnet50可以达到77.5%的效果。</p>
+</li>
+</ul>
+<p><img src="/2021/11/10/simclr/image-20220111100442618.png" alt="image-20220111100442618"></p>
+<ul>
+<li><p>根据作者的经验，越少的数据，越需要大模型，大的自监督模型更加的数据高效，在小数据上finetune的时候明显会更好，即使他们更容易过拟合</p>
+</li>
+<li><p><img src="/2021/11/10/simclr/image-20220111100853755.png" alt="image-20220111100853755"></p>
+</li>
+<li><p>进一步说明了非线性投影头（projection head）的重要性，不仅对改善特征表示有帮助，对半监督也很有效果</p>
+</li>
+<li><p>simclr v2的变化：</p>
+<blockquote>
+<ol>
+<li>训练更大的模型，resnet-152， 3x channel, + SK</li>
+<li>deeper projection head（3-layer） , 并且在finetune的时候 不全丢了，留1个layer。这个操作在linear evaluation和finetune都涨点了。</li>
+<li>采用moco的memory bank方式，得到更多的负样本，带来了大约1%的linear提升。</li>
+</ol>
+</blockquote>
+</li>
+<li><p>蒸馏loss: , P代表softmax</p>
+<p><img src="/2021/11/10/simclr/image-20220111105809415.png" alt="image-20220111105809415"></p>
+</li>
+<li><p>如果label的数据比较多 也可以把label的loss加上</p>
+<p><img src="/2021/11/10/simclr/image-20220111105937442.png" alt="image-20220111105937442"></p>
+</li>
+<li><p>参数细节可以看论文 Settings and Implementation Details，设置还是比较常规的。值得一提的是，在finetune和distilation的时候，并没有采用过多的augment，只是采用了random crop 和 horizontal flips，&#x3D;&#x3D;这个感觉有点少，不知作者是何意？是这样效果比较好？论文中貌似没提&#x3D;&#x3D;</p>
+</li>
+<li><p>从下面这个表可以看出，自监督后，使用100%数据finetune是要比supervised直接训练的效果要好的。并且随着网络结构变得复杂，finetune后的表现是会变好的，虽然可能从resnet50-&gt;resnet101-&gt;resnet152 的变化可能并不是特别大，57%-&gt;62%-&gt;64%，但是当进一步加大152的时候，就飙到了75%，相比57%就比较明显了。并且可以看出，在监督学习领域，这个方法的提升可能不大（4%），但是对自监督明显就大了（9%），并且这个模型增大也不是一直涨，可以看到resnet152 sk x2 和 x3，相差就不是特别大了。这里的supervise应用了很多的augment</p>
+</li>
+<li><p><img src="/2021/11/10/simclr/image-20220111113030474.png" alt="image-20220111113030474"></p>
+</li>
+<li><p>值得一提的是，当使用更大的resnet的时候，更深的projection head的作用就相对小一些了</p>
+</li>
+<li><p>大的teacher还可以采用自蒸馏的方式，提升自己的效果</p>
+</li>
+<li><p>linear evaluation 和finetune是正相关的，即会同时升高</p>
+</li>
+</ul>
+<p>&#x3D;&#x3D;<strong>目前来看，自监督训练的模型更不容易过拟合呀, 换大模型之后提升更为平稳</strong>&#x3D;&#x3D;</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/SimClr/" rel="tag"># SimClr</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2021/11/06/CoAtNet/" rel="next" title="CoAtNet">
+                  <i class="fa fa-chevron-left"></i> CoAtNet
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2021/11/15/mae/" rel="prev" title="MAE">
+                  MAE <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SimCLR"><span class="nav-number">1.</span> <span class="nav-text">SimCLR</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Abstract"><span class="nav-number">1.1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.2.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Relation"><span class="nav-number">1.3.</span> <span class="nav-text">Relation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Method"><span class="nav-number">1.4.</span> <span class="nav-text">Method</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#contrastive-learning-framework"><span class="nav-number">1.4.1.</span> <span class="nav-text">contrastive learning framework</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Training-with-Large-Batch-Size"><span class="nav-number">1.4.2.</span> <span class="nav-text">Training with Large Batch Size</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Global-BN"><span class="nav-number">1.4.3.</span> <span class="nav-text">Global BN</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Data-Augmentation-for-Contrastive-Repressentation-Learning"><span class="nav-number">1.5.</span> <span class="nav-text">Data Augmentation for Contrastive Repressentation Learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Architectures"><span class="nav-number">1.6.</span> <span class="nav-text">Architectures</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Comparison-with-Sota"><span class="nav-number">1.7.</span> <span class="nav-text">Comparison with Sota</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95"><span class="nav-number">1.8.</span> <span class="nav-text">附录</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#simclr-V2"><span class="nav-number">2.</span> <span class="nav-text">simclr - V2</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">63</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

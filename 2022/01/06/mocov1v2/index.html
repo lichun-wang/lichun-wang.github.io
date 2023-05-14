@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="在进行对比学习的时候，查询字典可以越大越好，可是在增大查询字典的同时，如何保证字典内的key的连续性就比较关键，如果不连续的话，很可能会偏向于相对连续的向量，这对对比学习是不利的，比如query encoder，key encoder 同时反向传播，由于key encoder更新较快，就只能利用mini-batch的字典，而另一种方法将key全部存起来，每次sample一定的量进行学习，虽然字典">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MoCo v1 v2">
+<meta property="og:url" content="https://www.wanglichun.tech/2022/01/06/mocov1v2/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="在进行对比学习的时候，查询字典可以越大越好，可是在增大查询字典的同时，如何保证字典内的key的连续性就比较关键，如果不连续的话，很可能会偏向于相对连续的向量，这对对比学习是不利的，比如query encoder，key encoder 同时反向传播，由于key encoder更新较快，就只能利用mini-batch的字典，而另一种方法将key全部存起来，每次sample一定的量进行学习，虽然字典">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.wanglichun.tech/2022/01/06/mocov1v2/image-20211109162238989.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2022/01/06/mocov1v2/image-20211109164140087.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2022/01/06/mocov1v2/image-20211109174727800.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2022/01/06/mocov1v2/image-20211109194215614.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2022/01/06/mocov1v2/image-20220106164730887.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2022/01/06/mocov1v2/image-20220106164946209.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2022/01/06/mocov1v2/image-20220107095224079.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2022/01/06/mocov1v2/image-20220107095655968.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2022/01/06/mocov1v2/image-20220107100229564.png">
+<meta property="og:image" content="https://www.wanglichun.tech/2022/01/06/mocov1v2/image-20220107103141366.png">
+<meta property="article:published_time" content="2022-01-06T01:02:42.000Z">
+<meta property="article:modified_time" content="2023-05-14T14:09:02.205Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="MoCo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.wanglichun.tech/2022/01/06/mocov1v2/image-20211109162238989.png">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2022/01/06/mocov1v2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>MoCo v1 v2 | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2022/01/06/mocov1v2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MoCo v1 v2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-06 09:02:42" itemprop="dateCreated datePublished" datetime="2022-01-06T09:02:42+08:00">2022-01-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-14 22:09:02" itemprop="dateModified" datetime="2023-05-14T22:09:02+08:00">2023-05-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Contrastive-learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Contrastive learning</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/01/06/mocov1v2/" class="post-meta-item leancloud_visitors" data-flag-title="MoCo v1 v2" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/01/06/mocov1v2/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/01/06/mocov1v2/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>在进行对比学习的时候，查询字典可以越大越好，可是在增大查询字典的同时，如何保证字典内的key的连续性就比较关键，如果不连续的话，很可能会偏向于相对连续的向量，这对对比学习是不利的，比如query encoder，key encoder 同时反向传播，由于key encoder更新较快，就只能利用mini-batch的字典，而另一种方法将key全部存起来，每次sample一定的量进行学习，虽然字典的量上来了，但是由于每次只能更新sample出来的key，明显不具备连续性，基于此，本文提出的momentum更新方式，由于momentum很大基本上是0.999，这就导致key encoder其实更新的很慢，这个时候维护一个队列比如65536，bs&#x3D;128的时候，512个batch就完成了一次队列的更新，这就保证了队列里面的数据不会太older，具备一定的连续性。还有一个小点是，contrastive loss的时候，其实是点积计算相似性，然后算cross_entropy(),做了一个k+1维的softmax</p>
+</blockquote>
+<hr>
+<span id="more"></span>
+
+
+
+<p>论文名称：MoCo v1: Momentum Contrast for Unsupervised Visual Representation Learning </p>
+<p>论文名称：MoCo v2：Improved Baselines with Momentum Contrastive Learning</p>
+<p>作者：Kaiming He 团队</p>
+<p>论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2111.06377">https://arxiv.org/abs/2111.06377</a> &amp;&amp; <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2003.04297">https://arxiv.org/abs/2003.04297</a></p>
+<p>Github:<a target="_blank" rel="noopener" href="https://github.com/facebookresearch/moco">https://github.com/facebookresearch/moco</a></p>
+<hr>
+<h1 id="Moco-V1"><a href="#Moco-V1" class="headerlink" title="Moco V1"></a>Moco V1</h1><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
+<li>对比学习，可以看做是字典查找，本文通过队列建立了一个动态的字典</li>
+</ul>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
+<li>相比较语言任务，视觉任务的更关注于字典的建立，因为原始信号是连续的高维空间，是没有结构的。</li>
+<li>contrastive loss</li>
+<li>以前的方法，总结来看，就是是建立动态的字典，字典中的key是从数据（image or patch）中采样的,然后用一个encoder来表示。 encoder用来完成字典查找的过程，query encoder应该匹配相同的key，不匹配其他，学习的过程就是最小化contrastive loss的过程。</li>
+<li>所以，这个字典得大，并且字典在训练过程中要具有连续性的。</li>
+<li>本文提出方法如下图</li>
+<li>encoder，默认就是resnet50结构，将最后的fc的num_classes 设置为特征维度（128）即可。</li>
+</ul>
+<p><img src="/2022/01/06/mocov1v2/image-20211109162238989.png" alt="image-20211109162238989"></p>
+<h2 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h2><ul>
+<li>unsupervised self-supervised learning，主要有两个方面，一个是pretext tasks (代理任务),另一个是 loss function</li>
+<li>contrastive loss 计算的是样本间表示的相似性,就是当样本相似的时候，就会比较小，样本对不相似的时候会比较大。adversarial losses 计算的是数据的分布概率，适用于数据的生成。adversarial network 和 nce loss会有一定的联系的。</li>
+</ul>
+<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><h3 id="contrastive-learning-as-dictionary-look-up"><a href="#contrastive-learning-as-dictionary-look-up" class="headerlink" title="contrastive learning as dictionary look-up"></a>contrastive learning as dictionary look-up</h3><ul>
+<li><p><strong>相似度的度量用点积</strong>，所以本文的对正负样本相似度的度量的loss函数如下：t是温度系数。简单点看，就是在k+1维的softmax-based classifier中，把q预测成k+的概率，<strong>infoNCE loss ：</strong></p>
+<p><img src="/2022/01/06/mocov1v2/image-20211109164140087.png" alt="image-20211109164140087"></p>
+</li>
+</ul>
+<ul>
+<li><p>query representation 可以是$q&#x3D;f_q(x^q)$ 输入的可以是image 也可以是patch 也可以是 patches， <strong>两个encoder可以是相同的，可以是共享的，也可以是不同的。</strong></p>
+</li>
+<li></li>
+</ul>
+<h3 id="Momentum-contrast"><a href="#Momentum-contrast" class="headerlink" title="Momentum contrast"></a>Momentum contrast</h3><ul>
+<li>我们的假设是，好的表达可以从大的字典中学到，因为其有足够的负样本，同时字典要具备一定的连续性。</li>
+<li>弄了个队列，来扩大字典的容量，新数据进队列，outdate数据出队列。</li>
+<li>用队列可以扩大字典量，但是却限制了key encoder的更新,那怎么办？一个简单的解决方式是，直接copy query encoder to key encoder，但实验显示效果不好，可能是key encoder更新太快了，破坏了连续性。</li>
+<li>本文是怎么干的呢？主要问题还是让key encoder更新的慢一点，所以就采用了动量的方式，每次梯度只更新query encoder，key encoder通过query的更新进行计算，公式如下，并且实验证明，动量越大，效果越好，e.g. m&#x3D;0.999比m&#x3D;0.9要好，说明更新的越慢越好。</li>
+<li><img src="/2022/01/06/mocov1v2/image-20211109174727800.png" alt="image-20211109174727800"></li>
+<li>该方法的好处，1.可以使用大量的数据，亿级别也不在话下，2.保证了更新的连续性。</li>
+</ul>
+<h3 id="Pretext-Task"><a href="#Pretext-Task" class="headerlink" title="Pretext Task"></a>Pretext Task</h3><ul>
+<li>实例辨别任务，a query and a key, 如果来自同一张图像，就是一个正例，如果是不同的就是一个反例。</li>
+</ul>
+<h3 id="Technical-details"><a href="#Technical-details" class="headerlink" title="Technical details"></a>Technical details</h3><ul>
+<li>resnet as encoder</li>
+<li>last fc层的输出(128维)，经过L2-norm 作为key 和query的特征表示， t&#x3D;0.07，<strong>这里提一下，为啥做L2-norm，我想主要是为了计算后面的相似性，需要做归一化</strong></li>
+</ul>
+<h3 id="shuffling-BN（小trick）"><a href="#shuffling-BN（小trick）" class="headerlink" title="shuffling BN（小trick）"></a>shuffling BN（小trick）</h3><ul>
+<li>传统的BN效果不是很好。因为模型会欺骗代理任务，找到一个简单的解决方式，而没有去学习更好的相似性</li>
+<li>因为是采用分布式进行的训练，所以数据会被分配到多块卡上，shuffling bn计算bn只在每块卡上单独计算。同时对于一批数据，对于key encoder，moco先把数据shuffle掉，然后在放到gpu过key encoder,但是query encoder并没有shuffle，这就导致key和query是跟不同的数据做的bn，解决了bn导致的数据内部通信减少了数据分辨信息的问题。</li>
+</ul>
+<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p><img src="/2022/01/06/mocov1v2/image-20211109194215614.png" alt="image-20211109194215614"></p>
+<h2 id="Exp"><a href="#Exp" class="headerlink" title="Exp"></a>Exp</h2><ul>
+<li>bs:256, 8 gpus</li>
+<li>init lr 0.03, 200 epochs</li>
+<li>linear classification protocol, 先unsepervise训练，然后固定参数，训练分类head,  &#x3D;&#x3D;initial learning rate:30 , weight decay is 0&#x3D;&#x3D;这个设置有点猛啊。</li>
+</ul>
+<ul>
+<li>跟以前的方法的对比：可以看到 bank的方法，在效果上不如moco，<strong>作者猜想，主要原因在于moco对于连续性的优化</strong></li>
+</ul>
+<p><img src="/2022/01/06/mocov1v2/image-20220106164730887.png" alt="image-20220106164730887"></p>
+<ul>
+<li><p>还有一个点是，momentum取多少合适呢？结果如下，可以看到，如果momentum&#x3D;0，就代表完全更新，结果就是训不起来了震荡的比较厉害，但等于0不就约等于是memory bank了吗？为什么训不起来了呢，是不是参数没调好。。。</p>
+<p><img src="/2022/01/06/mocov1v2/image-20220106164946209.png" alt="image-20220106164946209"></p>
+</li>
+<li><p>在finetune的时候，bn是全同步的，而不是冻住的，并且在新加的层中也加入了BN</p>
+</li>
+<li><p>moco的迁移性比较好，在多个下游的检测或者分割任务上超过了有监督学习。</p>
+</li>
+</ul>
+<hr>
+<h1 id="MoCo-V2"><a href="#MoCo-V2" class="headerlink" title="MoCo V2"></a>MoCo V2</h1><p>moco v2 主要是借鉴里simclr的augment以及加了非线性头的思想，在moco v1的基础上进行了进一步的优化，在无监督上提了大约7个点，增加训练epochs之后，提高了10个点。</p>
+<hr>
+<p>其中调整的augment如下：对colorjitter做了调整，对hue的强度做了调整，同时比例做了调整，增加了高斯blur</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> args.aug_plus:</span><br><span class="line">       <span class="comment"># MoCo v2&#x27;s aug: similar to SimCLR https://arxiv.org/abs/2002.05709</span></span><br><span class="line">       augmentation = [</span><br><span class="line">           transforms.RandomResizedCrop(<span class="number">224</span>, scale=(<span class="number">0.2</span>, <span class="number">1.</span>)),</span><br><span class="line">           transforms.RandomApply([</span><br><span class="line">               transforms.ColorJitter(<span class="number">0.4</span>, <span class="number">0.4</span>, <span class="number">0.4</span>, <span class="number">0.1</span>)  <span class="comment"># not strengthened， brightness, contrast, saturation, hue</span></span><br><span class="line">           ], p=<span class="number">0.8</span>),</span><br><span class="line">           transforms.RandomGrayscale(p=<span class="number">0.2</span>),</span><br><span class="line">           transforms.RandomApply([moco.loader.GaussianBlur([<span class="number">.1</span>, <span class="number">2.</span>])], p=<span class="number">0.5</span>),</span><br><span class="line">           transforms.RandomHorizontalFlip(),</span><br><span class="line">           transforms.ToTensor(),</span><br><span class="line">           normalize</span><br><span class="line">       ]</span><br><span class="line">   <span class="keyword">else</span>:</span><br><span class="line">       <span class="comment"># MoCo v1&#x27;s aug: the same as InstDisc https://arxiv.org/abs/1805.01978</span></span><br><span class="line">       augmentation = [</span><br><span class="line">           transforms.RandomResizedCrop(<span class="number">224</span>, scale=(<span class="number">0.2</span>, <span class="number">1.</span>)),</span><br><span class="line">           transforms.RandomGrayscale(p=<span class="number">0.2</span>),</span><br><span class="line">           transforms.ColorJitter(<span class="number">0.4</span>, <span class="number">0.4</span>, <span class="number">0.4</span>, <span class="number">0.4</span>),</span><br><span class="line">           transforms.RandomHorizontalFlip(),</span><br><span class="line">           transforms.ToTensor(),</span><br><span class="line">           normalize</span><br><span class="line">       ]</span><br></pre></td></tr></table></figure>
+
+<p>调整的mlp如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if mlp:  # hack: brute-force replacement</span><br><span class="line">           dim_mlp = self.encoder_q.fc.weight.shape[1] # 2048dim</span><br><span class="line">           self.encoder_q.fc = nn.Sequential(nn.Linear(dim_mlp, dim_mlp), nn.ReLU(), self.encoder_q.fc)</span><br><span class="line">           self.encoder_k.fc = nn.Sequential(nn.Linear(dim_mlp, dim_mlp), nn.ReLU(), self.encoder_k.fc)</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><p>moco的优势：相比simclr，不需要大的batch size 也能得到大量的负样本，使得即使没有大量gpu，也能训练。 </p>
+<p><img src="/2022/01/06/mocov1v2/image-20220107095224079.png" alt="image-20220107095224079"></p>
+</li>
+</ul>
+<h2 id="simclr这些设置到底起了多大作用呢？实验看一下"><a href="#simclr这些设置到底起了多大作用呢？实验看一下" class="headerlink" title="simclr这些设置到底起了多大作用呢？实验看一下"></a>simclr这些设置到底起了多大作用呢？实验看一下</h2><ul>
+<li><p>MLP head， 可见，有了mlp的效果提升还是比较大的，当$\tau&#x3D;0.2$时，提升了大约7%。</p>
+<p><img src="/2022/01/06/mocov1v2/image-20220107095655968.png" alt="image-20220107095655968"></p>
+</li>
+<li><p>augment的效果</p>
+<blockquote>
+<ol>
+<li>新的augment 带来了大于2.8%的提升</li>
+<li>detection上看，貌似aug比mlp带来了更大的提升82.2% -&gt; 82%,这说明，这种linear classification的方法得到的精度，对于检测的迁移性，并不一定正相关。</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+<p><img src="/2022/01/06/mocov1v2/image-20220107100229564.png" alt="image-20220107100229564"></p>
+<ul>
+<li>跟simclr做对比：可以看出moco v2 在更小的batch上面，取得了更好的效果，acc为linear classifier accuracy</li>
+</ul>
+<p><img src="/2022/01/06/mocov1v2/image-20220107103141366.png" alt="image-20220107103141366"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MoCo/" rel="tag"># MoCo</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2021/11/15/mae/" rel="next" title="MAE">
+                  <i class="fa fa-chevron-left"></i> MAE
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2022/01/06/vit/" rel="prev" title="ViT">
+                  ViT <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Moco-V1"><span class="nav-number">1.</span> <span class="nav-text">Moco V1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Abstract"><span class="nav-number">1.1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.2.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Related-Work"><span class="nav-number">1.3.</span> <span class="nav-text">Related Work</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Method"><span class="nav-number">1.4.</span> <span class="nav-text">Method</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#contrastive-learning-as-dictionary-look-up"><span class="nav-number">1.4.1.</span> <span class="nav-text">contrastive learning as dictionary look-up</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Momentum-contrast"><span class="nav-number">1.4.2.</span> <span class="nav-text">Momentum contrast</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pretext-Task"><span class="nav-number">1.4.3.</span> <span class="nav-text">Pretext Task</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Technical-details"><span class="nav-number">1.4.4.</span> <span class="nav-text">Technical details</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shuffling-BN%EF%BC%88%E5%B0%8Ftrick%EF%BC%89"><span class="nav-number">1.4.5.</span> <span class="nav-text">shuffling BN（小trick）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%AA%E4%BB%A3%E7%A0%81"><span class="nav-number">1.4.6.</span> <span class="nav-text">伪代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exp"><span class="nav-number">1.5.</span> <span class="nav-text">Exp</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MoCo-V2"><span class="nav-number">2.</span> <span class="nav-text">MoCo V2</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#simclr%E8%BF%99%E4%BA%9B%E8%AE%BE%E7%BD%AE%E5%88%B0%E5%BA%95%E8%B5%B7%E4%BA%86%E5%A4%9A%E5%A4%A7%E4%BD%9C%E7%94%A8%E5%91%A2%EF%BC%9F%E5%AE%9E%E9%AA%8C%E7%9C%8B%E4%B8%80%E4%B8%8B"><span class="nav-number">2.1.</span> <span class="nav-text">simclr这些设置到底起了多大作用呢？实验看一下</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">63</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>
