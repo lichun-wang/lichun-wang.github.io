@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Spring's Idea" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Diffusers 是huggingface开源的应用扩散模型的python库，用于生成图像、音频甚至分子的3D结构。Diffusers提供简单的推理解决方案以及训练自己的扩散模型，使用起来具有较好的可用性，同时非常的简单，支持多种diffusion模型以及算法，只需几行代码就可以实现diffusion的效果，同时对于civitai等开源模型可以无缝对接。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Diffusers">
+<meta property="og:url" content="https://www.wanglichun.tech/2023/07/15/diffusers/index.html">
+<meta property="og:site_name" content="Spring&#39;s Idea">
+<meta property="og:description" content="Diffusers 是huggingface开源的应用扩散模型的python库，用于生成图像、音频甚至分子的3D结构。Diffusers提供简单的推理解决方案以及训练自己的扩散模型，使用起来具有较好的可用性，同时非常的简单，支持多种diffusion模型以及算法，只需几行代码就可以实现diffusion的效果，同时对于civitai等开源模型可以无缝对接。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-07-15T01:02:42.000Z">
+<meta property="article:modified_time" content="2023-08-08T03:12:26.653Z">
+<meta property="article:author" content="Spring Wang">
+<meta property="article:tag" content="Diffusion">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.wanglichun.tech/2023/07/15/diffusers/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Diffusers | Spring's Idea</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f5aa4ee55174bece95c607a5becef769";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Spring's Idea</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>站点地图</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.wanglichun.tech/2023/07/15/diffusers/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.png">
+      <meta itemprop="name" content="Spring Wang">
+      <meta itemprop="description" content="众里寻他千百度，蓦然回首，那人却在灯火阑珊处">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Spring's Idea">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Diffusers
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-07-15 09:02:42" itemprop="dateCreated datePublished" datetime="2023-07-15T09:02:42+08:00">2023-07-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-08-08 11:12:26" itemprop="dateModified" datetime="2023-08-08T11:12:26+08:00">2023-08-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Diffusion/" itemprop="url" rel="index">
+                    <span itemprop="name">Diffusion</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2023/07/15/diffusers/" class="post-meta-item leancloud_visitors" data-flag-title="Diffusers" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/07/15/diffusers/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/07/15/diffusers/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>Diffusers 是huggingface开源的应用扩散模型的python库，用于生成图像、音频甚至分子的3D结构。Diffusers提供简单的推理解决方案以及训练自己的扩散模型，使用起来具有较好的可用性，同时非常的简单，支持多种diffusion模型以及算法，只需几行代码就可以实现diffusion的效果，同时对于civitai等开源模型可以无缝对接。</p>
+</blockquote>
+<hr>
+<span id="more"></span>
+
+
+
+<p>网站：<a target="_blank" rel="noopener" href="https://huggingface.co/docs/diffusers/v0.19.3/en/index">https://huggingface.co/docs/diffusers/v0.19.3/en/index</a></p>
+<p>Github：<a target="_blank" rel="noopener" href="https://github.com/huggingface/diffusers">https://github.com/huggingface/diffusers</a></p>
+<hr>
+<h2 id="零、安装"><a href="#零、安装" class="headerlink" title="零、安装"></a>零、安装</h2><p>这个自行查看：<a target="_blank" rel="noopener" href="https://huggingface.co/docs/diffusers/v0.19.3/en/installation">https://huggingface.co/docs/diffusers/v0.19.3/en/installation</a></p>
+<h2 id="一、如何简单推理diffusion-model"><a href="#一、如何简单推理diffusion-model" class="headerlink" title="一、如何简单推理diffusion model"></a>一、如何简单推理diffusion model</h2><ul>
+<li>一个简单的DDPM的例子</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> diffusers <span class="keyword">import</span> DDPMPipeline</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">ddmp = DDPMPipeline.from_pretrained(<span class="string">&quot;google/ddpm-cat-256&quot;</span>).to(<span class="string">&quot;cuda&quot;</span>)</span><br><span class="line">img = ddmp(num_inference_steps=<span class="number">50</span>).images[<span class="number">0</span>]</span><br><span class="line">img.save(<span class="string">&quot;/app/images/ddmp.png&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<ul>
+<li>一个简单的stable diffusion的例子</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> diffusers <span class="keyword">import</span> StableDiffusionPipeline, EulerDiscreteScheduler</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">pipe = StableDiffusionPipeline.from_pretrained(<span class="string">&quot;runwayml/stable-diffusion-v1-5&quot;</span>, torch_dtype=torch.float16, safety_checker=<span class="literal">None</span>)</span><br><span class="line">pipe.scheduler = EulerDiscreteScheduler.from_config(pipe.scheduler.config)</span><br><span class="line"></span><br><span class="line">pipe = pipe.to(<span class="string">&quot;cuda&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">prompt = <span class="string">&#x27;1girl,small breast,curly hair,(in the dark:1.2),deep shadow,spreading legs,hairy pussy,water,&lt;lora:creampieHairyPussy_creampieV11:0.5:BODY&gt;,&#x27;</span></span><br><span class="line">negative_prompt = <span class="string">&#x27;(worst quality:2),(low quality:2),(normal quality:2),lowres,watermark,badhandv4,ng_deepnegative_v1_75t,&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> torch.no_grad():</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">        image = pipe(prompt=prompt,</span><br><span class="line">                        negative_prompt=negative_prompt,</span><br><span class="line">                        height=<span class="number">640</span>, </span><br><span class="line">                        width=<span class="number">360</span>,</span><br><span class="line">                        num_inference_steps=<span class="number">30</span>,</span><br><span class="line">                        guidance_scale=<span class="number">8</span>).images[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">        image.save(<span class="string">&quot;./&#123;&#125;_&#123;&#125;.png&quot;</span>.<span class="built_in">format</span>(prompt[:<span class="number">10</span>], i))</span><br><span class="line"><span class="comment">## call的参数列表：https://huggingface.co/docs/diffusers/v0.19.3/en/api/pipelines/stable_diffusion/text2img#diffusers.StableDiffusionPipeline.__call__</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="二、如何加载civitai的模型？"><a href="#二、如何加载civitai的模型？" class="headerlink" title="二、如何加载civitai的模型？"></a>二、如何加载civitai的模型？</h2><ul>
+<li>如果是civitai提供的checkpoint，可以使用diffusers提供的scripts下面的convert_original_stable_diffusion_to_diffusers.py转换一下，就可以直接用上面的demo加载了。</li>
+</ul>
+<h2 id="三、如何加载civitai的lora模型？"><a href="#三、如何加载civitai的lora模型？" class="headerlink" title="三、如何加载civitai的lora模型？"></a>三、如何加载civitai的lora模型？</h2><ul>
+<li>可以使用diffusers提供的scripts下面的convert_lora_safetensor_to_diffusers.py将下载下来的准换，就可以利用 pipe.unet.load_attn_procs(lora_path)，进行加载了。</li>
+<li>可以直接使用 pipe.load_lora_weights(lora_path)，进行加载。<strong>推荐</strong></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## lora模型下载地址 wget https://civitai.com/api/download/models/15603 -O light_and_shadow.safetensors</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> diffusers <span class="keyword">import</span> StableDiffusionPipeline</span><br><span class="line"></span><br><span class="line">model_path = <span class="string">&#x27;gsdf/Counterfeit-V2.5&#x27;</span></span><br><span class="line">lora_path = <span class="string">&quot;light_and_shadow.safetensors&quot;</span></span><br><span class="line">pipe = StableDiffusionPipeline.from_pretrained(model_path, torch_dtype=torch.float16,safety_checker=<span class="literal">None</span>)</span><br><span class="line"><span class="comment"># pipe.unet.load_attn_procs(model_path) # 这个就对应的是转换后加载</span></span><br><span class="line">pipe.to(<span class="string">&quot;cuda&quot;</span>)</span><br><span class="line">pipe.load_lora_weights(lora_path) <span class="comment"># 这个对应直接加载，这个跟上面的load_attn_procs的作用是一样的，但是更推荐这个</span></span><br><span class="line"></span><br><span class="line">prompt = <span class="string">&quot;an woman with little liquid on big face&quot;</span></span><br><span class="line">negative_prompt = <span class="string">&#x27;(worst quality:2),(low quality:2),(normal quality:2),lowres,watermark,badhandv4,ng_deepnegative_v1_75t,&#x27;</span></span><br><span class="line">image = pipe(prompt, negative_prompt=negative_prompt, num_inference_steps=<span class="number">30</span>, guidance_scale=<span class="number">7.5</span>, ).images[<span class="number">0</span>]</span><br><span class="line">image.save(<span class="string">&quot;liquid.png&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="四、如下实现stable-diffusion-lora的训练"><a href="#四、如下实现stable-diffusion-lora的训练" class="headerlink" title="四、如下实现stable diffusion lora的训练"></a>四、如下实现stable diffusion lora的训练</h2><ul>
+<li>数据集的准备（数据集需要有图像和文本），如下形式：</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 文件夹如下：</span></span><br><span class="line">folder/train/metadata.csv</span><br><span class="line">folder/train/<span class="number">0001.</span>png</span><br><span class="line">folder/train/<span class="number">0002.</span>png</span><br><span class="line">folder/train/<span class="number">0003.</span>png</span><br><span class="line"></span><br><span class="line"><span class="comment">## metadata.csv内容如下：</span></span><br><span class="line">&#123;<span class="string">&quot;file_name&quot;</span>: <span class="string">&quot;0001.png&quot;</span>, <span class="string">&quot;text&quot;</span>: <span class="string">&quot;xxx&quot;</span>&#125;</span><br><span class="line">&#123;<span class="string">&quot;file_name&quot;</span>: <span class="string">&quot;0002.png&quot;</span>, <span class="string">&quot;text&quot;</span>: <span class="string">&quot;xxx&quot;</span>&#125;</span><br><span class="line">&#123;<span class="string">&quot;file_name&quot;</span>: <span class="string">&quot;0003.png&quot;</span>, <span class="string">&quot;text&quot;</span>: <span class="string">&quot;xxx&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 提供一个简单的脚本如下：</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">imagepath = <span class="string">&quot;/app/src/my_dataset/0&quot;</span></span><br><span class="line">imagelist = os.listdir(imagepath)</span><br><span class="line"></span><br><span class="line">captions = []</span><br><span class="line"><span class="keyword">for</span> img <span class="keyword">in</span> imagelist:</span><br><span class="line">    oriDict = &#123;&#125;</span><br><span class="line">    oriDict[<span class="string">&quot;file_name&quot;</span>] =  img</span><br><span class="line">    oriDict[<span class="string">&quot;text&quot;</span>] = <span class="string">&quot;A photograph of an woman with liquid&quot;</span></span><br><span class="line">    captions.append(oriDict)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> (captions)</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="comment"># # path to the folder containing the images</span></span><br><span class="line">root = <span class="string">&quot;/app/src/my_dataset/0/&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># add metadata.jsonl file to this folder</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(root + <span class="string">&quot;metadata.jsonl&quot;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> captions:</span><br><span class="line">        f.write(json.dumps(item) + <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">     </span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>准备好数据后，就可以使用example\text_to_image\train_text_to_image_lora.py 脚本进行训练了。</li>
+<li>训练好后，会保存lora的weight，然后就可以使用前面加载lora的方法，进行测试了。</li>
+</ul>
+<h2 id="备注一些基础知识："><a href="#备注一些基础知识：" class="headerlink" title="备注一些基础知识："></a>备注一些基础知识：</h2><p>1、训练：</p>
+<p>优化器还是adamw </p>
+<p>DDPMScheduler，# 这个东西比较重要，这个是加噪声的方式，如下这样 </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">noisy_images = noise_scheduler.add_noise(clean_images, noise, timesteps) </span><br></pre></td></tr></table></figure>
+
+
+
+<p>训练的主要步骤就是： </p>
+<ol>
+<li>取图像 </li>
+<li>生成noise， torch.randn() </li>
+<li>生成迭代次数 </li>
+<li>加噪声 </li>
+<li>模型前向预测噪声 </li>
+<li>预测噪声与噪声做loss </li>
+<li>backward</li>
+</ol>
+<ul>
+<li>diffusers提供了很多的管道类</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> diffusers <span class="keyword">import</span> DiffusionPipeline </span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> diffusers <span class="keyword">import</span> StableDiffusionPipeline </span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> diffusers <span class="keyword">import</span> StableDiffusionImg2ImgPipeline</span><br></pre></td></tr></table></figure>
+
+
+
+<p>2、Safety  checker</p>
+<p>模型默认会带一个nsfw的检测，所以使用safety_checker&#x3D;None就不会使用这个checker了 </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stable_diffusion = DiffusionPipeline.from_pretrained(repo_id, safety_checker=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>3、组件重用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> StableDiffusionPipeline，StableDiffusionImg2ImgPipeline </span><br><span class="line">model_id = “runwayml/stable-diffusion-v1-<span class="number">5</span>” </span><br><span class="line">stable_diffusion_txt2img = StableDiffusionPipeline.from_pretrained（model_id）</span><br><span class="line">stable_diffusion_img2img = StableDiffusionImg2ImgPipeline（    </span><br><span class="line">vae = stable_diffusion_txt2img.vae，    </span><br><span class="line">文本_encoder=stable_diffusion_txt2img.text_encoder,     </span><br><span class="line">tokenizer=stable_diffusion_txt2img.tokenizer,     </span><br><span class="line">unet =stable_diffusion_txt2img.unet，    </span><br><span class="line">scheduler=stable_diffusion_txt2img.scheduler，    </span><br><span class="line">safety_checker = <span class="literal">None</span>，    </span><br><span class="line">feature_extractor = <span class="literal">None</span>，    </span><br><span class="line">requires_safety_checker = <span class="literal">False</span>, )</span><br></pre></td></tr></table></figure>
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Diffusion/" rel="tag"># Diffusion</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2023/04/03/triton/" rel="next" title="Triton">
+                  <i class="fa fa-chevron-left"></i> Triton
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%B6%E3%80%81%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">零、安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%A6%82%E4%BD%95%E7%AE%80%E5%8D%95%E6%8E%A8%E7%90%86diffusion-model"><span class="nav-number">2.</span> <span class="nav-text">一、如何简单推理diffusion model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%A6%82%E4%BD%95%E5%8A%A0%E8%BD%BDcivitai%E7%9A%84%E6%A8%A1%E5%9E%8B%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">二、如何加载civitai的模型？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%A6%82%E4%BD%95%E5%8A%A0%E8%BD%BDcivitai%E7%9A%84lora%E6%A8%A1%E5%9E%8B%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">三、如何加载civitai的lora模型？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%A6%82%E4%B8%8B%E5%AE%9E%E7%8E%B0stable-diffusion-lora%E7%9A%84%E8%AE%AD%E7%BB%83"><span class="nav-number">5.</span> <span class="nav-text">四、如下实现stable diffusion lora的训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%87%E6%B3%A8%E4%B8%80%E4%BA%9B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%EF%BC%9A"><span class="nav-number">6.</span> <span class="nav-text">备注一些基础知识：</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Spring Wang"
+    src="/images/head.png">
+  <p class="site-author-name" itemprop="name">Spring Wang</p>
+  <div class="site-description" itemprop="description">众里寻他千百度，蓦然回首，那人却在灯火阑珊处</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">64</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">53</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lichun-wang" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;lichun-wang" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/lichun_wang1993@163.com" title="E-Mail &amp;rarr; lichun_wang1993@163.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Chunfengyanyulove" title="CSDN &amp;rarr; https:&#x2F;&#x2F;blog.csdn.net&#x2F;Chunfengyanyulove" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/chunfengyanyu" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;chunfengyanyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Spring Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = visitors.getAttribute('id').trim();
+      var title = visitors.getAttribute('data-flag-title').trim();
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .then(() => {
+                leancloudSelector(url).innerText = counter.time + 1;
+              })
+              .catch(error => {
+                console.log('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.log('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return element.getAttribute('id').trim();
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            leancloudSelector(url).innerText = time;
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.log('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+            'X-LC-Key': 'VAwpszUEpH7osEG3O76jh3be',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        const localhost = /http:\/\/(localhost|127.0.0.1|0.0.0.0)/;
+        if (localhost.test(document.URL)) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Lgw7TumxtycA4MCC8Ro8gL4a-gzGzoHsz',
+    appKey: 'VAwpszUEpH7osEG3O76jh3be',
+    placeholder: "comments",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>
